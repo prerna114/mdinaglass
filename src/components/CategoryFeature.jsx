@@ -1,6 +1,8 @@
 "use client"; // if your component uses hooks like useState
 
 import React from "react";
+// import React from "react";
+
 // import "./CategoryFeature.css"; // Optional for custom styling
 
 const CategoryFeature = () => {
