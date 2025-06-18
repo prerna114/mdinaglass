@@ -4,11 +4,12 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { SuccessToast } from "./CustomToast";
 import { useCartStore } from "@/store";
+import { SuccessToast } from "./CustomToast";
 
 const ProductCard = ({ title = "New Arrivals" }) => {
-    const { addToCart, cart, removeFromCart } = useCartStore((state) => state);
+  const { addToCart, cart } = useCartStore((state) => state);
+
   const products = [
     {
       id: 1,
@@ -44,7 +45,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     slidesToScroll: 1,
     arrows: true,
     responsive: [
-       { breakpoint: 1600, settings: { slidesToShow: 3 } },
+      { breakpoint: 1600, settings: { slidesToShow: 3 } },
       { breakpoint: 992, settings: { slidesToShow: 2 } },
       { breakpoint: 576, settings: { slidesToShow: 1 } },
     ],
@@ -57,7 +58,6 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     }
     console.log("updated", updated);
   };
- 
   return (
     <div className=" py-5 bg-white bg-white-custom">
       <div className="container">
@@ -109,7 +109,9 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                   />
                   <p className="text-muted mb-3">€{product.price.toFixed(2)}</p>
                   <div className="new-arrival-design">
-                  <button className="btn btn-outline-secondary  w-100"  onClick={() => {
+                    <button
+                      className="btn btn-outline-secondary  w-100"
+                      onClick={() => {
                         handleAdd({
                           id: 3,
                           name: "Glass Bead Necklace & Bracelet Set",
@@ -118,10 +120,11 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                           image: "/assets/bracelet1.png",
                           gift: false,
                         });
-                      }}>
-                    Add to Cart
-                  </button>
-                </div>
+                      }}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

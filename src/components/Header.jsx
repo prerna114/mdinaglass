@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { ShoppingCart, User, Bell } from "lucide-react";
@@ -10,6 +10,8 @@ import ResponsiveNav from "./NavMenu";
 import { CiSearch } from "react-icons/ci";
 import Video from "./Video";
 import Link from "next/link";
+import { buildProductUrl } from "@/utils/buildProductUrl";
+import { useCartStore } from "@/store";
 
 const Header = () => {
   const [isBannerVisible, setIsBannerVisible] = useState(true);
@@ -19,6 +21,18 @@ const Header = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
+  const { addToCart, cart, removeFromCart } = useCartStore((state) => state);
+
+  const isUserLogin = () => {
+    const data = localStorage.getItem("token");
+    if (data) {
+      setUserLogin(true);
+    } else {
+      setUserLogin(false);
+    }
+  };
+  const [userLogin, setUserLogin] = useState(false);
+
   const slides = [
     {
       type: "video",
@@ -28,6 +42,11 @@ const Header = () => {
 
   const toggleSearch = () => {
     setSearchVisible((prev) => !prev);
+  };
+
+  const logout = () => {
+    localStorage.clear();
+    setUserLogin(false);
   };
 
   const handleNext = () => {
@@ -56,6 +75,11 @@ const Header = () => {
 
   const current = slides[currentSlide];
 
+  useEffect(() => {
+    isUserLogin();
+  }, []);
+
+  // console.log("userLoginuserLogin", userLogin);
   return (
     <>
       {/* Top Banner */}
@@ -165,6 +189,7 @@ const Header = () => {
                     className="text-muted"
                     style={{ width: "22px", height: "22px", margin: "5px" }}
                   />
+
                   <User
                     color="#888888"
                     className="text-muted "
@@ -176,32 +201,31 @@ const Header = () => {
               {/* ========= Desktop Cart ===== */}
               <div className="desktop-cart">
                 <div className=" align-items-center hide-mobi-cart  justify-content-center justify-content-md-end">
-                <div className="d-flex align-items-center svg-design ">
-                  <Bell
-                    className="text-muted me-1"
-                    color="#888888"
-                    style={{
-                      width: "45px",
-                      height: "22px",
-                      margin: "5px 0px 5px 5px",
-                      
-                    }}
-                  />
-
-                  <Link href={"/cartpage"}>
-                
-                <div className="shopping-cart">
-                
-                  <ShoppingCart
-                    color="#888888"
-                    className="text-muted"
-                    style={{ width: "45px", height: "22px", margin: "5px 0px 5px 5px" }}
-                  />
-                      <span>1</span>
-               </div>  
-                        </Link>
-
-                <Link href={"/loginCheckoutPage"}>
+                  <div className="d-flex align-items-center svg-design ">
+                    <Bell
+                      className="text-muted me-1"
+                      color="#888888"
+                      style={{
+                        width: "45px",
+                        height: "22px",
+                        margin: "5px 0px 5px 5px",
+                      }}
+                    />
+                    <Link href={"/cartpage"}>
+                      <div className="shopping-cart">
+                        <ShoppingCart
+                          color="#888888"
+                          className="text-muted"
+                          style={{
+                            width: "45px",
+                            height: "22px",
+                            margin: "5px 0px 5px 5px",
+                          }}
+                        />
+                        <span>{cart?.length}</span>
+                      </div>
+                    </Link>
+                    <Link href={"/loginCheckoutPage"}>
                       <User
                         color="#888888"
                         className="text-muted "
@@ -212,9 +236,7 @@ const Header = () => {
                         }}
                       />
                     </Link>
-                </div>
-                
-                
+                  </div>
                   <div
                     style={{
                       border: "1.2px solid #005E84",
@@ -252,7 +274,7 @@ const Header = () => {
                         color: "#005E84",
                         paddingLeft: "5px",
                         fontSize: "18px",
-                        margin: "0 !important"
+                        margin: "0 !important",
                       }}
                     >
                       <option>EUR</option>
@@ -261,18 +283,36 @@ const Header = () => {
                     </select>
                   </div>
 
-                  <button
-                    className="signUp btn "
-                    style={{
-                      fontFamily: "'Quicksand', sans-serif",
-                      backgroundColor: "#005e84",
-                      color: "#fff",
-                      width: "105px",
-                      height: "46px",
-                    }}
-                  >
-                    SIGN UP
-                  </button>
+                  {userLogin ? (
+                    <button
+                      onClick={() => {
+                        logout();
+                      }}
+                      className="signUp btn "
+                      style={{
+                        fontFamily: "'Quicksand', sans-serif",
+                        backgroundColor: "#005e84",
+                        color: "#fff",
+                        width: "105px",
+                        height: "46px",
+                      }}
+                    >
+                      LOGOUT
+                    </button>
+                  ) : (
+                    <button
+                      className="signUp btn "
+                      style={{
+                        fontFamily: "'Quicksand', sans-serif",
+                        backgroundColor: "#005e84",
+                        color: "#fff",
+                        width: "105px",
+                        height: "46px",
+                      }}
+                    >
+                      SIGN UP
+                    </button>
+                  )}
                 </div>
               </div>
               {/* ========= Mobile Cart ===== */}
@@ -295,15 +335,12 @@ const Header = () => {
                     <option>USD</option>
                     <option>GBP</option>
                   </select>
-                <div>
-                <a href="#"> SIGN UP</a>
-               </div>
-                  
+                  <div>
+                    <a href="#"> SIGN UP</a>
+                  </div>
                 </div>
-               
               </div>
 
-          
               <div className="icon-section" onClick={toggleSearch}>
                 <CiSearch
                   className="text-muted  hide-desk"
@@ -314,31 +351,25 @@ const Header = () => {
                     margin: "5px",
                   }}
                 />
-             
-                
               </div>
             </div>
-              <div className="search-text">
-                 
-            {searchVisible && (
-                  <input
-                    type="text"
-                    // className="form-control"
-                    placeholder="Search"
-                    className="inputSubContainer"
-                  />
-                )}
-                 </div>
+            <div className="search-text">
+              {searchVisible && (
+                <input
+                  type="text"
+                  // className="form-control"
+                  placeholder="Search"
+                  className="inputSubContainer"
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Category Navigation */}
       <div className="category-nav border-bottom py-2 d-none d-md-none d-lg-block">
-        <div
-          className=" SubnavContainer"
-          
-        >
+        <div className=" SubnavContainer">
           <div className="d-flex justify-content-center flex-wrap">
             {[
               "Glass Blowing & Sculpting",
@@ -350,8 +381,7 @@ const Header = () => {
               "Legacy (Book)",
               "Gift Vouchers",
               "Sale",
-                "Shop by Ranges"
-
+              "Shop by Ranges",
             ].map((cat) => (
               <a key={cat} href="#" className="nav-link px-2">
                 {cat}
@@ -360,27 +390,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
 
       {/* Video Banner Section */}
       {/* <div className="video-banner position-relative text-center">
@@ -402,7 +411,6 @@ const Header = () => {
     ▶
   </button>
 </div> */}
-
     </>
   );
 };

@@ -2,6 +2,8 @@ import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Bootstrap CSS
 
 import { Geist, Geist_Mono, Quicksand, Domine } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
@@ -39,8 +41,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${quicksand.variable} ${domine.variable}`}
       >
+        <Header />
         {children}
-        <ToastContainer/>
+        <ToastContainer />
+        <Footer />
       </body>
     </html>
   );

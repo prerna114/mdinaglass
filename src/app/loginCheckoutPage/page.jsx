@@ -10,8 +10,11 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import Make from "@/components/Profile";
+import { useRouter } from "next/navigation";
 
 const loginCheckoutPage = () => {
+  const router = useRouter();
+
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [userLogin, setUserLogin] = useState(false);
@@ -23,9 +26,10 @@ const loginCheckoutPage = () => {
       CustomToast("Password required!", "top-right");
       console.log("Handle login");
     } else if (userName == "root" && password == "12345") {
-      console.log("Sucess")
       SuccessToast("Login Successfull", "top-right");
       localStorage.setItem("token", JSON.stringify("islogin"));
+      setUserLogin(true);
+      router.push("/");
     }
   };
 
@@ -40,7 +44,7 @@ const loginCheckoutPage = () => {
   // console.log("username", userName);
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <MegaMenu />
       {!userLogin && (
         <div
@@ -130,7 +134,7 @@ const loginCheckoutPage = () => {
         </div>
       )}
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

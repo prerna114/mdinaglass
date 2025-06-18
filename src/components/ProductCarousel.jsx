@@ -8,15 +8,12 @@ import { useCartStore } from "@/store";
 import { SuccessToast } from "./CustomToast";
 
 const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
-
-    const { addToCart, cart, removeFromCart } = useCartStore((state) => state);
   const products = [
     {
       id: 1,
       name: "Bubble Small Table Lamp",
       price: 65.0,
       image: "/assets/lamp.png",
-    
     },
     {
       id: 2,
@@ -51,7 +48,8 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
       { breakpoint: 576, settings: { slidesToShow: 1 } },
     ],
   };
-const handleAdd = (item) => {
+  const { addToCart, cart } = useCartStore((state) => state);
+  const handleAdd = (item) => {
     addToCart(item);
     const updated = useCartStore.getState().cart.find((i) => i.id === item.id);
     if (updated) {
@@ -59,6 +57,7 @@ const handleAdd = (item) => {
     }
     console.log("updated", updated);
   };
+  console.log("cartt", cart);
   return (
     <div className="py-5" style={{ backgroundColor: "#f5f5f5", margin: "0px" }}>
       <div className="container">
@@ -102,16 +101,19 @@ const handleAdd = (item) => {
                 </h6>
                 <p className="text-muted mb-2">€{product.price.toFixed(2)}</p>
 
-                <button className="btn btn-outline-secondary w-100 mt-auto" onClick={() => {
-                        handleAdd({
-                          id: 3,
-                          name: "Glass Bead Necklace & Bracelet Set",
-                          price: 29.0,
-                          qty: 1,
-                          image: "/assets/bracelet1.png",
-                          gift: false,
-                        });
-                      }}>
+                <button
+                  className="btn btn-outline-secondary w-100 mt-auto"
+                  onClick={() => {
+                    handleAdd({
+                      id: 6,
+                      name: "Glass Bead Necklace & Bracelet Set",
+                      price: 29.0,
+                      qty: 1,
+                      image: "/assets/bracelet1.png",
+                      gift: false,
+                    });
+                  }}
+                >
                   Add to Cart
                 </button>
               </div>

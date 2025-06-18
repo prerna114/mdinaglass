@@ -1,5 +1,4 @@
 "use client";
-import CategoryFeature from "@/components/CategoryFeature";
 import CategoryGrid from "@/components/CategoryGrid";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -9,14 +8,16 @@ import Testimonials from "@/components/Testimonials";
 import Video from "@/components/Video";
 import Megamenu from "@/components/Megamenu";
 import React from "react";
+import CategoryFeature from "../components/CategoryFeature";
+import { useCountStore } from "@/store";
 
 export default function Page() {
   return (
     <>
-      <Header />
-      <Megamenu/>
-        <Video/>
-    
+      {/* <Header /> */}
+      <Megamenu />
+      <Video />
+
       <section
         style={{
           backgroundColor: "#F1F1F1",
@@ -36,7 +37,7 @@ export default function Page() {
       <ProductCarousel title="Featured Products" showBadge={false} />
 
       <Testimonials />
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

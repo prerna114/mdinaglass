@@ -1,5 +1,7 @@
 "use client";
 
+import { createUrl } from "@/constant";
+import Link from "next/link";
 import React from "react";
 
 const Footer = () => {
@@ -10,17 +12,23 @@ const Footer = () => {
         <div className="row">
           {/* Logo & Payment */}
           <div className="col-md-4 mb-4">
-            <div className="footer-logo">
-            <img
-              src="/assets/footer-logo.png"
-              alt="Mdina Glass Logo"
-              className="mb-3 footer-logo"
-              style={{ width: "250px" }}
-            />
-           </div>
+            <Link href={"/"} className="footer-logo">
+              <img
+                src="/assets/footer-logo.png"
+                alt="Mdina Glass Logo"
+                className="mb-3 footer-logo"
+                style={{ width: "250px" }}
+              />
+            </Link>
             <p className="font-footer">Payment Method</p>
             <div className="d-flex footer-logo flex-wrap gap-2">
-              <img src="/assets/visa.png" className=""  alt="Visa" height="30" width="100%" />
+              <img
+                src="/assets/visa.png"
+                className=""
+                alt="Visa"
+                height="30"
+                width="100%"
+              />
             </div>
           </div>
 
@@ -28,12 +36,28 @@ const Footer = () => {
           <div className="col-md-2 mb-4">
             <h6 className="footer-link">Links</h6>
             <ul className="list-unstyled small">
-              <li>Home</li>
-              <li>About Us</li>
-              <li>All Products</li>
-              <li>New Arrivals</li>
-              <li>Limited Editions</li>
-              <li>Gift Registry</li>
+              <Link href={"/"}>
+                <li>Home</li>
+              </Link>
+
+              <Link href={"/aboutus"}>
+                <li>About Us</li>
+              </Link>
+
+              <Link href={createUrl("655", "all-product")}>
+                <li>All Products</li>
+              </Link>
+              <Link href={"/cartpage"}>
+                <li>New Arrivals</li>
+              </Link>
+
+              <Link href={"/loginCheckoutPage"}>
+                <li>Limited Editions</li>
+              </Link>
+
+              <Link href={"/gift"}>
+                <li>Gift Registry</li>
+              </Link>
             </ul>
           </div>
 
@@ -60,10 +84,26 @@ const Footer = () => {
             </ul>
             <h6 className="footer-link mt-3 mb-3">Get Social</h6>
             <div className="d-flex gap-2 footer-social-icon  mb-2">
-              <img src="/assets/fb.png" className="footer-images" alt="Facebook" />
-              <img src="/assets/insta.png" className="footer-images" alt="Instagram"  />
-              <img src="/assets/twitter.png" className="footer-images" alt="Twitter" />
-              <img src="/assets/linkedin.png" className="footer-images" alt="Linkedin"  />
+              <img
+                src="/assets/fb.png"
+                className="footer-images"
+                alt="Facebook"
+              />
+              <img
+                src="/assets/insta.png"
+                className="footer-images"
+                alt="Instagram"
+              />
+              <img
+                src="/assets/twitter.png"
+                className="footer-images"
+                alt="Twitter"
+              />
+              <img
+                src="/assets/linkedin.png"
+                className="footer-images"
+                alt="Linkedin"
+              />
             </div>
             <div
               className="d-inline-flex align-items-center houzer-button px-3 py-2 rounded mt-2"
@@ -72,9 +112,15 @@ const Footer = () => {
               <img
                 src="/assets/houzz.png"
                 alt="Houzz"
-                style={{ height: "24px", width: "auto!important", marginRight: "8px" }}
+                style={{
+                  height: "24px",
+                  width: "auto!important",
+                  marginRight: "8px",
+                }}
               />
-              <span className="text-white small span-houze">Featured on Houzz</span>
+              <span className="text-white small span-houze">
+                Featured on Houzz
+              </span>
             </div>
           </div>
         </div>

@@ -1,15 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import ProductCard from "./ProductCard";
+import { products } from "@/constant";
+import Link from "next/link";
 
 export default function Make() {
   const [tab, setTab] = useState("profile");
+  const subtotal = (price, qty) => (price * qty).toFixed(2);
 
   return (
     <div className="container mt-5">
       <div className="row">
         {/* Sidebar */}
-        <div className="col-md-3">
+        <div className="col-md-3 mb-4">
           <ul className="list-group">
             <li
               className={`list-group-item ${tab === "profile" ? "active" : ""}`}
@@ -30,7 +34,7 @@ export default function Make() {
               onClick={() => setTab("status")}
               style={{ cursor: "pointer" }}
             >
-              Order Status
+              Track Order
             </li>
           </ul>
         </div>
@@ -42,10 +46,66 @@ export default function Make() {
               {tab === "profile" && (
                 <div>
                   <h4>👤 User Profile</h4>
+
+                  <div className="ms-4">
+                    <div>
+                      <h5>Name</h5>
+                      <p>BlackBull</p>
+                    </div>
+
+                    <div>
+                      <h5>Email</h5>
+                      <p>BlackBull@gmail.com</p>
+                    </div>
+
+                    <div>
+                      <h5>Address</h5>
+                      <p>
+                        Vjal L-Istadium Nazzjonali, Attard, Ta' Qali, Opposite
+                        Big Mat
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
-              {tab === "orders" && <h4>🛒 Order List</h4>}
-              {tab === "status" && <h4>📦 Order Status</h4>}
+              {tab === "orders" && (
+                <div>
+                  <h4>🛒 Order List</h4>
+                  <div className="table-responsive-sm">
+                    <table className="table cart-table table-bordered">
+                      <thead className="thead-dark">
+                        <tr className="tr-bg">
+                          <th>ORDER ID</th>
+                          <th>ORDER DATE</th>
+                          <th>PRICE</th>
+                          <th>QTY</th>
+                          <th>ORDER STATUS</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {products.map((item) => (
+                          <tr key={item.id}>
+                            <td>{item.orderId}</td>
+                            <td>{item.orderDate}</td>
+
+                            {/* <td>€{item.price.toFixed(2)}</td> */}
+                            <td>€{subtotal(item.price, item.qty)}</td>
+                            <td>{item.qty}</td>
+                            <td>{item.orderStatus}</td>
+                            <td>
+                              <Link href={"/loginCheckoutPage"}>
+                                <p>View Details</p>
+                              </Link>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+              {tab === "status" && <div></div>}
             </div>
           </div>
         </div>

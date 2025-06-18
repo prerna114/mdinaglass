@@ -9,11 +9,11 @@ import CartHeading from "@/components/CartHeading";
 import MegaMenu from "@/components/Megamenu";
 import Link from "next/link";
 import { useCartStore } from "@/store";
+import { SuccessToast } from "@/components/CustomToast";
 
 const page = () => {
-    const { addToCart, cart, removeFromCart } = useCartStore((state) => state);
- 
- 
+  const { addToCart, cart, removeFromCart } = useCartStore((state) => state);
+
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -53,33 +53,45 @@ const page = () => {
   };
 
   const subtotal = (price, qty) => (price * qty).toFixed(2);
-
+  console.log("Cart", cart);
   return (
     <div>
-      <Header />
-       <MegaMenu />
+      {/* <Header /> */}
+      <MegaMenu />
       <CartHeading />
+      {cart?.length == 0 && (
+        <div>
+          <h1 className="text-center"> Shopping Cart is Empty.</h1>
+          <p
+            className="text-center"
+            style={{
+              marginBottom: "60px",
+            }}
+          >
+            You have no items in your shopping cart.
+          </p>
+        </div>
+      )}
 
-      <div
-        className="cart-page-main"
-        style={{
-          background: "#f1f1f1",
-        }}
-      >
-        <div className="container">
-          <div className="align-cart">
+      {cart?.length > 0 && (
+        <div
+          className="cart-page-main"
+          style={{
+            background: "#f1f1f1",
+          }}
+        >
+          <div className="container">
+            <div className="align-cart">
               <div className="header-of-cart">
                 <div className="row align-items-center">
-                  <div className="col-md-8">
-                   
-                  </div>
+                  <div className="col-md-8"></div>
 
                   <div className="col-md-4">
                     <div className="text-right button-margin float-right mb-3 mt-5">
                       <Link href="/checkout">
-                      <button className="btn btn-info text-white" > 
-                        Proceed To Checkout
-                      </button>
+                        <button className="btn btn-info text-white">
+                          Proceed To Checkout
+                        </button>
                       </Link>
                     </div>
                   </div>
@@ -145,16 +157,7 @@ const page = () => {
                 </table>
               </div>
 
-               {cart?.length == 0 && (
-              <div>
-                <h1 className="text-center my-5">
-                  {" "}
-                  Your mdinaglass cart is empty
-                </h1>
-              </div>
-            )}
-
-                            {/* <div className="col-md-12">
+              {/* <div className="col-md-12">
                       <div className="table-content">
                       <div className="table-row-1">
                             
@@ -291,107 +294,108 @@ const page = () => {
                       </div>
                   </div> */}
 
-                <table className="checkout-table table-row-1 checkout-table-mobile">
-                  <thead>
-                    <tr>
-                      <td className="col-item">Item</td>
-                      <td className="col-name">Product Name</td>
-                      <td className="col-price">Unit Price</td>
-                      <td className="col-subtotal">Subtotal</td>
-                    </tr>
-                  </thead>
-                </table>
+              <table className="checkout-table table-row-1 checkout-table-mobile">
+                <thead>
+                  <tr>
+                    <td className="col-item">Item</td>
+                    <td className="col-name">Product Name</td>
+                    <td className="col-price">Unit Price</td>
+                    <td className="col-subtotal">Subtotal</td>
+                  </tr>
+                </thead>
+              </table>
 
-                <div className="table-row-3">
-                  <div className="row">
-                    <div className="col-item">
-                      <div>
-                        <img src="/assets/bracelet1.png" className="w-100" />
-                      </div>
-                    </div>
-
-                    <div className=" col-name">
-                      <h6>Dog (standing) - Brown</h6>
-                    </div>
-                    <div className=" col-price">
-                      <h6>€17.00</h6>
-                    </div>
-
-                    <div className=" col-subtotal">
-                      <h6>€17.00</h6>
-                    </div>
-
-                    <div className="col-input mt-3">
-                      <h6>
-                        Qty{" "}
-                        <span>
-                          <input type="number"></input>
-                        </span>
-                      </h6>
-                    </div>
-
-                    <div className="col-gift mt-3">
-                      <h6>
-                        Gift{" "}
-                        <span>
-                          <input type="checkbox"></input>
-                        </span>
-                      </h6>
-                    </div>
-                    <div className="col-remove mt-3">
-                      <h6>x Remove</h6>
+              <div className="table-row-3">
+                <div className="row">
+                  <div className="col-item">
+                    <div>
+                      <img src="/assets/bracelet1.png" className="w-100" />
                     </div>
                   </div>
+
+                  <div className=" col-name">
+                    <h6>Dog (standing) - Brown</h6>
+                  </div>
+                  <div className=" col-price">
+                    <h6>€17.00</h6>
+                  </div>
+
+                  <div className=" col-subtotal">
+                    <h6>€17.00</h6>
+                  </div>
+
+                  <div className="col-input mt-3">
+                    <h6>
+                      Qty{" "}
+                      <span>
+                        <input type="number"></input>
+                      </span>
+                    </h6>
+                  </div>
+
+                  <div className="col-gift mt-3">
+                    <h6>
+                      Gift{" "}
+                      <span>
+                        <input type="checkbox"></input>
+                      </span>
+                    </h6>
+                  </div>
+                  <div className="col-remove mt-3">
+                    <h6>x Remove</h6>
+                  </div>
                 </div>
-                <hr className="display-option"/>
-             <div className="table-row-3">
-            <div className="row">
-              <div className="col-item">
-                <div>
-                  <img src="/assets/bracelet1.png" className="w-100" />
+              </div>
+              <hr className="display-option" />
+              <div className="table-row-3">
+                <div className="row">
+                  <div className="col-item">
+                    <div>
+                      <img src="/assets/bracelet1.png" className="w-100" />
+                    </div>
+                  </div>
+
+                  <div className=" col-name">
+                    <h6>Dog (standing) - Brown</h6>
+                  </div>
+                  <div className=" col-price">
+                    <h6>€17.00</h6>
+                  </div>
+
+                  <div className=" col-subtotal">
+                    <h6>€17.00</h6>
+                  </div>
+
+                  <div className="col-input mt-3">
+                    <h6>
+                      Qty{" "}
+                      <span>
+                        <input type="number"></input>
+                      </span>
+                    </h6>
+                  </div>
+
+                  <div className="col-gift mt-3">
+                    <h6>
+                      Gift{" "}
+                      <span>
+                        <input type="checkbox"></input>
+                      </span>
+                    </h6>
+                  </div>
+                  <div className="col-remove mt-3">
+                    <h6>x Remove</h6>
+                  </div>
                 </div>
               </div>
 
-              <div className=" col-name">
-                <h6>Dog (standing) - Brown</h6>
-              </div>
-              <div className=" col-price">
-                <h6>€17.00</h6>
-              </div>
-
-              <div className=" col-subtotal">
-                <h6>€17.00</h6>
-              </div>
-
-              <div className="col-input mt-3">
-                <h6>
-                  Qty{" "}
-                  <span>
-                    <input type="number"></input>
-                  </span>
-                </h6>
-              </div>
-
-              <div className="col-gift mt-3">
-                <h6>
-                  Gift{" "}
-                  <span>
-                    <input type="checkbox"></input>
-                  </span>
-                </h6>
-              </div>
-              <div className="col-remove mt-3">
-                <h6>x Remove</h6>
-              </div>
+              <AddToCart />
+              <GiftVoucher />
             </div>
-              </div>
-        
-        <AddToCart />
-        <GiftVoucher />
           </div>
         </div>
-      </div>
-      <Footer />
+      )}
+      {/* <Footer /> */}
     </div>
   );
 };
