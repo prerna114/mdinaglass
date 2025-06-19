@@ -7,7 +7,7 @@ export const products = [
     price: 37.0,
     qty: 2,
     orderDate: "25 May 2024",
-    orderStatus: "Deliver",
+    orderStatus: "In-Transit",
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ export const products = [
     price: 48.5,
     qty: 3,
     orderDate: "25 May 2024",
-    orderStatus: "Deliver",
+    orderStatus: "In-Transit",
   },
   {
     id: 3,
@@ -23,7 +23,7 @@ export const products = [
     price: 21.0,
     qty: 1,
     orderDate: "25 May 2024",
-    orderStatus: "Deliver",
+    orderStatus: "In-Transit",
   },
   {
     id: 4,
@@ -31,7 +31,7 @@ export const products = [
     price: 20.5,
     qty: 1,
     orderDate: "25 May 2024",
-    orderStatus: "Deliver",
+    orderStatus: "In-Transit",
   },
 ];
 export const createUrl = (categoryID, slug) => {

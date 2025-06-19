@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { FaTimes } from "react-icons/fa";
-import { IoIosSearch } from "react-icons/io";
+
 import { ShoppingCart, User, Bell } from "lucide-react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { FaPlay, FaPause } from "react-icons/fa";
@@ -12,6 +11,7 @@ import Video from "./Video";
 import Link from "next/link";
 import { buildProductUrl } from "@/utils/buildProductUrl";
 import { useCartStore } from "@/store";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const Header = () => {
   const [isBannerVisible, setIsBannerVisible] = useState(true);
@@ -21,14 +21,16 @@ const Header = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
-  const { addToCart, cart, removeFromCart } = useCartStore((state) => state);
-
+  const { cart } = useCartStore((state) => state);
+  const { login, isLogin, logout, setLoginState } = useAuthStore(
+    (state) => state
+  );
   const isUserLogin = () => {
     const data = localStorage.getItem("token");
     if (data) {
-      setUserLogin(true);
+      setLoginState(true);
     } else {
-      setUserLogin(false);
+      setLoginState(false);
     }
   };
   const [userLogin, setUserLogin] = useState(false);
@@ -44,9 +46,9 @@ const Header = () => {
     setSearchVisible((prev) => !prev);
   };
 
-  const logout = () => {
+  const logoutUser = () => {
     localStorage.clear();
-    setUserLogin(false);
+    logout();
   };
 
   const handleNext = () => {
@@ -141,13 +143,13 @@ const Header = () => {
           }}
         >
           {/* Logo */}
-          <div className="mb-3 mb-md-0 mobi-logo">
+          <Link href={"/"} className="mb-3 mb-md-0 mobi-logo">
             <img
               src="assets/logo.png"
               alt="Mdina Glass Logo"
               style={{ height: "90px" }}
             />
-          </div>
+          </Link>
 
           {/* Search Field */}
           <div className="search-bar-row">
@@ -283,10 +285,10 @@ const Header = () => {
                     </select>
                   </div>
 
-                  {userLogin ? (
+                  {isLogin ? (
                     <button
                       onClick={() => {
-                        logout();
+                        logoutUser();
                       }}
                       className="signUp btn "
                       style={{

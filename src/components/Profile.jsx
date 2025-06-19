@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ProductCard from "./ProductCard";
+import { AiOutlineEdit } from "react-icons/ai";
 import { products } from "@/constant";
 import Link from "next/link";
 
@@ -45,7 +45,14 @@ export default function Make() {
             <div className="card-body">
               {tab === "profile" && (
                 <div>
-                  <h4>👤 User Profile</h4>
+                  <div className="row d-flex align-items-center justify-content-between mb-3">
+                    <div className="col-auto">
+                      <h4 className="mb-0">👤 User Profile</h4>
+                    </div>
+                    <Link href={"/editUser"} className="col-auto">
+                      <AiOutlineEdit size={27} />
+                    </Link>
+                  </div>
 
                   <div className="ms-4">
                     <div>
@@ -105,7 +112,43 @@ export default function Make() {
                   </div>
                 </div>
               )}
-              {tab === "status" && <div></div>}
+              {tab === "status" && (
+                <div>
+                  <h4> 🖲 Track Order</h4>
+                  <div className="table-responsive-sm">
+                    <table className="table cart-table table-bordered">
+                      <thead className="thead-dark">
+                        <tr className="tr-bg">
+                          <th>ORDER ID</th>
+                          <th>ORDER DATE</th>
+                          <th>PRICE</th>
+                          <th>QTY</th>
+                          <th>ORDER STATUS</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {products.map((item) => (
+                          <tr key={item.id}>
+                            <td>{item.orderId}</td>
+                            <td>{item.orderDate}</td>
+
+                            {/* <td>€{item.price.toFixed(2)}</td> */}
+                            <td>€{subtotal(item.price, item.qty)}</td>
+                            <td>{item.qty}</td>
+                            <td>{item.orderStatus}</td>
+                            <td>
+                              <Link href={"/loginCheckoutPage"}>
+                                <p>Track Order</p>
+                              </Link>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

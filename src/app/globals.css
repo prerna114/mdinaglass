@@ -2798,3 +2798,7 @@ nav.border-top.navContainer {
 .shopping-cart {
   position: relative;
 }
+
+.list-group-item.active {
+  background-color: #005e84 !important;
+}

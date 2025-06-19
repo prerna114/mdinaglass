@@ -60,20 +60,28 @@ const page = () => {
       <MegaMenu />
       <CartHeading />
       {cart?.length == 0 && (
-        <div>
+        <div
+          style={{
+            marginBottom: "60px",
+          }}
+        >
           <h1 className="text-center"> Shopping Cart is Empty.</h1>
-          <p
-            className="text-center"
-            style={{
-              marginBottom: "60px",
-            }}
-          >
+          <p className="text-center">
             You have no items in your shopping cart.
           </p>
+          <div>
+            <div className="text-center  header-of-cart">
+              <Link href="/">
+                <button className="btn btn-info text-white">
+                  Continue Shopping
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
       )}
 
-      {cart?.length > 0 && (
+      {cart?.length != 0 && (
         <div
           className="cart-page-main"
           style={{

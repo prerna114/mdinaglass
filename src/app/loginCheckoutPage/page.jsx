@@ -11,10 +11,25 @@ import { ToastContainer, toast } from "react-toastify";
 import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import Make from "@/components/Profile";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const loginCheckoutPage = () => {
   const router = useRouter();
 
+  const { login, isLogin, logout, setLoginState } = useAuthStore(
+    (state) => state
+  );
+
+  useEffect(() => {
+    const isLogin = localStorage.getItem("token");
+    if (isLogin) {
+      setLoginState(true);
+    } else {
+      setLoginState(false);
+    }
+  }, []);
+
+  console.log("login state njnjn", login, isLogin);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [userLogin, setUserLogin] = useState(false);
@@ -28,25 +43,18 @@ const loginCheckoutPage = () => {
     } else if (userName == "root" && password == "12345") {
       SuccessToast("Login Successfull", "top-right");
       localStorage.setItem("token", JSON.stringify("islogin"));
+      login();
       setUserLogin(true);
-      router.push("/");
+      // router.push("/");
     }
   };
 
-  useEffect(() => {
-    const isLogin = localStorage.getItem("token");
-    if (isLogin) {
-      setUserLogin(true);
-    } else {
-      setUserLogin(false);
-    }
-  }, []);
   // console.log("username", userName);
   return (
     <>
       {/* <Header /> */}
       <MegaMenu />
-      {!userLogin && (
+      {!isLogin && (
         <div
           style={{
             background: "#f1f1f1",
@@ -128,8 +136,8 @@ const loginCheckoutPage = () => {
         </div>
       )}
 
-      {userLogin && (
-        <div>
+      {isLogin && (
+        <div className="mb-5">
           <Make />
         </div>
       )}
