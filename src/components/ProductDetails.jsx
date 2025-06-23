@@ -7,7 +7,8 @@ import { IoBagOutline } from "react-icons/io5";
 import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
 
-export default function ProductDetails() {
+export default function ProductDetails({ productDetails }) {
+  console.log("productDetails", productDetails);
   const imageList = [
     "/assets/bracelet1.png",
     "/assets/Bowls.png",
@@ -130,25 +131,32 @@ export default function ProductDetails() {
           <div className="products-detailing">
             <h2>Glass Bead Necklace & Bracelet Set</h2>
             <p className="text-muted sku-detail">
-              SKU: JG10068-M{" "}
+              SKU: {productDetails?.sku ? productDetails.sku : "JG10068-M"}{" "}
               <span className="wishlist float-right">
                 <FaHeart />
               </span>
             </p>
             <p className="sku-detail mb-0">Description </p>
-            <p className="text-muted">
+            {/* <p className="text-muted">
               Matching bracelet and necklace with large coloured glass beads.
               Bracelet has elasticated universal fit and is 6cm rested internal
               diameter. Necklace has lobster claw clasp and is 50cm long when
               open.
-            </p>
+            </p> */}
+            <p
+              dangerouslySetInnerHTML={{ __html: productDetails?.description }}
+            ></p>
 
             <p className="sku-detail">
               Availability: <span className="text-success">In Stock</span>
             </p>
 
             <p className="sku-detail">
-              Price: <span className="fs-4 text-dark">&euro;29.00</span>
+              {/* Price: <span className="fs-4 text-dark">&euro;29.00</span> */}
+              Price:{" "}
+              <span className="fs-4 text-dark">
+                {productDetails?.min_price}
+              </span>
             </p>
 
             <div className="mb-3 d-flex choose-category align-items-center">

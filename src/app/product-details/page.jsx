@@ -7,9 +7,26 @@ import ProductShow from "@/components/ProductShow";
 import CategorySidebar from "@/components/CategorySidebar";
 import MegaMenu from "@/components/Megamenu";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCartStore } from "@/store";
+import { useSearchParams } from "next/navigation";
+import { getProductByID } from "@/api/productApi";
 const page = () => {
+  const [productDetails, setProductDetails] = useState();
+  const searchParams = useSearchParams();
+  const sku = searchParams.get("sku");
+
+  const getProductDetails = async () => {
+    const data = await getProductByID(sku);
+    console.log("getProductDetails", data);
+    if (data) {
+      setProductDetails(data[0]);
+    }
+  };
+
+  useEffect(() => {
+    getProductDetails();
+  }, []);
   return (
     <>
       {/* <Header /> */}
@@ -38,7 +55,7 @@ const page = () => {
                 {/* Product Listing */}
                 <div className="col-lg-9 col-md-12">
                   <div className="container">
-                    <ProductDetails />
+                    <ProductDetails productDetails={productDetails} />
                   </div>
                   <ProductShow />
                 </div>

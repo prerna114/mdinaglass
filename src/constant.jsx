@@ -1,5 +1,5 @@
 import { buildProductUrl } from "./utils/buildProductUrl";
-
+export const API_BASE_URL = "https://mdinaglasses.blackbullsolution.com/";
 export const products = [
   {
     id: 1,

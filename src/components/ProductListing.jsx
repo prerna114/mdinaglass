@@ -1,58 +1,71 @@
 "use client";
 
+import { getAllProduct } from "@/api/productApi";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ProductListing = () => {
-  const [products] = useState([
-    {
-      id: 1,
-      name: "Glass Bead Necklace & Bracelet Set",
-      price: "€26.00",
-      image: "/assets/bg-image.png",
-      colors: ["amber", "black"],
-    },
-    {
-      id: 2,
-      name: "Long Necklace & Bracelet with Glass Beads Set",
-      price: "€27.50",
-      image: "/assets/product1.png",
-      colors: ["amber", "gold"],
-    },
-    {
-      id: 3,
-      name: "Glass Beads & Leather Strings Necklace & Bracelet Set",
-      price: "€28.50",
-      image: "/assets/product2.png",
-      colors: ["brown", "natural"],
-      hasOptions: true,
-    },
-    {
-      id: 4,
-      name: "Blue Glass Bead Necklace & Bracelet Set",
-      price: "€26.00",
-      image: "/assets/jwell-1.jpg",
-      colors: ["blue", "silver"],
-    },
-    {
-      id: 5,
-      name: "Elegant Blue Glass Necklace",
-      price: "€32.00",
-      image: "/assets/jwell-2.jpg",
-      colors: ["blue", "teal"],
-    },
-    {
-      id: 6,
-      name: "Multi-strand Blue Glass Bead Set",
-      price: "€35.00",
-      image: "/assets/bg-image.png",
-      colors: ["blue", "white"],
-    },
-  ]);
+  const [productList, setProductList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // const [products] = useState([
+  //   {
+  //     id: 1,
+  //     name: "Glass Bead Necklace & Bracelet Set",
+  //     min_price: "€26.00",
+  //     image: "/assets/bg-image.png",
+  //     colors: ["amber", "black"],
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Long Necklace & Bracelet with Glass Beads Set",
+  //     min_price: "€27.50",
+  //     image: "/assets/product1.png",
+  //     colors: ["amber", "gold"],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Glass Beads & Leather Strings Necklace & Bracelet Set",
+  //     min_price: "€28.50",
+  //     image: "/assets/product2.png",
+  //     colors: ["brown", "natural"],
+  //     hasOptions: true,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Blue Glass Bead Necklace & Bracelet Set",
+  //     min_price: "€26.00",
+  //     image: "/assets/jwell-1.jpg",
+  //     colors: ["blue", "silver"],
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Elegant Blue Glass Necklace",
+  //     min_price: "€32.00",
+  //     image: "/assets/jwell-2.jpg",
+  //     colors: ["blue", "teal"],
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Multi-strand Blue Glass Bead Set",
+  //     min_price: "€35.00",
+  //     image: "/assets/bg-image.png",
+  //     colors: ["blue", "white"],
+  //   },
+  // ]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(15);
 
+  const getProductList = async () => {
+    const data = await getAllProduct();
+    setProductList(data);
+    setLoading(false);
+  };
+  useEffect(() => {
+    getProductList();
+  }, []);
+
+  console.log("productList", productList);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -205,14 +218,29 @@ const ProductListing = () => {
         <small className="text-muted">Items 1-9 of 9 total</small>
       </div>
 
+      {loading && (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "50vh" }}
+        >
+          <div
+            className="spinner-border text-primary"
+            role="status"
+            style={{ width: "5rem", height: "5rem" }}
+          >
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
+
       {/* Product Grid */}
       <div className="row">
-        {products.map((product) => (
+        {productList.map((product) => (
           <div key={product.id} className="col-lg-4 col-md-6 mb-4">
             <div className=" product-card">
               <div className="position-relative">
                 <img
-                  src={product.image}
+                  src={"/assets/bg-image.png"}
                   className="card-img-top"
                   alt={product.name}
                   style={{}}
@@ -236,12 +264,17 @@ const ProductListing = () => {
                 )} */}
               </div>
               <div className="card-body text-center">
-                <Link href="/product-details">
+                <Link
+                  href={{
+                    pathname: "/product-details",
+                    query: { sku: product?.sku },
+                  }}
+                >
                   <h6 className="card-title mb-3">{product.name}</h6>
                 </Link>
                 {/* <h6 className="card-title mb-3">{product.name}</h6> */}
                 <p className="card-text text-info fw-bold">
-                  Price {product.price}
+                  Price {product.min_price}
                 </p>
               </div>
             </div>

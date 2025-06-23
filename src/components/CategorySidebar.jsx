@@ -1,88 +1,109 @@
 "use client";
 
-import React from "react";
+import { getMenuCategories } from "@/api/menuAPI";
+import React, { useEffect } from "react";
 
 const CategorySidebar = () => {
-  return (
+  const getMenuData = async () => {
+    const stored = localStorage.getItem("cart");
 
-   <div className="category-sidebar">
-    <div className="hide_Mobi_sidebar">
-    <div className="bg-white mt-5 text-white">
-      <h4 className="mb-4">Shop</h4>
-      <nav>
-        <ul className="list-unstyled category-sidebar">
-          <li className="mb-2">
-            <a href="#" className="text-white text-decoration-none">
-              Glass Blowing & Sculpting
-            </a>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-white text-decoration-none">
-              Fusion
-            </a>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-white text-decoration-none">
-              Lampwork
-            </a>
-          </li>
-          <li className="mb-3 jewels">
-            <a href="#" className="text-white text-decoration-none ">
-              Jewellery
-            </a>
-            <ul className="list-unstyled subcate-gories ms-3 mt-2">
-              <li className="mb-1">
-                <a href="#" className="text-white text-decoration-none small">
-                  BRACELETS
+    console.log("Data of menu", stored);
+  };
+
+  useEffect(() => {
+    getMenuData();
+  }, []);
+  return (
+    <div className="category-sidebar">
+      <div className="hide_Mobi_sidebar">
+        <div className="bg-white mt-5 text-white">
+          <h4 className="mb-4">Shop</h4>
+          <nav>
+            <ul className="list-unstyled category-sidebar">
+              <li className="mb-2">
+                <a href="#" className="text-white text-decoration-none">
+                  Glass Blowing & Sculpting
                 </a>
               </li>
-              <li className="mb-1">
-                <a href="#" className="text-white text-decoration-none small">
-                  EARRINGS
+              <li className="mb-2">
+                <a href="#" className="text-white text-decoration-none">
+                  Fusion
                 </a>
               </li>
-              <li className="mb-1">
-                <a href="#" className="text-white text-decoration-none small">
-                  NECKLACES
+              <li className="mb-2">
+                <a href="#" className="text-white text-decoration-none">
+                  Lampwork
                 </a>
               </li>
-              <li className="mb-1">
-                <a href="#" className="text-white text-decoration-none small">
-                  SETS
+              <li className="mb-3 jewels">
+                <a href="#" className="text-white text-decoration-none ">
+                  Jewellery
+                </a>
+                <ul className="list-unstyled subcate-gories ms-3 mt-2">
+                  <li className="mb-1">
+                    <a
+                      href="#"
+                      className="text-white text-decoration-none small"
+                    >
+                      BRACELETS
+                    </a>
+                  </li>
+                  <li className="mb-1">
+                    <a
+                      href="#"
+                      className="text-white text-decoration-none small"
+                    >
+                      EARRINGS
+                    </a>
+                  </li>
+                  <li className="mb-1">
+                    <a
+                      href="#"
+                      className="text-white text-decoration-none small"
+                    >
+                      NECKLACES
+                    </a>
+                  </li>
+                  <li className="mb-1">
+                    <a
+                      href="#"
+                      className="text-white text-decoration-none small"
+                    >
+                      SETS
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li className="mb-2">
+                <a href="#" className="text-white text-decoration-none">
+                  Christmas
+                </a>
+              </li>
+              <li className="mb-2">
+                <a href="#" className="text-white text-decoration-none">
+                  Valentine's
+                </a>
+              </li>
+              <li className="mb-2">
+                <a href="#" className="text-white text-decoration-none">
+                  Legacy: 50 Years of Mdina Glass (Book)
+                </a>
+              </li>
+              <li className="mb-2">
+                <a href="#" className="text-white text-decoration-none">
+                  Gift Vouchers
+                </a>
+              </li>
+              <li className="mb-2">
+                <a href="#" className="text-white text-decoration-none">
+                  Sale
                 </a>
               </li>
             </ul>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-white text-decoration-none">
-              Christmas
-            </a>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-white text-decoration-none">
-              Valentine's
-            </a>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-white text-decoration-none">
-              Legacy: 50 Years of Mdina Glass (Book)
-            </a>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-white text-decoration-none">
-              Gift Vouchers
-            </a>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-white text-decoration-none">
-              Sale
-            </a>
-          </li>
-        </ul>
-      </nav>
+          </nav>
+        </div>
+      </div>
     </div>
-    </div>
-  </div>
   );
 };
 

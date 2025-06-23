@@ -30,7 +30,7 @@ const MegaMenu = () => {
     // Enable Bootstrap dropdown on hover
   }, [showMenu]);
 
-  const getCategories = async () => {
+  const getMenuCategories = async () => {
     console.log("Get Catrogires is clling");
     const myHeaders = new Headers();
     const requestOptions = {
@@ -72,7 +72,7 @@ const MegaMenu = () => {
         console.error("Failed to parse cart from localStorage", e);
       }
     } else {
-      getCategories();
+      getMenuCategories();
     }
     // }
   }, []);
@@ -84,7 +84,7 @@ const MegaMenu = () => {
     let page = 1;
     return buildProductUrl(categoryID, sortOrder, limit, page, slug);
   };
-  console.log("Catrry data", categoriesData, categoriesData?.length);
+  // console.log("Catrry data", categoriesData, categoriesData?.length);
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
       <div

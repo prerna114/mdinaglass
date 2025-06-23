@@ -1,14 +1,17 @@
-"use client";
+// "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useCartStore } from "@/store";
 import { SuccessToast } from "./CustomToast";
+import { getAllProduct } from "@/api/productApi";
+import Link from "next/link";
 
 const ProductCard = ({ title = "New Arrivals" }) => {
   const { addToCart, cart } = useCartStore((state) => state);
+  const [productData, setProductData] = useState([]);
 
   const products = [
     {
@@ -58,6 +61,38 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     }
     console.log("updated", updated);
   };
+
+  // const getAllProduct = async () => {
+  //   console.log("Get Catrogires is clling");
+  //   const myHeaders = new Headers();
+  //   const requestOptions = {
+  //     method: "GET",
+  //     headers: myHeaders,
+  //     redirect: "follow",
+  //   };
+
+  //   try {
+  //     const res = await fetch(
+  //       "https://mdinaglasses.blackbullsolution.com/api/products",
+  //       requestOptions
+  //     );
+  //     const data = await res.json(); // ✅ this is what you need
+
+  //     console.log("Data", data);
+  //   } catch (error) {
+  //     console.log("eror", error);
+  //   }
+  // };
+
+  const fetchData = async () => {
+    const data = await getAllProduct();
+    setProductData([...data, ...data]);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log("productData", productData);
   return (
     <div className=" py-5 bg-white bg-white-custom">
       <div className="container">
@@ -68,7 +103,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
           {title}
         </h3>
         <Slider {...settings}>
-          {products.map((product) => (
+          {productData.map((product) => (
             <div key={product.id} className="px-2">
               <div
                 className=" bestseller-account border rounded p-3 d-flex flex-column align-items-center"
@@ -87,7 +122,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                   }}
                 >
                   <img
-                    src={product.image}
+                    src={product.base_image?.medium_image_url}
                     alt={product.name}
                     className="img-fluid"
                     style={{
@@ -97,17 +132,30 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                   />
                 </div>
                 <div className="text-center w-100">
-                  <h6
-                    className="mb-1"
-                    style={{ fontFamily: "Quicksand, sans-serif" }}
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    href={{
+                      pathname: "/product-details",
+                      query: { sku: product?.sku },
+                    }}
                   >
-                    {product.name}
-                  </h6>
+                    <h6
+                      className="mb-1"
+                      style={{
+                        fontFamily: "Quicksand, sans-serif",
+                        color: "black",
+                      }}
+                    >
+                      {product.name}
+                    </h6>
+                  </Link>
                   <hr
                     className="my-2"
                     style={{ width: "40px", margin: "auto" }}
                   />
-                  <p className="text-muted mb-3">€{product.price.toFixed(2)}</p>
+                  <p className="text-muted mb-3">{product.min_price}</p>
                   <div className="new-arrival-design">
                     <button
                       className="btn btn-outline-secondary  w-100"

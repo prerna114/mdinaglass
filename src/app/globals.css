@@ -2802,3 +2802,6 @@ nav.border-top.navContainer {
 .list-group-item.active {
   background-color: #005e84 !important;
 }
+a {
+  text-decoration: none !important; /* Removes the underline */
+}
