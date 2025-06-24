@@ -1,26 +1,82 @@
 "use client";
 
 import { getMenuCategories } from "@/api/menuAPI";
-import React, { useEffect } from "react";
+import { createUrl } from "@/constant";
+import { useAuthStore } from "@/store/useAuthStore";
+import Link from "next/link";
+import { useParams, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-const CategorySidebar = () => {
+const CategorySidebar = (cateogryId) => {
+  const [sideMenu, setSideMenu] = useState();
+  const { menu } = useAuthStore((state) => state);
+
+  const { params } = useParams();
+  const [categoryId, setCategoryId] = useState(
+    typeof params?.[0] !== "undefined" ? params[0] : cateogryId?.cateogryId
+  );
+
+  console.log("paramscateogryId", menu);
   const getMenuData = async () => {
     const stored = localStorage.getItem("cart");
 
+    if (stored?.length > 0) {
+      const parsed = JSON.parse(stored);
+
+      setSideMenu(parsed);
+    }
     console.log("Data of menu", stored);
   };
 
   useEffect(() => {
     getMenuData();
   }, []);
+
+  console.log("sideMenu", sideMenu);
   return (
     <div className="category-sidebar">
       <div className="hide_Mobi_sidebar">
         <div className="bg-white mt-5 text-white">
           <h4 className="mb-4">Shop</h4>
           <nav>
+            {/* ==========  Dynamic Side Menu =============== */}
             <ul className="list-unstyled category-sidebar">
-              <li className="mb-2">
+              {menu?.length > 0 &&
+                menu.map((item, index) => (
+                  <li className="mb-2" key={item?.id}>
+                    <Link
+                      // href={"#"}
+                      href={createUrl(item?.id, item?.slug)}
+                      onClick={() => {
+                        console.log("Item", item);
+                      }}
+                      className="text-white text-decoration-none"
+                    >
+                      {item?.name}
+                    </Link>
+                    {(item.children?.find((item) => item.id == categoryId) ||
+                      item?.id == categoryId) &&
+                      item?.children?.map((child) => (
+                        <ul
+                          className="list-unstyled subcate-gories ms-3 mt-2"
+                          key={child?.id}
+                        >
+                          <li className="mb-1">
+                            <Link
+                              href="#"
+                              className="text-white text-decoration-none small"
+                            >
+                              {child?.name}
+                            </Link>
+                          </li>
+                        </ul>
+                      ))}
+                  </li>
+                ))}
+
+              {/* ===========  Static  Side Menu =========== */}
+
+              {/* <li className="mb-2">
                 <a href="#" className="text-white text-decoration-none">
                   Glass Blowing & Sculpting
                 </a>
@@ -98,7 +154,7 @@ const CategorySidebar = () => {
                 <a href="#" className="text-white text-decoration-none">
                   Sale
                 </a>
-              </li>
+              </li> */}
             </ul>
           </nav>
         </div>
@@ -107,4 +163,4 @@ const CategorySidebar = () => {
   );
 };
 
-export default CategorySidebar;
+export default React.memo(CategorySidebar);

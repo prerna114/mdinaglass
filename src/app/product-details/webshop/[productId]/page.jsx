@@ -9,13 +9,15 @@ import MegaMenu from "@/components/Megamenu";
 
 import React, { useEffect, useState } from "react";
 import { useCartStore } from "@/store";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { getProductByID } from "@/api/productApi";
 const page = () => {
   const [productDetails, setProductDetails] = useState();
   const searchParams = useSearchParams();
   const sku = searchParams.get("sku");
+  const params = useParams();
 
+  console.log("paramsdsdsds", params?.productId);
   const getProductDetails = async () => {
     const data = await getProductByID(sku);
     console.log("getProductDetails", data);
@@ -50,7 +52,7 @@ const page = () => {
               <div className="row  min-vh-100">
                 {/* Category Sidebar */}
                 <div className="col-lg-3 col-md-12  p-0">
-                  <CategorySidebar />
+                  <CategorySidebar cateogryId={params?.productId} />
                 </div>
                 {/* Product Listing */}
                 <div className="col-lg-9 col-md-12">

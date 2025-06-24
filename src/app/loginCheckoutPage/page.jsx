@@ -12,6 +12,7 @@ import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import Make from "@/components/Profile";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
+import { Login, registerCustomer } from "@/api/Customer";
 
 const loginCheckoutPage = () => {
   const router = useRouter();
@@ -40,12 +41,29 @@ const loginCheckoutPage = () => {
     } else if (!password) {
       CustomToast("Password required!", "top-right");
       console.log("Handle login");
-    } else if (userName == "root" && password == "12345") {
+    } else {
+      LoginUser();
+      // SuccessToast("Login Successfull", "top-right");
+      // localStorage.setItem("token", JSON.stringify("islogin"));
+      // login();
+      // setUserLogin(true);
+      // router.push("/");
+    }
+  };
+
+  const LoginUser = async () => {
+    // const data = await registerCustomer();
+    console.log("userName", userName, password);
+    const data = await Login(userName, password);
+    if (data?.status == 200) {
+      console.log("Login Success");
       SuccessToast("Login Successfull", "top-right");
       localStorage.setItem("token", JSON.stringify("islogin"));
       login();
       setUserLogin(true);
-      // router.push("/");
+    } else {
+      // console.error("Data", data?.response?.data?.message);
+      CustomToast(data?.response?.data?.message, "top-right");
     }
   };
 

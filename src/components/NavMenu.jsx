@@ -64,7 +64,7 @@ const ResponsiveNav = () => {
       {/* Mobile Nav Toggle Button */}
       <div className="d-flex d-md-flex d-lg-none justify-content-between align-items-center py-2">
         <div className=" mb-md-0 mobile-logo-style">
-          <img src="assets/logo.png" alt="Mdina Glass Logo" />
+          <img src="/assets/logo.png" alt="Mdina Glass Logo" />
         </div>
         <button
           className="menu-toggle"

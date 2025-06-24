@@ -1,4 +1,5 @@
 "use client";
+import { useAuthStore } from "@/store/useAuthStore";
 import { buildProductUrl } from "@/utils/buildProductUrl";
 // import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Link from "next/link";
@@ -7,6 +8,7 @@ import { useEffect, useState } from "react";
 const MegaMenu = () => {
   const [categoriesData, setCategoriesData] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
+  const { setMenu } = useAuthStore((state) => state);
 
   useEffect(() => {
     if (showMenu) {
@@ -49,7 +51,7 @@ const MegaMenu = () => {
       console.log("data", data[0]?.children);
       setCategoriesData(data[0]?.children);
       localStorage.setItem("cart", JSON.stringify(data[0]?.children));
-
+      setMenu(data[0]?.children);
       if (data[0]?.children) {
         setShowMenu(true);
       }
@@ -68,6 +70,7 @@ const MegaMenu = () => {
         setShowMenu(true);
 
         setCategoriesData(parsed);
+        setMenu(parsed);
       } catch (e) {
         console.error("Failed to parse cart from localStorage", e);
       }

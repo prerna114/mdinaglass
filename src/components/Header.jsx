@@ -33,7 +33,6 @@ const Header = () => {
       setLoginState(false);
     }
   };
-  const [userLogin, setUserLogin] = useState(false);
 
   const slides = [
     {
@@ -145,7 +144,7 @@ const Header = () => {
           {/* Logo */}
           <Link href={"/"} className="mb-3 mb-md-0 mobi-logo">
             <img
-              src="assets/logo.png"
+              src="/assets/logo.png"
               alt="Mdina Glass Logo"
               style={{ height: "90px" }}
             />
@@ -260,7 +259,7 @@ const Header = () => {
                       }}
                     >
                       <img
-                        src="assets/flag.png"
+                        src="/assets/flag.png"
                         alt="Mdina Glass Logo"
                         style={{ height: "22px", width: "22px" }}
                       />
@@ -302,18 +301,25 @@ const Header = () => {
                       LOGOUT
                     </button>
                   ) : (
-                    <button
-                      className="signUp btn "
-                      style={{
-                        fontFamily: "'Quicksand', sans-serif",
-                        backgroundColor: "#005e84",
-                        color: "#fff",
-                        width: "105px",
-                        height: "46px",
+                    <Link
+                      href={"/loginCheckoutPage"}
+                      onClick={() => {
+                        console.log("dsadnjsandjasnj");
                       }}
                     >
-                      SIGN UP
-                    </button>
+                      <button
+                        className="signUp btn "
+                        style={{
+                          fontFamily: "'Quicksand', sans-serif",
+                          backgroundColor: "#005e84",
+                          color: "#fff",
+                          width: "105px",
+                          height: "46px",
+                        }}
+                      >
+                        SIGN UP
+                      </button>
+                    </Link>
                   )}
                 </div>
               </div>

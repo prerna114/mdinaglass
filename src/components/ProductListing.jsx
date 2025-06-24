@@ -58,6 +58,7 @@ const ProductListing = () => {
 
   const getProductList = async () => {
     const data = await getAllProduct();
+    console.log("Get Prouct api s calling");
     setProductList(data);
     setLoading(false);
   };
@@ -266,8 +267,12 @@ const ProductListing = () => {
               <div className="card-body text-center">
                 <Link
                   href={{
-                    pathname: "/product-details",
+                    pathname: `/product-details/webshop/${product?.id}`,
                     query: { sku: product?.sku },
+                  }}
+                  // href={"#"}
+                  onClick={() => {
+                    console.log("dsada", product);
                   }}
                 >
                   <h6 className="card-title mb-3">{product.name}</h6>

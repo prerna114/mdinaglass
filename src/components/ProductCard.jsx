@@ -106,7 +106,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
           {productData.map((product) => (
             <div key={product.id} className="px-2">
               <div
-                className=" bestseller-account border rounded p-3 d-flex flex-column align-items-center"
+                className=" bestseller-account border rounded p-3 d-flex flex-column align-items-center new-arrival-design "
                 style={{
                   height: "100%",
                   boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
