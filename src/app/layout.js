@@ -1,10 +1,17 @@
 import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Bootstrap CSS
 
-import { Geist, Geist_Mono, Quicksand, Domine } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Quicksand,
+  Domine,
+  Raleway,
+} from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ToastContainer } from "react-toastify";
+import MegaMenu from "@/components/Megamenu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +23,13 @@ const quicksand = Quicksand({
   weight: ["400", "500", "700"], // all the weights you want to use
   display: "swap",
   variable: "--font-quicksand", // optional: lets you use a CSS variable
+});
+
+const raleway = Raleway({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"], // all the weights you want to use
+  display: "swap",
+  variable: "--font-raleway", // optional: lets you use a CSS variable
 });
 
 const domine = Domine({
@@ -39,9 +53,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${quicksand.variable} ${domine.variable}`}
+        className={`${geistSans.variable} ${geistMono.variable} ${quicksand.variable} ${domine.variable} ${raleway.variable}`}
       >
         <Header />
+        <MegaMenu />
+
         {children}
         <ToastContainer />
         <Footer />

@@ -57,7 +57,7 @@ const page = () => {
   return (
     <div>
       {/* <Header /> */}
-      <MegaMenu />
+      {/* <MegaMenu /> */}
       <CartHeading />
       {cart?.length == 0 && (
         <div
@@ -81,7 +81,7 @@ const page = () => {
         </div>
       )}
 
-      {cart?.length != 0 && (
+      {cart?.length == 0 && (
         <div
           className="cart-page-main"
           style={{

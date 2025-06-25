@@ -32,7 +32,7 @@ const page = () => {
   return (
     <>
       {/* <Header /> */}
-      <MegaMenu />
+      {/* <MegaMenu /> */}
 
       <div
         style={{

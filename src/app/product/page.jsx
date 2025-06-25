@@ -12,28 +12,29 @@ const ShopPage = () => {
   return (
     <>
       <Header />
-      <MegaMenu />
-      <ProductHeading/>
-      <div  style={{
-                 background:"#f1f1f1",
-                }}>
-    <div className="category-sidebar">
-      <div className="container category-bg">
-        <div className="row  min-vh-100">
-          {/* Category Sidebar */}
-          <div className="col-lg-3 col-md-12 p-0">
-            <CategorySidebar />
+      {/* <MegaMenu /> */}
+      <ProductHeading />
+      <div
+        style={{
+          background: "#f1f1f1",
+        }}
+      >
+        <div className="category-sidebar">
+          <div className="container category-bg">
+            <div className="row  min-vh-100">
+              {/* Category Sidebar */}
+              <div className="col-lg-3 col-md-12 p-0">
+                <CategorySidebar />
+              </div>
+              {/* Product Listing */}
+              <div className="col-lg-9 col-md-12">
+                <ProductListing />
+              </div>
+            </div>
           </div>
-          {/* Product Listing */}
-          <div className="col-lg-9 col-md-12">
-            <ProductListing />
-        
-         </div>
         </div>
       </div>
-    </div>
-      </div>
-  
+
       <Footer />
     </>
   );

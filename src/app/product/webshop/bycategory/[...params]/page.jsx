@@ -12,7 +12,7 @@ const ShopPage = () => {
   return (
     <>
       {/* <Header /> */}
-      <MegaMenu />
+      {/* <MegaMenu /> */}
       <ProductHeading />
       <div
         style={{

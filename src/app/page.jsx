@@ -15,7 +15,7 @@ export default function Page() {
   return (
     <>
       {/* <Header /> */}
-      <Megamenu />
+      {/* <Megamenu /> */}
       <Video />
 
       <section

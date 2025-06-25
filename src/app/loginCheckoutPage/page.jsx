@@ -13,6 +13,7 @@ import Make from "@/components/Profile";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Login, registerCustomer } from "@/api/Customer";
+import Link from "next/link";
 
 const loginCheckoutPage = () => {
   const router = useRouter();
@@ -21,13 +22,18 @@ const loginCheckoutPage = () => {
     (state) => state
   );
 
+  // useEffect(() => {
+  //   const isLogin = localStorage.getItem("token");
+  //   if (isLogin) {
+  //     setLoginState(true);
+  //   } else {
+  //     setLoginState(false);
+  //   }
+  // }, []);
+
   useEffect(() => {
-    const isLogin = localStorage.getItem("token");
-    if (isLogin) {
-      setLoginState(true);
-    } else {
-      setLoginState(false);
-    }
+    const token = localStorage.getItem("token");
+    setLoginState(!!token); // ✅ hydrate Zustand with true
   }, []);
 
   console.log("login state njnjn", login, isLogin);
@@ -43,11 +49,6 @@ const loginCheckoutPage = () => {
       console.log("Handle login");
     } else {
       LoginUser();
-      // SuccessToast("Login Successfull", "top-right");
-      // localStorage.setItem("token", JSON.stringify("islogin"));
-      // login();
-      // setUserLogin(true);
-      // router.push("/");
     }
   };
 
@@ -55,10 +56,11 @@ const loginCheckoutPage = () => {
     // const data = await registerCustomer();
     console.log("userName", userName, password);
     const data = await Login(userName, password);
+    console.log("data", data);
     if (data?.status == 200) {
       console.log("Login Success");
       SuccessToast("Login Successfull", "top-right");
-      localStorage.setItem("token", JSON.stringify("islogin"));
+      localStorage.setItem("token", JSON.stringify(data?.data));
       login();
       setUserLogin(true);
     } else {
@@ -71,7 +73,7 @@ const loginCheckoutPage = () => {
   return (
     <>
       {/* <Header /> */}
-      <MegaMenu />
+      {/* <MegaMenu /> */}
       {!isLogin && (
         <div
           style={{
@@ -128,10 +130,11 @@ const loginCheckoutPage = () => {
 
                     <div className="col-md-12">
                       <div className="check-register">
-                        <input type="radio" /> Checkout As Guest
+                        <input type="radio" name="checkoutType" /> Checkout As
+                        Guest
                       </div>
                       <div className="check-register">
-                        <input type="radio" /> Register
+                        <input type="radio" name="checkoutType" /> Register
                       </div>
 
                       <a href="#" className="mt-1 mb-1">
@@ -143,7 +146,9 @@ const loginCheckoutPage = () => {
 
                     <div className="row">
                       <div className="col-md-12">
-                        <button className="btn-cart">Continue</button>
+                        <Link href={"/register"}>
+                          <button className="btn-cart">Continue</button>
+                        </Link>
                       </div>
                     </div>
                   </div>

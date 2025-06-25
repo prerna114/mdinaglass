@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { products } from "@/constant";
 import Link from "next/link";
@@ -8,7 +8,14 @@ import Link from "next/link";
 export default function Make() {
   const [tab, setTab] = useState("profile");
   const subtotal = (price, qty) => (price * qty).toFixed(2);
+  const [userDetails, setUserDetails] = useState();
 
+  useEffect(() => {
+    const data = localStorage.getItem("token");
+    if (data) {
+      setUserDetails(data);
+    }
+  }, []);
   return (
     <div className="container mt-5">
       <div className="row">

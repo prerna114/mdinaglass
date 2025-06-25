@@ -2805,3 +2805,82 @@ nav.border-top.navContainer {
 a {
   text-decoration: none !important; /* Removes the underline */
 }
+.label_checkbox {
+  font-size: 14px;
+  color: #005e84;
+  font-weight: 500;
+  display: inline-block;
+  width: 90%;
+  vertical-align: top;
+  margin-top: 2px;
+  margin-bottom: 8px;
+  font-family: var(--font-quicksand);
+}
+input[type="checkbox"].custom-checkbox {
+  width: 13px !important;
+  height: 13px !important;
+}
+.Terms_condition {
+  margin-top: 10px;
+  width: 50%;
+}
+.shipping-info {
+  font-size: 15px;
+  /* color: #005e84; */
+  font-weight: 500;
+  display: inline-block;
+  width: 90%;
+  vertical-align: top;
+  margin-top: 2px;
+  margin-bottom: 8px;
+  font-family: var(--font-quicksand);
+}
+.shipping-Container {
+  background: #fff;
+  margin-top: 20px;
+  padding: 50px;
+}
+.seller-Text {
+  font-weight: 500;
+  color: #005e84;
+  font-size: 15px;
+  font-family: var(--font-raleway);
+}
+.delivery-condition {
+  font-size: 14px;
+  margin-bottom: 0px;
+  color: #76d2d3;
+  font-family: var(--font-raleway);
+}
+.gift-text {
+  color: #005e84;
+  font-size: 17px;
+  font-family: "Domine", serif;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.back-button {
+  padding: 12px 25px !important;
+}
+.shipping-Checkbox-text {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+ul.category-sidebar li .activeSIdeBar {
+  color: #005e84 !important;
+}
+ul.category-sidebar li .nonActiveBar {
+  color: #808080 !important;
+}
+.billing-text {
+  color: #005e84;
+  font-family: "Domine", serif;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+/* ul.category-sidebar li a{
+
+} */

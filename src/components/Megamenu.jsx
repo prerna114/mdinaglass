@@ -7,29 +7,38 @@ import { useEffect, useState } from "react";
 
 const MegaMenu = () => {
   const [categoriesData, setCategoriesData] = useState([]);
-  const [showMenu, setShowMenu] = useState(false);
+  const [showMenu, setShowMenu] = useState(true);
   const { setMenu } = useAuthStore((state) => state);
 
   useEffect(() => {
     if (showMenu) {
       if (typeof window !== "undefined") {
-        const dropdownElements = document.querySelectorAll(".dropdown");
+        const timeout = setTimeout(() => {
+          const dropdownElements = document.querySelectorAll(".dropdown");
 
-        console.log("dropdown-menu", dropdownElements);
+          dropdownElements.forEach((dropdown) => {
+            const showMenu = () => {
+              const menu = dropdown.querySelector(".dropdown-menu");
+              if (menu) menu.classList.add("show");
+            };
+            const hideMenu = () => {
+              const menu = dropdown.querySelector(".dropdown-menu");
+              if (menu) menu.classList.remove("show");
+            };
 
-        dropdownElements.forEach((dropdown) => {
-          dropdown.addEventListener("mouseover", function () {
-            const menu = this.querySelector(".dropdown-menu");
-            if (menu) menu.classList.add("show");
+            dropdown.addEventListener("mouseover", showMenu);
+            dropdown.addEventListener("mouseout", hideMenu);
+
+            // Optional: Cleanup on unmount
+            return () => {
+              dropdown.removeEventListener("mouseover", showMenu);
+              dropdown.removeEventListener("mouseout", hideMenu);
+            };
           });
-          dropdown.addEventListener("mouseout", function () {
-            const menu = this.querySelector(".dropdown-menu");
-            if (menu) menu.classList.remove("show");
-          });
-        });
+        }, 100); // small delay
+        return () => clearTimeout(timeout);
       }
     }
-    // Enable Bootstrap dropdown on hover
   }, [showMenu]);
 
   const getMenuCategories = async () => {
@@ -132,8 +141,8 @@ const MegaMenu = () => {
                         <div className="col-lg-12 col-12 mb-3">
                           <ul className="list-unstyled">
                             {category.children
-                              .slice() // make a shallow copy to avoid mutating original
-                              .reverse()
+                              // .slice() // make a shallow copy to avoid mutating original
+                              // .reverse()
                               .map((child) => (
                                 <li key={child.id}>
                                   <Link
