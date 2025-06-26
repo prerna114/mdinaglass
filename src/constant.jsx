@@ -34,10 +34,25 @@ export const products = [
     orderStatus: "In-Transit",
   },
 ];
-export const createUrl = (categoryID, slug) => {
-  // console.log("dsada", slu g, categoryID);
-  let sortOrder = "asc";
-  let limit = 15;
-  let page = 1;
-  return buildProductUrl(categoryID, sortOrder, limit, page, slug);
+export const createUrl = (
+  categoryID,
+  slug,
+  thesortORder,
+  theLimit,
+  thePage
+) => {
+  console.log("dsada", categoryID);
+  let sortOrder = thesortORder ? thesortORder : "asc";
+  let limit = theLimit ? theLimit : 15;
+  let page = thePage ? thePage : 1;
+  // console.log(
+  //   "the params in create url",
+  //   categoryID,
+  //   slug,
+  //   thesortORder,
+  //   theLimit,
+  //   thePage
+  // );
+  const cleanSlug = slug ? slug.replace(/\.htm+$/i, "") : "all-product";
+  return buildProductUrl(categoryID, sortOrder, limit, page, cleanSlug);
 };

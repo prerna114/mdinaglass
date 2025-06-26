@@ -16,6 +16,7 @@ const CategorySidebar = (cateogryId) => {
     typeof params?.[0] !== "undefined" ? params[0] : cateogryId?.cateogryId
   );
 
+  console.log("Params", params, categoryId);
   const getMenuData = async () => {
     const stored = localStorage.getItem("cart");
 
@@ -31,12 +32,12 @@ const CategorySidebar = (cateogryId) => {
     getMenuData();
   }, []);
 
-  console.log(
-    "paramscateogryId",
-    params[0],
-    cateogryId,
-    typeof params?.[0] !== "undefined"
-  );
+  // console.log(
+  //   "paramscateogryId",
+  //   params[0],
+  //   cateogryId,
+  //   typeof params?.[0] !== "undefined"
+  // );
   return (
     <div className="category-sidebar">
       <div className="hide_Mobi_sidebar">

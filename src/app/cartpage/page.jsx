@@ -10,10 +10,13 @@ import MegaMenu from "@/components/Megamenu";
 import Link from "next/link";
 import { useCartStore } from "@/store";
 import { SuccessToast } from "@/components/CustomToast";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const page = () => {
   const { addToCart, cart, removeFromCart } = useCartStore((state) => state);
+  const { isLogin } = useAuthStore((state) => state);
 
+  console.log("isLogin", isLogin);
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -81,7 +84,7 @@ const page = () => {
         </div>
       )}
 
-      {cart?.length == 0 && (
+      {cart?.length != 0 && (
         <div
           className="cart-page-main"
           style={{
@@ -96,7 +99,7 @@ const page = () => {
 
                   <div className="col-md-4">
                     <div className="text-right button-margin float-right mb-3 mt-5">
-                      <Link href="/checkout">
+                      <Link href={isLogin ? "/checkout" : "/loginCheckoutPage"}>
                         <button className="btn btn-info text-white">
                           Proceed To Checkout
                         </button>

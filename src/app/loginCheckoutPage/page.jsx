@@ -17,19 +17,13 @@ import Link from "next/link";
 
 const loginCheckoutPage = () => {
   const router = useRouter();
+  const [checkoutType, setCheckoutType] = useState("");
 
   const { login, isLogin, logout, setLoginState } = useAuthStore(
     (state) => state
   );
 
-  // useEffect(() => {
-  //   const isLogin = localStorage.getItem("token");
-  //   if (isLogin) {
-  //     setLoginState(true);
-  //   } else {
-  //     setLoginState(false);
-  //   }
-  // }, []);
+  console.log("checkoutType", checkoutType);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -130,11 +124,30 @@ const loginCheckoutPage = () => {
 
                     <div className="col-md-12">
                       <div className="check-register">
-                        <input type="radio" name="checkoutType" /> Checkout As
-                        Guest
+                        <input
+                          type="radio"
+                          name="checkoutType"
+                          value="guest"
+                          checked={checkoutType === "guest"}
+                          onChange={(e) => {
+                            console.log("Er", e);
+                            setCheckoutType(e.target.value);
+                          }}
+                        />{" "}
+                        Checkout As Guest
                       </div>
                       <div className="check-register">
-                        <input type="radio" name="checkoutType" /> Register
+                        <input
+                          type="radio"
+                          name="checkoutType"
+                          checked={checkoutType === "register"}
+                          onChange={(e) => {
+                            console.log("Er", e);
+                            setCheckoutType(e.target.value);
+                          }}
+                          value="register"
+                        />{" "}
+                        Register
                       </div>
 
                       <a href="#" className="mt-1 mb-1">
@@ -146,7 +159,13 @@ const loginCheckoutPage = () => {
 
                     <div className="row">
                       <div className="col-md-12">
-                        <Link href={"/register"}>
+                        <Link
+                          href={
+                            checkoutType == "register"
+                              ? "/register"
+                              : "/checkout"
+                          }
+                        >
                           <button className="btn-cart">Continue</button>
                         </Link>
                       </div>

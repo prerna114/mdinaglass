@@ -1,18 +1,72 @@
+import { createUrl } from "@/constant";
+import { useAuthStore } from "@/store/useAuthStore";
 import { buildProductUrl } from "@/utils/buildProductUrl";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 
 const ResponsiveNav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showShop, setShowShop] = useState(false);
-  const createUrl = (categoryID, slug) => {
-    // console.log("dsada", slu g, categoryID);
-    let sortOrder = "asc";
-    let limit = 15;
-    let page = 1;
-    return buildProductUrl(categoryID, sortOrder, limit, page, slug);
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [showMenu, setShowMenu] = useState(true);
+  const { setMenu } = useAuthStore((state) => state);
+
+  const getMenuCategories = async () => {
+    console.log("Get Catrogires is clling");
+    const myHeaders = new Headers();
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    try {
+      const res = await fetch(
+        "https://mdinaglasses.blackbullsolution.com/api/menu-categories",
+        requestOptions
+      );
+      const data = await res.json(); // ✅ this is what you need
+
+      console.log("data", data[0]?.children);
+      setCategoriesData(data[0]?.children);
+      localStorage.setItem("cart", JSON.stringify(data[0]?.children));
+      setMenu(data[0]?.children);
+      if (data[0]?.children) {
+        setShowMenu(true);
+      }
+    } catch (error) {
+      console.log("eror", error);
+    }
   };
+  // const createUrl = (categoryID, slug) => {
+  //   // console.log("dsada", slu g, categoryID);
+  //   let sortOrder = "asc";
+  //   let limit = 15;
+  //   let page = 1;
+  //   return buildProductUrl(categoryID, sortOrder, limit, page, slug);
+  // };
+
+  useEffect(() => {
+    // if(localStorage.getItem('cart')){
+
+    const stored = localStorage.getItem("cart");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setShowMenu(true);
+
+        setCategoriesData(parsed);
+        setMenu(parsed);
+      } catch (e) {
+        console.error("Failed to parse cart from localStorage", e);
+      }
+    } else {
+      getMenuCategories();
+    }
+    // }
+  }, []);
+  console.log("categoriesData", categoriesData);
   return (
     <nav className="responsive-nav border-top">
       {/* Desktop Nav */}
@@ -29,7 +83,9 @@ const ResponsiveNav = () => {
                 },
                 { label: "New Arrivals", href: "/cartpage" },
                 { label: "Limited Editions", href: "/loginCheckoutPage" },
-                { label: "Gift Registry", href: "/gift" },
+                { label: "WishList", href: "/wishlist" },
+
+                { label: "Gift Registry", href: "/giftRegistry" },
               ].map(({ label, href }) => (
                 <Link key={label} href={href} className="navlink nav-link mx-4">
                   {label}
@@ -63,9 +119,9 @@ const ResponsiveNav = () => {
 
       {/* Mobile Nav Toggle Button */}
       <div className="d-flex d-md-flex d-lg-none justify-content-between align-items-center py-2">
-        <div className=" mb-md-0 mobile-logo-style">
+        <Link href={"/"} className=" mb-md-0 mobile-logo-style">
           <img src="/assets/logo.png" alt="Mdina Glass Logo" />
-        </div>
+        </Link>
         <button
           className="menu-toggle"
           onClick={() => setIsOpen(!isOpen)}
@@ -89,7 +145,7 @@ const ResponsiveNav = () => {
             <div className="mobile-nav d-md-flex d-lg-none">
               <div className="row supmenu navrow">
                 <div className="col-12 d-flex  flex-wrap">
-                  {[
+                  {/* {[
                     "Glass Blowing & Sculpting",
                     "Fusion",
                     "Lampwork",
@@ -104,6 +160,19 @@ const ResponsiveNav = () => {
                     <a key={item} href="#" className="navlink nav-link mx-4">
                       {item}
                     </a>
+                  ))} */}
+                  {categoriesData?.map((item) => (
+                    <Link
+                      key={item.id}
+                      href={createUrl(item.id, item?.slug)}
+                      onClick={() => {
+                        console.log("item", item);
+                        setIsOpen(false);
+                      }}
+                      className="navlink nav-link mx-3"
+                    >
+                      {item?.name}
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -111,21 +180,48 @@ const ResponsiveNav = () => {
           )}
 
           {/* Other items */}
-          <a href="#" className="menu-item">
+          <Link
+            href={"/loginCheckoutPage"}
+            className="menu-item"
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
             My Account
-          </a>
-          <a href="#" className="menu-item">
+          </Link>
+          <Link
+            href={"/aboutus"}
+            className="menu-item"
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
             About Us
-          </a>
+          </Link>
           <a href="#" className="menu-item">
             Contact Detail & Store Locator
           </a>
           <a href="#" className="menu-item">
             Cookies Policy
           </a>
-          <a href="#" className="menu-item">
+          <Link
+            className="menu-item"
+            href={"/wishlist"}
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
+            WishList
+          </Link>
+          <Link
+            href={"/giftRegistry"}
+            className="menu-item"
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
             Gift Registry
-          </a>
+          </Link>
         </div>
       )}
     </nav>

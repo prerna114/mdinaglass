@@ -2881,6 +2881,16 @@ ul.category-sidebar li .nonActiveBar {
   font-size: 16px;
   margin-bottom: 5px;
 }
-/* ul.category-sidebar li a{
-
-} */
+.billing-text-name {
+  font-size: 14px;
+  margin-bottom: 0px;
+  color: #666666;
+  line-height: 18px;
+  font-family: var(--font-raleway);
+}
+/* ============= Order Review table css =========== */
+.no-data-found {
+  text-align: center;
+  margin-top: 20vh;
+  margin-bottom: 20vh;
+}

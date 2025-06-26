@@ -59,7 +59,7 @@ const page = () => {
                   <div className="container">
                     <ProductDetails productDetails={productDetails} />
                   </div>
-                  <ProductShow />
+                  <ProductShow productDetails={productDetails} />
                 </div>
               </div>
             </div>

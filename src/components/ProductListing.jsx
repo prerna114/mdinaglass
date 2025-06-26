@@ -1,11 +1,36 @@
 "use client";
 
 import { getAllProduct } from "@/api/productApi";
+import { createUrl } from "@/constant";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
+
+import React, { useEffect, useRef, useState } from "react";
 
 const ProductListing = () => {
   const [productList, setProductList] = useState([]);
+  const params = useParams();
+  const router = useRouter();
+
+  const [category, , sortOrder, limit, page, slug] = params?.params || [];
+
+  const initialLimit = Number(limit) || 15;
+  const [filterData, setFilterData] = useState({
+    limit: initialLimit,
+  });
+
+  const handleFilter = (name, value) => {
+    setFilterData((prev) => ({
+      ...prev,
+      [name]: name === "limit" ? Number(value) : value,
+    }));
+  };
+
+  console.log(
+    "dskmkmk ohrna",
+    { category, sortOrder, limit, page, slug },
+    filterData
+  );
   const [loading, setLoading] = useState(true);
   // const [products] = useState([
   //   {
@@ -52,19 +77,45 @@ const ProductListing = () => {
   //     colors: ["blue", "white"],
   //   },
   // ]);
-
-  const [currentPage, setCurrentPage] = useState(1);
+  const initialPage = Number(page) || 1;
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const [itemsPerPage, setItemsPerPage] = useState(15);
-
+  const hasCalledRef = useRef(false);
   const getProductList = async () => {
-    const data = await getAllProduct();
-    console.log("Get Prouct api s calling");
-    setProductList(data);
-    setLoading(false);
+    if (hasCalledRef.current) {
+      hasCalledRef.current = false; // reset for next time
+      return;
+    }
+
+    setLoading(true);
+    hasCalledRef.current = true;
+    const data = await getAllProduct(filterData, currentPage);
+    if (data) {
+      console.log("Get Prouct api s calling");
+
+      const newURL = createUrl(
+        category,
+        slug,
+        "",
+        filterData?.limit,
+        currentPage
+      );
+
+      // router.replace(newURL);
+      // router.refresh();
+
+      // router.push(newURL);
+      setProductList(data);
+      setLoading(false);
+    } else {
+      setProductList([]);
+      setLoading(false);
+    }
   };
   useEffect(() => {
     getProductList();
-  }, []);
+    console.log("Filter data", filterData, currentPage);
+  }, [filterData, currentPage]);
 
   console.log("productList", productList);
   return (
@@ -159,8 +210,11 @@ const ProductListing = () => {
                 <span>Items</span>
                 <select
                   className="form-select w-auto me-3"
-                  value={itemsPerPage}
-                  onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                  value={filterData?.limit}
+                  onChange={(e) => {
+                    handleFilter("limit", e.target.value),
+                      console.log("New", e.target.value);
+                  }}
                 >
                   <option value={15}>15 Items</option>
                   <option value={30}>30 Items</option>
@@ -236,17 +290,18 @@ const ProductListing = () => {
 
       {/* Product Grid */}
       <div className="row">
-        {productList.map((product) => (
-          <div key={product.id} className="col-lg-4 col-md-6 mb-4">
-            <div className=" product-card">
-              <div className="position-relative">
-                <img
-                  src={"/assets/bg-image.png"}
-                  className="card-img-top"
-                  alt={product.name}
-                  style={{}}
-                />
-                {/* {product.hasOptions && (
+        {productList?.length > 0 &&
+          productList.map((product) => (
+            <div key={product.id} className="col-lg-4 col-md-6 mb-4">
+              <div className=" product-card">
+                <div className="position-relative">
+                  <img
+                    src={"/assets/bg-image.png"}
+                    className="card-img-top"
+                    alt={product.name}
+                    style={{}}
+                  />
+                  {/* {product.hasOptions && (
                   <div className="m-2">
                     <div className="form-check">
                       <input
@@ -263,28 +318,34 @@ const ProductListing = () => {
                     </div>
                   </div>
                 )} */}
-              </div>
-              <div className="card-body text-center">
-                <Link
-                  href={{
-                    pathname: `/product-details/webshop/${product?.id}`,
-                    query: { sku: product?.sku },
-                  }}
-                  // href={"#"}
-                  onClick={() => {
-                    console.log("dsada", product);
-                  }}
-                >
-                  <h6 className="card-title mb-3">{product.name}</h6>
-                </Link>
-                {/* <h6 className="card-title mb-3">{product.name}</h6> */}
-                <p className="card-text text-info fw-bold">
-                  Price {product.min_price}
-                </p>
+                </div>
+                <div className="card-body text-center">
+                  <Link
+                    href={{
+                      pathname: `/product-details/webshop/${product?.id}`,
+                      query: { sku: product?.sku },
+                    }}
+                    // href={"#"}
+                    onClick={() => {
+                      console.log("dsada", product);
+                    }}
+                  >
+                    <h6 className="card-title mb-3">{product.name}</h6>
+                  </Link>
+                  {/* <h6 className="card-title mb-3">{product.name}</h6> */}
+                  <p className="card-text text-info fw-bold">
+                    Price {product.min_price}
+                  </p>
+                </div>
               </div>
             </div>
+          ))}
+
+        {productList?.length == 0 && !loading && (
+          <div className="no-data-found">
+            <h1>No data found</h1>
           </div>
-        ))}
+        )}
       </div>
 
       {/* Sort and Items Control */}
@@ -307,8 +368,11 @@ const ProductListing = () => {
                 <span>Items</span>
                 <select
                   className="form-select w-auto me-3"
-                  value={itemsPerPage}
-                  onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                  value={filterData?.limit}
+                  onChange={(e) => {
+                    handleFilter("limit", e.target.value),
+                      console.log("New", e.target.value);
+                  }}
                 >
                   <option value={15}>15 Items</option>
                   <option value={30}>30 Items</option>
