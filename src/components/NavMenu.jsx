@@ -79,7 +79,7 @@ const ResponsiveNav = () => {
                 { label: "About Us", href: "/aboutus" },
                 {
                   label: "All Products",
-                  href: createUrl("655", "all-product"),
+                  href: createUrl("all", "all-product"),
                 },
                 { label: "New Arrivals", href: "/cartpage" },
                 { label: "Limited Editions", href: "/loginCheckoutPage" },

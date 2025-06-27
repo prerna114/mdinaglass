@@ -13,7 +13,7 @@ import { SuccessToast } from "@/components/CustomToast";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const page = () => {
-  const { addToCart, cart, removeFromCart } = useCartStore((state) => state);
+  const { cart, removeFromCart } = useCartStore((state) => state);
   const { isLogin } = useAuthStore((state) => state);
 
   console.log("isLogin", isLogin);

@@ -10,10 +10,8 @@ import React, { useEffect, useRef, useState } from "react";
 const ProductListing = () => {
   const [productList, setProductList] = useState([]);
   const params = useParams();
-  const router = useRouter();
-
   const [category, , sortOrder, limit, page, slug] = params?.params || [];
-
+  const [paginationList, setPaginationList] = useState([]);
   const initialLimit = Number(limit) || 15;
   const [filterData, setFilterData] = useState({
     limit: initialLimit,
@@ -32,64 +30,22 @@ const ProductListing = () => {
     filterData
   );
   const [loading, setLoading] = useState(true);
-  // const [products] = useState([
-  //   {
-  //     id: 1,
-  //     name: "Glass Bead Necklace & Bracelet Set",
-  //     min_price: "€26.00",
-  //     image: "/assets/bg-image.png",
-  //     colors: ["amber", "black"],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Long Necklace & Bracelet with Glass Beads Set",
-  //     min_price: "€27.50",
-  //     image: "/assets/product1.png",
-  //     colors: ["amber", "gold"],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Glass Beads & Leather Strings Necklace & Bracelet Set",
-  //     min_price: "€28.50",
-  //     image: "/assets/product2.png",
-  //     colors: ["brown", "natural"],
-  //     hasOptions: true,
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Blue Glass Bead Necklace & Bracelet Set",
-  //     min_price: "€26.00",
-  //     image: "/assets/jwell-1.jpg",
-  //     colors: ["blue", "silver"],
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Elegant Blue Glass Necklace",
-  //     min_price: "€32.00",
-  //     image: "/assets/jwell-2.jpg",
-  //     colors: ["blue", "teal"],
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Multi-strand Blue Glass Bead Set",
-  //     min_price: "€35.00",
-  //     image: "/assets/bg-image.png",
-  //     colors: ["blue", "white"],
-  //   },
-  // ]);
+
   const initialPage = Number(page) || 1;
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [itemsPerPage, setItemsPerPage] = useState(15);
-  const hasCalledRef = useRef(false);
-  const getProductList = async () => {
-    if (hasCalledRef.current) {
-      hasCalledRef.current = false; // reset for next time
-      return;
-    }
 
+  const getProductList = async () => {
     setLoading(true);
-    hasCalledRef.current = true;
-    const data = await getAllProduct(filterData, currentPage);
+
+    let data = "";
+    if (slug == "all-product.htm") {
+      console.log("With Slug");
+      data = await getAllProduct("", filterData, currentPage);
+    } else {
+      data = await getAllProduct(category, filterData, currentPage);
+      console.log("Without Slug", slug);
+    }
     if (data) {
       console.log("Get Prouct api s calling");
 
@@ -117,7 +73,29 @@ const ProductListing = () => {
     console.log("Filter data", filterData, currentPage);
   }, [filterData, currentPage]);
 
-  console.log("productList", productList);
+  useEffect(() => {
+    const totalLEnght = productList?.meta?.total;
+    const limit = filterData?.limit;
+    const length = Math.ceil(totalLEnght / limit);
+    // console.log("TH elnght ", length);
+    // 1
+    // 2   3
+    const allPages = [1, 2, 3, 4, 5, 6, 7];
+    let startIndex = currentPage - 1;
+
+    if (startIndex > allPages.length - 3) {
+      startIndex = allPages.length - 3;
+    }
+    if (startIndex < 0) {
+      startIndex = 0;
+    }
+
+    const visiblePages = allPages.slice(startIndex, startIndex + 3);
+    setPaginationList(visiblePages);
+    console.log("visiblePages", visiblePages, totalLEnght);
+  }, [productList, currentPage]);
+
+  console.log("productList", productList?.meta?.total);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -197,10 +175,16 @@ const ProductListing = () => {
             <div className="col-md-6">
               <div className="d-flex sorting-style align-items-center">
                 <span>Sort by</span>
-                <select className="form-select w-auto">
+                <select
+                  className="form-select w-auto"
+                  onChange={(e) => {
+                    if (e.target.value) {
+                    }
+                  }}
+                >
                   <option>Price</option>
                   <option>Name</option>
-                  <option>Newest</option>
+                  <option value={"Newest"}>Newest</option>
                   <option>Popular</option>
                 </select>
               </div>
@@ -226,46 +210,69 @@ const ProductListing = () => {
         </div>
 
         {/* Pagination */}
-        <div className="col-md-12 col-lg-5">
-          <nav aria-label="Product pagination">
-            <ul className="pagination">
-              <li
-                className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  disabled={currentPage === 1}
+        {true && (
+          <div className="col-md-12 col-lg-5">
+            <nav aria-label="Product pagination">
+              <ul className="pagination">
+                <li
+                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
                 >
-                  Previous
-                </button>
-              </li>
-              <li className={`page-item ${currentPage === 1 ? "active" : ""}`}>
-                <button className="page-link" onClick={() => setCurrentPage(1)}>
-                  1
-                </button>
-              </li>
-              <li className={`page-item ${currentPage === 2 ? "active" : ""}`}>
-                <button className="page-link" onClick={() => setCurrentPage(2)}>
-                  2
-                </button>
-              </li>
-              <li className="page-item">
-                <button className="page-link" onClick={() => setCurrentPage(3)}>
-                  3
-                </button>
-              </li>
-              <li className="page-item">
-                <button
-                  className="page-link"
-                  onClick={() => setCurrentPage(currentPage + 1)}
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                </li>
+                {paginationList.map((item, index) => {
+                  return (
+                    <li
+                      key={index}
+                      className={`page-item ${
+                        currentPage === item ? "active" : ""
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                      >
+                        {item}
+                      </button>
+                    </li>
+                  );
+                })}
+
+                {/* <li
+                  className={`page-item ${currentPage === 2 ? "active" : ""}`}
                 >
-                  Next &gt;
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(2)}
+                  >
+                    2
+                  </button>
+                </li>
+                <li className="page-item">
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(3)}
+                  >
+                    3
+                  </button>
+                </li> */}
+                <li className="page-item">
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                  >
+                    Next &gt;
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        )}
       </div>
 
       {/* Items Count */}
@@ -290,8 +297,8 @@ const ProductListing = () => {
 
       {/* Product Grid */}
       <div className="row">
-        {productList?.length > 0 &&
-          productList.map((product) => (
+        {productList?.data?.length > 0 &&
+          productList?.data?.map((product) => (
             <div key={product.id} className="col-lg-4 col-md-6 mb-4">
               <div className=" product-card">
                 <div className="position-relative">
@@ -341,7 +348,7 @@ const ProductListing = () => {
             </div>
           ))}
 
-        {productList?.length == 0 && !loading && (
+        {productList?.data?.length == 0 && !loading && (
           <div className="no-data-found">
             <h1>No data found</h1>
           </div>

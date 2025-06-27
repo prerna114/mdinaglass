@@ -10,7 +10,7 @@ const AddToCart = () => {
           <div className="col-md-12">
             <div className="d-flex float-right mb-5 ">
               <button className="btn btn-shop btn-primary me-3">
-                Countinue Shipping
+                Countinue Shopping
               </button>
               <button className="btn btn-cart btn-info text-white">
                 Update Shopping Cart

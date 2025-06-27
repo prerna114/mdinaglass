@@ -44,7 +44,7 @@ const Footer = () => {
                 <li>About Us</li>
               </Link>
 
-              <Link href={createUrl("655", "all-product")}>
+              <Link href={createUrl("all", "all-product")}>
                 <li>All Products</li>
               </Link>
               <Link href={"/cartpage"}>

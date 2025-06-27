@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/constant"; // Ensure this contains the base URL
 
-export const getAllProduct = async (filterData, currentPage) => {
+export const getAllProduct = async (category, filterData, currentPage) => {
   const data = {
     limit: filterData?.limit,
     page: currentPage,
@@ -11,10 +11,11 @@ export const getAllProduct = async (filterData, currentPage) => {
       params: {
         limit: filterData?.limit,
         page: currentPage,
+        category_id: category,
       },
     });
     console.log("Data", response); // Optional: for debugging
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
     return null;
