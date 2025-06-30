@@ -86,7 +86,12 @@ const ProductCard = ({ title = "New Arrivals" }) => {
 
   const fetchData = async () => {
     const data = await getAllProduct();
-    setProductData([...data, ...data]);
+    if (data.status == 200) {
+      setProductData([...data?.data?.data, ...data?.data?.data]);
+    } else {
+      setProductData([]);
+    }
+    console.log("THe data", data);
   };
   useEffect(() => {
     fetchData();

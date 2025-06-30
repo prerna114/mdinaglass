@@ -57,7 +57,7 @@ const MegaMenu = () => {
       );
       const data = await res.json(); // ✅ this is what you need
 
-      console.log("data", data[0]?.children);
+      console.log("Mega Menu", data[0]?.children);
       setCategoriesData(data[0]?.children);
       localStorage.setItem("cart", JSON.stringify(data[0]?.children));
       setMenu(data[0]?.children);
@@ -96,7 +96,7 @@ const MegaMenu = () => {
     let page = 1;
     return buildProductUrl(categoryID, sortOrder, limit, page, slug);
   };
-  // console.log("Catrry data", categoriesData, categoriesData?.length);
+  console.log("Catrry data", categoriesData[0]?.children[1]);
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
       <div

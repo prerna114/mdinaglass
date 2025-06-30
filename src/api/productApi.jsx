@@ -15,7 +15,7 @@ export const getAllProduct = async (category, filterData, currentPage) => {
       },
     });
     console.log("Data", response); // Optional: for debugging
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error fetching products:", error);
     return null;
@@ -31,6 +31,34 @@ export const getProductByID = async (id) => {
     });
     console.log("Data", response.data.data); // Optional: for debugging
     return response.data.data;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return null;
+  }
+};
+
+export const getProductCateogry = async (id) => {
+  const data = {
+    id: id,
+    filters: {
+      color: 24,
+      variations: 22,
+      per_page: 10,
+      page: 1,
+    },
+  };
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}api/categories/products-with-filters`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("getProductCateogry", response.data); // Optional: for debugging
+    return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
     return null;

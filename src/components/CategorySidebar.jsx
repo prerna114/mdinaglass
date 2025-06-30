@@ -1,6 +1,7 @@
 "use client";
 
 import { getMenuCategories } from "@/api/menuAPI";
+import { getProductCateogry } from "@/api/productApi";
 import { createUrl } from "@/constant";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
@@ -10,12 +11,24 @@ import React, { useEffect, useState } from "react";
 const CategorySidebar = (cateogryId) => {
   const [sideMenu, setSideMenu] = useState();
   const { menu } = useAuthStore((state) => state);
+  const [subCategory, setSubCategory] = useState([]);
+  const [subCartId, setSubCartId] = useState("");
+  const [catergoryTheId, setCategoryTheId] = useState("");
 
   const { params } = useParams();
   const [categoryId, setCategoryId] = useState(
     typeof params?.[0] !== "undefined" ? params[0] : cateogryId?.cateogryId
   );
 
+  const getProductByCategory = async (id, categoryId) => {
+    localStorage.setItem("subCartId", JSON.stringify(id));
+    localStorage.setItem("categoryId", JSON.stringify(categoryId));
+    setSubCartId(id);
+    setCategoryTheId(categoryId);
+    const data = await getProductCateogry(id);
+    setSubCategory(data?.sub_categories);
+    console.log("getProductByCategory", data, id);
+  };
   console.log("Params", params, categoryId);
   const getMenuData = async () => {
     const stored = localStorage.getItem("cart");
@@ -30,14 +43,25 @@ const CategorySidebar = (cateogryId) => {
 
   useEffect(() => {
     getMenuData();
+    const thesubcartID = localStorage.getItem("subCartId");
+    const theCaterygoryID = localStorage.getItem("categoryId");
+    setCategoryTheId(JSON.parse(theCaterygoryID));
+    console.log("useSubCart", thesubcartID);
+    setSubCartId(JSON.parse(thesubcartID));
+    // getProductByCategory(thesubcartID);
   }, []);
-
+  useEffect(() => {
+    if (subCartId && catergoryTheId) {
+      getProductByCategory(subCartId, catergoryTheId);
+    }
+  }, [subCartId, catergoryTheId]);
   // console.log(
   //   "paramscateogryId",
   //   params[0],
   //   cateogryId,
   //   typeof params?.[0] !== "undefined"
   // );
+  console.log("subCartId", subCartId);
   return (
     <div className="category-sidebar">
       <div className="hide_Mobi_sidebar">
@@ -67,17 +91,57 @@ const CategorySidebar = (cateogryId) => {
                           key={child?.id}
                         >
                           <li className="mb-1">
-                            <Link
-                              href={createUrl(child?.id, child?.slug)}
+                            <a
+                              style={{
+                                cursor: "pointer",
+                              }}
+                              // href={createUrl(child?.id, child?.slug)}
+                              // href={""}
+                              onClick={() => {
+                                console.log("dsdschild", child?.id, subCartId);
+                                getProductByCategory(child?.id, categoryId);
+                              }}
                               className={`text-white text-decoration-none small ${
-                                child.id == categoryId
+                                child.id == categoryId ||
+                                child.id == catergoryTheId
                                   ? "activeSIdeBar"
                                   : "nonActiveBar"
                               }`}
                             >
                               {child?.name}
-                            </Link>
+                            </a>
                           </li>
+                          <ul className="list-unstyled subcate-gories ms-3">
+                            {child.id == subCartId &&
+                              subCategory.map((item) => (
+                                <li className="pt-0" key={item.id}>
+                                  <Link
+                                    key={item.id}
+                                    onClick={() => {
+                                      console.log(
+                                        "creaturl",
+                                        createUrl(item?.id, item?.slug)
+                                      );
+                                    }}
+                                    // href={"#"}
+                                    // onClick={() => {
+                                    //   console.log("dsdschild", child);
+                                    //   getProductByCategory(child?.id);
+                                    // }}
+
+                                    href={createUrl(item?.id, item?.slug)}
+                                    className={`text-white text-decoration-none small ${
+                                      item.id == "229"
+                                        ? "activeSIdeBar"
+                                        : "nonActiveBar"
+                                    }`}
+                                  >
+                                    {item?.name}
+                                  </Link>
+                                  ;
+                                </li>
+                              ))}
+                          </ul>
                         </ul>
                       ))}
                   </li>

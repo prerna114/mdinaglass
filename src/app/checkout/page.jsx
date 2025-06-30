@@ -1,14 +1,101 @@
 "use client";
+import { CustomToast } from "@/components/CustomToast";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import MegaMenu from "@/components/Megamenu";
 import { useCartStore } from "@/store";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+
+import React, { useRef, useState } from "react";
 
 const checkout = () => {
   const [shipping, setShipping] = useState(false);
-  const [billingAddress, setBillingAddress] = useState();
+  const router = useRouter();
+  const [filed, setFiled] = useState({
+    firstName: "",
+    lastName: "",
+    company: "",
+    email: "",
+    addressOne: "",
+    addressTwo: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "",
+    telePhone: "",
+    fax: "",
+  });
+  const [error, setError] = useState({});
+
+  const handleText = (name, value) => {
+    setFiled((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const fieldRef = {
+    firstName: useRef(null),
+    lastName: useRef(null),
+    company: useRef(null),
+    email: useRef(null),
+    addressOne: useRef(null),
+    addressTwo: useRef(null),
+    city: useRef(null),
+    state: useRef(null),
+    zipCode: useRef(null),
+    country: useRef(null),
+    telePhone: useRef(null),
+    fax: useRef(null),
+  };
+  const validation = () => {
+    const newError = {};
+    if (!filed?.firstName.trim()) {
+      newError.firstName = "First name required*";
+    } else if (!filed?.lastName?.trim()) {
+      newError.lastName = "Last name required*";
+    } else if (!filed?.company?.trim()) {
+      newError.company = "Company name required*";
+    } else if (!filed?.email?.trim()) {
+      newError.email = "Email is required*";
+    } else if (!filed?.addressOne?.trim()) {
+      newError.addressOne = "Address is required*";
+    } else if (!filed?.addressTwo?.trim()) {
+      newError.addressTwo = "Address two is required*";
+    } else if (!filed?.city?.trim()) {
+      newError.city = "City is required*";
+    } else if (!filed?.state?.trim()) {
+      newError.state = "State is required*";
+    } else if (!filed?.zipCode?.trim()) {
+      newError.zipCode = "zip Code is required*";
+    } else if (!filed?.country?.trim()) {
+      newError.country = "Country is required*";
+    } else if (!filed?.telePhone?.trim()) {
+      newError.telePhone = "TelePhone is required*";
+    } else if (!filed?.fax?.trim()) {
+      newError.fax = "Fax is required*";
+      console.log("FLax is not avialel");
+    }
+    setError(newError);
+    console.log("Object.keys(newError)[0]", Object.keys(newError)[0], newError);
+    if (Object.keys(newError).length > 0) {
+      CustomToast("Please fill all required fields", "top-right");
+
+      const firstErrorKey = Object.keys(newError)[0];
+      fieldRef[firstErrorKey]?.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      return false;
+    } else {
+      localStorage.setItem("billingaddress", JSON.stringify(filed));
+      router.push("/shipping");
+    }
+
+    return true;
+  };
+  console.log("Hndle text", !filed.fax);
+
   return (
     <>
       {/* <Header /> */}
@@ -35,39 +122,121 @@ const checkout = () => {
                     </p>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="FIRST NAME*"></input>
+                      <input
+                        type="text"
+                        required
+                        ref={fieldRef?.firstName}
+                        onChange={(e) => {
+                          handleText("firstName", e.target.value);
+                        }}
+                        placeholder="FIRST NAME*"
+                      ></input>
+
+                      <div className="required-text">{error.firstName}</div>
                     </div>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="LAST NAME*"></input>
+                      <input
+                        type="text"
+                        ref={fieldRef?.lastName}
+                        onChange={(e) => {
+                          handleText("lastName", e.target.value);
+                        }}
+                        placeholder="LAST NAME*"
+                      ></input>
+
+                      <div className="required-text">{error.lastName}</div>
                     </div>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="COMPANY*"></input>
+                      <input
+                        type="text"
+                        ref={fieldRef?.company}
+                        placeholder="COMPANY*"
+                        onChange={(e) => {
+                          handleText("company", e.target.value);
+                        }}
+                      ></input>
+
+                      <div className="required-text">{error.company}</div>
                     </div>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="EMAIL*"></input>
+                      <input
+                        type="text"
+                        placeholder="EMAIL*"
+                        ref={fieldRef?.email}
+                        onChange={(e) => {
+                          handleText("email", e.target.value);
+                        }}
+                      ></input>
+
+                      <div className="required-text">{error.email}</div>
                     </div>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="ADDRESS LINE 1*"></input>
+                      <input
+                        type="text"
+                        ref={fieldRef?.addressOne}
+                        placeholder="ADDRESS LINE 1*"
+                        onChange={(e) => {
+                          handleText("addressOne", e.target.value);
+                        }}
+                      ></input>
+
+                      <div className="required-text">{error.addressOne}</div>
                     </div>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="ADDRESS LINE 2*"></input>
+                      <input
+                        type="text"
+                        ref={fieldRef?.addressTwo}
+                        placeholder="ADDRESS LINE 2*"
+                        onChange={(e) => {
+                          handleText("addressTwo", e.target.value);
+                        }}
+                      ></input>
+
+                      <div className="required-text">{error.addressTwo}</div>
                     </div>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="CITY*"></input>
+                      <input
+                        type="text"
+                        placeholder="CITY*"
+                        ref={fieldRef?.city}
+                        onChange={(e) => {
+                          handleText("city", e.target.value);
+                        }}
+                      ></input>
+
+                      <div className="required-text">{error.city}</div>
                     </div>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="STATE/PROVINCE*"></input>
+                      <input
+                        type="text"
+                        ref={fieldRef?.state}
+                        placeholder="STATE/PROVINCE*"
+                        onChange={(e) => {
+                          handleText("state", e.target.value);
+                        }}
+                      ></input>
+
+                      <div className="required-text">{error.state}</div>
                     </div>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="ZIP CODE*"></input>
+                      <input
+                        type="text"
+                        placeholder="ZIP CODE*"
+                        ref={fieldRef?.zipCode}
+                        onChange={(e) => {
+                          handleText("zipCode", e.target.value);
+                        }}
+                      ></input>
+
+                      <div className="required-text">{error.zipCode}</div>
                     </div>
 
                     <div className="col-md-12">
@@ -76,6 +245,10 @@ const checkout = () => {
                         className="required"
                         name="country"
                         id="country"
+                        ref={fieldRef?.country}
+                        onChange={(e) => {
+                          handleText("country", e.target.value);
+                        }}
                       >
                         <option value="">SELECT COUNTRY *</option>
                         <option value="Afghanistan">Afghanistan</option>
@@ -433,14 +606,34 @@ const checkout = () => {
                         <option value="Zambia">Zambia</option>
                         <option value="Zimbabwe">Zimbabwe</option>
                       </select>
+
+                      <div className="required-text">{error.country}</div>
                     </div>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="TELEPHONE*"></input>
+                      <input
+                        ref={fieldRef?.telePhone}
+                        type="text"
+                        onChange={(e) => {
+                          handleText("telePhone", e.target.value);
+                        }}
+                        placeholder="TELEPHONE*"
+                      ></input>
+
+                      <div className="required-text">{error.telePhone}</div>
                     </div>
 
                     <div className="col-md-12">
-                      <input type="text" placeholder="FAX*"></input>
+                      <input
+                        type="text"
+                        ref={fieldRef?.fax}
+                        onChange={(e) => {
+                          handleText("fax", e.target.value);
+                        }}
+                        placeholder="FAX*"
+                      ></input>
+
+                      <div className="required-text">{error.fax}</div>
                     </div>
                     <div className="col-md-12">
                       <a>Fields Marked with (*) are Required.</a>
@@ -461,9 +654,18 @@ const checkout = () => {
 
                         <div className="col-md-6">
                           <div className="float-right">
-                            <Link href={"/shipping"}>
-                              <button className="btn-cart">Continue</button>
-                            </Link>
+                            {/* <Link
+                              // href={"/shipping"}
+                              href={"#"}
+                              onClick={() => validation()}
+                            > */}
+                            <button
+                              onClick={() => validation()}
+                              className="btn-cart"
+                            >
+                              Continue
+                            </button>
+                            {/* </Link> */}
                           </div>
                         </div>
                       </div>

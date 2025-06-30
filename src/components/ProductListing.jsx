@@ -2,6 +2,7 @@
 
 import { getAllProduct } from "@/api/productApi";
 import { createUrl } from "@/constant";
+import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 
@@ -11,12 +12,13 @@ const ProductListing = () => {
   const [productList, setProductList] = useState([]);
   const params = useParams();
   const [category, , sortOrder, limit, page, slug] = params?.params || [];
-  const [paginationList, setPaginationList] = useState([]);
+  const [paginationList, setPaginationList] = useState([1, 2, 3]);
   const initialLimit = Number(limit) || 15;
   const [filterData, setFilterData] = useState({
     limit: initialLimit,
   });
 
+  const router = useRouter();
   const handleFilter = (name, value) => {
     setFilterData((prev) => ({
       ...prev,
@@ -30,13 +32,18 @@ const ProductListing = () => {
     filterData
   );
   const [loading, setLoading] = useState(true);
+  const { menu } = useAuthStore((state) => state);
 
   const initialPage = Number(page) || 1;
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [itemsPerPage, setItemsPerPage] = useState(15);
 
+  const [subCategory, setSubCategory] = useState([]);
+
   const getProductList = async () => {
     setLoading(true);
+
+    console.log("getProductList");
 
     let data = "";
     if (slug == "all-product.htm") {
@@ -61,7 +68,7 @@ const ProductListing = () => {
       // router.refresh();
 
       // router.push(newURL);
-      setProductList(data);
+      setProductList(data?.data?.data);
       setLoading(false);
     } else {
       setProductList([]);
@@ -73,29 +80,47 @@ const ProductListing = () => {
     console.log("Filter data", filterData, currentPage);
   }, [filterData, currentPage]);
 
-  useEffect(() => {
+  const handlePagination = (item, action) => {
     const totalLEnght = productList?.meta?.total;
-    const limit = filterData?.limit;
-    const length = Math.ceil(totalLEnght / limit);
-    // console.log("TH elnght ", length);
-    // 1
-    // 2   3
-    const allPages = [1, 2, 3, 4, 5, 6, 7];
-    let startIndex = currentPage - 1;
-
-    if (startIndex > allPages.length - 3) {
-      startIndex = allPages.length - 3;
+    //  if(item> )
+    let array = [];
+    console.log("TH elnght ", item, action);
+    if (action == "prev" && item > 1) {
+      array = [item - 2, item - 1, item];
+    } else if (action == "next" && item > 1) {
+      array = [item, item + 1, item + 2];
+    } else if (item == 1) {
+      setPaginationList([1, 2, 3]);
+    } else {
+      if (item > 1) {
+        array = [item, item + 1, item + 2];
+      }
     }
-    if (startIndex < 0) {
-      startIndex = 0;
+    setPaginationList(array);
+  };
+
+  const handlePrevious = (currentPage) => {
+    if (currentPage == paginationList[0]) {
+      setCurrentPage((prev) => prev - 1);
+
+      const array = [currentPage - 2, currentPage - 1, currentPage];
+      setPaginationList(array);
+    } else {
+      setCurrentPage((prev) => prev - 1);
     }
+  };
 
-    const visiblePages = allPages.slice(startIndex, startIndex + 3);
-    setPaginationList(visiblePages);
-    console.log("visiblePages", visiblePages, totalLEnght);
-  }, [productList, currentPage]);
+  const handleNext = (currentPage) => {
+    if (currentPage == paginationList[paginationList?.length - 1]) {
+      setCurrentPage((prev) => prev + 1);
+      const array = [currentPage, currentPage + 1, currentPage + 2];
+      setPaginationList(array);
+    } else {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
 
-  console.log("productList", productList?.meta?.total);
+  console.log("productList", subCategory);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -104,8 +129,44 @@ const ProductListing = () => {
           <div className="side-bar-mobi">
             <div className="row">
               <div className="col-12">
-                <select className="form-select mt-2">
-                  <option>Glass Blowing & Sculpting</option>
+                <select
+                  className="form-select mt-2"
+                  onChange={(e) => {
+                    const selectedId = e.target.value;
+                    const data = menu.filter((item) => item.id == selectedId);
+                    console.log("Select edimd", selectedId, data);
+                    setSubCategory(data[0]?.children);
+
+                    const selectedProduct = menu.find(
+                      (m) => m.id === selectedId
+                    );
+                    const href = createUrl(data[0].id, data[0]?.slug);
+                    console.log("HREF TAG", href);
+                    router.push(href); // or use <Link> separately
+                  }}
+                >
+                  <option
+                  // key={product.id}
+                  // onClick={(e) => {
+                  //   console.log("Eeeeeee", e);
+                  // }}
+                  // value={product.id}
+                  >
+                    Select
+                  </option>
+                  {menu?.length > 0 &&
+                    menu?.map((product) => (
+                      <option
+                        key={product.id}
+                        onClick={(e) => {
+                          console.log("Eeeeeee", e);
+                        }}
+                        value={category ? category : product.id}
+                      >
+                        {product.name}
+                      </option>
+                    ))}
+                  {/* <option>Glass Blowing & Sculpting</option>
                   <option>Fusion</option>
                   <option>Lampwork</option>
                   <option>Jewellery</option>
@@ -113,14 +174,31 @@ const ProductListing = () => {
                   <option>Valentine's</option>
                   <option>Legacy: 50 Years of Mdina Glass (Book)</option>
                   <option>Gift Vouchers</option>
-                  <option>Sale</option>
+                  <option>Sale</option> */}
                 </select>
               </div>
 
               <div className="col-12">
-                <select className="form-select mt-2">
+                <select
+                  onChange={(e) => {
+                    const selectedId = e.target.value;
+                    const data = subCategory.filter(
+                      (item) => item.id == selectedId
+                    );
+                    const href = createUrl(data[0].id, data[0]?.slug);
+                    console.log("HREF TAG", href);
+                    router.push(href); // or use <Link> separately
+                  }}
+                  className="form-select mt-2"
+                >
                   <option>Select</option>
-                  <option>Bathroom Accessories</option>
+
+                  {subCategory?.map((item, index) => (
+                    <option value={item.id} key={index}>
+                      {item.name}
+                    </option>
+                  ))}
+                  {/* <option>Bathroom Accessories</option>
                   <option>Book Ends</option>
                   <option>Vases</option>
                   <option>Decorative Bowls</option>
@@ -135,7 +213,7 @@ const ProductListing = () => {
                   <option>Oil & Vinegar Bottles</option>
                   <option>Scented Candleholders</option>
                   <option> Candleholders</option>
-                  <option>Candlesticks & Candelabras</option>
+                  <option>Candlesticks & Candelabras</option> */}
                 </select>
               </div>
             </div>
@@ -214,17 +292,28 @@ const ProductListing = () => {
           <div className="col-md-12 col-lg-5">
             <nav aria-label="Product pagination">
               <ul className="pagination">
-                <li
-                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                    disabled={currentPage === 1}
+                {currentPage == 1 ? (
+                  <></>
+                ) : (
+                  <li
+                    className={`page-item ${
+                      currentPage === 1 ? "disabled" : ""
+                    }`}
                   >
-                    Previous
-                  </button>
-                </li>
+                    <button
+                      className="page-link"
+                      onClick={() => {
+                        if (currentPage > 1) {
+                          handlePrevious(currentPage);
+                        }
+                      }}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </button>
+                  </li>
+                )}
+
                 {paginationList.map((item, index) => {
                   return (
                     <li
@@ -235,7 +324,20 @@ const ProductListing = () => {
                     >
                       <button
                         className="page-link"
-                        onClick={() => setCurrentPage(currentPage + 1)}
+                        onClick={(e) => {
+                          console.log("eeeeeee", e);
+                          // if (currentPage == currentPage) {
+                          // } else if (currentPage < item) {
+                          // }
+                          setCurrentPage(item);
+                          if (
+                            paginationList[paginationList?.length - 1] == item
+                          ) {
+                            handlePagination(item, "next");
+                          } else if (paginationList[0] == item && item > 1) {
+                            handlePagination(item, "prev");
+                          }
+                        }}
                       >
                         {item}
                       </button>
@@ -264,7 +366,7 @@ const ProductListing = () => {
                 <li className="page-item">
                   <button
                     className="page-link"
-                    onClick={() => setCurrentPage(currentPage + 1)}
+                    onClick={() => handleNext(currentPage)}
                   >
                     Next &gt;
                   </button>
@@ -297,8 +399,8 @@ const ProductListing = () => {
 
       {/* Product Grid */}
       <div className="row">
-        {productList?.data?.length > 0 &&
-          productList?.data?.map((product) => (
+        {productList?.length > 0 &&
+          productList?.map((product) => (
             <div key={product.id} className="col-lg-4 col-md-6 mb-4">
               <div className=" product-card">
                 <div className="position-relative">
@@ -348,7 +450,7 @@ const ProductListing = () => {
             </div>
           ))}
 
-        {productList?.data?.length == 0 && !loading && (
+        {productList?.length == 0 && !loading && (
           <div className="no-data-found">
             <h1>No data found</h1>
           </div>
@@ -391,46 +493,93 @@ const ProductListing = () => {
         </div>
 
         {/* Pagination */}
-        <div className="col-md-12 col-lg-5">
-          <nav aria-label="Product pagination">
-            <ul className="pagination">
-              <li
-                className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
-              >
-                <button
-                  className="page-link"
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  disabled={currentPage === 1}
+        {true && (
+          <div className="col-md-12 col-lg-5">
+            <nav aria-label="Product pagination">
+              <ul className="pagination">
+                {currentPage == 1 ? (
+                  <></>
+                ) : (
+                  <li
+                    className={`page-item ${
+                      currentPage === 1 ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => {
+                        if (currentPage > 1) {
+                          handlePrevious(currentPage);
+                        }
+                      }}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </button>
+                  </li>
+                )}
+
+                {paginationList.map((item, index) => {
+                  return (
+                    <li
+                      key={index}
+                      className={`page-item ${
+                        currentPage === item ? "active" : ""
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={(e) => {
+                          console.log("eeeeeee", e);
+                          // if (currentPage == currentPage) {
+                          // } else if (currentPage < item) {
+                          // }
+                          setCurrentPage(item);
+                          if (
+                            paginationList[paginationList?.length - 1] == item
+                          ) {
+                            handlePagination(item, "next");
+                          } else if (paginationList[0] == item && item > 1) {
+                            handlePagination(item, "prev");
+                          }
+                        }}
+                      >
+                        {item}
+                      </button>
+                    </li>
+                  );
+                })}
+
+                {/* <li
+                  className={`page-item ${currentPage === 2 ? "active" : ""}`}
                 >
-                  Previous
-                </button>
-              </li>
-              <li className={`page-item ${currentPage === 1 ? "active" : ""}`}>
-                <button className="page-link" onClick={() => setCurrentPage(1)}>
-                  1
-                </button>
-              </li>
-              <li className={`page-item ${currentPage === 2 ? "active" : ""}`}>
-                <button className="page-link" onClick={() => setCurrentPage(2)}>
-                  2
-                </button>
-              </li>
-              <li className="page-item">
-                <button className="page-link" onClick={() => setCurrentPage(3)}>
-                  3
-                </button>
-              </li>
-              <li className="page-item">
-                <button
-                  className="page-link"
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                >
-                  Next &gt;
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(2)}
+                  >
+                    2
+                  </button>
+                </li>
+                <li className="page-item">
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(3)}
+                  >
+                    3
+                  </button>
+                </li> */}
+                <li className="page-item">
+                  <button
+                    className="page-link"
+                    onClick={() => handleNext(currentPage)}
+                  >
+                    Next &gt;
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        )}
       </div>
     </div>
   );

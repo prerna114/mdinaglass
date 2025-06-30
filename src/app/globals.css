@@ -2894,3 +2894,11 @@ ul.category-sidebar li .nonActiveBar {
   margin-top: 20vh;
   margin-bottom: 20vh;
 }
+.required-text {
+  font-size: 14px;
+  font-family: var(--font-quicksand);
+  color: red;
+  margin-bottom: 7px;
+  margin-top: -5px;
+  font-weight: 500;
+}
