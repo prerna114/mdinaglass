@@ -57,8 +57,8 @@ export const getProductCateogry = async (id) => {
         },
       }
     );
-    console.log("getProductCateogry", response.data); // Optional: for debugging
-    return response.data;
+    console.log("getProductCateogry", response); // Optional: for debugging
+    return response;
   } catch (error) {
     console.error("Error fetching products:", error);
     return null;

@@ -1,3 +1,6 @@
+import { API_BASE_URL } from "@/constant";
+import axios from "axios";
+
 export const getMenuCategories = async () => {
   console.log("Get Catrogires is clling");
   const myHeaders = new Headers();
@@ -23,5 +26,21 @@ export const getMenuCategories = async () => {
     }
   } catch (error) {
     console.log("eror", error);
+  }
+};
+
+export const getCategories = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}api/categories`, {
+      params: {
+        limit: 5,
+      },
+    });
+    console.log("DataOfcat", response); // Optional: for debugging
+
+    return response;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return null;
   }
 };

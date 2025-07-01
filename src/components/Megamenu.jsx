@@ -96,7 +96,7 @@ const MegaMenu = () => {
     let page = 1;
     return buildProductUrl(categoryID, sortOrder, limit, page, slug);
   };
-  console.log("Catrry data", categoriesData[0]?.children[1]);
+  console.log("Catrry data", Array.isArray(categoriesData));
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
       <div

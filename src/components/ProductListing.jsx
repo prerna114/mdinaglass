@@ -2,6 +2,7 @@
 
 import { getAllProduct } from "@/api/productApi";
 import { createUrl } from "@/constant";
+import { ProductLists } from "@/store/product";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
@@ -11,9 +12,10 @@ import React, { useEffect, useRef, useState } from "react";
 const ProductListing = () => {
   const [productList, setProductList] = useState([]);
   const params = useParams();
-  const [category, , sortOrder, limit, page, slug] = params?.params || [];
+  console.log("currentCategoryId", params);
+  // const [category, , sortOrder, limit, page, slug] = params?.params || [];
   const [paginationList, setPaginationList] = useState([1, 2, 3]);
-  const initialLimit = Number(limit) || 15;
+  const initialLimit = 15;
   const [filterData, setFilterData] = useState({
     limit: initialLimit,
   });
@@ -26,59 +28,62 @@ const ProductListing = () => {
     }));
   };
 
-  console.log(
-    "dskmkmk ohrna",
-    { category, sortOrder, limit, page, slug },
-    filterData
-  );
-  const [loading, setLoading] = useState(true);
+  // console.log(
+  //   "dskmkmk ohrna",
+  //   { category, sortOrder, limit, page, slug },
+  //   filterData
+  // );
+  const [loading, setLoading] = useState(false);
   const { menu } = useAuthStore((state) => state);
 
-  const initialPage = Number(page) || 1;
+  const initialPage = 1;
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [itemsPerPage, setItemsPerPage] = useState(15);
+  const { setProducts, products, category, setCategory } = ProductLists(
+    (state) => state
+  );
+  // const [subCategory, setSubCategory] = useState([]);
 
-  const [subCategory, setSubCategory] = useState([]);
+  // const getProductList = async () => {
+  //   setLoading(true);
 
-  const getProductList = async () => {
-    setLoading(true);
+  //   console.log("getProductList");
 
-    console.log("getProductList");
+  //   let data = "";
+  //   if (slug == "all-product.htm") {
+  //     console.log("With Slug");
+  //     data = await getAllProduct("", filterData, currentPage);
+  //   } else {
+  //     data = await getAllProduct(category, filterData, currentPage);
+  //     console.log("Without Slug", slug);
+  //   }
+  //   if (data) {
+  //     console.log("Get Prouct api s calling");
+  //     console.log("Product Lsiting", category);
 
-    let data = "";
-    if (slug == "all-product.htm") {
-      console.log("With Slug");
-      data = await getAllProduct("", filterData, currentPage);
-    } else {
-      data = await getAllProduct(category, filterData, currentPage);
-      console.log("Without Slug", slug);
-    }
-    if (data) {
-      console.log("Get Prouct api s calling");
+  //     const newURL = createUrl(
+  //       category,
+  //       slug,
+  //       "",
+  //       filterData?.limit,
+  //       currentPage
+  //     );
 
-      const newURL = createUrl(
-        category,
-        slug,
-        "",
-        filterData?.limit,
-        currentPage
-      );
+  //     // router.replace(newURL);
+  //     // router.refresh();
 
-      // router.replace(newURL);
-      // router.refresh();
-
-      // router.push(newURL);
-      setProductList(data?.data?.data);
-      setLoading(false);
-    } else {
-      setProductList([]);
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    getProductList();
-    console.log("Filter data", filterData, currentPage);
-  }, [filterData, currentPage]);
+  //     // router.push(newURL);
+  //     setProductList(data?.data?.data);
+  //     setLoading(false);
+  //   } else {
+  //     setProductList([]);
+  //     setLoading(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getProductList();
+  //   console.log("Filter data", filterData, currentPage);
+  // }, [filterData, currentPage]);
 
   const handlePagination = (item, action) => {
     const totalLEnght = productList?.meta?.total;
@@ -120,7 +125,8 @@ const ProductListing = () => {
     }
   };
 
-  console.log("productList", subCategory);
+  console.log("productList", category);
+  console.log("productList1", products);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -166,54 +172,6 @@ const ProductListing = () => {
                         {product.name}
                       </option>
                     ))}
-                  {/* <option>Glass Blowing & Sculpting</option>
-                  <option>Fusion</option>
-                  <option>Lampwork</option>
-                  <option>Jewellery</option>
-                  <option>Christmas</option>
-                  <option>Valentine's</option>
-                  <option>Legacy: 50 Years of Mdina Glass (Book)</option>
-                  <option>Gift Vouchers</option>
-                  <option>Sale</option> */}
-                </select>
-              </div>
-
-              <div className="col-12">
-                <select
-                  onChange={(e) => {
-                    const selectedId = e.target.value;
-                    const data = subCategory.filter(
-                      (item) => item.id == selectedId
-                    );
-                    const href = createUrl(data[0].id, data[0]?.slug);
-                    console.log("HREF TAG", href);
-                    router.push(href); // or use <Link> separately
-                  }}
-                  className="form-select mt-2"
-                >
-                  <option>Select</option>
-
-                  {subCategory?.map((item, index) => (
-                    <option value={item.id} key={index}>
-                      {item.name}
-                    </option>
-                  ))}
-                  {/* <option>Bathroom Accessories</option>
-                  <option>Book Ends</option>
-                  <option>Vases</option>
-                  <option>Decorative Bowls</option>
-                  <option>Lanterns</option>
-                  <option>Lighting</option>
-                  <option>Sculptures</option>
-                  <option>Solids</option>
-                  <option>Tumblers</option>
-                  <option> Carafes</option>
-                  <option> Serving Bowls</option>
-                  <option> Pestle & Mortars</option>
-                  <option>Oil & Vinegar Bottles</option>
-                  <option>Scented Candleholders</option>
-                  <option> Candleholders</option>
-                  <option>Candlesticks & Candelabras</option> */}
                 </select>
               </div>
             </div>
@@ -345,24 +303,6 @@ const ProductListing = () => {
                   );
                 })}
 
-                {/* <li
-                  className={`page-item ${currentPage === 2 ? "active" : ""}`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(2)}
-                  >
-                    2
-                  </button>
-                </li>
-                <li className="page-item">
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(3)}
-                  >
-                    3
-                  </button>
-                </li> */}
                 <li className="page-item">
                   <button
                     className="page-link"
@@ -399,8 +339,8 @@ const ProductListing = () => {
 
       {/* Product Grid */}
       <div className="row">
-        {productList?.length > 0 &&
-          productList?.map((product) => (
+        {category?.length > 0 &&
+          category?.map((product) => (
             <div key={product.id} className="col-lg-4 col-md-6 mb-4">
               <div className=" product-card">
                 <div className="position-relative">
@@ -450,11 +390,70 @@ const ProductListing = () => {
             </div>
           ))}
 
-        {productList?.length == 0 && !loading && (
+        {products?.length == 0 && category?.length == 0 && !loading && (
           <div className="no-data-found">
             <h1>No data found</h1>
           </div>
         )}
+      </div>
+
+      <div className="row">
+        {products?.length > 0 &&
+          products?.map((product) => (
+            <div key={product.id} className="col-lg-4 col-md-6 mb-4">
+              <div className=" product-card">
+                <div className="position-relative">
+                  <img
+                    src={"/assets/bg-image.png"}
+                    className="card-img-top"
+                    alt={product.name}
+                    style={{}}
+                  />
+                  {/* {product.hasOptions && (
+                  <div className="m-2">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`options-${product.id}`}
+                      />
+                      <label
+                        className="form-check-label small text-muted"
+                        htmlFor={`options-${product.id}`}
+                      >
+                        Click for more options
+                      </label>
+                    </div>
+                  </div>
+                )} */}
+                </div>
+                <div className="card-body text-center">
+                  <Link
+                    href={{
+                      pathname: `/product-details/webshop/${product?.id}`,
+                      query: { sku: product?.sku },
+                    }}
+                    // href={"#"}
+                    onClick={() => {
+                      console.log("dsada", product);
+                    }}
+                  >
+                    <h6 className="card-title mb-3">{product.name}</h6>
+                  </Link>
+                  {/* <h6 className="card-title mb-3">{product.name}</h6> */}
+                  <p className="card-text text-info fw-bold">
+                    Price {product.min_price}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+
+        {/* {(category?.length == 0 || products.length == 0) && !loading && (
+          <div className="no-data-found">
+            <h1>No data found</h1>
+          </div>
+        )} */}
       </div>
 
       {/* Sort and Items Control */}

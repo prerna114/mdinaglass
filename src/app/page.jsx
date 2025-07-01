@@ -7,11 +7,19 @@ import ProductCarousel from "@/components/ProductCarousel";
 import Testimonials from "@/components/Testimonials";
 import Video from "@/components/Video";
 import Megamenu from "@/components/Megamenu";
-import React from "react";
+import React, { useEffect } from "react";
 import CategoryFeature from "../components/CategoryFeature";
 import { useCountStore } from "@/store";
+import { getCategories } from "@/api/menuAPI";
 
 export default function Page() {
+  const getAllCategory = async () => {
+    const data = await getCategories();
+    console.log("data", data);
+  };
+  useEffect(() => {
+    getAllCategory();
+  }, []);
   return (
     <>
       {/* <Header /> */}

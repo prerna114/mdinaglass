@@ -53,6 +53,9 @@ export const createUrl = (
   //   theLimit,
   //   thePage
   // );
+  const idPath = Array.isArray(categoryID)
+    ? categoryID.join("/")
+    : String(categoryID);
   const cleanSlug = slug ? slug.replace(/\.htm+$/i, "") : "all-product";
-  return buildProductUrl(categoryID, sortOrder, limit, page, cleanSlug);
+  return buildProductUrl(idPath, sortOrder, limit, page, cleanSlug);
 };
