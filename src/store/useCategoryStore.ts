@@ -2,7 +2,10 @@
 import { create } from "zustand";
 
 type MenuStore = {
+  parentMap: any;
   expandedIds: number[];
+  loading: boolean;
+  setLoading: (value: boolean) => void;
   subCategoryMap: Record<number, any[]>;
   toggleExpanded: (id: number) => void;
   setExpanded: (ids: number[]) => void;
@@ -16,7 +19,10 @@ const SUBCATEGORY_MAP_KEY = "subCategoryMap";
 export const useMenuStore = create<MenuStore>((set) => ({
   expandedIds: [],
   subCategoryMap: {},
+  parentMap: {},
+  loading: true,
 
+  setLoading: (value) => set({ loading: value }),
   toggleExpanded: (id) =>
     set((state) => {
       const newExpanded = state.expandedIds.includes(id)
@@ -38,8 +44,18 @@ export const useMenuStore = create<MenuStore>((set) => ({
         ...state.subCategoryMap,
         [id]: items,
       };
+
+      const parentEntries = items.reduce((acc, item) => {
+        acc[item.id] = id;
+        return acc;
+      }, {} as Record<number, number>);
+
       localStorage.setItem(SUBCATEGORY_MAP_KEY, JSON.stringify(updated));
-      return { subCategoryMap: updated };
+
+      return {
+        subCategoryMap: updated,
+        parentMap: { ...state.parentMap, ...parentEntries }, // <-- new
+      };
     });
   },
 

@@ -2902,3 +2902,8 @@ ul.category-sidebar li .nonActiveBar {
   margin-top: -5px;
   font-weight: 500;
 }
+
+ul.category-sidebar li.top-level-li > .category-sidebar {
+  color: #005e84 !important;
+  font-size: 18px;
+}

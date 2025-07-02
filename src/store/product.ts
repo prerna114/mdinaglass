@@ -4,8 +4,10 @@ import { persist } from "zustand/middleware";
 type ProdutList = {
   products: [];
   category: [];
+  allProduct: {};
   setProducts: (state: []) => void;
   setCategory: (state: []) => void;
+  setAllProduct: (state: []) => void;
 };
 
 export const ProductLists = create<ProdutList>()(
@@ -13,12 +15,16 @@ export const ProductLists = create<ProdutList>()(
     (set, get) => ({
       products: [],
       category: [],
+      allProduct: {},
 
       setProducts: (item) => {
         set({ products: item });
       },
       setCategory: (item) => {
         set({ category: item });
+      },
+      setAllProduct: (item) => {
+        set({ allProduct: item });
       },
     }),
     {

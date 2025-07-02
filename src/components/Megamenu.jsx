@@ -1,4 +1,5 @@
 "use client";
+import { createUrl } from "@/constant";
 import { useAuthStore } from "@/store/useAuthStore";
 import { buildProductUrl } from "@/utils/buildProductUrl";
 // import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -89,13 +90,13 @@ const MegaMenu = () => {
     // }
   }, []);
 
-  const createUrl = (categoryID, slug) => {
-    // console.log("dsada", slu g, categoryID);
-    let sortOrder = "asc";
-    let limit = 15;
-    let page = 1;
-    return buildProductUrl(categoryID, sortOrder, limit, page, slug);
-  };
+  // const createUrl = (categoryID, slug) => {
+  //   // console.log("dsada", slu g, categoryID);
+  //   let sortOrder = "asc";
+  //   let limit = 15;
+  //   let page = 1;
+  //   return buildProductUrl(categoryID, sortOrder, limit, page, slug);
+  // };
   console.log("Catrry data", Array.isArray(categoriesData));
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
@@ -147,20 +148,27 @@ const MegaMenu = () => {
                                 <li key={child.id}>
                                   <Link
                                     href={createUrl(
-                                      child?.translations[0]?.category_id,
+                                      [
+                                        category.id,
+
+                                        child?.translations[0]?.category_id,
+                                      ],
+
                                       child?.translations[0]?.slug
                                     )}
                                     // href={"#"}
                                     className="dropdown-item"
                                     onClick={() => {
+                                      console.log("Child name", category);
                                       console.log(
-                                        "Child name",
-                                        child?.translations[0]?.slug
-                                      );
-                                      createUrl(
-                                        child?.translations[0]?.category_id,
-
-                                        child?.translations[0]?.slug
+                                        "rohanrohanrohan",
+                                        createUrl(
+                                          [
+                                            category.id,
+                                            child?.translations[0]?.category_id,
+                                          ],
+                                          child?.translations[0]?.slug
+                                        )
                                       );
                                     }}
                                   >

@@ -9,6 +9,38 @@ import { CustomToast, SuccessToast } from "./CustomToast";
 
 export default function ProductDetails({ productDetails }) {
   console.log("productDetails", productDetails);
+  // Step 1: Count usage of each option_id across attribute_ids
+  const optionIdCount = new Map(); // option_id -> count
+
+  productDetails?.variants.forEach((variant) => {
+    Object.entries(variant.attributes).forEach(([key, value]) => {
+      if (!/^\d+$/.test(key)) return;
+
+      const optionId = value.option_id;
+
+      if (optionIdCount.has(optionId)) {
+        optionIdCount.set(optionId, optionIdCount.get(optionId) + 1);
+      } else {
+        optionIdCount.set(optionId, 1);
+      }
+    });
+  });
+
+  // Step 2: Collect unique option_values where option_id appears under only one attribute_id
+  const uniqueOptions = new Map(); // option_id -> option_value
+
+  productDetails?.variants.forEach((variant) => {
+    Object.entries(variant.attributes).forEach(([key, value]) => {
+      if (!/^\d+$/.test(key)) return;
+
+      const { option_id, option_value } = value;
+
+      if (optionIdCount.get(option_id) === 1 && !uniqueOptions.has(option_id)) {
+        uniqueOptions.set(option_id, option_value);
+      }
+    });
+  });
+
   const imageList = [
     "/assets/bracelet1.png",
     "/assets/Bowls.png",
@@ -25,7 +57,10 @@ export default function ProductDetails({ productDetails }) {
     }
     console.log("updated", updated);
   };
-  console.log("cartt", cart);
+  console.log(
+    "productDetails",
+    productDetails?.variants?.attributes?.variations
+  );
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       <div className="side-bar-mobi">
@@ -102,11 +137,15 @@ export default function ProductDetails({ productDetails }) {
             <tbody>
               <tr>
                 <th>Colour:</th>
-                <td>n/a</td>
+                <td>
+                  {productDetails?.attributes?.color
+                    ? productDetails?.attributes?.color
+                    : "n/a"}
+                </td>
               </tr>
               <tr>
                 <th>Width(cm):</th>
-                <td>n/a</td>
+                <td>{productDetails?.width ? productDetails?.width : "n/a"}</td>
               </tr>
 
               <tr>
@@ -116,12 +155,16 @@ export default function ProductDetails({ productDetails }) {
 
               <tr>
                 <th>Height(cm):</th>
-                <td>n/a</td>
+                <td>
+                  {productDetails?.height ? productDetails?.height : "n/a"}
+                </td>
               </tr>
 
               <tr>
                 <th>Length(cm):</th>
-                <td>n/a</td>
+                <td>
+                  {productDetails?.length ? productDetails?.length : "n/a"}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -129,7 +172,7 @@ export default function ProductDetails({ productDetails }) {
         {/* Product Details */}
         <div className="col-md-12 col-lg-6 ">
           <div className="products-detailing">
-            <h2>Glass Bead Necklace & Bracelet Set</h2>
+            <h2>{productDetails?.name}</h2>
             <p className="text-muted sku-detail">
               SKU: {productDetails?.sku ? productDetails.sku : "JG10068-M"}{" "}
               <span className="wishlist float-right">
@@ -155,28 +198,42 @@ export default function ProductDetails({ productDetails }) {
               {/* Price: <span className="fs-4 text-dark">&euro;29.00</span> */}
               Price:{" "}
               <span className="fs-4 text-dark">
-                {productDetails?.min_price}
+                {productDetails?.formatted_price}
               </span>
             </p>
 
-            <div className="mb-3 d-flex choose-category align-items-center">
-              <label
-                className="form-label me-2  fw-semibold"
-                style={{
-                  color: "#005e84",
-                }}
-              >
-                Choose:
-              </label>
-              <select
-                className="form-select"
-                style={{
-                  color: "#005e84",
-                }}
-              >
-                <option>Select Item</option>
-              </select>
-            </div>
+            {productDetails?.variants?.length > 0 && (
+              <div className="mb-3 d-flex choose-category align-items-center">
+                <label
+                  className="form-label me-2  fw-semibold"
+                  style={{
+                    color: "#005e84",
+                  }}
+                >
+                  Choose:
+                </label>
+                {/* <select className="form-select" style={{ color: "#005e84" }}>
+                  <option>Select Option</option>
+                  {productDetails?.variants.flatMap((variant) =>
+                    Object.entries(variant.attributes)
+                      .filter(([key]) => /^\d+$/.test(key)) // only numeric attribute keys
+                      .map(([key, value]) => (
+                        <option key={`${variant.id}-${key}`}>
+                          {value.option_value}
+                        </option>
+                      ))
+                  )}
+                </select> */}
+                <select className="form-select" style={{ color: "#005e84" }}>
+                  <option>Select Option</option>
+                  {[...uniqueOptions.entries()].map(([optionId, label]) => (
+                    <option key={optionId} value={optionId}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="mb-4 d-flex choose-category align-items-center">
               <label

@@ -86,6 +86,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
 
   const fetchData = async () => {
     const data = await getAllProduct();
+    console.log("Product car", data);
     if (data.status == 200) {
       setProductData([...data?.data?.data, ...data?.data?.data]);
     } else {

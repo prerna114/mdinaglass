@@ -24,13 +24,11 @@ export const getAllProduct = async (category, filterData, currentPage) => {
 
 export const getProductByID = async (id) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}api/products`, {
-      params: {
-        sku: id,
-      },
-    });
+    const response = await axios.get(
+      `${API_BASE_URL}api/blackbull/products/${id}`
+    );
     console.log("Data", response.data.data); // Optional: for debugging
-    return response.data.data;
+    return response;
   } catch (error) {
     console.error("Error fetching products:", error);
     return null;

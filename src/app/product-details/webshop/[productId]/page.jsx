@@ -20,16 +20,20 @@ const page = () => {
 
   console.log("paramsdsdsds", params?.productId);
   const getProductDetails = async () => {
-    const data = await getProductByID(sku);
+    // const data = await getProductByID(params?.productId);
+    const data = await getProductByID(479);
     console.log("getProductDetails", data);
-    if (data) {
-      setProductDetails(data[0]);
+    // if()
+    if (data?.status == 200) {
+      setProductDetails(data?.data?.data);
     }
   };
 
   useEffect(() => {
     getProductDetails();
   }, []);
+
+  console.log("Product details", productDetails);
   return (
     <>
       {/* <Header /> */}

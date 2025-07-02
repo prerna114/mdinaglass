@@ -54,7 +54,7 @@ const CategorySidebar = (cateogryId) => {
 
       setSideMenu(parsed);
     }
-    console.log("Data of menu", stored);
+    // console.log("Data of menu", stored);
   };
 
   useEffect(() => {
