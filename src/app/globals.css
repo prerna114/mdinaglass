@@ -2871,9 +2871,17 @@ input[type="checkbox"].custom-checkbox {
 
 ul.category-sidebar li .activeSIdeBar {
   color: #005e84 !important;
+  font-family: var(--font-domine) !important;
 }
 ul.category-sidebar li .nonActiveBar {
   color: #808080 !important;
+  /* color: #76d2d3 !important; */
+  font-family: var(--font-domine) !important;
+}
+ul.category-sidebar li .level-3 {
+  /* color: #808080 !important; */
+  color: #76d2d3 !important;
+  font-family: var(--font-domine) !important;
 }
 .billing-text {
   color: #005e84;
@@ -2905,5 +2913,6 @@ ul.category-sidebar li .nonActiveBar {
 
 ul.category-sidebar li.top-level-li > .category-sidebar {
   color: #005e84 !important;
-  font-size: 18px;
+  /* font-size: 18px; */
+  /* padding: 10px 30px 0; */
 }

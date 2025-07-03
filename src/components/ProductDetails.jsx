@@ -12,34 +12,39 @@ export default function ProductDetails({ productDetails }) {
   // Step 1: Count usage of each option_id across attribute_ids
   const optionIdCount = new Map(); // option_id -> count
 
-  productDetails?.variants.forEach((variant) => {
-    Object.entries(variant.attributes).forEach(([key, value]) => {
-      if (!/^\d+$/.test(key)) return;
+  productDetails?.variants &&
+    productDetails?.variants.forEach((variant) => {
+      Object.entries(variant.attributes).forEach(([key, value]) => {
+        if (!/^\d+$/.test(key)) return;
 
-      const optionId = value.option_id;
+        const optionId = value.option_id;
 
-      if (optionIdCount.has(optionId)) {
-        optionIdCount.set(optionId, optionIdCount.get(optionId) + 1);
-      } else {
-        optionIdCount.set(optionId, 1);
-      }
+        if (optionIdCount.has(optionId)) {
+          optionIdCount.set(optionId, optionIdCount.get(optionId) + 1);
+        } else {
+          optionIdCount.set(optionId, 1);
+        }
+      });
     });
-  });
 
   // Step 2: Collect unique option_values where option_id appears under only one attribute_id
   const uniqueOptions = new Map(); // option_id -> option_value
 
-  productDetails?.variants.forEach((variant) => {
-    Object.entries(variant.attributes).forEach(([key, value]) => {
-      if (!/^\d+$/.test(key)) return;
+  productDetails?.variants &&
+    productDetails?.variants.forEach((variant) => {
+      Object.entries(variant.attributes).forEach(([key, value]) => {
+        if (!/^\d+$/.test(key)) return;
 
-      const { option_id, option_value } = value;
+        const { option_id, option_value } = value;
 
-      if (optionIdCount.get(option_id) === 1 && !uniqueOptions.has(option_id)) {
-        uniqueOptions.set(option_id, option_value);
-      }
+        if (
+          optionIdCount.get(option_id) === 1 &&
+          !uniqueOptions.has(option_id)
+        ) {
+          uniqueOptions.set(option_id, option_value);
+        }
+      });
     });
-  });
 
   const imageList = [
     "/assets/bracelet1.png",

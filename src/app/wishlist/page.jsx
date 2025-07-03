@@ -7,6 +7,7 @@ import ProductHeading from "@/components/ProductHeading";
 import ProductListing from "@/components/ProductListing";
 import MegaMenu from "@/components/Megamenu";
 import React from "react";
+import SideMenu from "@/components/SideMenu";
 
 const ShopPage = () => {
   return (
@@ -24,7 +25,7 @@ const ShopPage = () => {
             <div className="row  min-vh-100">
               {/* Category Sidebar */}
               <div className="col-lg-3 col-md-12 p-0">
-                <CategorySidebar />
+                <SideMenu />
               </div>
               {/* Product Listing */}
               <div className="col-lg-9 col-md-12">

@@ -41,7 +41,7 @@ export const createUrl = (
   theLimit,
   thePage
 ) => {
-  console.log("dsadadsadadsada", categoryID);
+  // console.log("dsadadsadadsada", categoryID);
   let sortOrder = thesortORder ? thesortORder : "asc";
   let limit = theLimit ? theLimit : 15;
   let page = thePage ? thePage : 1;
@@ -57,7 +57,7 @@ export const createUrl = (
   const idPath = Array.isArray(categoryID)
     ? categoryID.join("/")
     : String(categoryID);
-  console.log("rohanrohanrohan123", categoryID);
+  // console.log("rohanrohanrohan123", categoryID);
   const cleanSlug = slug ? slug.replace(/\.htm+$/i, "") : "all-product";
   return buildProductUrl(idPath, sortOrder, limit, page, cleanSlug);
 };

@@ -1,19 +1,98 @@
 "use client";
 
-import { getAllProduct } from "@/api/productApi";
+import { getAllProduct, getProductCateogry } from "@/api/productApi";
 import { createUrl } from "@/constant";
 import { ProductLists } from "@/store/product";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMenuStore } from "@/store/useCategoryStore";
 import Link from "next/link";
-import { useParams, useSearchParams, useRouter } from "next/navigation";
+import {
+  useParams,
+  useSearchParams,
+  useRouter,
+  usePathname,
+} from "next/navigation";
 
 import React, { useEffect, useRef, useState } from "react";
 
 const ProductListing = ({ onDataLoaded }) => {
   const [productList, setProductList] = useState([]);
+  const [categoryidList, setCategoryidList] = useState([]);
+  const pathname = usePathname();
   const params = useParams();
-  // console.log("currentCategoryId", params);
+  const allParams = params?.params || [];
+  const priceIndex = allParams.findIndex((p) => p === "price");
+  console.log("allParams", allParams, params);
+  const sku = allParams[allParams.length - 1];
+  // console.log("SKU", sku.split(".")[0]);
+  const getProductByCategory = async (id) => {
+    setLoading(true);
+    setProducts([]);
+    setCategory([]);
+
+    const data = await getProductCateogry(id);
+    if (data?.status === 200) {
+      setProducts(data.data.products || []);
+    } else {
+      setProducts([]);
+      setCategory([]);
+    }
+
+    setLoading(false);
+  };
+  const fetchData = async () => {
+    const data = await getAllProduct();
+    console.log("Product car", data?.data?.data);
+    if (data.status == 200) {
+      setProducts(data?.data?.data);
+      setLoading(false);
+    } else {
+      // setProductData([]);
+    }
+    setLoading(false);
+
+    console.log("THe data", data);
+  };
+  useEffect(() => {
+    if (sku == "all-product.htm") {
+      fetchData();
+    } else if (pathname == "/wishlist") {
+      fetchData();
+    } else {
+      const categoryIds =
+        priceIndex !== -1 ? allParams.slice(0, priceIndex).map(Number) : [];
+      const lastId = categoryIds[categoryIds.length - 1];
+      const subCateogry = localStorage.getItem("subCateogry");
+      const parsedCateogry = subCateogry ? JSON.parse(subCateogry) : [];
+      console.log("Category Ids", categoryIds, lastId, parsedCateogry);
+
+      const idPath = Array.isArray(categoryIds)
+        ? categoryIds.join("/")
+        : String(categoryIds);
+      setCategoryidList(idPath);
+      const findCategoryById = (categories, targetId) => {
+        for (const cat of categories) {
+          if (cat.id === targetId) return cat;
+          if (cat.children?.length) {
+            const found = findCategoryById(cat.children, targetId);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      const selectedCategory = findCategoryById(parsedCateogry, lastId);
+      console.log("✅ selectedCategory", selectedCategory?.children);
+      if (selectedCategory?.children?.length > 0) {
+        setCategory(selectedCategory?.children);
+        setProducts([]);
+        setLoading(false);
+        console.log("selectedCategory if");
+      } else {
+        console.log("selectedCategory else");
+        getProductByCategory(lastId);
+      }
+    }
+  }, []);
 
   // const [category, , sortOrder, limit, page, slug] = params?.params || [];
   const [paginationList, setPaginationList] = useState([1, 2, 3]);
@@ -44,49 +123,17 @@ const ProductListing = ({ onDataLoaded }) => {
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const { setProducts, products, category, setCategory, allProduct } =
     ProductLists((state) => state);
-  // const [subCategory, setSubCategory] = useState([]);
 
-  // const getProductList = async () => {
-  //   setLoading(true);
+  console.log("Products", products, category, loading);
 
-  //   console.log("getProductList");
-
-  //   let data = "";
-  //   if (slug == "all-product.htm") {
-  //     console.log("With Slug");
-  //     data = await getAllProduct("", filterData, currentPage);
-  //   } else {
-  //     data = await getAllProduct(category, filterData, currentPage);
-  //     console.log("Without Slug", slug);
-  //   }
-  //   if (data) {
-  //     console.log("Get Prouct api s calling");
-  //     console.log("Product Lsiting", category);
-
-  //     const newURL = createUrl(
-  //       category,
-  //       slug,
-  //       "",
-  //       filterData?.limit,
-  //       currentPage
-  //     );
-
-  //     // router.replace(newURL);
-  //     // router.refresh();
-
-  //     // router.push(newURL);
-  //     setProductList(data?.data?.data);
-  //     setLoading(false);
-  //   } else {
-  //     setProductList([]);
-  //     setLoading(false);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getProductList();
-  //   console.log("Filter data", filterData, currentPage);
-  // }, [filterData, currentPage]);
-
+  function sortProductsByPriceLowToHigh(products) {
+    const data = [...products].sort(
+      (a, b) =>
+        parseFloat(a.prices.final.price) - parseFloat(b.prices.final.price)
+    );
+    console.log("Sorted Products by Price", data);
+    setProducts(data);
+  }
   const handlePagination = (item, action) => {
     const totalLEnght = productList?.meta?.total;
     //  if(item> )
@@ -170,10 +217,8 @@ const ProductListing = ({ onDataLoaded }) => {
     }, 1000);
     console.log("");
   }, [products, category]);
-  useEffect(() => {
-    setLoading(true);
-  }, []);
-  // console.log("allProduct", category?.length, products?.length, loading);
+
+  console.log("allProduct", category?.length, products?.length, loading);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -257,131 +302,130 @@ const ProductListing = ({ onDataLoaded }) => {
         </div>
       </div>
       {/* Sort and Items Control */}
-      {category?.length == 0 ||
-        (category.length == 0 && productList?.length == 0 && (
-          <>
-            <div className="row mb-3">
-              <div className="col-md-12 col-lg-7">
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="d-flex sorting-style align-items-center">
-                      <span>Sort by</span>
-                      <select
-                        className="form-select w-auto"
-                        onChange={(e) => {
-                          if (e.target.value) {
+      {category?.length == 0 && (
+        <>
+          <div className="row mb-3">
+            <div className="col-md-12 col-lg-7">
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="d-flex sorting-style align-items-center">
+                    <span>Sort by</span>
+                    <select
+                      className="form-select w-auto"
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          if (e.target.value == "Price") {
+                            sortProductsByPriceLowToHigh(products);
                           }
-                        }}
-                      >
-                        <option>Price</option>
-                        <option>Name</option>
-                        <option value={"Newest"}>Newest</option>
-                        <option>Popular</option>
-                      </select>
-                    </div>
+                          console.log("Selected value", e.target.value);
+                        }
+                      }}
+                    >
+                      <option>Select</option>
+
+                      <option>Price</option>
+                      <option>Name</option>
+                      <option value={"Newest"}>Newest</option>
+                      <option>Popular</option>
+                      <option>Date Published</option>
+                      <option>Date Archived</option>
+                      <option>Date Created</option>
+                      <option>Date Modified</option>
+                    </select>
                   </div>
-                  <div className="col-md-6">
-                    <div className="d-flex  sorting-item align-items-center justify-content-end">
-                      <span>Items</span>
-                      <select
-                        className="form-select w-auto me-3"
-                        value={filterData?.limit}
-                        onChange={(e) => {
-                          handleFilter("limit", e.target.value);
-                          // console.log("New", e.target.value);
-                        }}
-                      >
-                        <option value={15}>15 Items</option>
-                        <option value={30}>30 Items</option>
-                        <option value={60}>60 Items</option>
-                      </select>
-                    </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="d-flex  sorting-item align-items-center justify-content-end">
+                    <span>Items</span>
+                    <select
+                      className="form-select w-auto me-3"
+                      value={filterData?.limit}
+                      onChange={(e) => {
+                        handleFilter("limit", e.target.value);
+                        // console.log("New", e.target.value);
+                      }}
+                    >
+                      <option value={15}>15 Items</option>
+                      <option value={30}>30 Items</option>
+                      <option value={60}>60 Items</option>
+                    </select>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Pagination */}
-              {true && (
-                <div className="col-md-12 col-lg-5">
-                  <nav aria-label="Product pagination">
-                    <ul className="pagination">
-                      {currentPage == 1 ? (
-                        <></>
-                      ) : (
-                        <li
-                          className={`page-item ${
-                            currentPage === 1 ? "disabled" : ""
-                          }`}
-                        >
-                          <button
-                            className="page-link"
-                            onClick={() => {
-                              if (currentPage > 1) {
-                                handlePrevious(currentPage);
-                              }
-                            }}
-                            disabled={currentPage === 1}
-                          >
-                            Previous
-                          </button>
-                        </li>
-                      )}
+            {/* Pagination */}
+          </div>
 
-                      {paginationList.map((item, index) => {
-                        return (
-                          <li
-                            key={index}
-                            className={`page-item ${
-                              currentPage === item ? "active" : ""
-                            }`}
-                          >
-                            <button
-                              className="page-link"
-                              onClick={(e) => {
-                                // console.log("eeeeeee", e);
-                                // if (currentPage == currentPage) {
-                                // } else if (currentPage < item) {
-                                // }
-                                setCurrentPage(item);
-                                if (
-                                  paginationList[paginationList?.length - 1] ==
-                                  item
-                                ) {
-                                  handlePagination(item, "next");
-                                } else if (
-                                  paginationList[0] == item &&
-                                  item > 1
-                                ) {
-                                  handlePagination(item, "prev");
-                                }
-                              }}
-                            >
-                              {item}
-                            </button>
-                          </li>
-                        );
-                      })}
-
-                      <li className="page-item">
-                        <button
-                          className="page-link"
-                          onClick={() => handleNext(currentPage)}
-                        >
-                          Next &gt;
-                        </button>
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
+          {/* Items Count */}
+          <div className="mb-3">
+            <small className="text-muted">Items 1-9 of 9 total</small>
+          </div>
+        </>
+      )}
+      {products?.length > 15 && (
+        <div className="col-md-12 col-lg-5">
+          <nav aria-label="Product pagination">
+            <ul className="pagination">
+              {currentPage == 1 ? (
+                <></>
+              ) : (
+                <li
+                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => {
+                      if (currentPage > 1) {
+                        handlePrevious(currentPage);
+                      }
+                    }}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                </li>
               )}
-            </div>
 
-            {/* Items Count */}
-            <div className="mb-3">
-              <small className="text-muted">Items 1-9 of 9 total</small>
-            </div>
-          </>
-        ))}
+              {paginationList.map((item, index) => {
+                return (
+                  <li
+                    key={index}
+                    className={`page-item ${
+                      currentPage === item ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={(e) => {
+                        setCurrentPage(item);
+                        if (
+                          paginationList[paginationList?.length - 1] == item
+                        ) {
+                          handlePagination(item, "next");
+                        } else if (paginationList[0] == item && item > 1) {
+                          handlePagination(item, "prev");
+                        }
+                      }}
+                    >
+                      {item}
+                    </button>
+                  </li>
+                );
+              })}
+
+              <li className="page-item">
+                <button
+                  className="page-link"
+                  onClick={() => handleNext(currentPage)}
+                >
+                  Next &gt;
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
 
       {loading && (
         <div
@@ -416,23 +460,6 @@ const ProductListing = ({ onDataLoaded }) => {
                     alt={product.name}
                     style={{}}
                   />
-                  {/* {product.hasOptions && (
-                  <div className="m-2">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id={`options-${product.id}`}
-                      />
-                      <label
-                        className="form-check-label small text-muted"
-                        htmlFor={`options-${product.id}`}
-                      >
-                        Click for more options
-                      </label>
-                    </div>
-                  </div>
-                )} */}
                 </div>
                 <div className="card-body text-center">
                   <a
@@ -507,9 +534,10 @@ const ProductListing = ({ onDataLoaded }) => {
                 <div className="card-body text-center">
                   <Link
                     href={{
-                      pathname: `/product-details/webshop/${product?.id}`,
-                      query: { sku: product?.sku },
+                      pathname: `/product-details/webshop/${categoryidList}`,
+                      query: { sku: product?.sku, id: product?.id },
                     }}
+                    scroll={false}
                     // href={"#"}
                     onClick={() => {
                       // console.log("dsada", product);
@@ -571,7 +599,7 @@ const ProductListing = ({ onDataLoaded }) => {
             </div>
 
             {/* Pagination */}
-            {true && (
+            {products?.length > 15 && (
               <div className="col-md-12 col-lg-5">
                 <nav aria-label="Product pagination">
                   <ul className="pagination">

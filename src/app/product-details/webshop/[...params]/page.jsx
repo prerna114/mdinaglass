@@ -12,16 +12,22 @@ import { useCartStore } from "@/store";
 import { useParams, useSearchParams } from "next/navigation";
 import { getProductByID } from "@/api/productApi";
 import CateogoryTree from "@/components/CateogoryTree";
+import { ProductLists } from "@/store/product";
+import SideMenu from "@/components/SideMenu";
 const page = () => {
+  const { heading } = ProductLists((state) => state);
+
   const [productDetails, setProductDetails] = useState();
   const searchParams = useSearchParams();
   const sku = searchParams.get("sku");
+  const productId = searchParams.get("id");
+
   const params = useParams();
 
-  console.log("paramsdsdsds", params?.productId);
+  console.log("paramsdsdsds", params, productId);
   const getProductDetails = async () => {
     // const data = await getProductByID(params?.productId);
-    const data = await getProductByID(479);
+    const data = await getProductByID(productId);
     console.log("getProductDetails", data);
     // if()
     if (data?.status == 200) {
@@ -45,7 +51,7 @@ const page = () => {
         }}
       >
         <div className="header-product bg-white">
-          <h1>Jewellery</h1>
+          <h1>{heading}</h1>
           <h5>
             We offer a selection of affordable contemporary costume jewellery
             with glass beads.
@@ -57,8 +63,9 @@ const page = () => {
               <div className="row  min-vh-100">
                 {/* Category Sidebar */}
                 <div className="col-lg-3 col-md-12  p-0">
+                  <SideMenu />
                   {/* <CategorySidebar cateogryId={params?.productId} /> */}
-                  <CateogoryTree cateogryId={params?.productId} />
+                  {/* <CateogoryTree cateogryId={params?.productId} /> */}
                 </div>
                 {/* Product Listing */}
                 <div className="col-lg-9 col-md-12">

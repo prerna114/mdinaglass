@@ -1,7 +1,7 @@
 "use client";
 
 import { getCategories, getMenuCategories } from "@/api/menuAPI";
-import { getProductCateogry } from "@/api/productApi";
+import { getProductCateogry, getProductCateogrybyId } from "@/api/productApi";
 import { createUrl } from "@/constant";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
@@ -61,38 +61,39 @@ const CateogoryTree = ({ cateogryId, onDataLoaded }) => {
     // console.log("Data of menu", stored);
   };
 
-  useEffect(() => {
-    getMenuData();
-    const thesubcartID = localStorage.getItem("subCartId");
-    const theCaterygoryID = localStorage.getItem("categoryId");
-    const theSubCategoryList = localStorage.getItem("subCateogry");
-    setCategoryTheId(JSON.parse(theCaterygoryID));
-    console.log("useSubCart", thesubcartID);
-    const parsthesubcartID = JSON.parse(thesubcartID);
-    const parsetheSubCategoryList = JSON.parse(theSubCategoryList);
-    setSubCartId(parsthesubcartID);
-    setSubCategory(parsetheSubCategoryList);
-    // console.log(
-    //   "theSubCategoryList",
-    //   Array.isArray(parsetheSubCategoryList),
-    //   parsetheSubCategoryList
-    // );
-    const catID = localStorage.getItem("categoryID");
-    setShowID(JSON.parse(catID));
-    // getProductByCategory(thesubcartID);
-  }, []);
-  useEffect(() => {
-    if (subCartId && catergoryTheId) {
-      getProductByCategory(subCartId, catergoryTheId);
-    }
-  }, [subCartId, catergoryTheId]);
-
-  const getCategory = async () => {
-    const data = await getCategories();
-    console.log("DatagetCategories", data);
+  const CategoryById = async (id) => {
+    const data = await getProductCateogrybyId(1);
+    console.log("CategoryById", data);
   };
   useEffect(() => {
-    getCategory();
+    // getMenuData();
+    // const thesubcartID = localStorage.getItem("subCartId");
+    // const theCaterygoryID = localStorage.getItem("categoryId");
+    // const theSubCategoryList = localStorage.getItem("subCateogry");
+    // setCategoryTheId(JSON.parse(theCaterygoryID));
+    // console.log("useSubCart", thesubcartID);
+    // const parsthesubcartID = JSON.parse(thesubcartID);
+    // const parsetheSubCategoryList = JSON.parse(theSubCategoryList);
+    // setSubCartId(parsthesubcartID);
+    // setSubCategory(parsetheSubCategoryList);
+
+    // const catID = localStorage.getItem("categoryID");
+    // setShowID(JSON.parse(catID));
+
+    CategoryById();
+  }, []);
+  useEffect(() => {
+    // if (subCartId && catergoryTheId) {
+    //   getProductByCategory(subCartId, catergoryTheId);
+    // }
+  }, [subCartId, catergoryTheId]);
+
+  // const getCategory = async () => {
+  //   const data = await getCategories();
+  //   console.log("DatagetCategories", data);
+  // };
+  useEffect(() => {
+    // getCategory();
   }, []);
 
   return (

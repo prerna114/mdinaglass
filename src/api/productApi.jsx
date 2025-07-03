@@ -62,3 +62,14 @@ export const getProductCateogry = async (id) => {
     return null;
   }
 };
+
+export const getProductCateogrybyId = async (id) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}api/categories/${id}`);
+    console.log("getProductCateogry", response); // Optional: for debugging
+    return response;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return null;
+  }
+};

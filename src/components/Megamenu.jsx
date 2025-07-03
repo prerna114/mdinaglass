@@ -1,5 +1,6 @@
 "use client";
 import { createUrl } from "@/constant";
+import { ProductLists } from "@/store/product";
 import { useAuthStore } from "@/store/useAuthStore";
 import { buildProductUrl } from "@/utils/buildProductUrl";
 // import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -8,6 +9,8 @@ import { useEffect, useState } from "react";
 
 const MegaMenu = () => {
   const [categoriesData, setCategoriesData] = useState([]);
+  const { heading, setHeading } = ProductLists((state) => state);
+
   const [showMenu, setShowMenu] = useState(true);
   const { setMenu } = useAuthStore((state) => state);
 
@@ -40,7 +43,7 @@ const MegaMenu = () => {
         return () => clearTimeout(timeout);
       }
     }
-  }, [showMenu]);
+  }, [showMenu, categoriesData]);
 
   const getMenuCategories = async () => {
     console.log("Get Catrogires is clling");
@@ -170,6 +173,7 @@ const MegaMenu = () => {
                                           child?.translations[0]?.slug
                                         )
                                       );
+                                      setHeading(child.name);
                                     }}
                                   >
                                     {child.name}
