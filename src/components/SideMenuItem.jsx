@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ProductLists } from "@/store/product";
 import { getProductCateogry } from "@/api/productApi";
 import { createUrl } from "@/constant";
@@ -22,7 +22,11 @@ const SideMenuItem = ({
       ? allParams.slice(0, priceIndex).map(Number)
       : allParams.map(Number);
 
-  console.log("All Params", params, categoryIds, allParams, priceIndex);
+  // console.log("All Params", params, categoryIds, allParams, priceIndex);
+  const [selectedFilter, setSelectedFilter] = useState({
+    variations: 0,
+    color: 0,
+  });
 
   const sortOrder = priceIndex !== -1 ? allParams[priceIndex + 1] : "asc";
   const limit = priceIndex !== -1 ? allParams[priceIndex + 2] : 15;
@@ -32,7 +36,7 @@ const SideMenuItem = ({
   const cleanSlug = slugWithExt?.replace(/\.htm+$/i, "") || "all-product";
 
   const { subCategoryMap, setSubCategory } = useMenuStore();
-  const { setProducts, setCategory, setHeading } = ProductLists(
+  const { setProducts, setCategory, setHeading, setAllProduct } = ProductLists(
     (state) => state
   );
   const { loading, setLoading } = useMenuStore.getState();
@@ -63,45 +67,49 @@ const SideMenuItem = ({
 
     if (item?.children?.length > 0) {
       // setCategory(item.children);
-      getProductByCategory(item.id);
+      console.log("Side Menu");
+      getProductByCategory(item.id, selectedFilter);
     } else {
-      getProductByCategory(item.id);
+      getProductByCategory(item.id, selectedFilter);
+      console.log("Side Menu");
     }
   };
 
-  const getProductByCategory = async (id) => {
+  const getProductByCategory = async (id, selectedFilter) => {
     setLoading(true);
     setProducts([]);
     setCategory([]);
-
-    const data = await getProductCateogry(id);
-    console.log("Product Data", data.data);
-
-    if (data?.status === 200) {
-      if (data.data.products && data.data.products.length > 0) {
-        setProducts(data.data.products);
-      } else if (
-        data?.data?.sub_categories &&
-        data?.data?.sub_categories.length > 0
-      ) {
-        setCategory(data.data.sub_categories);
-      }
-      window.scrollTo({
-        top: 500,
-        behavior: "smooth", // Optional: for smooth scrolling animation
-      });
-      // setProducts(data.data.products || []);
+    if (id && selectedFilter && Object.keys(selectedFilter).length > 0) {
+      const data = await getProductCateogry(id, selectedFilter);
       console.log("Product Data", data.data);
-    } else {
-      setProducts([]);
-      setCategory([]);
-      window.scrollTo({
-        top: 500,
-        behavior: "smooth", // Optional: for smooth scrolling animation
-      });
-    }
 
-    setLoading(false);
+      if (data?.status === 200) {
+        setAllProduct(data.data);
+        if (data.data.products && data.data.products.length > 0) {
+          setProducts(data.data.products);
+        } else if (
+          data?.data?.sub_categories &&
+          data?.data?.sub_categories.length > 0
+        ) {
+          setCategory(data.data.sub_categories);
+        }
+        window.scrollTo({
+          top: 500,
+          behavior: "smooth", // Optional: for smooth scrolling animation
+        });
+        // setProducts(data.data.products || []);
+        console.log("Product Data", data.data);
+      } else {
+        setProducts([]);
+        setCategory([]);
+        window.scrollTo({
+          top: 500,
+          behavior: "smooth", // Optional: for smooth scrolling animation
+        });
+      }
+
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -114,8 +122,19 @@ const SideMenuItem = ({
     const lastId = categoryIds[categoryIds.length - 1];
     if (lastId && lastId === item.id) {
       console.log("🔁 Triggering getProductByCategory for lastId:", lastId);
-      getProductByCategory(lastId);
+      getProductByCategory(lastId, selectedFilter);
+      console.log("Side Menu");
     }
+    const data = localStorage.getItem("filterdData");
+    if (data) {
+      const parsedData = JSON.parse(data);
+      setSelectedFilter({
+        color: parsedData?.color || 0,
+        variations: parsedData?.variations || 0,
+      });
+      console.log("Parsed Data", parsedData);
+    }
+    console.log("Filter Data", data, selectedFilter);
   }, []);
   return (
     <li

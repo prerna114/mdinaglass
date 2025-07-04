@@ -18,27 +18,32 @@ import React, { useEffect, useRef, useState } from "react";
 const ProductListing = ({ onDataLoaded }) => {
   const [productList, setProductList] = useState([]);
   const [categoryidList, setCategoryidList] = useState([]);
+  const [theLastI, setTheLastI] = useState("");
   const pathname = usePathname();
   const params = useParams();
   const allParams = params?.params || [];
+
   const priceIndex = allParams.findIndex((p) => p === "price");
   console.log("allParams", allParams, params);
   const sku = allParams[allParams.length - 1];
   // console.log("SKU", sku.split(".")[0]);
-  const getProductByCategory = async (id) => {
+  const getProductByCategory = async (id, filter) => {
     setLoading(true);
     setProducts([]);
     setCategory([]);
+    if (id && filter && Object.keys(filter).length > 0) {
+      const data = await getProductCateogry(id, filter);
+      // console.log("Product by category", data.data.products);
+      if (data?.status === 200) {
+        setProducts(data.data.products || []);
+        console.log("Inside getProduct", data.data.products);
+      } else {
+        setProducts([]);
+        setCategory([]);
+      }
 
-    const data = await getProductCateogry(id);
-    if (data?.status === 200) {
-      setProducts(data.data.products || []);
-    } else {
-      setProducts([]);
-      setCategory([]);
+      setLoading(false);
     }
-
-    setLoading(false);
   };
   const fetchData = async () => {
     const data = await getAllProduct();
@@ -65,7 +70,9 @@ const ProductListing = ({ onDataLoaded }) => {
       const subCateogry = localStorage.getItem("subCateogry");
       const parsedCateogry = subCateogry ? JSON.parse(subCateogry) : [];
       console.log("Category Ids", categoryIds, lastId, parsedCateogry);
-
+      if (lastId) {
+        setTheLastI(lastId);
+      }
       const idPath = Array.isArray(categoryIds)
         ? categoryIds.join("/")
         : String(categoryIds);
@@ -89,8 +96,15 @@ const ProductListing = ({ onDataLoaded }) => {
         console.log("selectedCategory if");
       } else {
         console.log("selectedCategory else");
-        getProductByCategory(lastId);
+
+        getProductByCategory(lastId, filterData);
       }
+    }
+    const data = localStorage.getItem("filterdData");
+    if (data) {
+      const parsedData = JSON.parse(data);
+      setSelectedFilter(parsedData);
+      console.log("Parsed Data", parsedData);
     }
   }, []);
 
@@ -109,23 +123,39 @@ const ProductListing = ({ onDataLoaded }) => {
     }));
   };
 
-  // console.log(
-  //   "dskmkmk ohrna",
-  //   { category, sortOrder, limit, page, slug },
-  //   filterData
-  // );
-  // const [loading, setLoading] = useState(false);
   const { menu } = useAuthStore((state) => state);
   const { loading, setLoading } = useMenuStore.getState();
 
   const initialPage = 1;
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [itemsPerPage, setItemsPerPage] = useState(15);
+  const [colorOptions, setColorOptions] = useState([]);
+  const [variationOption, setVariationOption] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState({
+    variations: 0,
+    color: 0,
+  });
+
   const { setProducts, products, category, setCategory, allProduct } =
     ProductLists((state) => state);
 
-  console.log("Products", products, category, loading);
+  console.log("Products", products, allProduct);
 
+  const SaveColor = () => {
+    const colors = allProduct?.filterable?.find((item) => item.code == "color");
+    const variation = allProduct?.filterable?.find(
+      (item) => item.code == "variations"
+    );
+
+    console.log("Colors", variation?.options);
+    if (colors?.options?.length > 0) {
+      setColorOptions(colors?.options);
+    }
+    if (variation?.options?.length > 0) {
+      setVariationOption(variation?.options);
+    }
+  };
+
+  console.log("Category", variationOption);
   function sortProductsByPriceLowToHigh(products) {
     const data = [...products].sort(
       (a, b) =>
@@ -173,17 +203,6 @@ const ProductListing = ({ onDataLoaded }) => {
       setCurrentPage((prev) => prev + 1);
     }
   };
-  useEffect(() => {
-    if (typeof onDataLoaded === "function") {
-      const timer = setTimeout(() => {
-        // onDataLoaded();
-        console.log("✅ onDataLoaded function called");
-      }, 50);
-
-      // Cleanup on unmount
-      return () => clearTimeout(timer);
-    }
-  }, [onDataLoaded]);
 
   const buildCategoryPath = (id) => {
     const { parentMap } = useMenuStore.getState();
@@ -218,7 +237,19 @@ const ProductListing = ({ onDataLoaded }) => {
     console.log("");
   }, [products, category]);
 
-  console.log("allProduct", category?.length, products?.length, loading);
+  useEffect(() => {
+    if (allProduct?.filterable?.length > 0) {
+      SaveColor();
+    }
+  }, [allProduct]);
+  useEffect(() => {
+    if (Object.keys(selectedFilter).length > 0) {
+      console.log("Selected Filter", selectedFilter);
+      getProductByCategory(theLastI, selectedFilter);
+      localStorage.setItem("filterdData", JSON.stringify(selectedFilter));
+    }
+  }, [selectedFilter]);
+  console.log("allProduct", selectedFilter);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -272,31 +303,72 @@ const ProductListing = ({ onDataLoaded }) => {
           {(category?.length == 0 ||
             (category?.length == 0 && products?.length == 0)) && (
             <>
-              <div className="col-md-4 col-lg-3">
+              {/* <div className="col-md-4 col-lg-3">
                 <select className="form-select  mt-2">
                   <option>SHAPE</option>
                   <option>Round</option>
                   <option>Square</option>
                   <option>Oval</option>
                 </select>
-              </div>
-              <div className="col-md-4 col-lg-3">
-                <select className="form-select  mt-2">
-                  <option>ALL COLOURS</option>
-                  <option>Blue</option>
-                  <option>Amber</option>
-                  <option>Green</option>
-                  <option>Clear</option>
-                </select>
-              </div>
-              <div className="col-md-4 col-lg-3">
+              </div> */}
+              {colorOptions?.length > 0 && (
+                <div className="col-md-4 col-lg-3">
+                  <select
+                    defaultValue={selectedFilter.color}
+                    className="form-select  mt-2"
+                    onChange={(e) => {
+                      console.log("Selected Color", e.target.value);
+                      setSelectedFilter((prev) => ({
+                        ...prev,
+                        ["color"]: e.target.value,
+                      }));
+
+                      // getProductByCategory(theLastI);
+                    }}
+                  >
+                    <option value="0">ALL COLOURS</option>
+
+                    {colorOptions?.length > 0 &&
+                      colorOptions?.map((item, index) => (
+                        <option value={item.id} key={index}>
+                          {item.label}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
+              {/* <div className="col-md-4 col-lg-3">
                 <select className="form-select  mt-2">
                   <option>ALL PRICES</option>
                   <option>Under €20</option>
                   <option>€20 - €50</option>
                   <option>Over €50</option>
                 </select>
-              </div>
+              </div> */}
+              {variationOption?.length > 0 && (
+                <div className="col-md-4 col-lg-3">
+                  <select
+                    defaultValue={selectedFilter.variations}
+                    className="form-select  mt-2"
+                    onChange={(e) => {
+                      console.log("Selected Color", e.target.value);
+                      setSelectedFilter((prev) => ({
+                        ...prev,
+                        ["variations"]: e.target.value,
+                      }));
+                      getProductByCategory(theLastI);
+                    }}
+                  >
+                    <option value={0}>All Variations</option>
+                    {variationOption?.length > 0 &&
+                      variationOption?.map((item, index) => (
+                        <option value={item.id} key={index}>
+                          {item.label}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
             </>
           )}
         </div>
@@ -485,7 +557,10 @@ const ProductListing = ({ onDataLoaded }) => {
                   </a>
                   {/* <h6 className="card-title mb-3">{product.name}</h6> */}
                   <p className="card-text text-info fw-bold">
-                    Price {product.min_price ? product.min_price : "120"}
+                    Price €
+                    {product.min_price
+                      ? Number(product.min_price).toFixed(2)
+                      : "120.00"}
                   </p>
                 </div>
               </div>
@@ -547,7 +622,12 @@ const ProductListing = ({ onDataLoaded }) => {
                   </Link>
                   {/* <h6 className="card-title mb-3">{product.name}</h6> */}
                   <p className="card-text text-info fw-bold">
-                    Price {product.min_price}
+                    Price €
+                    {product?.min_price
+                      ? Number(product?.min_price).toFixed(2)
+                      : Number(product?.price).toFixed(2)
+                      ? Number(product?.price).toFixed(2)
+                      : "120"}
                   </p>
                 </div>
               </div>

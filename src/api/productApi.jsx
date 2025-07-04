@@ -36,15 +36,31 @@ export const getProductByID = async (id) => {
 };
 
 export const getProductCateogry = async (id) => {
+  console.log("getProductCateogryData"); // Optional: for debugging
+  const filter =
+    localStorage.getItem("filterdData") &&
+    JSON.parse(localStorage.getItem("filterdData"));
+  const filterData = {
+    color: filter?.color || 0,
+    variations: filter?.variations || 0,
+  };
+
   const data = {
     id: id,
     filters: {
-      color: 24,
-      variations: 22,
+      ...(filterData != undefined &&
+        filterData?.color !== 0 && { color: filterData?.color }),
+      ...(filterData?.variations !== undefined &&
+        filterData?.variations !== 0 && {
+          variations: filterData?.variations,
+        }),
+
+      // variations: 22,
       per_page: 10,
       page: 1,
     },
   };
+  // console.log("getProductCateogryData", data, filter); // Optional: for debugging
   try {
     const response = await axios.post(
       `${API_BASE_URL}api/categories/products-with-filters`,
