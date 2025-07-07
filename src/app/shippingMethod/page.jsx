@@ -52,7 +52,7 @@ const page = () => {
       </div>
 
       <div className="container">
-        <div>
+        <div className="login-signup">
           <h5 className="gift-text mt-2">
             Do you have any gift items in your order?
           </h5>
@@ -66,23 +66,23 @@ const page = () => {
               &nbsp; Add Gift Options
             </label>
           </div>
-        </div>
-        <div className="col-md-12">
-          <div
-            className="d-flex pb-3 mt-3"
-            style={{ justifyContent: "space-between" }}
-          >
-            <Link href={"#"}>
-              <button className="btn btn-shop btn-primary back-button">
-                Back
-              </button>
-            </Link>
+          <div className="col-md-12">
+            <div
+              className="d-flex pb-3 mt-3"
+              style={{ justifyContent: "space-between" }}
+            >
+              <Link href={"#"}>
+                <button className="btn btn-shop btn-primary back-button">
+                  Back
+                </button>
+              </Link>
 
-            <Link href={"/payment"}>
-              <button className="btn btn-cart btn-info text-white back-button">
-                Continue
-              </button>
-            </Link>
+              <Link href={"/payment"}>
+                <button className="btn btn-cart btn-info text-white back-button">
+                  Continue
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

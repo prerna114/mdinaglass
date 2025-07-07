@@ -7,7 +7,6 @@ import ProductHeading from "@/components/ProductHeading";
 import ProductListing from "@/components/ProductListing";
 import MegaMenu from "@/components/Megamenu";
 import React, { useRef } from "react";
-import CateogoryTree from "@/components/CateogoryTree";
 import SideMenu from "@/components/SideMenu";
 import { useParams } from "next/navigation";
 
@@ -38,7 +37,6 @@ const ShopPage = () => {
 
               <div className="col-lg-3 col-md-12 p-0">
                 {/* <CategorySidebar /> */}
-                {/* <CateogoryTree onDataLoaded={onDataLoaded} /> */}
                 <SideMenu />
               </div>
               {/* Product Listing */}

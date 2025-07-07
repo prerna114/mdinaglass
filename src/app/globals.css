@@ -32,6 +32,7 @@
     padding-left: 15px;
   }
 }
+
 .discount-section button:hover {
   background: #76d2d3;
 }
@@ -1997,10 +1998,22 @@ hr.display-option {
   }
 }
 
+@media screen and (min-width: 999px) and (max-width: 1201px) {
+  ul.category-sidebar li a {
+    font-size: 14px;
+    font-weight: 500;
+    color: #005e84 !important;
+  }
+}
 @media screen and (min-width: 1201px) and (max-width: 1400px) {
   .checkout-sec input {
     color: #666;
     width: 80% !important;
+  }
+  ul.category-sidebar li a {
+    font-size: 14px;
+    font-weight: 500;
+    color: #005e84 !important;
   }
   .login-sec.checkout-sec select {
     width: 80%;
@@ -2717,6 +2730,9 @@ p.sku-detail span {
   .login-signup {
     margin: 0px 80px;
   }
+  .subContainer {
+    margin: "0 90px";
+  }
 }
 .dropdown-menu {
   left: 0 !important;
@@ -2901,6 +2917,7 @@ ul.category-sidebar li .level-3 {
   text-align: center;
   margin-top: 20vh;
   margin-bottom: 20vh;
+  color: #666;
 }
 .required-text {
   font-size: 14px;

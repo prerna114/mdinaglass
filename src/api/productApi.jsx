@@ -36,7 +36,7 @@ export const getProductByID = async (id) => {
 };
 
 export const getProductCateogry = async (id) => {
-  console.log("getProductCateogryData"); // Optional: for debugging
+  // console.log("getProductCateogryData"); // Optional: for debugging
   const filter =
     localStorage.getItem("filterdData") &&
     JSON.parse(localStorage.getItem("filterdData"));
@@ -45,6 +45,7 @@ export const getProductCateogry = async (id) => {
     variations: filter?.variations || 0,
   };
 
+  console.log("getProductCateogryData", id, filterData); // Optional: for debugging
   const data = {
     id: id,
     filters: {

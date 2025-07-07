@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { ProductLists } from "@/store/product";
 import { getProductCateogry } from "@/api/productApi";
-import { createUrl } from "@/constant";
+import { createUrl, products } from "@/constant";
 import { useMenuStore } from "@/store/useCategoryStore";
 
 const SideMenuItem = ({
@@ -36,9 +36,15 @@ const SideMenuItem = ({
   const cleanSlug = slugWithExt?.replace(/\.htm+$/i, "") || "all-product";
 
   const { subCategoryMap, setSubCategory } = useMenuStore();
-  const { setProducts, setCategory, setHeading, setAllProduct } = ProductLists(
-    (state) => state
-  );
+  const {
+    setProducts,
+    setCategory,
+    setHeading,
+    setAllProduct,
+    products,
+    setFilterOption,
+    category,
+  } = ProductLists((state) => state);
   const { loading, setLoading } = useMenuStore.getState();
 
   const fullPathToItem = [...parentPath, item.id];
@@ -67,11 +73,11 @@ const SideMenuItem = ({
 
     if (item?.children?.length > 0) {
       // setCategory(item.children);
-      console.log("Side Menu");
+      console.log("===========Side Menu45", products);
       getProductByCategory(item.id, selectedFilter);
     } else {
       getProductByCategory(item.id, selectedFilter);
-      console.log("Side Menu");
+      console.log("========= Side Menu1111", products);
     }
   };
 
@@ -79,12 +85,45 @@ const SideMenuItem = ({
     setLoading(true);
     setProducts([]);
     setCategory([]);
-    if (id && selectedFilter && Object.keys(selectedFilter).length > 0) {
+    if (
+      id &&
+      selectedFilter &&
+      Object.keys(selectedFilter).length > 0 &&
+      (products?.length === 0 || category?.length === 0)
+    ) {
       const data = await getProductCateogry(id, selectedFilter);
-      console.log("Product Data", data.data);
+      console.log(
+        " ====================== Side Menu Insde23",
+        data.data,
+        products.length,
+        category.length
+      );
 
       if (data?.status === 200) {
+        const FilterData = data.data || [];
         setAllProduct(data.data);
+        if (data.data.filterable?.length > 0) {
+          const colors = FilterData?.filterable?.find(
+            (item) => item.code == "color"
+          );
+          const variation = FilterData?.filterable?.find(
+            (item) => item.code == "variations"
+          );
+
+          console.log("ColorsSideMenu", variation?.options, colors);
+          if (colors?.options?.length > 0) {
+            // setColorOptions(colors?.options);
+            setFilterOption({
+              colors: colors?.options,
+            });
+          }
+          if (variation?.options?.length > 0) {
+            setFilterOption({
+              variations: variation?.options,
+            });
+            // setVariationOption(variation?.options);
+          }
+        }
         if (data.data.products && data.data.products.length > 0) {
           setProducts(data.data.products);
         } else if (
@@ -121,8 +160,11 @@ const SideMenuItem = ({
   useEffect(() => {
     const lastId = categoryIds[categoryIds.length - 1];
     if (lastId && lastId === item.id) {
-      console.log("🔁 Triggering getProductByCategory for lastId:", lastId);
-      getProductByCategory(lastId, selectedFilter);
+      console.log(
+        "============= Triggering getProductByCategory for lastId:",
+        lastId
+      );
+      // getProductByCategory(lastId, selectedFilter);
       console.log("Side Menu");
     }
     const data = localStorage.getItem("filterdData");
@@ -136,23 +178,36 @@ const SideMenuItem = ({
     }
     console.log("Filter Data", data, selectedFilter);
   }, []);
+  // console.log("item, subCategoryMap, setSubCategory", item, subCategoryMap);
   return (
     <li
       className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}  `}
       style={{
         padding: 0,
-        padding: "10px 30px 0px",
+        padding: "5px 10px 5px 10px !important",
       }}
     >
-      <a
+      <div
         onClick={() => handleClick(item)}
         className={`list-unstyled category-sidebar 
     ${isSelected ? "activeSIdeBar" : level >= 3 ? "level-3" : "nonActiveBar"}
   `}
-        style={{ cursor: "pointer", textTransform: "uppercase" }}
+        style={{
+          cursor: "pointer",
+          textTransform: "uppercase",
+          padding: "2px 0px 2px",
+        }}
       >
-        {item.name}
-      </a>
+        <p
+          style={{
+            margin: 0,
+            padding: 0,
+          }}
+        >
+          {item.name}
+        </p>{" "}
+        {/* Now valid inside a div */}
+      </div>
 
       {isExpanded && subCategories.length > 0 && (
         <ul style={{ paddingLeft: "2px" }}>

@@ -18,24 +18,60 @@ import React, { useEffect, useRef, useState } from "react";
 const ProductListing = ({ onDataLoaded }) => {
   const [productList, setProductList] = useState([]);
   const [categoryidList, setCategoryidList] = useState([]);
+  const [cateogryArray, setCateogryArray] = useState([]);
+  const [urlArray, setUrlArray] = useState([]);
   const [theLastI, setTheLastI] = useState("");
   const pathname = usePathname();
   const params = useParams();
   const allParams = params?.params || [];
 
   const priceIndex = allParams.findIndex((p) => p === "price");
-  console.log("allParams", allParams, params);
+  console.log("allParams", allParams, params, priceIndex);
   const sku = allParams[allParams.length - 1];
   // console.log("SKU", sku.split(".")[0]);
   const getProductByCategory = async (id, filter) => {
+    localStorage.setItem("filterdData", JSON.stringify(filter));
+
+    console.log("filtergetProductByCategory", filter);
     setLoading(true);
     setProducts([]);
     setCategory([]);
-    if (id && filter && Object.keys(filter).length > 0) {
+    if (
+      id &&
+      filter &&
+      Object.keys(filter).length > 0 &&
+      (products?.length === 0 || category?.length === 0)
+    ) {
+      console.log("=================Inside Prodct listing");
       const data = await getProductCateogry(id, filter);
       // console.log("Product by category", data.data.products);
       if (data?.status === 200) {
+        const FilterData = data.data || [];
+
+        if (data.data.filterable?.length > 0) {
+          const colors = FilterData?.filterable?.find(
+            (item) => item.code == "color"
+          );
+          const variation = FilterData?.filterable?.find(
+            (item) => item.code == "variations"
+          );
+
+          console.log("ColorsSideMenu", variation?.options, colors);
+          if (colors?.options?.length > 0) {
+            // setColorOptions(colors?.options);
+            setFilterOption({
+              colors: colors?.options,
+            });
+          }
+          if (variation?.options?.length > 0) {
+            setFilterOption({
+              variations: variation?.options,
+            });
+            // setVariationOption(variation?.options);
+          }
+        }
         setProducts(data.data.products || []);
+        setCategory(data.data.sub_categories || []);
         console.log("Inside getProduct", data.data.products);
       } else {
         setProducts([]);
@@ -45,6 +81,8 @@ const ProductListing = ({ onDataLoaded }) => {
       setLoading(false);
     }
   };
+
+  // console.log("Filter Option", filterOption);
   const fetchData = async () => {
     const data = await getAllProduct();
     console.log("Product car", data?.data?.data);
@@ -58,7 +96,12 @@ const ProductListing = ({ onDataLoaded }) => {
 
     console.log("THe data", data);
   };
+
+  const hasRunOnce = useRef(false);
+  // console.log("selectedCategory", hasRunOnce.current);
   useEffect(() => {
+    if (hasRunOnce.current) return;
+    hasRunOnce.current = true;
     if (sku == "all-product.htm") {
       fetchData();
     } else if (pathname == "/wishlist") {
@@ -70,6 +113,7 @@ const ProductListing = ({ onDataLoaded }) => {
       const subCateogry = localStorage.getItem("subCateogry");
       const parsedCateogry = subCateogry ? JSON.parse(subCateogry) : [];
       console.log("Category Ids", categoryIds, lastId, parsedCateogry);
+      setCateogryArray(categoryIds);
       if (lastId) {
         setTheLastI(lastId);
       }
@@ -124,7 +168,7 @@ const ProductListing = ({ onDataLoaded }) => {
   };
 
   const { menu } = useAuthStore((state) => state);
-  const { loading, setLoading } = useMenuStore.getState();
+  const { loading, setLoading, sideMenu } = useMenuStore.getState();
 
   const initialPage = 1;
   const [currentPage, setCurrentPage] = useState(initialPage);
@@ -135,10 +179,16 @@ const ProductListing = ({ onDataLoaded }) => {
     color: 0,
   });
 
-  const { setProducts, products, category, setCategory, allProduct } =
-    ProductLists((state) => state);
-
-  console.log("Products", products, allProduct);
+  const {
+    setProducts,
+    filterOption,
+    products,
+    category,
+    setCategory,
+    allProduct,
+    setFilterOption,
+    setHeading,
+  } = ProductLists((state) => state);
 
   const SaveColor = () => {
     const colors = allProduct?.filterable?.find((item) => item.code == "color");
@@ -155,7 +205,6 @@ const ProductListing = ({ onDataLoaded }) => {
     }
   };
 
-  console.log("Category", variationOption);
   function sortProductsByPriceLowToHigh(products) {
     const data = [...products].sort(
       (a, b) =>
@@ -213,9 +262,6 @@ const ProductListing = ({ onDataLoaded }) => {
       current = parentMap[current];
       path.unshift(current);
     }
-
-    // expandCategoriesSequentially();
-    console.log("qqqqqqqqqqqq");
     return path;
   };
   useEffect(() => {
@@ -240,16 +286,79 @@ const ProductListing = ({ onDataLoaded }) => {
   useEffect(() => {
     if (allProduct?.filterable?.length > 0) {
       SaveColor();
+      console.log("All Product Filterable", allProduct?.filterable);
     }
   }, [allProduct]);
+  console.log("categoryidList", cateogryArray);
+  console.log("sideMenusideMenu", sideMenu);
+
+  const [levels, setLevels] = useState([]);
+
   useEffect(() => {
-    if (Object.keys(selectedFilter).length > 0) {
-      console.log("Selected Filter", selectedFilter);
-      getProductByCategory(theLastI, selectedFilter);
-      localStorage.setItem("filterdData", JSON.stringify(selectedFilter));
+    if (!sideMenu || !Array.isArray(cateogryArray)) return;
+
+    let currentLevel = Array.isArray(sideMenu) ? sideMenu : [];
+    let newLevels = [];
+    let children = [];
+
+    for (let i = 0; i < cateogryArray.length; i++) {
+      newLevels.push(currentLevel);
+
+      const selectedId = Number(cateogryArray[i]);
+      const match = currentLevel.find((cat) => cat.id == selectedId);
+      console.log("currentLevel", match, selectedId);
+      if (match) {
+        console.log("currentLevel", currentLevel);
+      }
+      if (!match) {
+        console.warn(`Category ID ${selectedId} not found at level ${i}`);
+        currentLevel = [];
+        break; // Stop further nesting
+      }
+
+      currentLevel = match.children || [];
     }
-  }, [selectedFilter]);
-  console.log("allProduct", selectedFilter);
+
+    if (currentLevel.length > 0) {
+      newLevels.push(currentLevel); // allow next level
+    }
+
+    setLevels(newLevels);
+  }, [sideMenu, cateogryArray]);
+
+  const handleClick = (item) => {
+    const newPath = [...cateogryArray.slice(0, index), selectedId];
+    setCategoryArray(newPath);
+
+    // Get selected item for slug
+    const selectedItem = levels[index].find((cat) => cat.id === selectedId);
+    const slug = selectedItem?.slug || "category";
+
+    // Push to new URL
+    const newUrl = createUrl(newPath, slug);
+    console.log("New URL", newUrl);
+    // if (indexInPath > -1 && cateogryArray.length > fullPathToItem.length) {
+    //   // Collapse: remove children
+    //   newPath = cateogryArray.slice(0, indexInPath + 1);
+    // } else {
+    //   // Expand or Select
+    //   newPath = fullPathToItem;
+    // }
+
+    // const newUrl = createUrl(newPath, item.slug, sortOrder, limit, page);
+    // router.push(newUrl, { scroll: false });
+    // console.log("New URL", newUrl);
+
+    // if (item?.children?.length > 0) {
+    //   // setCategory(item.children);
+    //   console.log("===========Side Menu45", products);
+    //   getProductByCategory(item.id, selectedFilter);
+    // } else {
+    //   getProductByCategory(item.id, selectedFilter);
+    //   console.log("========= Side Menu1111", products);
+    // }
+  };
+  console.log("filterOption", filterOption);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -258,44 +367,60 @@ const ProductListing = ({ onDataLoaded }) => {
           <div className="side-bar-mobi">
             <div className="row">
               <div className="col-12">
-                <select
-                  className="form-select mt-2"
-                  onChange={(e) => {
-                    const selectedId = e.target.value;
-                    const data = menu.filter((item) => item.id == selectedId);
-                    console.log("Select edimd", selectedId, data);
-                    setSubCategory(data[0]?.children);
+                <h4 className="mb-3">Filter</h4>
+                {levels?.length > 0 &&
+                  levels.map((levelItems, index) => (
+                    <select
+                      key={index}
+                      className="form-select mt-2"
+                      value={cateogryArray[index] ?? ""} // 👈 Set selected value
+                      onChange={(e) => {
+                        const selectedId = Number(e.target.value);
+                        const element = levelItems.find(
+                          (cat) => cat.id == selectedId
+                        );
+                        console.log("Selected Category", element);
+                        // handleClick(element);
 
-                    const selectedProduct = menu.find(
-                      (m) => m.id === selectedId
-                    );
-                    const href = createUrl(data[0].id, data[0]?.slug);
-                    // console.log("HREF TAG", href);
-                    router.push(href); // or use <Link> separately
-                  }}
-                >
-                  <option
-                  // key={product.id}
-                  // onClick={(e) => {
-                  //   console.log("Eeeeeee", e);
-                  // }}
-                  // value={product.id}
-                  >
-                    Select
-                  </option>
-                  {menu?.length > 0 &&
-                    menu?.map((product) => (
-                      <option
-                        key={product.id}
-                        onClick={(e) => {
-                          // console.log("Eeeeeee", e);
-                        }}
-                        value={category ? category : product.id}
-                      >
-                        {product.name}
-                      </option>
-                    ))}
-                </select>
+                        // Replace category IDs after this level
+                        const newArray = [
+                          ...cateogryArray.slice(0, index),
+                          selectedId,
+                        ];
+                        setCateogryArray(newArray);
+                        //  const selectedId = Number(e.target.value);
+                        const newPath = [
+                          ...cateogryArray.slice(0, index),
+                          selectedId,
+                        ];
+                        setCateogryArray(newPath);
+
+                        // Get selected item for slug
+                        const selectedItem = levels[index].find(
+                          (cat) => cat.id === selectedId
+                        );
+                        const slug = selectedItem?.slug || "category";
+
+                        // Push to new URL
+                        const newUrl = createUrl(newPath, slug);
+                        console.log("New URL", newUrl);
+                        getProductByCategory(selectedId, filterData);
+
+                        router.push(newUrl, { scroll: false });
+                        setHeading(element?.name);
+
+                        // Optional: update URL here or use router.push(...)
+                      }}
+                    >
+                      <option value="">Select</option>
+                      {levelItems?.length > 0 &&
+                        levelItems.map((cat, index) => (
+                          <option key={index} value={cat?.id}>
+                            {cat?.name}
+                          </option>
+                        ))}
+                    </select>
+                  ))}
               </div>
             </div>
           </div>
@@ -311,7 +436,7 @@ const ProductListing = ({ onDataLoaded }) => {
                   <option>Oval</option>
                 </select>
               </div> */}
-              {colorOptions?.length > 0 && (
+              {filterOption?.colors?.length > 0 && (
                 <div className="col-md-4 col-lg-3">
                   <select
                     defaultValue={selectedFilter.color}
@@ -322,14 +447,18 @@ const ProductListing = ({ onDataLoaded }) => {
                         ...prev,
                         ["color"]: e.target.value,
                       }));
+                      getProductByCategory(theLastI, {
+                        ...selectedFilter,
+                        color: e.target.value,
+                      });
 
                       // getProductByCategory(theLastI);
                     }}
                   >
                     <option value="0">ALL COLOURS</option>
 
-                    {colorOptions?.length > 0 &&
-                      colorOptions?.map((item, index) => (
+                    {filterOption?.colors?.length > 0 &&
+                      filterOption?.colors?.map((item, index) => (
                         <option value={item.id} key={index}>
                           {item.label}
                         </option>
@@ -345,7 +474,7 @@ const ProductListing = ({ onDataLoaded }) => {
                   <option>Over €50</option>
                 </select>
               </div> */}
-              {variationOption?.length > 0 && (
+              {filterOption?.variations?.length > 0 && (
                 <div className="col-md-4 col-lg-3">
                   <select
                     defaultValue={selectedFilter.variations}
@@ -356,12 +485,16 @@ const ProductListing = ({ onDataLoaded }) => {
                         ...prev,
                         ["variations"]: e.target.value,
                       }));
-                      getProductByCategory(theLastI);
+                      getProductByCategory(theLastI, {
+                        ...selectedFilter,
+                        variations: e.target.value,
+                      });
+                      // getProductByCategory(theLastI);
                     }}
                   >
                     <option value={0}>All Variations</option>
-                    {variationOption?.length > 0 &&
-                      variationOption?.map((item, index) => (
+                    {filterOption?.variations?.length > 0 &&
+                      filterOption?.variations?.map((item, index) => (
                         <option value={item.id} key={index}>
                           {item.label}
                         </option>

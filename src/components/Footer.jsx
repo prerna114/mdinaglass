@@ -17,7 +17,7 @@ const Footer = () => {
                 src="/assets/footer-logo.png"
                 alt="Mdina Glass Logo"
                 className="mb-3 footer-logo"
-                style={{ width: "250px" }}
+                style={{ width: "290px !important" }}
               />
             </Link>
             <p className="font-footer">Payment Method</p>
@@ -148,7 +148,12 @@ const Footer = () => {
             is responsible for finally checking conversion rates, if they wish,
             from their own preferred source.
           </p>
-          <p className="mb-0">
+          <p
+            className="mb-0"
+            style={{
+              fontSize: "15px",
+            }}
+          >
             Designed by
             <a
               href="https://bubbletechnosoft.com"
@@ -159,7 +164,7 @@ const Footer = () => {
                 src="/assets/blackbull-logo.png"
                 alt="BlackBull TechnoSoft"
                 className="ms-2"
-                style={{ height: "20px", verticalAlign: "middle" }}
+                style={{ height: "15px", verticalAlign: "middle" }}
               />
             </a>
           </p>

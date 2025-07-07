@@ -66,6 +66,7 @@ const page = () => {
         <div
           style={{
             marginBottom: "60px",
+            color: "#666",
           }}
         >
           <h1 className="text-center"> Shopping Cart is Empty.</h1>

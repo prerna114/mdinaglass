@@ -1,7 +1,10 @@
 // components/CustomToast.js
 import { toast } from "react-toastify";
 
-export const CustomToast = (message = "Wow so easy!", place = "top-right") => {
+export const CustomToast = (
+  message = "Something went wrong!",
+  place = "top-right"
+) => {
   console.log("CUstomer Toast");
   return toast.error(message, {
     position: place,

@@ -9,10 +9,13 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { memo, useEffect, useState } from "react";
 import CategoryItem from "./CategoryItem";
 import SideMenuItem from "./SideMenuItem";
+import { Menu } from "lucide-react";
+import { useMenuStore } from "@/store/useCategoryStore";
 
 const SideMenu = ({ cateogryId }) => {
-  const [sideMenu, setSideMenu] = useState();
+  // const [sideMenu, setSideMenu] = useState();
   const { menu } = useAuthStore((state) => state);
+  const { sideMenu, setSideMenu } = useMenuStore((state) => state);
   const [subCategory, setSubCategory] = useState([]);
   const [subCartId, setSubCartId] = useState("");
   const [showId, setShowID] = useState();
@@ -36,6 +39,7 @@ const SideMenu = ({ cateogryId }) => {
         "subCateogry",
         JSON.stringify(data?.data?.sub_categories)
       );
+      setSideMenu(data?.data?.sub_categories);
     }
   };
   useEffect(() => {
@@ -43,6 +47,7 @@ const SideMenu = ({ cateogryId }) => {
     const paresed = JSON.parse(stored);
     if (paresed?.length > 0) {
       setSubCategory(paresed);
+      setSideMenu(paresed);
     } else {
       CategoryById();
     }

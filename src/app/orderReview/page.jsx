@@ -35,76 +35,79 @@ const page = () => {
       </div>
 
       <div className="container">
-        <div
-          className="row mt-3"
-          style={{
-            backgroundColor: "white",
-            padding: 20,
-          }}
-        >
-          {/* Billing Info Box 1 */}
-          <div className="col-12 col-md-4">
-            <div className=" p-3 mb-3 h-100">
-              <div className="d-flex justify-content-between">
-                <h5 className="billing-text">Billing Information:</h5>
-              </div>
-              <p className="mb-1 billing-text-name">Rohan Rohan</p>
-              <p className="mb-1 billing-text-name">dec5377@gmail.com</p>
-              <p className="mb-1 billing-text-name">
-                B 64 A Vikas Vihar Kakrolla
-              </p>
-              <p className="mb-1 billing-text-name">Address 2</p>
-              <p className="mb-1 billing-text-name">
-                New Delhi, Delhi, 110078, India
-              </p>
-              <p className="mb-0 billing-text-name">Tel: 07011391100</p>
-              <a href="#" className="text-primary">
-                Edit
-              </a>
-            </div>
-          </div>
-
-          {/* Billing Info Box 2 */}
-          <div className="col-12 col-md-4">
-            <div className="p-3 mb-3 h-100">
-              <div className="d-flex justify-content-between">
-                <h5 className="billing-text">Shipping Information</h5>
-              </div>
-              <p className="mb-1 billing-text-name ">Rohan Rohan</p>
-              <p className="mb-1 billing-text-name ">dec5377@gmail.com</p>
-              <p className="mb-1 billing-text-name ">
-                B 64 A Vikas Vihar Kakrolla
-              </p>
-              <p className="mb-1 billing-text-name ">Address 2</p>
-              <p className="mb-1 billing-text-name ">
-                New Delhi, Delhi, 110078, India
-              </p>
-              <p className="mb-0 billing-text-name ">Tel: 07011391100</p>
-              <a href="#" className="text-primary">
-                Edit
-              </a>
-            </div>
-          </div>
-
-          <div className="col-12 col-md-4">
-            <div className="p-3 mb-3 h-100">
-              <div className="d-flex justify-content-between">
-                <h5 className="billing-text">Shipping Method:</h5>
-              </div>
-              <p className="mb-1 billing-text-name ">eSeller International</p>
-              <a href="#" className="text-primary">
-                Edit
-              </a>
-              <div>
+        <div className="subContainer">
+          <div
+            className="row mt-3"
+            style={{
+              backgroundColor: "white",
+              padding: 20,
+            }}
+          >
+            {/* Billing Info Box 1 */}
+            <div className="col-12 col-md-4">
+              <div className=" p-3 mb-3 h-100">
                 <div className="d-flex justify-content-between">
-                  <h5 className="billing-text mt-2">Payment Method:</h5>
+                  <h5 className="billing-text">Billing Information:</h5>
                 </div>
-                <p className="mb-1 billing-text-name ">
-                  Card Payment (Using Trust Payments 3D Secure Hosted Checkout)
+                <p className="mb-1 billing-text-name">Rohan Rohan</p>
+                <p className="mb-1 billing-text-name">dec5377@gmail.com</p>
+                <p className="mb-1 billing-text-name">
+                  B 64 A Vikas Vihar Kakrolla
                 </p>
+                <p className="mb-1 billing-text-name">Address 2</p>
+                <p className="mb-1 billing-text-name">
+                  New Delhi, Delhi, 110078, India
+                </p>
+                <p className="mb-0 billing-text-name">Tel: 07011391100</p>
                 <a href="#" className="text-primary">
                   Edit
                 </a>
+              </div>
+            </div>
+
+            {/* Billing Info Box 2 */}
+            <div className="col-12 col-md-4">
+              <div className="p-3 mb-3 h-100">
+                <div className="d-flex justify-content-between">
+                  <h5 className="billing-text">Shipping Information</h5>
+                </div>
+                <p className="mb-1 billing-text-name ">Rohan Rohan</p>
+                <p className="mb-1 billing-text-name ">dec5377@gmail.com</p>
+                <p className="mb-1 billing-text-name ">
+                  B 64 A Vikas Vihar Kakrolla
+                </p>
+                <p className="mb-1 billing-text-name ">Address 2</p>
+                <p className="mb-1 billing-text-name ">
+                  New Delhi, Delhi, 110078, India
+                </p>
+                <p className="mb-0 billing-text-name ">Tel: 07011391100</p>
+                <a href="#" className="text-primary">
+                  Edit
+                </a>
+              </div>
+            </div>
+
+            <div className="col-12 col-md-4">
+              <div className="p-3 mb-3 h-100">
+                <div className="d-flex justify-content-between">
+                  <h5 className="billing-text">Shipping Method:</h5>
+                </div>
+                <p className="mb-1 billing-text-name ">eSeller International</p>
+                <a href="#" className="text-primary">
+                  Edit
+                </a>
+                <div>
+                  <div className="d-flex justify-content-between">
+                    <h5 className="billing-text mt-2">Payment Method:</h5>
+                  </div>
+                  <p className="mb-1 billing-text-name ">
+                    Card Payment (Using Trust Payments 3D Secure Hosted
+                    Checkout)
+                  </p>
+                  <a href="#" className="text-primary">
+                    Edit
+                  </a>
+                </div>
               </div>
             </div>
           </div>

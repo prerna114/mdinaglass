@@ -11,7 +11,6 @@ import React, { useEffect, useState } from "react";
 import { useCartStore } from "@/store";
 import { useParams, useSearchParams } from "next/navigation";
 import { getProductByID } from "@/api/productApi";
-import CateogoryTree from "@/components/CateogoryTree";
 import { ProductLists } from "@/store/product";
 import SideMenu from "@/components/SideMenu";
 const page = () => {
@@ -65,7 +64,6 @@ const page = () => {
                 <div className="col-lg-3 col-md-12  p-0">
                   <SideMenu />
                   {/* <CategorySidebar cateogryId={params?.productId} /> */}
-                  {/* <CateogoryTree cateogryId={params?.productId} /> */}
                 </div>
                 {/* Product Listing */}
                 <div className="col-lg-9 col-md-12">

@@ -40,6 +40,71 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     },
   ];
 
+  const CustomPrevArrow = ({ onClick }) => (
+    <div
+      onClick={onClick}
+      style={{
+        width: "50px",
+        height: "50px",
+        // right: "422px",
+        textAlign: "center",
+        zIndex: 1,
+        left: "-10px",
+        borderRadius: "50%",
+        backgroundColor: "white",
+        transform: "translateY(-50%)",
+        position: "absolute",
+        cursor: "pointer",
+        top: "46%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <img
+        src="/assets/leftarrow.png"
+        className="w-19"
+        style={{
+          // width: "20px !important",
+          height: "20px",
+        }}
+      />
+    </div>
+  );
+
+  const CustomNextArrow = ({ onClick }) => (
+    <div
+      onClick={onClick}
+      style={{
+        width: "50px",
+        height: "50px",
+        // right: "422px",
+        right: "-10px",
+        transform: "translateY(-50%)",
+        position: "absolute",
+        cursor: "pointer",
+        top: "46%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1,
+        borderRadius: "50%",
+        backgroundColor: "white",
+        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <img
+        src="/assets/rightarrow.png"
+        className="w-19"
+        style={{
+          // width: "20px",
+          height: "20px",
+        }}
+      />
+    </div>
+  );
+
   const settings = {
     dots: false,
     infinite: true,
@@ -52,6 +117,8 @@ const ProductCard = ({ title = "New Arrivals" }) => {
       { breakpoint: 992, settings: { slidesToShow: 2 } },
       { breakpoint: 576, settings: { slidesToShow: 1 } },
     ],
+    nextArrow: <CustomNextArrow />,
+    prevArrow: <CustomPrevArrow />,
   };
   const handleAdd = (item) => {
     addToCart(item);

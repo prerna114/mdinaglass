@@ -65,22 +65,24 @@ const page = () => {
       </div>
 
       <div className="container">
-        <div className="col-md-12">
-          <div
-            className="d-flex pb-3 mt-3"
-            style={{ justifyContent: "space-between" }}
-          >
-            <Link href={"#"}>
-              <button className="btn btn-shop btn-primary back-button">
-                Back
-              </button>
-            </Link>
+        <div className="login-signup">
+          <div className="col-md-12">
+            <div
+              className="d-flex pb-3 mt-3"
+              style={{ justifyContent: "space-between" }}
+            >
+              <Link href={"#"}>
+                <button className="btn btn-shop btn-primary back-button">
+                  Back
+                </button>
+              </Link>
 
-            <Link href={"/orderReview"}>
-              <button className="btn btn-cart btn-info text-white back-button">
-                Continue
-              </button>
-            </Link>
+              <Link href={"/orderReview"}>
+                <button className="btn btn-cart btn-info text-white back-button">
+                  Continue
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

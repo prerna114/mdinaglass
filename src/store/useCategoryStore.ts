@@ -5,12 +5,14 @@ type MenuStore = {
   parentMap: any;
   expandedIds: number[];
   loading: boolean;
+  sideMenu: any[];
   setLoading: (value: boolean) => void;
   subCategoryMap: Record<number, any[]>;
   toggleExpanded: (id: number) => void;
   setExpanded: (ids: number[]) => void;
   setSubCategory: (id: number, items: any[]) => void;
   hydrateFromStorage: () => void;
+  setSideMenu: (sideMenu: any[]) => void;
 };
 
 const EXPANDED_IDS_KEY = "expandedIds";
@@ -21,6 +23,7 @@ export const useMenuStore = create<MenuStore>((set) => ({
   subCategoryMap: {},
   parentMap: {},
   loading: true,
+  sideMenu: [],
 
   setLoading: (value) => set({ loading: value }),
   toggleExpanded: (id) =>
@@ -58,7 +61,9 @@ export const useMenuStore = create<MenuStore>((set) => ({
       };
     });
   },
-
+  setSideMenu: (sideMenu) => {
+    set({ sideMenu });
+  },
   hydrateFromStorage: () => {
     const storedExpanded = localStorage.getItem(EXPANDED_IDS_KEY);
     const storedMap = localStorage.getItem(SUBCATEGORY_MAP_KEY);
