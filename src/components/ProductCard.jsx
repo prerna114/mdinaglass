@@ -13,33 +13,6 @@ const ProductCard = ({ title = "New Arrivals" }) => {
   const { addToCart, cart } = useCartStore((state) => state);
   const [productData, setProductData] = useState([]);
 
-  const products = [
-    {
-      id: 1,
-      name: "Oranges & Reds Carafe",
-      price: 37.0,
-      image: "/assets/lighting.jpg",
-    },
-    {
-      id: 2,
-      name: "Oranges & Reds Round Jug",
-      price: 48.5,
-      image: "/assets/lanterns.png",
-    },
-    {
-      id: 3,
-      name: "Small Dip Bowl",
-      price: 21.0,
-      image: "/assets/lanterns.png",
-    },
-    {
-      id: 4,
-      name: "Barrel Tumbler",
-      price: 20.5,
-      image: "/assets/lanterns.png",
-    },
-  ];
-
   const CustomPrevArrow = ({ onClick }) => (
     <div
       onClick={onClick}
@@ -63,6 +36,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
       }}
     >
       <img
+        alt="Previous"
         src="/assets/leftarrow.png"
         className="w-19"
         style={{
@@ -95,6 +69,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
       }}
     >
       <img
+        alt="Next"
         src="/assets/rightarrow.png"
         className="w-19"
         style={{

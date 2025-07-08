@@ -1,25 +1,26 @@
 "use client";
-
-import CategorySidebar from "@/components/CategorySidebar";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import ProductHeading from "@/components/ProductHeading";
-import ProductListing from "@/components/ProductListing";
+// import ProductListing from "@/components/ProductListing";
 import MegaMenu from "@/components/Megamenu";
-import React, { useRef } from "react";
-import SideMenu from "@/components/SideMenu";
-import { useParams } from "next/navigation";
+import Reac from "react";
+// import SideMenu from "@/components/SideMenu";
+import dynamic from "next/dynamic";
+// const SideMenu = dynamic(() => import("@/components/SideMenu"), {
+//   ssr: false,
+//   loading: () => <div style={{ height: 200 }}>Loading...</div>,
+// });
+
+const SideMenu = dynamic(() => import("@/components/SideMenu"), {
+  ssr: true,
+  loading: () => <div style={{ height: 200 }}>Loading...</div>,
+});
+
+const ProductListing = dynamic(() => import("@/components/ProductListing"), {
+  ssr: true,
+  loading: () => <div style={{ height: 200 }}>Loading...</div>,
+});
 
 const ShopPage = () => {
-  const params = useParams();
-  const allParams = params?.params || [];
-  console.log("allParams", allParams, params);
-  const sku = allParams[allParams.length - 1];
-  console.log("SKU prent", sku.split(".")[0]);
-  const scrollref = useRef(null);
-  const onDataLoaded = () => {
-    scrollref.current?.scrollIntoView({ behavior: "smooth" });
-  };
   return (
     <>
       {/* <Header /> */}
@@ -30,7 +31,7 @@ const ShopPage = () => {
           background: "#f1f1f1",
         }}
       >
-        <div ref={scrollref} className="category-sidebar ">
+        <div className="category-sidebar ">
           <div className="container category-bg">
             <div className="row  min-vh-100">
               {/* Category Sidebar */}
@@ -41,7 +42,7 @@ const ShopPage = () => {
               </div>
               {/* Product Listing */}
               <div className="col-lg-9 col-md-12">
-                <ProductListing onDataLoaded={onDataLoaded} />
+                <ProductListing />
               </div>
             </div>
           </div>

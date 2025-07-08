@@ -57,6 +57,7 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
       }}
     >
       <img
+        alt="Previous"
         src="/assets/leftarrow.png"
         className="w-19"
         style={{
@@ -89,6 +90,7 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
       }}
     >
       <img
+        alt="Next"
         src="/assets/rightarrow.png"
         className="w-19"
         style={{

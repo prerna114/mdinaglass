@@ -1,25 +1,38 @@
 "use client";
 import CategoryGrid from "@/components/CategoryGrid";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import ProductCard from "@/components/ProductCard";
-import ProductCarousel from "@/components/ProductCarousel";
-import Testimonials from "@/components/Testimonials";
-import Video from "@/components/Video";
+import dynamic from "next/dynamic";
+// import ProductCard from "@/components/ProductCard";
+
+// import ProductCarousel from "@/components/ProductCarousel";
+// import Testimonials from "@/components/Testimonials";
+// import Video from "@/components/Video";
 import Megamenu from "@/components/Megamenu";
 import React, { useEffect } from "react";
-import CategoryFeature from "../components/CategoryFeature";
-import { useCountStore } from "@/store";
-import { getCategories } from "@/api/menuAPI";
+// import CategoryFeature from "../components/CategoryFeature";
+const Video = dynamic(() => import("@/components/Video"), {
+  ssr: false,
+  loading: () => <div style={{ height: 300 }}>Loading video...</div>,
+});
+const ProductCarousel = dynamic(() => import("@/components/ProductCarousel"), {
+  ssr: false,
+  loading: () => <div style={{ height: 200 }}>Loading...</div>,
+});
+const CategoryFeature = dynamic(() => import("@/components/CategoryFeature"), {
+  ssr: false,
+  loading: () => <div style={{ height: 200 }}>Loading...</div>,
+});
+
+const ProductCard = dynamic(() => import("@/components/ProductCard"), {
+  ssr: false,
+  loading: () => <div style={{ height: 200 }}>Loading...</div>,
+});
+
+const Testimonials = dynamic(() => import("@/components/Testimonials"), {
+  ssr: false,
+  loading: () => <div style={{ height: 200 }}>Loading...</div>,
+});
 
 export default function Page() {
-  const getAllCategory = async () => {
-    const data = await getCategories();
-    console.log("data", data);
-  };
-  useEffect(() => {
-    getAllCategory();
-  }, []);
   return (
     <>
       {/* <Header /> */}

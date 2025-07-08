@@ -160,6 +160,15 @@ h4 {
   line-height: 26px;
   font-family: var(--font-quicksand);
 }
+
+.footer-area ul.list-unstyled li a {
+  color: #888888;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 26px;
+  /* font-family: var(--font-quicksand); */
+  font-family: var(--font-domine);
+}
 .navrow {
   padding-top: 1.2rem;
   padding-bottom: 1.2rem;
@@ -572,7 +581,7 @@ ul.list-unstyled.category-sidebar li.jewels:hover {
   padding: 10px 30px 0px;
 }
 ul.list-unstyled.category-sidebar li {
-  padding: 10px 30px 0;
+  padding: 10px 16px 0;
   margin-bottom: 0px !important;
 }
 .filter-are select {
@@ -2390,6 +2399,9 @@ li.nav-item:hover {
     margin-right: 3px !important;
     font-size: 17px !important;
     padding: 15px 8px !important;
+  }
+  .category-sidebar {
+    margin: 0px 16px;
   }
 
   .SubnavContainer a {

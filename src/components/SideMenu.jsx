@@ -52,7 +52,7 @@ const SideMenu = ({ cateogryId }) => {
       CategoryById();
     }
   }, []);
-  //   console.log("CategoryById", subCategory);
+  console.log("CategoryById", subCategory);
 
   return (
     <div className="category-sidebar">

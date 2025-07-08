@@ -5,28 +5,62 @@ import { createUrl } from "@/constant";
 import { ProductLists } from "@/store/product";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMenuStore } from "@/store/useCategoryStore";
-import Link from "next/link";
-import {
-  useParams,
-  useSearchParams,
-  useRouter,
-  usePathname,
-} from "next/navigation";
+import dynamic from "next/dynamic";
+import { useParams, useRouter, usePathname } from "next/navigation";
 
 import React, { useEffect, useRef, useState } from "react";
+// import ProductGrid from "./Products/ProductGrid";
+// import CategoryGrid from "./Products/CategoryGrid";
+// import dynamic from "next/dynamic";
+const ProductGrid = dynamic(() => import("@/components/Products/ProductGrid"), {
+  ssr: false,
+  loading: () => (
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "50vh" }}
+    >
+      <div
+        className="spinner-border text-primary"
+        role="status"
+        style={{ width: "5rem", height: "5rem" }}
+      >
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  ),
+});
 
+const CategoryGrid = dynamic(
+  () => import("@/components/Products/CategoryGrid"),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "50vh" }}
+      >
+        <div
+          className="spinner-border text-primary"
+          role="status"
+          style={{ width: "5rem", height: "5rem" }}
+        >
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    ),
+  }
+);
 const ProductListing = ({ onDataLoaded }) => {
   const [productList, setProductList] = useState([]);
   const [categoryidList, setCategoryidList] = useState([]);
   const [cateogryArray, setCateogryArray] = useState([]);
-  const [urlArray, setUrlArray] = useState([]);
   const [theLastI, setTheLastI] = useState("");
   const pathname = usePathname();
   const params = useParams();
   const allParams = params?.params || [];
 
   const priceIndex = allParams.findIndex((p) => p === "price");
-  console.log("allParams", allParams, params, priceIndex);
+  // console.log("allParams", allParams, params, priceIndex);
   const sku = allParams[allParams.length - 1];
   // console.log("SKU", sku.split(".")[0]);
   const getProductByCategory = async (id, filter) => {
@@ -169,6 +203,7 @@ const ProductListing = ({ onDataLoaded }) => {
 
   const { menu } = useAuthStore((state) => state);
   const { loading, setLoading, sideMenu } = useMenuStore.getState();
+  const [levels, setLevels] = useState([]);
 
   const initialPage = 1;
   const [currentPage, setCurrentPage] = useState(initialPage);
@@ -191,18 +226,17 @@ const ProductListing = ({ onDataLoaded }) => {
   } = ProductLists((state) => state);
 
   const SaveColor = () => {
-    const colors = allProduct?.filterable?.find((item) => item.code == "color");
-    const variation = allProduct?.filterable?.find(
-      (item) => item.code == "variations"
-    );
-
-    console.log("Colors", variation?.options);
-    if (colors?.options?.length > 0) {
-      setColorOptions(colors?.options);
-    }
-    if (variation?.options?.length > 0) {
-      setVariationOption(variation?.options);
-    }
+    // const colors = allProduct?.filterable?.find((item) => item.code == "color");
+    // const variation = allProduct?.filterable?.find(
+    //   (item) => item.code == "variations"
+    // );
+    // console.log("Colors", variation?.options);
+    // if (colors?.options?.length > 0) {
+    //   setColorOptions(colors?.options);
+    // }
+    // if (variation?.options?.length > 0) {
+    //   setVariationOption(variation?.options);
+    // }
   };
 
   function sortProductsByPriceLowToHigh(products) {
@@ -253,17 +287,6 @@ const ProductListing = ({ onDataLoaded }) => {
     }
   };
 
-  const buildCategoryPath = (id) => {
-    const { parentMap } = useMenuStore.getState();
-    const path = [id];
-    let current = id;
-
-    while (parentMap[current]) {
-      current = parentMap[current];
-      path.unshift(current);
-    }
-    return path;
-  };
   useEffect(() => {
     const hasLoaded =
       (Array.isArray(products) && products.length > 0) ||
@@ -285,14 +308,10 @@ const ProductListing = ({ onDataLoaded }) => {
 
   useEffect(() => {
     if (allProduct?.filterable?.length > 0) {
-      SaveColor();
+      // SaveColor();
       console.log("All Product Filterable", allProduct?.filterable);
     }
   }, [allProduct]);
-  console.log("categoryidList", cateogryArray);
-  console.log("sideMenusideMenu", sideMenu);
-
-  const [levels, setLevels] = useState([]);
 
   useEffect(() => {
     if (!sideMenu || !Array.isArray(cateogryArray)) return;
@@ -319,6 +338,7 @@ const ProductListing = ({ onDataLoaded }) => {
       currentLevel = match.children || [];
     }
 
+    console.log("Next Level", currentLevel);
     if (currentLevel.length > 0) {
       newLevels.push(currentLevel); // allow next level
     }
@@ -326,39 +346,39 @@ const ProductListing = ({ onDataLoaded }) => {
     setLevels(newLevels);
   }, [sideMenu, cateogryArray]);
 
-  const handleClick = (item) => {
-    const newPath = [...cateogryArray.slice(0, index), selectedId];
-    setCategoryArray(newPath);
+  // const handleClick = (item) => {
+  //   const newPath = [...cateogryArray.slice(0, index), selectedId];
+  //   setCategoryArray(newPath);
 
-    // Get selected item for slug
-    const selectedItem = levels[index].find((cat) => cat.id === selectedId);
-    const slug = selectedItem?.slug || "category";
+  //   // Get selected item for slug
+  //   const selectedItem = levels[index].find((cat) => cat.id === selectedId);
+  //   const slug = selectedItem?.slug || "category";
 
-    // Push to new URL
-    const newUrl = createUrl(newPath, slug);
-    console.log("New URL", newUrl);
-    // if (indexInPath > -1 && cateogryArray.length > fullPathToItem.length) {
-    //   // Collapse: remove children
-    //   newPath = cateogryArray.slice(0, indexInPath + 1);
-    // } else {
-    //   // Expand or Select
-    //   newPath = fullPathToItem;
-    // }
+  //   // Push to new URL
+  //   const newUrl = createUrl(newPath, slug);
+  //   console.log("New URL", newUrl);
+  //   // if (indexInPath > -1 && cateogryArray.length > fullPathToItem.length) {
+  //   //   // Collapse: remove children
+  //   //   newPath = cateogryArray.slice(0, indexInPath + 1);
+  //   // } else {
+  //   //   // Expand or Select
+  //   //   newPath = fullPathToItem;
+  //   // }
 
-    // const newUrl = createUrl(newPath, item.slug, sortOrder, limit, page);
-    // router.push(newUrl, { scroll: false });
-    // console.log("New URL", newUrl);
+  //   // const newUrl = createUrl(newPath, item.slug, sortOrder, limit, page);
+  //   // router.push(newUrl, { scroll: false });
+  //   // console.log("New URL", newUrl);
 
-    // if (item?.children?.length > 0) {
-    //   // setCategory(item.children);
-    //   console.log("===========Side Menu45", products);
-    //   getProductByCategory(item.id, selectedFilter);
-    // } else {
-    //   getProductByCategory(item.id, selectedFilter);
-    //   console.log("========= Side Menu1111", products);
-    // }
-  };
-  console.log("filterOption", filterOption);
+  //   // if (item?.children?.length > 0) {
+  //   //   // setCategory(item.children);
+  //   //   console.log("===========Side Menu45", products);
+  //   //   getProductByCategory(item.id, selectedFilter);
+  //   // } else {
+  //   //   getProductByCategory(item.id, selectedFilter);
+  //   //   console.log("========= Side Menu1111", products);
+  //   // }
+  // };
+  // console.log("filterOption", filterOption);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -542,7 +562,14 @@ const ProductListing = ({ onDataLoaded }) => {
                 <div className="col-md-6">
                   <div className="d-flex  sorting-item align-items-center justify-content-end">
                     <span>Items</span>
+                    <label
+                      htmlFor="currency-select"
+                      className="visually-hidden"
+                    >
+                      Select currency
+                    </label>
                     <select
+                      id="currency-select"
                       className="form-select w-auto me-3"
                       value={filterData?.limit}
                       onChange={(e) => {
@@ -648,7 +675,7 @@ const ProductListing = ({ onDataLoaded }) => {
       )}
 
       {/* Category Grid */}
-      <div className="row">
+      {/* <div className="row">
         {category?.length > 0 &&
           !loading &&
           category?.map((product) => (
@@ -671,10 +698,6 @@ const ProductListing = ({ onDataLoaded }) => {
                     style={{
                       cursor: "pointer",
                     }}
-                    // href={{
-                    //   pathname: `/product-details/webshop/${product?.id}`,
-                    //   query: { sku: product?.sku },
-                    // }}
                     href={"#"}
                     onClick={() => {
                       // console.log("dsada", product);
@@ -688,7 +711,6 @@ const ProductListing = ({ onDataLoaded }) => {
                   >
                     <h6 className="card-title mb-3">{product.name}</h6>
                   </a>
-                  {/* <h6 className="card-title mb-3">{product.name}</h6> */}
                   <p className="card-text text-info fw-bold">
                     Price €
                     {product.min_price
@@ -699,80 +721,24 @@ const ProductListing = ({ onDataLoaded }) => {
               </div>
             </div>
           ))}
+      </div> */}
+      {category?.length > 0 && !loading && <CategoryGrid category={category} />}
 
-        {products?.length == 0 && category?.length == 0 && !loading && (
-          <div className="no-data-found">
-            <h1>No data found</h1>
-          </div>
-        )}
-      </div>
+      {products?.length == 0 && category?.length == 0 && !loading && (
+        <div className="no-data-found">
+          <h1>No data found</h1>
+        </div>
+      )}
 
       {/* Product Grid */}
-      <div className="row">
-        {products?.length > 0 &&
-          !loading &&
-          products?.map((product) => (
-            <div key={product.id} className="col-lg-4 col-md-6 mb-4">
-              <div className=" product-card">
-                <div className="position-relative">
-                  <img
-                    src={"/assets/bg-image.png"}
-                    className="card-img-top"
-                    alt={product.name}
-                    style={{}}
-                  />
-                  {/* {product.hasOptions && (
-                  <div className="m-2">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id={`options-${product.id}`}
-                      />
-                      <label
-                        className="form-check-label small text-muted"
-                        htmlFor={`options-${product.id}`}
-                      >
-                        Click for more options
-                      </label>
-                    </div>
-                  </div>
-                )} */}
-                </div>
-                <div className="card-body text-center">
-                  <Link
-                    href={{
-                      pathname: `/product-details/webshop/${categoryidList}`,
-                      query: { sku: product?.sku, id: product?.id },
-                    }}
-                    scroll={false}
-                    // href={"#"}
-                    onClick={() => {
-                      // console.log("dsada", product);
-                    }}
-                  >
-                    <h6 className="card-title mb-3">{product.name}</h6>
-                  </Link>
-                  {/* <h6 className="card-title mb-3">{product.name}</h6> */}
-                  <p className="card-text text-info fw-bold">
-                    Price €
-                    {product?.min_price
-                      ? Number(product?.min_price).toFixed(2)
-                      : Number(product?.price).toFixed(2)
-                      ? Number(product?.price).toFixed(2)
-                      : "120"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
 
-        {/* {(category?.length == 0 || products.length == 0) && !loading && (
-          <div className="no-data-found">
-            <h1>No data found</h1>
-          </div>
-        )} */}
-      </div>
+      {!loading && products?.length > 0 && category?.length == 0 && (
+        <ProductGrid
+          products={products}
+          categoryidList={categoryidList}
+          theloading={loading}
+        />
+      )}
 
       {/* Sort and Items Control */}
       {category?.length == 0 ||

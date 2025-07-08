@@ -107,7 +107,7 @@ const Header = () => {
                 cursor: "pointer",
                 // top: "46%",
                 marginLeft: "15px",
-                marginTop: "12px",
+                marginTop: "19px",
               }}
               onClick={() => setIsBannerVisible(false)}
             >
@@ -118,6 +118,7 @@ const Header = () => {
                   width: "20px",
                   height: "20px",
                 }}
+                alt="Close Banner"
               />
             </div>
           </span>
@@ -272,7 +273,10 @@ const Header = () => {
                         <span>{cart?.length}</span>
                       </div>
                     </Link>
-                    <Link href={"/loginCheckoutPage"}>
+                    <Link
+                      href={"/loginCheckoutPage"}
+                      aria-label="Go to login or checkout page"
+                    >
                       <User
                         color="#888888"
                         className="text-muted "
@@ -310,8 +314,14 @@ const Header = () => {
                         style={{ height: "22px", width: "22px" }}
                       />
                     </div>
-
+                    <label
+                      htmlFor="currency-select"
+                      className="visually-hidden"
+                    >
+                      Select currency
+                    </label>
                     <select
+                      id="currency-select"
                       className="form-select me-2 searchContainer"
                       style={{
                         width: "80px",

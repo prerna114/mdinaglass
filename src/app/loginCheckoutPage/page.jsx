@@ -7,7 +7,6 @@ import ProductHeading from "@/components/ProductHeading";
 import ProductListing from "@/components/ProductListing";
 import MegaMenu from "@/components/Megamenu";
 import React, { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
 import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import Make from "@/components/Profile";
 import { useRouter } from "next/navigation";

@@ -129,16 +129,23 @@ const MegaMenu = () => {
                   className="nav-item dropdown position-static"
                   key={category.id}
                 >
-                  <a
+                  <Link
                     className="nav-link"
-                    href="#"
                     role="button"
                     data-bs-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
+                    href={createUrl(
+                      [category.id],
+
+                      category?.slug
+                    )}
+                    onClick={() => {
+                      setHeading(category.name);
+                    }}
                   >
                     {category.name}
-                  </a>
+                  </Link>
                   <div className="dropdown-menu w-100 mt-0 p-4 border-0 shadow">
                     <div className="container">
                       <div className="row">

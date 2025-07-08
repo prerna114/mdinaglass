@@ -102,6 +102,7 @@ const ResponsiveNav = () => {
                     border: "none",
                     paddingRight: "0px",
                   }}
+                  aria-label="Search"
                 >
                   <IoIosSearch size={27} />
                 </button>

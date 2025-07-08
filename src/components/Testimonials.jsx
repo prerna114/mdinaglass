@@ -56,7 +56,7 @@ const Testimonials = () => {
                           style={{ width: "auto", height: "auto" }}
                         />
                       </div>
-                    
+
                       <p className="review-sec">{t.quote}</p>
                     </div>
                     <div className="mt-4">
@@ -66,6 +66,7 @@ const Testimonials = () => {
                       <p className="text-warning border-0 mb-0">
                         {" "}
                         <img
+                          alt="Review icon"
                           src="/assets/review.png"
                           style={{ width: "auto", height: "auto" }}
                         />

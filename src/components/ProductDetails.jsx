@@ -62,10 +62,7 @@ export default function ProductDetails({ productDetails }) {
     }
     console.log("updated", updated);
   };
-  console.log(
-    "productDetails",
-    productDetails?.variants?.attributes?.variations
-  );
+  console.log("productDetails", productDetails);
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       <div className="side-bar-mobi">
@@ -112,8 +109,8 @@ export default function ProductDetails({ productDetails }) {
         {/* Product Image and Thumbnails */}
         <div className="col-md-12 col-lg-6 mt-2">
           <div className="border  text-center">
-            <Image
-              src={selectedImage}
+            <img
+              src={productDetails?.images[0]?.url || selectedImage}
               alt="Glass Bead Necklace"
               width={600}
               height={400}
@@ -121,21 +118,23 @@ export default function ProductDetails({ productDetails }) {
             />
           </div>
           <div className="d-flex thumbnail-section justify-content-center gap-2 mt-3">
-            {imageList.map((src, index) => (
-              <Image
-                key={index}
-                src={src}
-                alt={`Thumbnail ${index + 1}`}
-                width={120}
-                height={120}
-                className="img-thumbnail"
-                style={{
-                  cursor: "pointer",
-                  border: selectedImage === src ? "2px solid #007bff" : "none",
-                }}
-                onClick={() => setSelectedImage(src)}
-              />
-            ))}
+            {productDetails?.images?.length > 1 &&
+              imageList.map((src, index) => (
+                <Image
+                  key={index}
+                  src={src}
+                  alt={`Thumbnail ${index + 1}`}
+                  width={120}
+                  height={120}
+                  className="img-thumbnail"
+                  style={{
+                    cursor: "pointer",
+                    border:
+                      selectedImage === src ? "2px solid #007bff" : "none",
+                  }}
+                  onClick={() => setSelectedImage(src)}
+                />
+              ))}
           </div>
 
           <table className="table table-details mt-5">

@@ -36,28 +36,24 @@ const Footer = () => {
           <div className="col-md-2 mb-4">
             <h6 className="footer-link">Links</h6>
             <ul className="list-unstyled small">
-              <Link href={"/"}>
-                <li>Home</li>
-              </Link>
-
-              <Link href={"/aboutus"}>
-                <li>About Us</li>
-              </Link>
-
-              <Link href={createUrl("all", "all-product")}>
-                <li>All Products</li>
-              </Link>
-              <Link href={"/cartpage"}>
-                <li>New Arrivals</li>
-              </Link>
-
-              <Link href={"/loginCheckoutPage"}>
-                <li>Limited Editions</li>
-              </Link>
-
-              <Link href={"/gift"}>
-                <li>Gift Registry</li>
-              </Link>
+              <li>
+                <Link href={"/"}>Home</Link>
+              </li>
+              <li>
+                <Link href={"/aboutus"}>About Us</Link>
+              </li>
+              <li>
+                <Link href={createUrl("all", "all-product")}>All Products</Link>
+              </li>
+              <li>
+                <Link href={"/cartpage"}>New Arrivals</Link>
+              </li>
+              <li>
+                <Link href={"/loginCheckoutPage"}>Limited Editions</Link>
+              </li>
+              <li>
+                <Link href={"/gift"}>Gift Registry</Link>
+              </li>
             </ul>
           </div>
 

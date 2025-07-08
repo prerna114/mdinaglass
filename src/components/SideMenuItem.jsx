@@ -22,7 +22,7 @@ const SideMenuItem = ({
       ? allParams.slice(0, priceIndex).map(Number)
       : allParams.map(Number);
 
-  // console.log("All Params", params, categoryIds, allParams, priceIndex);
+  console.log("All Params", params, categoryIds, allParams, priceIndex);
   const [selectedFilter, setSelectedFilter] = useState({
     variations: 0,
     color: 0,

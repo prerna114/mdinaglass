@@ -173,15 +173,17 @@ const CategoryItem = ({ item, onDataLoaded, level = 1, isFirst = false }) => {
 
       {isExpanded && subCategories.length > 0 && (
         <ul>
-          {subCategories.map((child) => (
-            <React.Suspense key={child.id} fallback={<li>Loading...</li>}>
-              <CategoryItem
-                level={(level || 1) + 1}
-                key={child.id}
-                item={child}
-              />
-            </React.Suspense>
-          ))}
+          <li key={child.id}>
+            {subCategories.map((child) => (
+              <React.Suspense key={child.id} fallback={<li>Loading...</li>}>
+                <CategoryItem
+                  level={(level || 1) + 1}
+                  key={child.id}
+                  item={child}
+                />
+              </React.Suspense>
+            ))}
+          </li>
         </ul>
       )}
     </li>
