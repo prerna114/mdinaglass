@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "@/constant";
-import axios from "axios";
+import { appAxios } from "./intercepter";
 
 export const getMenuCategories = async () => {
   console.log("Get Catrogires is clling");
@@ -31,7 +31,7 @@ export const getMenuCategories = async () => {
 
 export const getCategories = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}api/categories`, {
+    const response = await appAxios.get(`${API_BASE_URL}api/categories`, {
       params: {
         limit: 5,
       },

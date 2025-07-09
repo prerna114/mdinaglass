@@ -8,30 +8,41 @@ import { useMenuStore } from "@/store/useCategoryStore";
 import dynamic from "next/dynamic";
 import { useParams, useRouter, usePathname } from "next/navigation";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+const FilterProduct = dynamic(
+  () => import("../components/Products/FilterProduct"),
+  {
+    ssr: false,
+    loading: () => <span className="visually-hidden">Loading...</span>,
+  }
+);
+// import FilterProduct from "./Products/FilterProduct";
 // import ProductGrid from "./Products/ProductGrid";
 // import CategoryGrid from "./Products/CategoryGrid";
 // import dynamic from "next/dynamic";
-const ProductGrid = dynamic(() => import("@/components/Products/ProductGrid"), {
-  ssr: false,
-  loading: () => (
-    <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ height: "50vh" }}
-    >
+const ProductGrid = dynamic(
+  () => import("../components/Products/ProductGrid"),
+  {
+    ssr: false,
+    loading: () => (
       <div
-        className="spinner-border text-primary"
-        role="status"
-        style={{ width: "5rem", height: "5rem" }}
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "50vh" }}
       >
-        <span className="visually-hidden">Loading...</span>
+        <div
+          className="spinner-border text-primary"
+          role="status"
+          style={{ width: "5rem", height: "5rem" }}
+        >
+          <span className="visually-hidden">Loading...</span>
+        </div>
       </div>
-    </div>
-  ),
-});
+    ),
+  }
+);
 
 const CategoryGrid = dynamic(
-  () => import("@/components/Products/CategoryGrid"),
+  () => import("../components/Products/CategoryGrid"),
   {
     ssr: false,
     loading: () => (
@@ -64,25 +75,21 @@ const ProductListing = ({ onDataLoaded }) => {
   const sku = allParams[allParams.length - 1];
   // console.log("SKU", sku.split(".")[0]);
   const getProductByCategory = async (id, filter) => {
+    console.log("selectedCategory get", id, filter);
     localStorage.setItem("filterdData", JSON.stringify(filter));
 
-    console.log("filtergetProductByCategory", filter);
+    console.log("filtergetProductByCategory Product lstun", filter);
     setLoading(true);
-    setProducts([]);
-    setCategory([]);
-    if (
-      id &&
-      filter &&
-      Object.keys(filter).length > 0 &&
-      (products?.length === 0 || category?.length === 0)
-    ) {
+
+    if (id && filter && Object.keys(filter).length > 0) {
       console.log("=================Inside Prodct listing");
       const data = await getProductCateogry(id, filter);
-      // console.log("Product by category", data.data.products);
+      console.log("Product by category inside", data);
       if (data?.status === 200) {
         const FilterData = data.data || [];
 
         if (data.data.filterable?.length > 0) {
+          console.log("INsde filter color");
           const colors = FilterData?.filterable?.find(
             (item) => item.code == "color"
           );
@@ -106,13 +113,24 @@ const ProductListing = ({ onDataLoaded }) => {
         }
         setProducts(data.data.products || []);
         setCategory(data.data.sub_categories || []);
-        console.log("Inside getProduct", data.data.products);
+        console.log("Inside getProduct Productlisting", data.data);
+        setLoading(false);
       } else {
         setProducts([]);
         setCategory([]);
+        setLoading(false);
       }
 
       setLoading(false);
+    } else {
+      console.log(
+        "IdELse nsde",
+        id,
+        filter,
+        Object.keys(filter).length,
+        products?.length,
+        category?.length
+      );
     }
   };
 
@@ -134,57 +152,66 @@ const ProductListing = ({ onDataLoaded }) => {
   const hasRunOnce = useRef(false);
   // console.log("selectedCategory", hasRunOnce.current);
   useEffect(() => {
-    if (hasRunOnce.current) return;
-    hasRunOnce.current = true;
-    if (sku == "all-product.htm") {
-      fetchData();
-    } else if (pathname == "/wishlist") {
-      fetchData();
-    } else {
-      const categoryIds =
-        priceIndex !== -1 ? allParams.slice(0, priceIndex).map(Number) : [];
-      const lastId = categoryIds[categoryIds.length - 1];
-      const subCateogry = localStorage.getItem("subCateogry");
-      const parsedCateogry = subCateogry ? JSON.parse(subCateogry) : [];
-      console.log("Category Ids", categoryIds, lastId, parsedCateogry);
-      setCateogryArray(categoryIds);
-      if (lastId) {
-        setTheLastI(lastId);
-      }
-      const idPath = Array.isArray(categoryIds)
-        ? categoryIds.join("/")
-        : String(categoryIds);
-      setCategoryidList(idPath);
-      const findCategoryById = (categories, targetId) => {
-        for (const cat of categories) {
-          if (cat.id === targetId) return cat;
-          if (cat.children?.length) {
-            const found = findCategoryById(cat.children, targetId);
-            if (found) return found;
-          }
-        }
-        return null;
-      };
-      const selectedCategory = findCategoryById(parsedCateogry, lastId);
-      console.log("✅ selectedCategory", selectedCategory?.children);
-      if (selectedCategory?.children?.length > 0) {
-        setCategory(selectedCategory?.children);
-        setProducts([]);
-        setLoading(false);
-        console.log("selectedCategory if");
+    const intiziliaseData = async () => {
+      // if (hasRunOnce.current) return;
+      // hasRunOnce.current = true;
+      if (sku == "all-product.htm") {
+        fetchData();
+        console.log("Rohan123456");
+      } else if (pathname == "/wishlist") {
+        fetchData();
+        console.log("Rohan123456");
       } else {
-        console.log("selectedCategory else");
+        console.log("Rohan0987");
 
-        getProductByCategory(lastId, filterData);
+        const categoryIds =
+          priceIndex !== -1 ? allParams.slice(0, priceIndex).map(Number) : [];
+        const lastId = categoryIds[categoryIds.length - 1];
+        const subCateogry = localStorage.getItem("subCateogry");
+        const parsedCateogry = subCateogry ? JSON.parse(subCateogry) : [];
+        console.log("Category Ids", categoryIds, lastId, parsedCateogry);
+        setCateogryArray(categoryIds);
+        if (lastId) {
+          setTheLastI(lastId);
+        }
+        const idPath = Array.isArray(categoryIds)
+          ? categoryIds.join("/")
+          : String(categoryIds);
+        setCategoryidList(idPath);
+        const findCategoryById = async (categories, targetId) => {
+          for (const cat of categories) {
+            if (cat.id === targetId) return cat;
+            if (cat.children?.length) {
+              const found = findCategoryById(cat.children, targetId);
+              if (found) return found;
+            }
+          }
+          return null;
+        };
+        const selectedCategory = findCategoryById(parsedCateogry, lastId);
+        console.log("✅ selectedCategory", selectedCategory?.children);
+        if (selectedCategory?.children?.length > 0) {
+          setCategory(selectedCategory?.children);
+          setProducts([]);
+          setLoading(false);
+          console.log("selectedCategory if");
+        } else {
+          console.log("selectedCategory else");
+          setProducts([]);
+          setCategory([]);
+          getProductByCategory(lastId, filterData);
+        }
       }
-    }
-    const data = localStorage.getItem("filterdData");
-    if (data) {
-      const parsedData = JSON.parse(data);
-      setSelectedFilter(parsedData);
-      console.log("Parsed Data", parsedData);
-    }
-  }, []);
+      const data = localStorage.getItem("filterdData");
+      if (data) {
+        const parsedData = JSON.parse(data);
+        setSelectedFilter(parsedData);
+        console.log("Parsed Data", parsedData);
+      }
+    };
+    intiziliaseData();
+    console.log("ROhan1234");
+  }, [pathname]);
 
   // const [category, , sortOrder, limit, page, slug] = params?.params || [];
   const [paginationList, setPaginationList] = useState([1, 2, 3]);
@@ -202,7 +229,10 @@ const ProductListing = ({ onDataLoaded }) => {
   };
 
   const { menu } = useAuthStore((state) => state);
-  const { loading, setLoading, sideMenu } = useMenuStore.getState();
+  const loading = useMenuStore((state) => state.loading);
+  const setLoading = useMenuStore((state) => state.setLoading);
+  const sideMenu = useMenuStore((state) => state.sideMenu);
+
   const [levels, setLevels] = useState([]);
 
   const initialPage = 1;
@@ -224,6 +254,60 @@ const ProductListing = ({ onDataLoaded }) => {
     setFilterOption,
     setHeading,
   } = ProductLists((state) => state);
+  const renderedDropdowns = useMemo(
+    () => (
+      <>
+        {levels?.length > 0 &&
+          levels.map((levelItems, index) => (
+            <select
+              key={index}
+              className="form-select mt-2"
+              value={cateogryArray[index] ?? ""} // 👈 Set selected value
+              onChange={(e) => {
+                const selectedId = Number(e.target.value);
+                const element = levelItems.find((cat) => cat.id == selectedId);
+                console.log("Selected Category", element);
+                // handleClick(element);
+
+                // Replace category IDs after this level
+                const newArray = [...cateogryArray.slice(0, index), selectedId];
+                setCateogryArray(newArray);
+                //  const selectedId = Number(e.target.value);
+                const newPath = [...cateogryArray.slice(0, index), selectedId];
+                setCateogryArray(newPath);
+
+                // Get selected item for slug
+                const selectedItem = levels[index].find(
+                  (cat) => cat.id === selectedId
+                );
+                const slug = selectedItem?.slug || "category";
+
+                // Push to new URL
+                const newUrl = createUrl(newPath, slug);
+                console.log("New URL", newUrl);
+                setProducts([]);
+                setCategory([]);
+                getProductByCategory(selectedId, filterData);
+
+                router.push(newUrl, { scroll: false, shallow: false });
+                setHeading(element?.name);
+
+                // Optional: update URL here or use router.push(...)
+              }}
+            >
+              <option value="">Select</option>
+              {levelItems?.length > 0 &&
+                levelItems.map((cat, index) => (
+                  <option key={index} value={cat?.id}>
+                    {cat?.name}
+                  </option>
+                ))}
+            </select>
+          ))}
+      </>
+    ),
+    [levels, cateogryArray]
+  );
 
   const SaveColor = () => {
     // const colors = allProduct?.filterable?.find((item) => item.code == "color");
@@ -287,33 +371,8 @@ const ProductListing = ({ onDataLoaded }) => {
     }
   };
 
-  useEffect(() => {
-    const hasLoaded =
-      (Array.isArray(products) && products.length > 0) ||
-      (Array.isArray(category) && category.length > 0) ||
-      (!products.length && !category.length); // Handles "no results" case
-
-    if (hasLoaded) {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-    } else {
-      setLoading(true);
-    }
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    console.log("");
-  }, [products, category]);
-
-  useEffect(() => {
-    if (allProduct?.filterable?.length > 0) {
-      // SaveColor();
-      console.log("All Product Filterable", allProduct?.filterable);
-    }
-  }, [allProduct]);
-
-  useEffect(() => {
+  const getLevels = () => {
+    console.log("GetLEVELcall");
     if (!sideMenu || !Array.isArray(cateogryArray)) return;
 
     let currentLevel = Array.isArray(sideMenu) ? sideMenu : [];
@@ -344,6 +403,16 @@ const ProductListing = ({ onDataLoaded }) => {
     }
 
     setLevels(newLevels);
+  };
+  useEffect(() => {
+    if (allProduct?.filterable?.length > 0) {
+      // SaveColor();
+      console.log("All Product Filterable", allProduct?.filterable);
+    }
+  }, [allProduct]);
+
+  useEffect(() => {
+    getLevels();
   }, [sideMenu, cateogryArray]);
 
   // const handleClick = (item) => {
@@ -378,7 +447,7 @@ const ProductListing = ({ onDataLoaded }) => {
   //   //   console.log("========= Side Menu1111", products);
   //   // }
   // };
-  // console.log("filterOption", filterOption);
+  console.log("filterOption", category);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -388,7 +457,7 @@ const ProductListing = ({ onDataLoaded }) => {
             <div className="row">
               <div className="col-12">
                 <h4 className="mb-3">Filter</h4>
-                {levels?.length > 0 &&
+                {/* {levels?.length > 0 &&
                   levels.map((levelItems, index) => (
                     <select
                       key={index}
@@ -426,7 +495,7 @@ const ProductListing = ({ onDataLoaded }) => {
                         console.log("New URL", newUrl);
                         getProductByCategory(selectedId, filterData);
 
-                        router.push(newUrl, { scroll: false });
+                        router.push(newUrl, { scroll: false, shallow: false });
                         setHeading(element?.name);
 
                         // Optional: update URL here or use router.push(...)
@@ -440,7 +509,8 @@ const ProductListing = ({ onDataLoaded }) => {
                           </option>
                         ))}
                     </select>
-                  ))}
+                  ))} */}
+                {renderedDropdowns}
               </div>
             </div>
           </div>
@@ -448,14 +518,6 @@ const ProductListing = ({ onDataLoaded }) => {
           {(category?.length == 0 ||
             (category?.length == 0 && products?.length == 0)) && (
             <>
-              {/* <div className="col-md-4 col-lg-3">
-                <select className="form-select  mt-2">
-                  <option>SHAPE</option>
-                  <option>Round</option>
-                  <option>Square</option>
-                  <option>Oval</option>
-                </select>
-              </div> */}
               {filterOption?.colors?.length > 0 && (
                 <div className="col-md-4 col-lg-3">
                   <select
@@ -467,12 +529,12 @@ const ProductListing = ({ onDataLoaded }) => {
                         ...prev,
                         ["color"]: e.target.value,
                       }));
+                      setProducts([]);
+                      setCategory([]);
                       getProductByCategory(theLastI, {
                         ...selectedFilter,
                         color: e.target.value,
                       });
-
-                      // getProductByCategory(theLastI);
                     }}
                   >
                     <option value="0">ALL COLOURS</option>
@@ -505,6 +567,8 @@ const ProductListing = ({ onDataLoaded }) => {
                         ...prev,
                         ["variations"]: e.target.value,
                       }));
+                      setProducts([]);
+                      setCategory([]);
                       getProductByCategory(theLastI, {
                         ...selectedFilter,
                         variations: e.target.value,
@@ -529,70 +593,7 @@ const ProductListing = ({ onDataLoaded }) => {
       {/* Sort and Items Control */}
       {category?.length == 0 && (
         <>
-          <div className="row mb-3">
-            <div className="col-md-12 col-lg-7">
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="d-flex sorting-style align-items-center">
-                    <span>Sort by</span>
-                    <select
-                      className="form-select w-auto"
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          if (e.target.value == "Price") {
-                            sortProductsByPriceLowToHigh(products);
-                          }
-                          console.log("Selected value", e.target.value);
-                        }
-                      }}
-                    >
-                      <option>Select</option>
-
-                      <option>Price</option>
-                      <option>Name</option>
-                      <option value={"Newest"}>Newest</option>
-                      <option>Popular</option>
-                      <option>Date Published</option>
-                      <option>Date Archived</option>
-                      <option>Date Created</option>
-                      <option>Date Modified</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="d-flex  sorting-item align-items-center justify-content-end">
-                    <span>Items</span>
-                    <label
-                      htmlFor="currency-select"
-                      className="visually-hidden"
-                    >
-                      Select currency
-                    </label>
-                    <select
-                      id="currency-select"
-                      className="form-select w-auto me-3"
-                      value={filterData?.limit}
-                      onChange={(e) => {
-                        handleFilter("limit", e.target.value);
-                        // console.log("New", e.target.value);
-                      }}
-                    >
-                      <option value={15}>15 Items</option>
-                      <option value={30}>30 Items</option>
-                      <option value={60}>60 Items</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Pagination */}
-          </div>
-
-          {/* Items Count */}
-          <div className="mb-3">
-            <small className="text-muted">Items 1-9 of 9 total</small>
-          </div>
+          <FilterProduct />
         </>
       )}
       {products?.length > 15 && (
@@ -742,135 +743,7 @@ const ProductListing = ({ onDataLoaded }) => {
 
       {/* Sort and Items Control */}
       {category?.length == 0 ||
-        (category?.length == 0 && products?.length == 0 && (
-          <div className="row mb-3">
-            <div className="col-md-12 col-lg-7">
-              <div className="row">
-                <div className="col-md-6 col-lg-6">
-                  <div className="d-flex sorting-style align-items-center">
-                    <span>Sort by</span>
-                    <select className="form-select w-auto">
-                      <option>Price</option>
-                      <option>Name</option>
-                      <option>Newest</option>
-                      <option>Popular</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="col-md-6 col-lg-6">
-                  <div className="d-flex  sorting-item align-items-center justify-content-end">
-                    <span>Items</span>
-                    <select
-                      className="form-select w-auto me-3"
-                      value={filterData?.limit}
-                      onChange={(e) => {
-                        handleFilter("limit", e.target.value);
-                        // console.log("New", e.target.value);
-                      }}
-                    >
-                      <option value={15}>15 Items</option>
-                      <option value={30}>30 Items</option>
-                      <option value={60}>60 Items</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Pagination */}
-            {products?.length > 15 && (
-              <div className="col-md-12 col-lg-5">
-                <nav aria-label="Product pagination">
-                  <ul className="pagination">
-                    {currentPage == 1 ? (
-                      <></>
-                    ) : (
-                      <li
-                        className={`page-item ${
-                          currentPage === 1 ? "disabled" : ""
-                        }`}
-                      >
-                        <button
-                          className="page-link"
-                          onClick={() => {
-                            if (currentPage > 1) {
-                              handlePrevious(currentPage);
-                            }
-                          }}
-                          disabled={currentPage === 1}
-                        >
-                          Previous
-                        </button>
-                      </li>
-                    )}
-
-                    {paginationList.map((item, index) => {
-                      return (
-                        <li
-                          key={index}
-                          className={`page-item ${
-                            currentPage === item ? "active" : ""
-                          }`}
-                        >
-                          <button
-                            className="page-link"
-                            onClick={(e) => {
-                              // console.log("eeeeeee", e);
-                              // if (currentPage == currentPage) {
-                              // } else if (currentPage < item) {
-                              // }
-                              setCurrentPage(item);
-                              if (
-                                paginationList[paginationList?.length - 1] ==
-                                item
-                              ) {
-                                handlePagination(item, "next");
-                              } else if (
-                                paginationList[0] == item &&
-                                item > 1
-                              ) {
-                                handlePagination(item, "prev");
-                              }
-                            }}
-                          >
-                            {item}
-                          </button>
-                        </li>
-                      );
-                    })}
-
-                    {/* <li
-                  className={`page-item ${currentPage === 2 ? "active" : ""}`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(2)}
-                  >
-                    2
-                  </button>
-                </li>
-                <li className="page-item">
-                  <button
-                    className="page-link"
-                    onClick={() => setCurrentPage(3)}
-                  >
-                    3
-                  </button>
-                </li> */}
-                    <li className="page-item">
-                      <button
-                        className="page-link"
-                        onClick={() => handleNext(currentPage)}
-                      >
-                        Next &gt;
-                      </button>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            )}
-          </div>
-        ))}
+        (category?.length == 0 && products?.length == 0 && <FilterProduct />)}
     </div>
   );
 };

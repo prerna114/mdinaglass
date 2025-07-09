@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { FaHeart } from "react-icons/fa";
-import { IoBagOutline } from "react-icons/io5";
+import { Heart } from "lucide-react";
 import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
 
@@ -180,7 +179,12 @@ export default function ProductDetails({ productDetails }) {
             <p className="text-muted sku-detail">
               SKU: {productDetails?.sku ? productDetails.sku : "JG10068-M"}{" "}
               <span className="wishlist float-right">
-                <FaHeart />
+                <Heart
+                  size={24}
+                  color="#c6302c"
+                  fill="#c6302c" // ✅ adds fill color
+                  stroke="#c6302c"
+                />
               </span>
             </p>
             <p className="sku-detail mb-0">Description </p>
@@ -276,7 +280,17 @@ export default function ProductDetails({ productDetails }) {
             >
               <span>
                 {" "}
-                <IoBagOutline /> Add to Cart
+                <Image
+                  src="/assets/bag_white.webp"
+                  alt="Glass Bead Necklace"
+                  width={27}
+                  height={27}
+                  className="img-fluid"
+                  style={{
+                    marginRight: "10px",
+                  }}
+                />
+                Add to Cart
               </span>
             </button>
 

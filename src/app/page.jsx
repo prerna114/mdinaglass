@@ -1,33 +1,32 @@
 "use client";
-import CategoryGrid from "@/components/CategoryGrid";
+import CategoryGrid from "../components/CategoryGrid";
 import dynamic from "next/dynamic";
-// import ProductCard from "@/components/ProductCard";
+// import ProductCard from "../components/ProductCard";
 
-// import ProductCarousel from "@/components/ProductCarousel";
-// import Testimonials from "@/components/Testimonials";
-// import Video from "@/components/Video";
-import Megamenu from "@/components/Megamenu";
+// import ProductCarousel from "../components/ProductCarousel";
+// import Testimonials from "../components/Testimonials";
+// import Video from "../components/Video";
 import React, { useEffect } from "react";
 // import CategoryFeature from "../components/CategoryFeature";
-const Video = dynamic(() => import("@/components/Video"), {
+const Video = dynamic(() => import("../components/Video"), {
   ssr: false,
   loading: () => <div style={{ height: 300 }}>Loading video...</div>,
 });
-const ProductCarousel = dynamic(() => import("@/components/ProductCarousel"), {
+const ProductCarousel = dynamic(() => import("../components/ProductCarousel"), {
   ssr: false,
   loading: () => <div style={{ height: 200 }}>Loading...</div>,
 });
-const CategoryFeature = dynamic(() => import("@/components/CategoryFeature"), {
-  ssr: false,
-  loading: () => <div style={{ height: 200 }}>Loading...</div>,
-});
-
-const ProductCard = dynamic(() => import("@/components/ProductCard"), {
+const CategoryFeature = dynamic(() => import("../components/CategoryFeature"), {
   ssr: false,
   loading: () => <div style={{ height: 200 }}>Loading...</div>,
 });
 
-const Testimonials = dynamic(() => import("@/components/Testimonials"), {
+const ProductCard = dynamic(() => import("../components/ProductCard"), {
+  ssr: false,
+  loading: () => <div style={{ height: 200 }}>Loading...</div>,
+});
+
+const Testimonials = dynamic(() => import("../components/Testimonials"), {
   ssr: false,
   loading: () => <div style={{ height: 200 }}>Loading...</div>,
 });

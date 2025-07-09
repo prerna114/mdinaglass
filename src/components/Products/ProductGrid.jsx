@@ -2,6 +2,7 @@ import { useMenuStore } from "@/store/useCategoryStore";
 import Link from "next/link";
 import React from "react";
 // const { loading } = useMenuStore.getState();
+import Image from "next/image";
 
 const ProductGrid = ({ products, categoryidList }) => {
   //   console.log("Products in Grid", products, loading, theloading);
@@ -12,12 +13,13 @@ const ProductGrid = ({ products, categoryidList }) => {
           <div key={product.id} className="col-lg-4 col-md-6 mb-4">
             <div className=" product-card">
               <div className="position-relative">
-                <img
+                <Image
                   //   src={"/assets/bg-image.png"}
-                  src={product?.images[0]?.url}
+                  src={product?.images[0]?.url || "/fallback.jpg"}
                   className="card-img-top"
                   alt={product.name}
-                  style={{}}
+                  width={214}
+                  height={214}
                 />
                 {/* {product.hasOptions && (
                   <div className="m-2">

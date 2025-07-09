@@ -1,15 +1,9 @@
 "use client";
 
-import { getCategories, getMenuCategories } from "@/api/menuAPI";
-import { getProductCateogry, getProductCateogrybyId } from "@/api/productApi";
-import { createUrl } from "@/constant";
+import { getProductCateogrybyId } from "@/api/productApi";
 import { useAuthStore } from "@/store/useAuthStore";
-import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import React, { memo, useEffect, useState } from "react";
-import CategoryItem from "./CategoryItem";
+import React, { useEffect, useState } from "react";
 import SideMenuItem from "./SideMenuItem";
-import { Menu } from "lucide-react";
 import { useMenuStore } from "@/store/useCategoryStore";
 
 const SideMenu = ({ cateogryId }) => {
@@ -17,17 +11,6 @@ const SideMenu = ({ cateogryId }) => {
   const { menu } = useAuthStore((state) => state);
   const { sideMenu, setSideMenu } = useMenuStore((state) => state);
   const [subCategory, setSubCategory] = useState([]);
-  const [subCartId, setSubCartId] = useState("");
-  const [showId, setShowID] = useState();
-  const [catergoryTheId, setCategoryTheId] = useState("");
-  const [categoryDetails, setCategoryDetails] = useState({});
-  const { params } = useParams();
-  const [categoryId, setCategoryId] = useState(
-    typeof params?.[0] !== "undefined" ? params[0] : cateogryId?.cateogryId
-  );
-
-  const [expand, setExpand] = useState({});
-  const router = useRouter();
 
   const CategoryById = async (id) => {
     const data = await getProductCateogrybyId(1);

@@ -1,10 +1,81 @@
 import { createUrl } from "@/constant";
+import { ProductLists } from "@/store/product";
 import { useMenuStore } from "@/store/useCategoryStore";
 import { useRouter } from "next/navigation";
 import React from "react";
 
 const CategoryGrid = ({ category }) => {
   const router = useRouter();
+
+  // const getProductByCategory = async (id, selectedFilter) => {
+  //   setLoading(true);
+  //   setProducts([]);
+  //   setCategory([]);
+  //   if (
+  //     id &&
+  //     selectedFilter &&
+  //     Object.keys(selectedFilter).length > 0 &&
+  //     (products?.length === 0 || category?.length === 0)
+  //   ) {
+  //     const data = await getProductCateogry(id, selectedFilter);
+  //     console.log(
+  //       " ====================== Side Menu Insde23",
+  //       data.data,
+  //       products.length,
+  //       category.length
+  //     );
+
+  //     if (data?.status === 200) {
+  //       const FilterData = data.data || [];
+  //       setAllProduct(data.data);
+  //       if (data.data.filterable?.length > 0) {
+  //         const colors = FilterData?.filterable?.find(
+  //           (item) => item.code == "color"
+  //         );
+  //         const variation = FilterData?.filterable?.find(
+  //           (item) => item.code == "variations"
+  //         );
+
+  //         console.log("ColorsSideMenu", variation?.options, colors);
+  //         if (colors?.options?.length > 0) {
+  //           // setColorOptions(colors?.options);
+  //           setFilterOption({
+  //             colors: colors?.options,
+  //           });
+  //         }
+  //         if (variation?.options?.length > 0) {
+  //           setFilterOption({
+  //             variations: variation?.options,
+  //           });
+  //           // setVariationOption(variation?.options);
+  //         }
+  //       }
+  //       if (data.data.products && data.data.products.length > 0) {
+  //         setProducts(data.data.products);
+  //       } else if (
+  //         data?.data?.sub_categories &&
+  //         data?.data?.sub_categories.length > 0
+  //       ) {
+  //         setCategory(data.data.sub_categories);
+  //       }
+  //       window.scrollTo({
+  //         top: 500,
+  //         behavior: "smooth", // Optional: for smooth scrolling animation
+  //       });
+  //       // setProducts(data.data.products || []);
+  //       console.log("Product Data", data.data);
+  //     } else {
+  //       setProducts([]);
+  //       setCategory([]);
+  //       window.scrollTo({
+  //         top: 500,
+  //         behavior: "smooth", // Optional: for smooth scrolling animation
+  //       });
+  //     }
+
+  //     setLoading(false);
+  //   }
+  // };
 
   const buildCategoryPath = (id) => {
     const { parentMap } = useMenuStore.getState();
@@ -17,6 +88,7 @@ const CategoryGrid = ({ category }) => {
     }
     return path;
   };
+
   return (
     <div className="row">
       {category?.map((product) => (
@@ -37,20 +109,15 @@ const CategoryGrid = ({ category }) => {
                 style={{
                   cursor: "pointer",
                 }}
-                // href={{
-                //   pathname: `/product-details/webshop/${product?.id}`,
-                //   query: { sku: product?.sku },
-                // }}
-                href={"#"}
+                // href=""
                 onClick={() => {
-                  // console.log("dsada", product);
+                  console.log("dsada", product);
                   const pathToId = buildCategoryPath(product?.id);
                   useMenuStore.getState().setExpanded(pathToId);
                   const newUrl = createUrl(pathToId, product.slug);
-
-                  // console.log("logo_image", product);
-                  // console.log("New url ,", newUrl);
                   router.push(newUrl);
+
+                  // getProductByCategory()
                 }}
               >
                 <h6 className="card-title mb-3">{product.name}</h6>

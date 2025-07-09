@@ -3,7 +3,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { buildProductUrl } from "@/utils/buildProductUrl";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { IoIosSearch } from "react-icons/io";
+import { Search } from "lucide-react";
 
 const ResponsiveNav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -104,7 +104,11 @@ const ResponsiveNav = () => {
                   }}
                   aria-label="Search"
                 >
-                  <IoIosSearch size={27} />
+                  <Search
+                    // className="text-muted  hide-desk"
+                    // color="#888888"
+                    size={25}
+                  />
                 </button>
                 <input
                   type="text"

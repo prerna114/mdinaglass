@@ -1,7 +1,7 @@
 "use client";
 
-import AddToCart from "@/components/AddToCart";
-import GiftVoucher from "@/components/GiftVoucher";
+import AddToCart from "../components/AddToCart";
+import GiftVoucher from "../components/GiftVoucher";
 import { useCartStore } from "@/store";
 import Link from "next/link";
 import React from "react";

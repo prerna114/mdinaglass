@@ -22,7 +22,7 @@ const SideMenuItem = ({
       ? allParams.slice(0, priceIndex).map(Number)
       : allParams.map(Number);
 
-  console.log("All Params", params, categoryIds, allParams, priceIndex);
+  // console.log("All Params", params, categoryIds, allParams, priceIndex);
   const [selectedFilter, setSelectedFilter] = useState({
     variations: 0,
     color: 0,
@@ -74,10 +74,13 @@ const SideMenuItem = ({
     if (item?.children?.length > 0) {
       // setCategory(item.children);
       console.log("===========Side Menu45", products);
+      console.log("Insde If");
+
       getProductByCategory(item.id, selectedFilter);
     } else {
-      getProductByCategory(item.id, selectedFilter);
-      console.log("========= Side Menu1111", products);
+      // getProductByCategory(item.id, selectedFilter);
+      console.log("Insde else");
+      // console.log("========= Side Menu1111", products);
     }
   };
 
@@ -126,11 +129,16 @@ const SideMenuItem = ({
         }
         if (data.data.products && data.data.products.length > 0) {
           setProducts(data.data.products);
-        } else if (
+        }
+        if (
           data?.data?.sub_categories &&
           data?.data?.sub_categories.length > 0
         ) {
           setCategory(data.data.sub_categories);
+          console.log(
+            "SUb Category inside sidemenu",
+            data?.data.sub_categories
+          );
         }
         window.scrollTo({
           top: 500,

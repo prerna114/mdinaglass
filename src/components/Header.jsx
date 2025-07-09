@@ -3,17 +3,15 @@
 import { useState, useRef, useEffect } from "react";
 
 import { ShoppingCart, User, Bell } from "lucide-react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { FaPlay, FaPause } from "react-icons/fa";
+
 import ResponsiveNav from "./NavMenu";
-import { CiSearch } from "react-icons/ci";
-import Video from "./Video";
+import { Search } from "lucide-react";
+
 import Link from "next/link";
-import { buildProductUrl } from "@/utils/buildProductUrl";
 import { useCartStore } from "@/store";
 import { useAuthStore } from "@/store/useAuthStore";
-import { IoMdCloseCircleOutline } from "react-icons/io";
-import { FaTimes } from "react-icons/fa";
+
+import Image from "next/image";
 
 const Header = () => {
   const [isBannerVisible, setIsBannerVisible] = useState(true);
@@ -308,10 +306,13 @@ const Header = () => {
                         justifyContent: "center",
                       }}
                     >
-                      <img
-                        src="/assets/flag.png"
+                      <Image
+                        src="/assets/flag.webp"
                         alt="Mdina Glass Logo"
-                        style={{ height: "22px", width: "22px" }}
+                        // style={{ height: "22px", width: "22px" }}
+                        height={22}
+                        width={22}
+                        loading="lazy"
                       />
                     </div>
                     <label
@@ -406,7 +407,7 @@ const Header = () => {
               </div>
 
               <div className="icon-section" onClick={toggleSearch}>
-                <CiSearch
+                <Search
                   className="text-muted  hide-desk"
                   color="#888888"
                   style={{

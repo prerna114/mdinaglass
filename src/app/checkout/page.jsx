@@ -1,8 +1,8 @@
 "use client";
-import { CustomToast } from "@/components/CustomToast";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import MegaMenu from "@/components/Megamenu";
+import { CustomToast } from "../components/CustomToast";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import MegaMenu from "../components/Megamenu";
 import { useCartStore } from "@/store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

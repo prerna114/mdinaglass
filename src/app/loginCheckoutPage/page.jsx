@@ -1,14 +1,14 @@
 "use client";
 
-import CategorySidebar from "@/components/CategorySidebar";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import ProductHeading from "@/components/ProductHeading";
-import ProductListing from "@/components/ProductListing";
-import MegaMenu from "@/components/Megamenu";
+import CategorySidebar from "../components/CategorySidebar";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import ProductHeading from "../components/ProductHeading";
+import ProductListing from "../components/ProductListing";
+import MegaMenu from "../components/Megamenu";
 import React, { useEffect, useState } from "react";
-import { CustomToast, SuccessToast } from "@/components/CustomToast";
-import Make from "@/components/Profile";
+import { CustomToast, SuccessToast } from "../components/CustomToast";
+import Make from "../components/Profile";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Login, registerCustomer } from "@/api/Customer";

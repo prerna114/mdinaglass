@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "@/constant";
-import axios from "axios";
+import { appAxios } from "./intercepter";
 
 export const registerCustomer = async (id) => {
   const data = {
@@ -11,7 +11,7 @@ export const registerCustomer = async (id) => {
   };
 
   try {
-    const response = await axios.post(
+    const response = await appAxios.post(
       `${API_BASE_URL}api/v1/customer/register`,
       data,
       {
@@ -35,7 +35,7 @@ export const Login = async (userName, password) => {
   };
 
   try {
-    const response = await axios.post(
+    const response = await axios.appAxios(
       `${API_BASE_URL}api/customer/login`,
       credentials,
       {

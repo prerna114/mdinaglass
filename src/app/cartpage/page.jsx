@@ -1,15 +1,15 @@
 "use client";
 
-import AddToCart from "@/components/AddToCart";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import GiftVoucher from "@/components/GiftVoucher";
+import AddToCart from "../components/AddToCart";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import GiftVoucher from "../components/GiftVoucher";
 import React, { useState } from "react";
-import CartHeading from "@/components/CartHeading";
-import MegaMenu from "@/components/Megamenu";
+import CartHeading from "../components/CartHeading";
+import MegaMenu from "../components/Megamenu";
 import Link from "next/link";
 import { useCartStore } from "@/store";
-import { SuccessToast } from "@/components/CustomToast";
+import { SuccessToast } from "../components/CustomToast";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const page = () => {

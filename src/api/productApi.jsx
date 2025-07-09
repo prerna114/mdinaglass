@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/constant"; // Ensure this contains the base URL
+import { appAxios } from "./intercepter";
 
 export const getAllProduct = async (category, filterData, currentPage) => {
   const data = {
@@ -7,7 +8,7 @@ export const getAllProduct = async (category, filterData, currentPage) => {
     page: currentPage,
   };
   try {
-    const response = await axios.get(`${API_BASE_URL}api/products`, {
+    const response = await appAxios.get(`${API_BASE_URL}api/products`, {
       params: {
         limit: filterData?.limit,
         page: currentPage,
@@ -24,7 +25,7 @@ export const getAllProduct = async (category, filterData, currentPage) => {
 
 export const getProductByID = async (id) => {
   try {
-    const response = await axios.get(
+    const response = await appAxios.get(
       `${API_BASE_URL}api/blackbull/products/${id}`
     );
     console.log("Data", response.data.data); // Optional: for debugging
@@ -63,7 +64,7 @@ export const getProductCateogry = async (id) => {
   };
   // console.log("getProductCateogryData", data, filter); // Optional: for debugging
   try {
-    const response = await axios.post(
+    const response = await appAxios.post(
       `${API_BASE_URL}api/categories/products-with-filters`,
       data,
       {
@@ -82,7 +83,7 @@ export const getProductCateogry = async (id) => {
 
 export const getProductCateogrybyId = async (id) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}api/categories/${id}`);
+    const response = await appAxios.get(`${API_BASE_URL}api/categories/${id}`);
     console.log("getProductCateogry", response); // Optional: for debugging
     return response;
   } catch (error) {

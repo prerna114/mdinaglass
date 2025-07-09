@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AiOutlineEdit } from "react-icons/ai";
+import { SquarePen } from "lucide-react";
+
 import { products } from "@/constant";
 import Link from "next/link";
 
@@ -57,7 +58,7 @@ export default function Make() {
                       <h4 className="mb-0">👤 User Profile</h4>
                     </div>
                     <Link href={"/editUser"} className="col-auto">
-                      <AiOutlineEdit size={27} />
+                      <SquarePen size={27} />
                     </Link>
                   </div>
 

@@ -2,8 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 
-import { FaPlay, FaPause } from "react-icons/fa";
-
 const Video = () => {
   const videoRef = useRef(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);

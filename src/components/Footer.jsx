@@ -3,6 +3,7 @@
 import { createUrl } from "@/constant";
 import Link from "next/link";
 import React from "react";
+import Image from "next/image";
 
 const Footer = () => {
   return (
@@ -13,21 +14,25 @@ const Footer = () => {
           {/* Logo & Payment */}
           <div className="col-md-4 mb-4">
             <Link href={"/"} className="footer-logo">
-              <img
-                src="/assets/footer-logo.png"
+              <Image
+                src="/assets/footer-logo.webp"
                 alt="Mdina Glass Logo"
                 className="mb-3 footer-logo"
                 style={{ width: "290px !important" }}
+                width={290}
+                height={116}
               />
             </Link>
             <p className="font-footer">Payment Method</p>
             <div className="d-flex footer-logo flex-wrap gap-2">
-              <img
+              <Image
                 src="/assets/visa.png"
                 className=""
                 alt="Visa"
-                height="30"
-                width="100%"
+                height={30}
+                // width="100%"
+                loading="lazy"
+                width={336}
               />
             </div>
           </div>
@@ -64,7 +69,11 @@ const Footer = () => {
               <li>Careers</li>
               <li>International Delivery</li>
               <li>Trade Enquiries</li>
-              <li>Terms & Conditions</li>
+              <li>
+                <Link href={"/information/terms-and-conditions"}>
+                  Terms & Conditions
+                </Link>
+              </li>
               <li>Privacy Policy & Data Protection</li>
               <li>Cookies Policy</li>
               <li>Returns & Cancellations</li>
@@ -86,12 +95,12 @@ const Footer = () => {
                 alt="Facebook"
               />
               <img
-                src="/assets/insta.png"
+                src="/assets/insta.webp"
                 className="footer-images"
                 alt="Instagram"
               />
               <img
-                src="/assets/twitter.png"
+                src="/assets/twitter.webp"
                 className="footer-images"
                 alt="Twitter"
               />
@@ -156,11 +165,14 @@ const Footer = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <img
-                src="/assets/blackbull-logo.png"
+              <Image
+                src="/assets/blackbull-logo.webp"
                 alt="BlackBull TechnoSoft"
                 className="ms-2"
                 style={{ height: "15px", verticalAlign: "middle" }}
+                loading="lazy"
+                width={51}
+                height={15}
               />
             </a>
           </p>

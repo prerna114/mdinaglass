@@ -6,7 +6,10 @@ const withBundleAnalyzer = createBundleAnalyzer({
 });
 
 const nextConfig = {
-  // your existing config (add/merge as needed)
+  images: {
+    domains: ["mdinaglasses.blackbullsolution.com"],
+  },
+  // other configs if any
 };
 
 export default withBundleAnalyzer(nextConfig);
