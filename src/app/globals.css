@@ -10,6 +10,10 @@
   .container.mobile-header-bg {
     max-width: 1700px;
   }
+  .InfoContainer {
+    max-width: 1050px !important;
+    margin: 0 auto;
+  }
   .checkout-sec input {
     width: 65% !important;
     height: 62px;
@@ -58,6 +62,10 @@
 input[type="checkbox"] {
   width: 25px !important;
   height: 25px !important;
+}
+.InfoContainer {
+  max-width: 1050px !important;
+  margin: 0 auto;
 }
 
 .shiping-radio {
@@ -335,6 +343,10 @@ ul.category-sidebar li a {
   .container-xl,
   .container-xxl {
     max-width: 1550px !important;
+  }
+  .InfoContainer {
+    max-width: 1050px !important;
+    margin: 0 auto;
   }
 }
 input[type="checkbox"] {
@@ -1832,10 +1844,15 @@ hr.display-option {
     font-size: 28px;
   }
 }
+
 @media screen and (min-width: 1001px) and (max-width: 1200px) {
   .nav-link {
     margin-right: 3px !important;
     font-size: 10px !important;
+  }
+  .InfoContainer {
+    max-width: 1050px !important;
+    margin: 0 auto;
   }
 
   .nav-link {
@@ -2944,4 +2961,72 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
   color: #005e84 !important;
   /* font-size: 18px; */
   /* padding: 10px 30px 0; */
+}
+.info-layout {
+  display: flex;
+}
+.sidebar h1 {
+  color: #4d4d4d;
+  font-size: 2rem;
+  /* padding: 20px 0px 0px; */
+  font-family: var(--font-domine);
+}
+.sidebar {
+  padding-right: 15px;
+  width: 20%;
+}
+.sidebar ul {
+  list-style: none;
+  padding-left: 0px;
+}
+.sidebar ul li {
+  padding: 10px 0px;
+  font-family: var(--font-domine);
+  font-size: 15px;
+}
+.sidebar ul li a.activeTab {
+  color: #76d2d3;
+  font-weight: bold;
+}
+
+.sidebar ul li a.nonActiveBar {
+  color: #666666;
+}
+.nonActiveBar {
+  padding: 10px 0px;
+  color: #000;
+}
+
+.activeTab {
+  color: #76d2d3;
+  padding: 10px 0px;
+}
+.information h2 {
+  color: #4d4d4d;
+  font-size: 32px;
+  font-family: var(--font-domine);
+  font-weight: normal;
+  margin-bottom: 15px;
+}
+.information {
+  width: 80%;
+}
+.information p {
+  font-family: var(--font-raleway);
+  font-size: 14px;
+  margin: 0 0 10px;
+  color: #666666;
+  /* margin: 0; */
+  padding: 0;
+}
+.information h3 {
+  font-family: var(--font-domine);
+  font-size: 18px !important;
+  margin: 0 0 10px;
+  color: #666666;
+  /* margin: 0; */
+  padding: 0;
+}
+.information h3 {
+  margin-top: 24px;
 }

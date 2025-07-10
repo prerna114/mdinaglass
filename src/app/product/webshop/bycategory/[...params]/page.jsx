@@ -1,8 +1,7 @@
 "use client";
-import ProductHeading from "../components/ProductHeading";
+import ProductHeading from "@/components/ProductHeading";
 // import ProductListing from "../components/ProductListing";
-import MegaMenu from "../components/Megamenu";
-import Reac from "react";
+
 // import SideMenu from "../components/SideMenu";
 import dynamic from "next/dynamic";
 // const SideMenu = dynamic(() => import("../components/SideMenu"), {
@@ -10,12 +9,12 @@ import dynamic from "next/dynamic";
 //   loading: () => <div style={{ height: 200 }}>Loading...</div>,
 // });
 
-const SideMenu = dynamic(() => import("../components/SideMenu"), {
+const SideMenu = dynamic(() => import("@/components/SideMenu"), {
   ssr: false,
   loading: () => <div style={{ height: 200 }}>Loading...</div>,
 });
 
-const ProductListing = dynamic(() => import("../components/ProductListing"), {
+const ProductListing = dynamic(() => import("@/components/ProductListing"), {
   ssr: false,
   loading: () => <div style={{ height: 200 }}>Loading...</div>,
 });

@@ -45,7 +45,7 @@ const Footer = () => {
                 <Link href={"/"}>Home</Link>
               </li>
               <li>
-                <Link href={"/aboutus"}>About Us</Link>
+                <Link href={"/about/about-mdina-glass"}>About Us</Link>
               </li>
               <li>
                 <Link href={createUrl("all", "all-product")}>All Products</Link>
@@ -67,16 +67,32 @@ const Footer = () => {
             <h6 className="footer-link">Information</h6>
             <ul className="list-unstyled small">
               <li>Careers</li>
-              <li>International Delivery</li>
-              <li>Trade Enquiries</li>
+
               <li>
-                <Link href={"/information/terms-and-conditions"}>
+                <Link href={"/information/international-delivery"}>
+                  International Delivery
+                </Link>
+              </li>
+
+              <li>
+                <Link href={"/about/trade-partner"}>Trade Enquiries</Link>
+              </li>
+              <li>
+                <Link href={"/information/terms-conditions"}>
                   Terms & Conditions
                 </Link>
               </li>
-              <li>Privacy Policy & Data Protection</li>
+              <li>
+                <Link href={"/information/privacy-policy"}>
+                  Privacy Policy & Data Protection
+                </Link>
+              </li>
               <li>Cookies Policy</li>
-              <li>Returns & Cancellations</li>
+              <li>
+                <Link href={"/information/return-policy"}>
+                  Returns & Cancellations
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -85,7 +101,9 @@ const Footer = () => {
             <h6 className="footer-link">Contact</h6>
             <ul className="list-unstyled small">
               <li>Store Locator & Contact</li>
-              <li>Contact Form</li>
+              <li>
+                <Link href={"/contactus/contact-form"}>Contact Form</Link>
+              </li>
             </ul>
             <h6 className="footer-link mt-3 mb-3">Get Social</h6>
             <div className="d-flex gap-2 footer-social-icon  mb-2">

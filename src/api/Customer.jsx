@@ -35,7 +35,7 @@ export const Login = async (userName, password) => {
   };
 
   try {
-    const response = await axios.appAxios(
+    const response = await appAxios.post(
       `${API_BASE_URL}api/customer/login`,
       credentials,
       {
@@ -51,6 +51,27 @@ export const Login = async (userName, password) => {
     return response;
   } catch (error) {
     // console.error("❌ Login failed:", error.response?.data || error.message);
+    return error;
+  }
+};
+
+export const CmsInformation = async (slug) => {
+  try {
+    const response = await appAxios.get(
+      `${API_BASE_URL}api/blackbull/cms/${slug}`,
+
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("✅ CMS:", response);
+    return response;
+  } catch (error) {
+    console.error("❌ Login failed:", error.response?.data || error.message);
     return error;
   }
 };

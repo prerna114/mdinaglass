@@ -1,13 +1,7 @@
 "use client";
 import CategoryGrid from "../components/CategoryGrid";
 import dynamic from "next/dynamic";
-// import ProductCard from "../components/ProductCard";
-
-// import ProductCarousel from "../components/ProductCarousel";
-// import Testimonials from "../components/Testimonials";
-// import Video from "../components/Video";
 import React, { useEffect } from "react";
-// import CategoryFeature from "../components/CategoryFeature";
 const Video = dynamic(() => import("../components/Video"), {
   ssr: false,
   loading: () => <div style={{ height: 300 }}>Loading video...</div>,

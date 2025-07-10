@@ -8,13 +8,16 @@ type AuthStore = {
   logout: () => void;
   setLoginState: (state: boolean) => void;
   menu: [];
+  cmsInfo: {};
   setMenu: (state: []) => void;
+  setCmsInfo: (state: {}) => void;
 };
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set) => ({
       isLogin: false,
       menu: [],
+      cmsInfo: "",
       login: () => set({ isLogin: true }),
       logout: () => {
         localStorage.removeItem("token"); // remove actual token
@@ -22,6 +25,7 @@ export const useAuthStore = create<AuthStore>()(
       },
       setLoginState: (state: boolean) => set({ isLogin: state }),
       setMenu: (data) => set({ menu: data }),
+      setCmsInfo: (data) => set({ cmsInfo: data }),
     }),
     {
       name: "auth-storage", // localStorage key

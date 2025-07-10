@@ -76,7 +76,7 @@ const ResponsiveNav = () => {
             <div className="col-9 d-flex justify-content-end flex-wrap">
               {[
                 { label: "Home", href: "/" },
-                { label: "About Us", href: "/aboutus" },
+                { label: "About Us", href: "/about/about-mdina-glass" },
                 {
                   label: "All Products",
                   href: createUrl("all", "all-product"),
@@ -195,7 +195,7 @@ const ResponsiveNav = () => {
             My Account
           </Link>
           <Link
-            href={"/aboutus"}
+            href={"/about/about-mdina-glass"}
             className="menu-item"
             onClick={() => {
               setIsOpen(false);

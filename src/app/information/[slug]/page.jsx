@@ -1,52 +1,65 @@
-import { notFound } from "next/navigation";
-
-const contentMap = {
-  "international-delivery": {
-    title: "International Delivery",
-    body: `
-      We are happy to deliver to most countries around the world.
-      We use insurance and carefully wrap our items to ensure their safe delivery.
-      Because our glassware varies a lot in size, shape and fragility we process our international orders manually.
-      You can calculate your correct shipping price in our cart to find out how much it will cost to your selected item/s to your particular country.
-
-      Your order may be subject to import duties and/or taxes, which are levied once your package reaches your country,
-      if country is outside EU. For more information regarding your country’s customs policies, please contact your local customs office.
-
-      While we make every effort to ensure automated shipping charges are correct for individual products,
-      the final shipping costs may vary. This can only be determined upon packing.
-      In this case, you will be notified of the extra charge prior to dispatch.
-    `,
-  },
-  "terms-and-conditions": {
-    title: "Terms & Conditions",
-    body: "Here are the terms and conditions of our service...",
-  },
-  "privacy-policy": {
-    title: "Privacy Policy & Data Protection",
-    body: "Your data privacy is important to us...",
-  },
-  "returns-and-cancellations": {
-    title: "Returns & Cancellations",
-    body: "You may return items within 14 days...",
-  },
-};
+"use client";
+import InfoContent from "@/components/Information/InfoContent";
+import dynamic from "next/dynamic";
+// import InformationSideMenu from "@/components/Information/InformationSideMenu";
+import Image from "next/image";
+const InformationSideMenu = dynamic(
+  () => import("@/components/Information/InformationSideMenu"),
+  {
+    ssr: false,
+    loading: () => <div style={{ height: 300 }}></div>,
+  }
+);
+import { useParams } from "next/navigation";
+import { useEffect } from "react";
 
 // ✅ Do NOT destructure params in the function signature
-export default async function Page(props) {
-  const { params } = props;
-  const content = contentMap[params.slug];
+export default function Page() {
+  const params = useParams();
+  console.log("paramsInfromation", params.slug);
 
-  if (!content) return notFound();
-
+  useEffect(() => {
+    // showContent()
+  }, []);
   return (
-    <div className="container py-5">
-      <h1 className="mb-3">{content.title}</h1>
-      {content.body
-        .split("\n")
-        .filter((line) => line.trim())
-        .map((line, idx) => (
-          <p key={idx}>{line.trim()}</p>
-        ))}
+    <div
+      className="container"
+      style={
+        {
+          // width: "53%",
+          // maxWidth: "1016px",
+        }
+      }
+    >
+      {params.slug === "terms-conditions" && (
+        <Image
+          src="/assets/termscondition.webp"
+          width={1117}
+          height={417}
+          alt="terms and condtion"
+          style={
+            {
+              // width: "10%",
+              // maxWidth: "1006px",
+            }
+          }
+        />
+      )}
+
+      <div
+        style={{
+          flexDirection: "row",
+          display: "flex",
+          marginTop: "20px",
+          // maxWidth: "1029px",
+          // margin: "0 auto",
+        }}
+      >
+        {/* <h1 className="mb-3">{content.title}</h1> */}
+
+        <InformationSideMenu />
+        <InfoContent />
+      </div>
     </div>
   );
 }
