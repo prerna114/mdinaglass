@@ -52,7 +52,7 @@ const ContactSideMenu = () => {
           <li key={link.slug}>
             <Link
               className={link.id === active ? "activeTab" : "nonActiveBar"}
-              href={`/about/${link.slug}`}
+              href={`/contactus/${link.slug}`}
             >
               {link.label}
             </Link>
