@@ -1,20 +1,20 @@
 "use client";
 
-import CategorySidebar from "../components/CategorySidebar";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import ProductHeading from "../components/ProductHeading";
-import ProductListing from "../components/ProductListing";
-import MegaMenu from "../components/Megamenu";
 import React, { useEffect, useState } from "react";
-import { CustomToast, SuccessToast } from "../components/CustomToast";
-import Make from "../components/Profile";
+import { CustomToast, SuccessToast } from "@/components/CustomToast";
+
+import Make from "@/components/Profile";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
+
 import { Login, registerCustomer } from "@/api/Customer";
 import Link from "next/link";
+import { useCartStore } from "@/store";
+import { getCartListing } from "@/api/CartApi";
 
 const loginCheckoutPage = () => {
+  const { clearCart, addToCart } = useCartStore((state) => state);
+
   const router = useRouter();
   const [checkoutType, setCheckoutType] = useState("");
 
@@ -56,10 +56,25 @@ const loginCheckoutPage = () => {
       localStorage.setItem("token", JSON.stringify(data?.data));
       login();
       setUserLogin(true);
+      setTimeout(() => {
+        getCart();
+      }, 1000);
+      getCart();
     } else {
       // console.error("Data", data?.response?.data?.message);
       CustomToast(data?.response?.data?.message, "top-right");
     }
+  };
+  const getCart = async () => {
+    clearCart();
+    const data = await getCartListing();
+    if (data?.status == 200) {
+      // addToCart(data.result.items);
+      data.result.items.forEach((item) => {
+        addToCart(item);
+      });
+    }
+    // console.log("getCart", data);
   };
 
   // console.log("username", userName);

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Heart } from "lucide-react";
 import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
+import { addToTheCart } from "@/api/CartApi";
 
 export default function ProductDetails({ productDetails }) {
   console.log("productDetails", productDetails);
@@ -52,7 +53,7 @@ export default function ProductDetails({ productDetails }) {
     "/assets/bracelet2.png",
   ];
   const [selectedImage, setSelectedImage] = useState(imageList[0]);
-  const { addToCart, cart } = useCartStore((state) => state);
+  const { addToCart, cart, clearCart } = useCartStore((state) => state);
   const handleAdd = (item) => {
     addToCart(item);
     const updated = useCartStore.getState().cart.find((i) => i.id === item.id);
@@ -61,7 +62,19 @@ export default function ProductDetails({ productDetails }) {
     }
     console.log("updated", updated);
   };
-  console.log("productDetails", productDetails);
+
+  const addItemCart = async () => {
+    const data = await addToTheCart();
+    if (data.status == 200) {
+      clearCart();
+      addToCart(data.result.cart.items);
+
+      SuccessToast("Item added Successfuly", "top-right");
+    } else {
+      CustomToast("Something went Wrong", "top-right");
+    }
+  };
+  // console.log("productDetails", productDetails);
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       <div className="side-bar-mobi">
@@ -268,14 +281,15 @@ export default function ProductDetails({ productDetails }) {
             <button
               className="w-100 py-3 text-uppercase addtocart"
               onClick={() => {
-                handleAdd({
-                  id: 1,
-                  name: "Glass Bead Necklace & Bracelet Set",
-                  price: 29.0,
-                  qty: 1,
-                  image: "/assets/bracelet1.png",
-                  gift: false,
-                });
+                // handleAdd({
+                //   id: 1,
+                //   name: "Glass Bead Necklace & Bracelet Set",
+                //   price: 29.0,
+                //   qty: 1,
+                //   image: "/assets/bracelet1.png",
+                //   gift: false,
+                // });
+                addItemCart();
               }}
             >
               <span>

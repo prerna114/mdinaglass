@@ -1,13 +1,10 @@
 "use client";
 
-import CategorySidebar from "../components/CategorySidebar";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import ProductHeading from "../components/ProductHeading";
-import ProductListing from "../components/ProductListing";
-import MegaMenu from "../components/Megamenu";
+import ProductHeading from "@/components/ProductHeading";
+import ProductListing from "@/components/ProductListing";
+
 import React from "react";
-import SideMenu from "../components/SideMenu";
+import SideMenu from "@/components/SideMenu";
 
 const ShopPage = () => {
   return (

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { API_BASE_URL } from "@/constant"; // Ensure this contains the base URL
 import { appAxios } from "./intercepter";
 

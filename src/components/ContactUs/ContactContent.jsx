@@ -8,9 +8,12 @@ const ContactContent = ({ content }) => {
 
   return (
     <div className="information px-5">
-      {Object.keys(cmsInfo).length > 0 ? (
+      {cmsInfo && Object.keys(cmsInfo).length > 0 ? (
         <div className="container">
-          <h1>Contect</h1>
+          <h2>{cmsInfo?.page_title}</h2>
+          <p
+            dangerouslySetInnerHTML={{ __html: cmsInfo?.html_content }}
+          ></p>{" "}
         </div>
       ) : (
         <div className="container">
@@ -34,6 +37,7 @@ const ContactContent = ({ content }) => {
                       }}
                       style={{
                         paddingLeft: 10,
+                        width: "100% !important",
                       }}
                       placeholder="FIRST NAME*"
                     ></input>
@@ -48,6 +52,7 @@ const ContactContent = ({ content }) => {
                       }}
                       style={{
                         paddingLeft: 10,
+                        width: "100% !important",
                       }}
                       placeholder="LAST NAME*"
                     ></input>
@@ -62,6 +67,7 @@ const ContactContent = ({ content }) => {
                       }}
                       style={{
                         paddingLeft: 10,
+                        width: "100% !important",
                       }}
                       placeholder="EMAIL*"
                     ></input>
@@ -76,6 +82,7 @@ const ContactContent = ({ content }) => {
                       }}
                       style={{
                         paddingLeft: 10,
+                        width: "100% !important",
                       }}
                       placeholder="SUBJECT*"
                     ></input>
@@ -85,7 +92,7 @@ const ContactContent = ({ content }) => {
                     <textarea
                       required
                       onChange={(e) => handleText("firstName", e.target.value)}
-                      style={{ paddingLeft: 10, height: 150, width: "65%" }} // you can adjust height as needed
+                      style={{ paddingLeft: 10, height: 150, width: "100%" }} // you can adjust height as needed
                       placeholder="MESSAGE*"
                       rows={5}
                     />

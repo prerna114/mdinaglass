@@ -1,15 +1,13 @@
 "use client";
 
-import AddToCart from "../components/AddToCart";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import GiftVoucher from "../components/GiftVoucher";
+import AddToCart from "@/components/AddToCart";
+
+import GiftVoucher from "@/components/GiftVoucher";
 import React, { useState } from "react";
-import CartHeading from "../components/CartHeading";
-import MegaMenu from "../components/Megamenu";
+import CartHeading from "@/components/CartHeading";
 import Link from "next/link";
 import { useCartStore } from "@/store";
-import { SuccessToast } from "../components/CustomToast";
+import { SuccessToast } from "@/components/CustomToast";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const page = () => {
@@ -55,7 +53,7 @@ const page = () => {
     SuccessToast("Item Remove succusfully", "top-right");
   };
 
-  const subtotal = (price, qty) => (price * qty).toFixed(2);
+  const subtotal = (price, qty) => Number(price * qty).toFixed(2);
   console.log("Cart", cart);
   return (
     <div>
@@ -130,7 +128,7 @@ const page = () => {
                           <img src={item.image} alt={item.name} width="80" />
                         </td>
                         <td>{item.name}</td>
-                        <td>€{item.price.toFixed(2)}</td>
+                        <td>€{Number(item.price).toFixed(2)}</td>
                         <td>€{subtotal(item.price, item.qty)}</td>
                         <td>
                           <input

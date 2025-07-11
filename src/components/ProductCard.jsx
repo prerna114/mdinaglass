@@ -8,9 +8,10 @@ import { useCartStore } from "@/store";
 import { SuccessToast } from "./CustomToast";
 import { getAllProduct } from "@/api/productApi";
 import Link from "next/link";
+import { addToTheCart } from "@/api/CartApi";
 
 const ProductCard = ({ title = "New Arrivals" }) => {
-  const { addToCart, cart } = useCartStore((state) => state);
+  const { addToCart, cart, clearCart } = useCartStore((state) => state);
   const [productData, setProductData] = useState([]);
 
   const CustomPrevArrow = ({ onClick }) => (
@@ -136,6 +137,19 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     }
     console.log("THe data", data);
   };
+  const addItemCart = async () => {
+    // clearCart()
+    const data = await addToTheCart();
+    if (data.status == 200) {
+      clearCart();
+
+      addToCart(data.result.cart.items);
+
+      SuccessToast("Item added Successfuly", "top-right");
+    } else {
+      CustomToast("Something went Wrong", "top-right");
+    }
+  };
   useEffect(() => {
     fetchData();
   }, []);
@@ -208,14 +222,15 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                     <button
                       className="btn btn-outline-secondary  w-100"
                       onClick={() => {
-                        handleAdd({
-                          id: 3,
-                          name: "Glass Bead Necklace & Bracelet Set",
-                          price: 29.0,
-                          qty: 1,
-                          image: "/assets/bracelet1.png",
-                          gift: false,
-                        });
+                        // handleAdd({
+                        //   id: 3,
+                        //   name: "Glass Bead Necklace & Bracelet Set",
+                        //   price: 29.0,
+                        //   qty: 1,
+                        //   image: "/assets/bracelet1.png",
+                        //   gift: false,
+                        // });
+                        addItemCart();
                       }}
                     >
                       Add to Cart

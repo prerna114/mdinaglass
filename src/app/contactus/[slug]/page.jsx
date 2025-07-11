@@ -4,7 +4,7 @@ import ContactSideMenu from "@/components/ContactUs/ContactSideMenu";
 import React from "react";
 const page = () => {
   return (
-    <div className="container">
+    <div className="InfoContainer">
       <iframe
         src="https://www.google.com/maps?q=Mdina+Glass,+Ta'+Qali&output=embed"
         width="100%"

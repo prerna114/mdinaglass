@@ -4,33 +4,48 @@ import axios from "axios";
 export const appAxios = axios.create({
   baseURL: API_BASE_URL,
 });
-appAxios.interceptors.request.use(async (config) => {
-  const data = localStorage.getItem("token");
-  const accessToken = data?.token;
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
+
+// ✅ Request Interceptor (Safe localStorage access)
+appAxios.interceptors.request.use((config) => {
+  try {
+    const tokenData = localStorage.getItem("token");
+    const parsed = tokenData ? JSON.parse(tokenData) : null;
+    const accessToken = parsed?.token;
+
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+  } catch (err) {
+    console.warn("Token parse error", err);
   }
+
   return config;
 });
 
+// ✅ Response Interceptor (Refresh token logic)
 appAxios.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response && error.response.status == 401) {
+    if (error.response?.status === 401) {
       try {
-        const newAccessTOken = await refresh_Token();
-        if (newAccessTOken) {
-          error.config.headers.Authorization = `Bearer ${newAccessTOken}`;
-          return axios(error.config);
+        const newAccessToken = await refresh_Token();
+
+        if (newAccessToken) {
+          error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+          return axios(error.config); // Retry original request
         }
-      } catch (error) {
-        console.log("Error resfreshing token");
+      } catch (e) {
+        console.error("Error refreshing token", e);
       }
     }
-    if (error.response && error.response.status != 401) {
-      const errorMesage = error.response.data.message || "Something went wrong";
-      //   Alert.alert(errorMesage);
+
+    if (error.response && error.response.status !== 401) {
+      const errorMessage =
+        error.response.data?.message || "Something went wrong";
+      // Optionally show error
+      // alert(errorMessage);
     }
-    return Promise.resolve(error);
+
+    return Promise.reject(error); // 🔄 use `reject` instead of `resolve`
   }
 );

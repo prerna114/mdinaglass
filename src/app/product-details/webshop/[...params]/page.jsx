@@ -1,18 +1,12 @@
 "use client";
-
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import ProductDetails from "../components/ProductDetails";
-import ProductShow from "../components/ProductShow";
-import CategorySidebar from "../components/CategorySidebar";
-import MegaMenu from "../components/Megamenu";
-
 import React, { useEffect, useState } from "react";
 import { useCartStore } from "@/store";
 import { useParams, useSearchParams } from "next/navigation";
 import { getProductByID } from "@/api/productApi";
 import { ProductLists } from "@/store/product";
-import SideMenu from "../components/SideMenu";
+import ProductDetails from "@/components/ProductDetails";
+import ProductShow from "@/components/ProductShow";
+import SideMenu from "@/components/SideMenu";
 const page = () => {
   const { heading } = ProductLists((state) => state);
 

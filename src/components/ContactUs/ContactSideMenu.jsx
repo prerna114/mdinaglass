@@ -41,6 +41,8 @@ const ContactSideMenu = () => {
     }
     if (current.id == 1) {
       getInformation();
+    } else {
+      setCmsInfo(null);
     }
   }, [params?.slug]);
 

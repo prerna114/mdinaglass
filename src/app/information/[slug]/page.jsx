@@ -23,7 +23,7 @@ export default function Page() {
   }, []);
   return (
     <div
-      className="container"
+      className="InfoContainer"
       style={
         {
           // width: "53%",
@@ -46,15 +46,7 @@ export default function Page() {
         />
       )}
 
-      <div
-        style={{
-          flexDirection: "row",
-          display: "flex",
-          marginTop: "20px",
-          // maxWidth: "1029px",
-          // margin: "0 auto",
-        }}
-      >
+      <div className="flex-container">
         {/* <h1 className="mb-3">{content.title}</h1> */}
 
         <InformationSideMenu />

@@ -1,6 +1,7 @@
 import { createUrl } from "@/constant";
 import { ProductLists } from "@/store/product";
 import { useMenuStore } from "@/store/useCategoryStore";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -105,23 +106,17 @@ const CategoryGrid = ({ category }) => {
               />
             </div>
             <div className="card-body text-center">
-              <a
-                style={{
-                  cursor: "pointer",
-                }}
-                // href=""
-                onClick={() => {
-                  console.log("dsada", product);
+              <Link
+                href={createUrl(buildCategoryPath(product?.id), product.slug)}
+                onClick={(e) => {
+                  e.preventDefault(); // prevent default to handle navigation manually
                   const pathToId = buildCategoryPath(product?.id);
                   useMenuStore.getState().setExpanded(pathToId);
-                  const newUrl = createUrl(pathToId, product.slug);
-                  router.push(newUrl);
-
-                  // getProductByCategory()
+                  router.push(createUrl(pathToId, product.slug));
                 }}
               >
                 <h6 className="card-title mb-3">{product.name}</h6>
-              </a>
+              </Link>
               {/* <h6 className="card-title mb-3">{product.name}</h6> */}
               <p className="card-text text-info fw-bold">
                 Price €

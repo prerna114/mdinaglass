@@ -1,4 +1,5 @@
 "use client";
+import { getCartListing } from "@/api/CartApi";
 import CategoryGrid from "../components/CategoryGrid";
 import dynamic from "next/dynamic";
 import React, { useEffect } from "react";

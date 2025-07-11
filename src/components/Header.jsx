@@ -12,6 +12,7 @@ import { useCartStore } from "@/store";
 import { useAuthStore } from "@/store/useAuthStore";
 
 import Image from "next/image";
+import { getCartListing } from "@/api/CartApi";
 
 const Header = () => {
   const [isBannerVisible, setIsBannerVisible] = useState(true);
@@ -22,7 +23,7 @@ const Header = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
-  const { cart } = useCartStore((state) => state);
+  const { addToCart, cart, clearCart } = useCartStore((state) => state);
   const { login, isLogin, logout, setLoginState } = useAuthStore(
     (state) => state
   );
@@ -48,32 +49,25 @@ const Header = () => {
 
   const logoutUser = () => {
     localStorage.clear();
+    clearCart();
     logout();
   };
 
-  const handleNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-    setIsVideoPlaying(false);
-    if (videoRef.current) videoRef.current.pause();
-  };
-
-  const handlePrev = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-    setIsVideoPlaying(false);
-    if (videoRef.current) videoRef.current.pause();
-  };
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-        setIsVideoPlaying(true);
-      } else {
-        videoRef.current.pause();
-        setIsVideoPlaying(false);
-      }
+  const getCart = async () => {
+    clearCart();
+    const data = await getCartListing();
+    if (data?.status == 200) {
+      // addToCart(data.result.items);
+      data.result.items.forEach((item) => {
+        addToCart(item);
+      });
     }
+    console.log("getCart", data);
   };
+
+  useEffect(() => {
+    getCart();
+  }, []);
 
   const current = slides[currentSlide];
 

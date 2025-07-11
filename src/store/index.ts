@@ -2,10 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 type CartItem = {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
+  [key: string]: any;
   // any other fields
 };
 
