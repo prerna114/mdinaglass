@@ -45,7 +45,7 @@ export const getProductCateogry = async (id) => {
     variations: filter?.variations || 0,
   };
 
-  console.log("getProductCateogryData", id, filterData); // Optional: for debugging
+  // console.log("getProductCateogryData", id, filterData); // Optional: for debugging
   const data = {
     id: id,
     filters: {

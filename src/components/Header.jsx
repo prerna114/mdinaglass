@@ -48,8 +48,8 @@ const Header = () => {
   };
 
   const logoutUser = () => {
-    localStorage.clear();
-    clearCart();
+    // localStorage.clear();
+    // clearCart();
     logout();
   };
 

@@ -76,7 +76,7 @@ const SideMenuItem = ({
       console.log("===========Side Menu45", products);
       console.log("Insde If");
 
-      getProductByCategory(item.id, selectedFilter);
+      // getProductByCategory(item.id, selectedFilter);
     } else {
       // getProductByCategory(item.id, selectedFilter);
       console.log("Insde else");
@@ -85,6 +85,7 @@ const SideMenuItem = ({
   };
 
   const getProductByCategory = async (id, selectedFilter) => {
+    console.log("getProductCateogry sidemenu");
     setLoading(true);
     setProducts([]);
     setCategory([]);

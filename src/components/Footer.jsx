@@ -107,25 +107,37 @@ const Footer = () => {
             </ul>
             <h6 className="footer-link mt-3 mb-3">Get Social</h6>
             <div className="d-flex gap-2 footer-social-icon  mb-2">
-              <img
+              <Image
                 src="/assets/fb.png"
                 className="footer-images"
                 alt="Facebook"
+                width={38}
+                height={38}
+                loading="lazy"
               />
-              <img
+              <Image
                 src="/assets/insta.webp"
                 className="footer-images"
                 alt="Instagram"
+                width={38}
+                height={38}
+                loading="lazy"
               />
-              <img
+              <Image
                 src="/assets/twitter.webp"
                 className="footer-images"
                 alt="Twitter"
+                width={38}
+                height={38}
+                loading="lazy"
               />
-              <img
+              <Image
                 src="/assets/linkedin.png"
                 className="footer-images"
                 alt="Linkedin"
+                width={38}
+                height={38}
+                loading="lazy"
               />
             </div>
             <div

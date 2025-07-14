@@ -1,6 +1,7 @@
 // stores/useAuthStore.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useCartStore } from "./index"; // <-- import cart store
 
 type AuthStore = {
   isLogin: boolean;
@@ -20,7 +21,8 @@ export const useAuthStore = create<AuthStore>()(
       cmsInfo: "",
       login: () => set({ isLogin: true }),
       logout: () => {
-        localStorage.removeItem("token"); // remove actual token
+        localStorage.clear(); // remove actual token
+        useCartStore.getState().clearCart();
         set({ isLogin: false });
       },
       setLoginState: (state: boolean) => set({ isLogin: state }),

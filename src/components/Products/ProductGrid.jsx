@@ -6,7 +6,6 @@ import Image from "next/image";
 
 const ProductGrid = ({ products, categoryidList }) => {
   //   console.log("Products in Grid", products, loading, theloading);
-  console.log("categoryidList", categoryidList);
   return (
     <div className="row">
       {products?.length > 0 &&

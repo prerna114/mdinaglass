@@ -1,7 +1,7 @@
 "use client";
 // import AboutContent from "@/components/AboutUs/AboutContent";
 import AboutSideMenu from "@/components/AboutUs/AboutSideMenu";
-import ParagraphSkeleton from "@/components/ParagraphSkeleton";
+import ParagraphSkeleton from "@/components/Skeleton/ParagraphSkeleton";
 import dynamic from "next/dynamic";
 import React from "react";
 const AboutContent = dynamic(

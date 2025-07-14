@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import { useCartStore } from "@/store";
@@ -9,42 +9,45 @@ import { addToTheCart } from "@/api/CartApi";
 
 export default function ProductDetails({ productDetails }) {
   console.log("productDetails", productDetails);
+  const [quantity, setQuantity] = useState(1);
   // Step 1: Count usage of each option_id across attribute_ids
   const optionIdCount = new Map(); // option_id -> count
-
-  productDetails?.variants &&
-    productDetails?.variants.forEach((variant) => {
-      Object.entries(variant.attributes).forEach(([key, value]) => {
-        if (!/^\d+$/.test(key)) return;
-
-        const optionId = value.option_id;
-
-        if (optionIdCount.has(optionId)) {
-          optionIdCount.set(optionId, optionIdCount.get(optionId) + 1);
-        } else {
-          optionIdCount.set(optionId, 1);
-        }
-      });
-    });
-
-  // Step 2: Collect unique option_values where option_id appears under only one attribute_id
   const uniqueOptions = new Map(); // option_id -> option_value
 
-  productDetails?.variants &&
-    productDetails?.variants.forEach((variant) => {
-      Object.entries(variant.attributes).forEach(([key, value]) => {
-        if (!/^\d+$/.test(key)) return;
+  const getDetails = async () => {
+    (await productDetails?.variants) &&
+      productDetails?.variants.forEach((variant) => {
+        Object.entries(variant.attributes).forEach(([key, value]) => {
+          if (!/^\d+$/.test(key)) return;
 
-        const { option_id, option_value } = value;
+          const { option_id, option_value } = value;
 
-        if (
-          optionIdCount.get(option_id) === 1 &&
-          !uniqueOptions.has(option_id)
-        ) {
-          uniqueOptions.set(option_id, option_value);
-        }
+          if (
+            optionIdCount.get(option_id) === 1 &&
+            !uniqueOptions.has(option_id)
+          ) {
+            uniqueOptions.set(option_id, option_value);
+          }
+        });
       });
-    });
+
+    (await productDetails?.variants) &&
+      productDetails?.variants.forEach((variant) => {
+        Object.entries(variant.attributes).forEach(([key, value]) => {
+          if (!/^\d+$/.test(key)) return;
+
+          const optionId = value.option_id;
+
+          if (optionIdCount.has(optionId)) {
+            optionIdCount.set(optionId, optionIdCount.get(optionId) + 1);
+          } else {
+            optionIdCount.set(optionId, 1);
+          }
+        });
+      });
+  };
+
+  // Step 2: Collect unique option_values where option_id appears under only one attribute_id
 
   const imageList = [
     "/assets/bracelet1.png",
@@ -63,9 +66,11 @@ export default function ProductDetails({ productDetails }) {
     console.log("updated", updated);
   };
 
-  const addItemCart = async () => {
-    const data = await addToTheCart();
-    if (data.status == 200) {
+  const addItemCart = async (sku, qty) => {
+    console.log("productDetails?.sku, quantity", productDetails?.sku, quantity);
+    const data = await addToTheCart(productDetails?.sku, quantity);
+    console.log("data", data);
+    if (data?.status == 200) {
       clearCart();
       addToCart(data.result.cart.items);
 
@@ -74,7 +79,10 @@ export default function ProductDetails({ productDetails }) {
       CustomToast("Something went Wrong", "top-right");
     }
   };
-  // console.log("productDetails", productDetails);
+  useEffect(() => {
+    getDetails();
+  }, []);
+  console.log("productDetails", productDetails);
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       <div className="side-bar-mobi">
@@ -270,6 +278,11 @@ export default function ProductDetails({ productDetails }) {
                 style={{
                   color: "#005e84",
                 }}
+                onChange={(e) => {
+                  console.log("Quantity", e.target.value);
+                  setQuantity(e.target.value);
+                }}
+                defaultValue={quantity}
               >
                 <option>1</option>
                 <option>2</option>

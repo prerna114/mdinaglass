@@ -11,9 +11,12 @@ import { Login, registerCustomer } from "@/api/Customer";
 import Link from "next/link";
 import { useCartStore } from "@/store";
 import { getCartListing } from "@/api/CartApi";
+import { useMenuStore } from "@/store/useCategoryStore";
 
 const loginCheckoutPage = () => {
   const { clearCart, addToCart } = useCartStore((state) => state);
+  const loading = useMenuStore((state) => state.loading);
+  const setLoading = useMenuStore((state) => state.setLoading);
 
   const router = useRouter();
   const [checkoutType, setCheckoutType] = useState("");
@@ -66,6 +69,7 @@ const loginCheckoutPage = () => {
     }
   };
   const getCart = async () => {
+    setLoading(true);
     clearCart();
     const data = await getCartListing();
     if (data?.status == 200) {
@@ -73,6 +77,9 @@ const loginCheckoutPage = () => {
       data.result.items.forEach((item) => {
         addToCart(item);
       });
+      setLoading(false);
+    } else if (data?.status == 401) {
+      // logout;
     }
     // console.log("getCart", data);
   };

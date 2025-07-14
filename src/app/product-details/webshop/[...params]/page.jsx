@@ -4,9 +4,25 @@ import { useCartStore } from "@/store";
 import { useParams, useSearchParams } from "next/navigation";
 import { getProductByID } from "@/api/productApi";
 import { ProductLists } from "@/store/product";
-import ProductDetails from "@/components/ProductDetails";
-import ProductShow from "@/components/ProductShow";
-import SideMenu from "@/components/SideMenu";
+import dynamic from "next/dynamic";
+
+const ProductDetails = dynamic(() => import("@/components/ProductDetails"), {
+  ssr: false,
+  loading: () => <span className="visually-hidden">Loading...</span>,
+});
+
+const ProductShow = dynamic(() => import("@/components/ProductShow"), {
+  ssr: true,
+  loading: () => <span className="visually-hidden">Loading...</span>,
+});
+
+const SideMenu = dynamic(() => import("@/components/SideMenu"), {
+  ssr: true,
+  loading: () => <span className="visually-hidden">Loading...</span>,
+});
+// import ProductDetails from "@/components/ProductDetails";
+// import ProductShow from "@/components/ProductShow";
+// import SideMenu from "@/components/SideMenu";
 const page = () => {
   const { heading } = ProductLists((state) => state);
 

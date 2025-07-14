@@ -7,11 +7,14 @@ import React, { useState } from "react";
 import CartHeading from "@/components/CartHeading";
 import Link from "next/link";
 import { useCartStore } from "@/store";
-import { SuccessToast } from "@/components/CustomToast";
+import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import { useAuthStore } from "@/store/useAuthStore";
+import { RemoveItemCart, updateQuantity } from "@/api/CartApi";
 
 const page = () => {
-  const { cart, removeFromCart } = useCartStore((state) => state);
+  const { cart, removeFromCart, updateQuantity } = useCartStore(
+    (state) => state
+  );
   const { isLogin } = useAuthStore((state) => state);
 
   console.log("isLogin", isLogin);
@@ -34,10 +37,10 @@ const page = () => {
     },
   ]);
 
-  const updateQuantity = (id, newQty) => {
-    setCartItems((items) =>
-      items.map((item) => (item.id === id ? { ...item, qty: newQty } : item))
-    );
+  const updateTheQuantity = (id, newQty) => {
+    console.log("ID", id, newQty);
+
+    updateQuantity(id, newQty);
   };
 
   const toggleGift = (id) => {
@@ -51,6 +54,31 @@ const page = () => {
   const removeTheItem = (id) => {
     removeFromCart(id);
     SuccessToast("Item Remove succusfully", "top-right");
+  };
+
+  const handleDelete = (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+    if (confirmed) {
+      removeItem(id);
+      // User clicked "Yes"
+      console.log("Item deleted");
+    } else {
+      // User clicked "No"
+      console.log("Action cancelled");
+    }
+  };
+
+  const removeItem = async (id) => {
+    const data = await RemoveItemCart(id);
+    console.log("Data", data);
+    if (data.status == 200) {
+      SuccessToast("Item Remove succusfully", "top-right");
+      removeFromCart(id);
+    } else {
+      CustomToast("Something went wrong", "top-right");
+    }
   };
 
   const subtotal = (price, qty) => Number(price * qty).toFixed(2);
@@ -122,23 +150,32 @@ const page = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {cart.map((item) => (
-                      <tr key={item.id}>
+                    {cart.map((item, index) => (
+                      <tr key={index}>
                         <td>
                           <img src={item.image} alt={item.name} width="80" />
                         </td>
                         <td>{item.name}</td>
                         <td>€{Number(item.price).toFixed(2)}</td>
-                        <td>€{subtotal(item.price, item.qty)}</td>
+                        <td>
+                          €
+                          {subtotal(
+                            item.price,
+                            item.qty ? item.qty : item.quantity
+                          )}
+                        </td>
                         <td>
                           <input
                             type="number"
-                            value={item.qty}
+                            value={item.qty ? item.qty : item.quantity}
                             min="1"
                             className="form-control"
                             style={{ width: "70px" }}
                             onChange={(e) =>
-                              updateQuantity(item.id, parseInt(e.target.value))
+                              updateTheQuantity(
+                                item.id,
+                                parseInt(e.target.value)
+                              )
                             }
                           />
                         </td>
@@ -153,7 +190,7 @@ const page = () => {
                           <span
                             className="text-info"
                             style={{ cursor: "pointer" }}
-                            onClick={() => removeTheItem(item.id)}
+                            onClick={() => handleDelete(item.id)}
                           >
                             &times;
                           </span>

@@ -28,6 +28,7 @@
     "@next/bundle-analyzer": "^15.3.5",
     "@types/node": "24.0.12",
     "@types/react": "19.1.8",
+    "critical": "^7.2.1",
     "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.3"

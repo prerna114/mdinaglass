@@ -1,23 +1,25 @@
 "use client";
 import ProductHeading from "@/components/ProductHeading";
-// import ProductListing from "../components/ProductListing";
+import ListingSkeleton from "@/components/Skeleton/ListingSkeleton";
+import SideMenuSkeleton from "@/components/Skeleton/SideMenuSkeleton";
 
-// import SideMenu from "../components/SideMenu";
 import dynamic from "next/dynamic";
-// const SideMenu = dynamic(() => import("../components/SideMenu"), {
-//   ssr: false,
-//   loading: () => <div style={{ height: 200 }}>Loading...</div>,
-// });
-
 const SideMenu = dynamic(() => import("@/components/SideMenu"), {
-  ssr: false,
-  loading: () => <div style={{ height: 200 }}>Loading...</div>,
+  ssr: true,
+  loading: () => (
+    <div>
+      <SideMenuSkeleton />
+      {/* <ParagraphSkeleton /> */}
+    </div>
+  ),
 });
 
 const ProductListing = dynamic(() => import("@/components/ProductListing"), {
-  ssr: false,
-  loading: () => <div style={{ height: 200 }}>Loading...</div>,
+  ssr: true,
+  loading: () => <ListingSkeleton />,
 });
+ProductListing.preload?.();
+SideMenu.preload?.();
 
 const ShopPage = () => {
   return (

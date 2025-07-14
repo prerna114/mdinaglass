@@ -1,6 +1,10 @@
 import { API_BASE_URL } from "@/constant";
-import axios from "axios";
 
+import axios from "axios";
+import { useAuthStore } from "@/store/useAuthStore";
+
+// Use Zustand's getState() outside React components
+const { logout } = useAuthStore.getState(); //
 export const appAxios = axios.create({
   baseURL: API_BASE_URL,
 });
@@ -27,12 +31,15 @@ appAxios.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
+      logout();
       try {
         const newAccessToken = await refresh_Token();
 
         if (newAccessToken) {
           error.config.headers.Authorization = `Bearer ${newAccessToken}`;
-          return axios(error.config); // Retry original request
+          return axios(error.config);
+
+          // Retry original request
         }
       } catch (e) {
         console.error("Error refreshing token", e);

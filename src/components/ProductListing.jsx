@@ -9,56 +9,28 @@ import dynamic from "next/dynamic";
 import { useParams, useRouter, usePathname } from "next/navigation";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import ListingSkeleton from "./Skeleton/ListingSkeleton";
 const FilterProduct = dynamic(
   () => import("../components/Products/FilterProduct"),
   {
-    ssr: false,
+    ssr: true,
     loading: () => <span className="visually-hidden">Loading...</span>,
   }
 );
-// import FilterProduct from "./Products/FilterProduct";
-// import ProductGrid from "./Products/ProductGrid";
-// import CategoryGrid from "./Products/CategoryGrid";
-// import dynamic from "next/dynamic";
+
 const ProductGrid = dynamic(
   () => import("../components/Products/ProductGrid"),
   {
-    ssr: false,
-    loading: () => (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "50vh" }}
-      >
-        <div
-          className="spinner-border text-primary"
-          role="status"
-          style={{ width: "5rem", height: "5rem" }}
-        >
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    ),
+    ssr: true,
+    loading: () => <ListingSkeleton />,
   }
 );
 
 const CategoryGrid = dynamic(
   () => import("../components/Products/CategoryGrid"),
   {
-    ssr: false,
-    loading: () => (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "50vh" }}
-      >
-        <div
-          className="spinner-border text-primary"
-          role="status"
-          style={{ width: "5rem", height: "5rem" }}
-        >
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    ),
+    ssr: true,
+    loading: () => <ListingSkeleton />,
   }
 );
 const ProductListing = ({ onDataLoaded }) => {
@@ -66,30 +38,25 @@ const ProductListing = ({ onDataLoaded }) => {
   const [categoryidList, setCategoryidList] = useState([]);
   const [cateogryArray, setCateogryArray] = useState([]);
   const [theLastI, setTheLastI] = useState("");
+
   const pathname = usePathname();
   const params = useParams();
   const allParams = params?.params || [];
 
   const priceIndex = allParams.findIndex((p) => p === "price");
-  // console.log("allParams", allParams, params, priceIndex);
   const sku = allParams[allParams.length - 1];
-  // console.log("SKU", sku.split(".")[0]);
   const getProductByCategory = async (id, filter) => {
-    console.log("selectedCategory get", id, filter);
     localStorage.setItem("filterdData", JSON.stringify(filter));
 
-    console.log("filtergetProductByCategory Product lstun", filter);
     setLoading(true);
 
     if (id && filter && Object.keys(filter).length > 0) {
       console.log("=================Inside Prodct listing");
       const data = await getProductCateogry(id, filter);
-      console.log("Product by category inside", data);
       if (data?.status === 200) {
         const FilterData = data.data || [];
 
         if (data.data.filterable?.length > 0) {
-          console.log("INsde filter color");
           const colors = FilterData?.filterable?.find(
             (item) => item.code == "color"
           );
@@ -113,7 +80,6 @@ const ProductListing = ({ onDataLoaded }) => {
         }
         setProducts(data.data.products || []);
         setCategory(data.data.sub_categories || []);
-        console.log("Inside getProduct Productlisting", data.data);
         setLoading(false);
       } else {
         setProducts([]);
@@ -153,8 +119,8 @@ const ProductListing = ({ onDataLoaded }) => {
   // console.log("selectedCategory", hasRunOnce.current);
   useEffect(() => {
     const intiziliaseData = async () => {
-      // if (hasRunOnce.current) return;
-      // hasRunOnce.current = true;
+      if (hasRunOnce.current) return;
+      hasRunOnce.current = true;
       if (sku == "all-product.htm") {
         fetchData();
         console.log("Rohan123456");
@@ -209,8 +175,9 @@ const ProductListing = ({ onDataLoaded }) => {
         console.log("Parsed Data", parsedData);
       }
     };
-    intiziliaseData();
-    console.log("ROhan1234");
+    setTimeout(() => {
+      intiziliaseData();
+    }, 1000);
   }, [pathname]);
 
   // const [category, , sortOrder, limit, page, slug] = params?.params || [];
@@ -661,18 +628,19 @@ const ProductListing = ({ onDataLoaded }) => {
       )}
 
       {loading && (
-        <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ height: "50vh" }}
-        >
-          <div
-            className="spinner-border text-primary"
-            role="status"
-            style={{ width: "5rem", height: "5rem" }}
-          >
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
+        // <div
+        //   className="d-flex justify-content-center align-items-center"
+        //   style={{ height: "50vh" }}
+        // >
+        //   <div
+        //     className="spinner-border text-primary"
+        //     role="status"
+        //     style={{ width: "5rem", height: "5rem" }}
+        //   >
+        //     <span className="visually-hidden">Loading...</span>
+        //   </div>
+        // </div>
+        <ListingSkeleton />
       )}
 
       {/* Category Grid */}

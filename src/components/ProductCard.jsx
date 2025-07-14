@@ -105,28 +105,6 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     console.log("updated", updated);
   };
 
-  // const getAllProduct = async () => {
-  //   console.log("Get Catrogires is clling");
-  //   const myHeaders = new Headers();
-  //   const requestOptions = {
-  //     method: "GET",
-  //     headers: myHeaders,
-  //     redirect: "follow",
-  //   };
-
-  //   try {
-  //     const res = await fetch(
-  //       "https://mdinaglasses.blackbullsolution.com/api/products",
-  //       requestOptions
-  //     );
-  //     const data = await res.json(); // ✅ this is what you need
-
-  //     console.log("Data", data);
-  //   } catch (error) {
-  //     console.log("eror", error);
-  //   }
-  // };
-
   const fetchData = async () => {
     const data = await getAllProduct();
     console.log("Product car", data);

@@ -2,17 +2,22 @@
 
 import { getProductCateogrybyId } from "@/api/productApi";
 import { useAuthStore } from "@/store/useAuthStore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SideMenuItem from "./SideMenuItem";
 import { useMenuStore } from "@/store/useCategoryStore";
+import SideMenuSkeleton from "./Skeleton/SideMenuSkeleton";
 
 const SideMenu = ({ cateogryId }) => {
   // const [sideMenu, setSideMenu] = useState();
-  const { menu } = useAuthStore((state) => state);
   const { sideMenu, setSideMenu } = useMenuStore((state) => state);
   const [subCategory, setSubCategory] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const hasRunOnce = useRef(false);
 
   const CategoryById = async (id) => {
+    if (hasRunOnce.current) return;
+    hasRunOnce.current = true;
     const data = await getProductCateogrybyId(1);
     console.log("CategoryById", data?.data?.sub_categories);
 
@@ -23,17 +28,23 @@ const SideMenu = ({ cateogryId }) => {
         JSON.stringify(data?.data?.sub_categories)
       );
       setSideMenu(data?.data?.sub_categories);
+      setLoading(false);
+    } else {
+      setLoading(false);
     }
   };
   useEffect(() => {
-    const stored = localStorage.getItem("subCateogry");
-    const paresed = JSON.parse(stored);
-    if (paresed?.length > 0) {
-      setSubCategory(paresed);
-      setSideMenu(paresed);
-    } else {
-      CategoryById();
-    }
+    setTimeout(() => {
+      const stored = localStorage.getItem("subCateogry");
+      const paresed = JSON.parse(stored);
+      if (paresed?.length > 0) {
+        setSubCategory(paresed);
+        setSideMenu(paresed);
+        setLoading(false);
+      } else {
+        CategoryById();
+      }
+    }, 1000);
   }, []);
   console.log("CategoryById", subCategory);
 
@@ -42,29 +53,33 @@ const SideMenu = ({ cateogryId }) => {
       <div className="hide_Mobi_sidebar">
         <div className="bg-white mt-5 text-white">
           <h4 className="mb-4">Shop</h4>
-          <nav>
-            {/* ==========  Dynamic Side Menu =============== */}
-            <ul
-              className="list-unstyled category-sidebar  "
-              style={{
-                backgroundColor: "white",
-                // padding: "15px",
-              }}
-            >
-              {subCategory?.map((item, index) => {
-                const parentPath = []; // ✅ define root path
-                return (
-                  <SideMenuItem
-                    key={item.id}
-                    item={item}
-                    level={1}
-                    isFirst={index === 0}
-                    parentPath={[...parentPath]}
-                  />
-                );
-              })}
-            </ul>
-          </nav>
+          {loading ? (
+            <SideMenuSkeleton />
+          ) : (
+            <nav>
+              {/* ==========  Dynamic Side Menu =============== */}
+              <ul
+                className="list-unstyled category-sidebar  "
+                style={{
+                  backgroundColor: "white",
+                  // padding: "15px",
+                }}
+              >
+                {subCategory?.map((item, index) => {
+                  const parentPath = []; // ✅ define root path
+                  return (
+                    <SideMenuItem
+                      key={item.id}
+                      item={item}
+                      level={1}
+                      isFirst={index === 0}
+                      parentPath={[...parentPath]}
+                    />
+                  );
+                })}
+              </ul>
+            </nav>
+          )}
         </div>
       </div>
     </div>
