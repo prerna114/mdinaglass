@@ -7,9 +7,8 @@ import SideMenuItem from "./SideMenuItem";
 import { useMenuStore } from "@/store/useCategoryStore";
 import SideMenuSkeleton from "./Skeleton/SideMenuSkeleton";
 
-const SideMenu = ({ cateogryId }) => {
+const SideMenu = ({}) => {
   // const [sideMenu, setSideMenu] = useState();
-  const { sideMenu, setSideMenu } = useMenuStore((state) => state);
   const [subCategory, setSubCategory] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,7 +18,7 @@ const SideMenu = ({ cateogryId }) => {
     if (hasRunOnce.current) return;
     hasRunOnce.current = true;
     const data = await getProductCateogrybyId(1);
-    console.log("CategoryById", data?.data?.sub_categories);
+    // console.log("CategoryById", data?.data?.sub_categories);
 
     if (data?.status == 200) {
       setSubCategory(data?.data?.sub_categories);
@@ -27,7 +26,6 @@ const SideMenu = ({ cateogryId }) => {
         "subCateogry",
         JSON.stringify(data?.data?.sub_categories)
       );
-      setSideMenu(data?.data?.sub_categories);
       setLoading(false);
     } else {
       setLoading(false);
@@ -39,14 +37,14 @@ const SideMenu = ({ cateogryId }) => {
       const paresed = JSON.parse(stored);
       if (paresed?.length > 0) {
         setSubCategory(paresed);
-        setSideMenu(paresed);
+
         setLoading(false);
       } else {
         CategoryById();
       }
-    }, 1000);
+    }, 10);
   }, []);
-  console.log("CategoryById", subCategory);
+  // console.log("CategoryById", subCategory);
 
   return (
     <div className="category-sidebar">

@@ -70,7 +70,7 @@ const loginCheckoutPage = () => {
   };
   const getCart = async () => {
     setLoading(true);
-    clearCart();
+    // clearCart();
     const data = await getCartListing();
     if (data?.status == 200) {
       // addToCart(data.result.items);

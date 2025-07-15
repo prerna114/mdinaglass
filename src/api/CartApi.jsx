@@ -1,9 +1,10 @@
-import { API_BASE_URL } from "@/constant";
+import { API_BASE_URL, products } from "@/constant";
 import { useAuthStore } from "@/store/useAuthStore";
+import { fetchGlobal } from "./fetchAPI";
 
 // Use Zustand's getState() outside React components
 const { logout } = useAuthStore.getState(); //
-export const addToTheCart = async (sku, qty) => {
+export const addToTheCart = async (product, qty) => {
   const tokenData = localStorage.getItem("token");
   const parsed = tokenData ? JSON.parse(tokenData) : null;
   const accessToken = parsed?.token;
@@ -12,7 +13,7 @@ export const addToTheCart = async (sku, qty) => {
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
   const raw = JSON.stringify({
-    sku: sku,
+    sku: product?.sku,
     qty: qty,
   });
 
@@ -24,20 +25,23 @@ export const addToTheCart = async (sku, qty) => {
   };
 
   try {
-    const response = await fetch(
-      `${API_BASE_URL}api/blackbull/cart/add`,
-      requestOptions
-    );
-    if (response.status == 200) {
-      const result = await response.json(); // or use response.text() if needed
-      return {
-        status: response.status, // ✅ status code like 200, 401, etc.
-        result, // ✅ actual response payload
-      };
+    if (accessToken) {
+      const response = await fetch(
+        `${API_BASE_URL}api/blackbull/cart/add`,
+        requestOptions
+      );
+      if (response.status == 200) {
+        const result = await response.json(); // or use response.text() if needed
+        return {
+          status: response.status, // ✅ status code like 200, 401, etc.
+          result, // ✅ actual response payload
+        };
+      } else {
+        console.log("Response", response);
+
+        return response;
+      }
     } else {
-      const result = await response.json(); // or use response.text() if needed
-      console.log("Response", response);
-      return result;
     }
   } catch (error) {
     console.error("Add to cart error:", error.status);
@@ -46,6 +50,7 @@ export const addToTheCart = async (sku, qty) => {
 };
 
 export const getCartListing = async (sku, qty) => {
+  console.log("getCartListing");
   const tokenData = localStorage.getItem("token");
   const parsed = tokenData ? JSON.parse(tokenData) : null;
   const accessToken = parsed?.token;
@@ -78,7 +83,7 @@ export const getCartListing = async (sku, qty) => {
       return null;
     }
   } else if (response.status == 401) {
-    logout();
+    // logout();
   } else {
     return null;
   }
@@ -121,7 +126,7 @@ export const RemoveItemCart = async (id) => {
       return null;
     }
   } else if (response.status == 401) {
-    logout();
+    // logout();
   } else {
     return null;
   }
@@ -164,8 +169,26 @@ export const updateQuantity = async (id, qty) => {
       return null;
     }
   } else if (response.status == 401) {
-    logout();
+    // logout();
   } else {
     return null;
   }
+};
+
+export const testCartAPi = async () => {
+  const data = await fetchGlobal("api/blackbull/cart");
+
+  return data;
+};
+
+export const testAddCart = async (product, qty) => {
+  const raw = JSON.stringify({
+    sku: product?.sku,
+    qty: qty,
+  });
+  const data = await fetchGlobal("api/blackbull/cart/add", {
+    method: "POST",
+    body: raw,
+  });
+  return data;
 };

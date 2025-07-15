@@ -12,7 +12,7 @@ import { useCartStore } from "@/store";
 import { useAuthStore } from "@/store/useAuthStore";
 
 import Image from "next/image";
-import { getCartListing } from "@/api/CartApi";
+import { getCartListing, testCartAPi } from "@/api/CartApi";
 
 const Header = () => {
   const [isBannerVisible, setIsBannerVisible] = useState(true);
@@ -54,7 +54,8 @@ const Header = () => {
   };
 
   const getCart = async () => {
-    clearCart();
+    // clearCart();
+    await testCartAPi();
     const data = await getCartListing();
     if (data?.status == 200) {
       // addToCart(data.result.items);

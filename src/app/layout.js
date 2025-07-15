@@ -13,6 +13,7 @@ import Header from "../components/Header";
 import { ToastContainer } from "react-toastify";
 import MegaMenu from "../components/Megamenu";
 import dynamic from "next/dynamic";
+
 const Footer = dynamic(() => import("../components/Footer"), {
   ssr: true,
   loading: () => <div style={{ height: 200 }}>Loading...</div>,

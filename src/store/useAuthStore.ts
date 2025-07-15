@@ -21,6 +21,7 @@ export const useAuthStore = create<AuthStore>()(
       cmsInfo: "",
       login: () => set({ isLogin: true }),
       logout: () => {
+        console.log("Logout function calling");
         localStorage.clear(); // remove actual token
         useCartStore.getState().clearCart();
         set({ isLogin: false });

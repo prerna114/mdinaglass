@@ -2911,6 +2911,12 @@ input[type="checkbox"].custom-checkbox {
   font-size: 15px;
   font-family: var(--font-raleway);
 }
+.cash-Text {
+  font-weight: 500;
+  color: #666;
+  font-size: 17px;
+  font-family: var(--font-raleway);
+}
 .delivery-condition {
   font-size: 14px;
   margin-bottom: 0px;

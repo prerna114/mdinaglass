@@ -3,7 +3,7 @@
 import AddToCart from "@/components/AddToCart";
 
 import GiftVoucher from "@/components/GiftVoucher";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CartHeading from "@/components/CartHeading";
 import Link from "next/link";
 import { useCartStore } from "@/store";
@@ -73,21 +73,23 @@ const page = () => {
   const removeItem = async (id) => {
     const data = await RemoveItemCart(id);
     console.log("Data", data);
-    if (data.status == 200) {
-      SuccessToast("Item Remove succusfully", "top-right");
-      removeFromCart(id);
-    } else {
-      CustomToast("Something went wrong", "top-right");
-    }
+    // if (data.status == 200) {
+    //   SuccessToast("Item Remove succusfully", "top-right");
+    //   removeFromCart(id);
+    // } else {
+    //   CustomToast("Something went wrong", "top-right");
+    // }
   };
 
   const subtotal = (price, qty) => Number(price * qty).toFixed(2);
+
   console.log("Cart", cart);
   return (
     <div>
       {/* <Header /> */}
       {/* <MegaMenu /> */}
       <CartHeading />
+
       {cart?.length == 0 && (
         <div
           style={{
@@ -153,21 +155,19 @@ const page = () => {
                     {cart.map((item, index) => (
                       <tr key={index}>
                         <td>
-                          <img src={item.image} alt={item.name} width="80" />
+                          {/* <img
+                            src={item?.images[0]?.url}
+                            alt={item.name}
+                            width="80"
+                          /> */}
                         </td>
                         <td>{item.name}</td>
                         <td>€{Number(item.price).toFixed(2)}</td>
-                        <td>
-                          €
-                          {subtotal(
-                            item.price,
-                            item.qty ? item.qty : item.quantity
-                          )}
-                        </td>
+                        <td>€{subtotal(item.price, item.quantity)}</td>
                         <td>
                           <input
                             type="number"
-                            value={item.qty ? item.qty : item.quantity}
+                            value={item.quantity}
                             min="1"
                             className="form-control"
                             style={{ width: "70px" }}
@@ -442,6 +442,7 @@ const page = () => {
           </div>
         </div>
       )}
+
       {/* <Footer /> */}
     </div>
   );

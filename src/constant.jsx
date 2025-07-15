@@ -61,3 +61,28 @@ export const createUrl = (
   const cleanSlug = slug ? slug.replace(/\.htm+$/i, "") : "all-product";
   return buildProductUrl(idPath, sortOrder, limit, page, cleanSlug);
 };
+// Move this outside the component
+export const extractUniqueOptions = (variants = []) => {
+  const optionIdCount = new Map();
+  const uniqueOptions = new Map();
+
+  variants.forEach((variant) => {
+    Object.entries(variant.attributes || {}).forEach(([key, value]) => {
+      if (!/^\d+$/.test(key)) return;
+      const optionId = value.option_id;
+      optionIdCount.set(optionId, (optionIdCount.get(optionId) || 0) + 1);
+    });
+  });
+
+  variants.forEach((variant) => {
+    Object.entries(variant.attributes || {}).forEach(([key, value]) => {
+      if (!/^\d+$/.test(key)) return;
+      const { option_id, option_value } = value;
+      if (optionIdCount.get(option_id) === 1 && !uniqueOptions.has(option_id)) {
+        uniqueOptions.set(option_id, option_value);
+      }
+    });
+  });
+
+  return uniqueOptions;
+};

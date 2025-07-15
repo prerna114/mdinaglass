@@ -41,10 +41,14 @@ const ProductListing = ({ onDataLoaded }) => {
 
   const pathname = usePathname();
   const params = useParams();
-  const allParams = params?.params || [];
+  const allParams = useMemo(() => params?.params || [], [params]);
 
-  const priceIndex = allParams.findIndex((p) => p === "price");
-  const sku = allParams[allParams.length - 1];
+  const priceIndex = useMemo(
+    () => allParams.findIndex((p) => p === "price"),
+    [params]
+  );
+
+  const sku = useMemo(() => allParams[allParams.length - 1], [allParams]);
   const getProductByCategory = async (id, filter) => {
     localStorage.setItem("filterdData", JSON.stringify(filter));
 
@@ -89,14 +93,14 @@ const ProductListing = ({ onDataLoaded }) => {
 
       setLoading(false);
     } else {
-      console.log(
-        "IdELse nsde",
-        id,
-        filter,
-        Object.keys(filter).length,
-        products?.length,
-        category?.length
-      );
+      // console.log(
+      //   "IdELse nsde",
+      //   id,
+      //   filter,
+      //   Object.keys(filter).length,
+      //   products?.length,
+      //   category?.length
+      // );
     }
   };
 
@@ -116,6 +120,48 @@ const ProductListing = ({ onDataLoaded }) => {
   };
 
   const hasRunOnce = useRef(false);
+
+  const intiziliaseDataChild = () => {
+    console.log("Rohan0987");
+
+    const categoryIds =
+      priceIndex !== -1 ? allParams.slice(0, priceIndex).map(Number) : [];
+    const lastId = categoryIds[categoryIds.length - 1];
+    const subCateogry = localStorage.getItem("subCateogry");
+    const parsedCateogry = subCateogry ? JSON.parse(subCateogry) : [];
+    console.log("Category Ids", categoryIds, lastId, parsedCateogry);
+    setCateogryArray(categoryIds);
+    if (lastId) {
+      setTheLastI(lastId);
+    }
+    const idPath = Array.isArray(categoryIds)
+      ? categoryIds.join("/")
+      : String(categoryIds);
+    setCategoryidList(idPath);
+    const findCategoryById = async (categories, targetId) => {
+      for (const cat of categories) {
+        if (cat.id === targetId) return cat;
+        if (cat.children?.length) {
+          const found = findCategoryById(cat.children, targetId);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    const selectedCategory = findCategoryById(parsedCateogry, lastId);
+    console.log("✅ selectedCategory", selectedCategory?.children);
+    if (selectedCategory?.children?.length > 0) {
+      setCategory(selectedCategory?.children);
+      setProducts([]);
+      setLoading(false);
+      console.log("selectedCategory if");
+    } else {
+      console.log("selectedCategory else");
+      setProducts([]);
+      setCategory([]);
+      getProductByCategory(lastId, filterData);
+    }
+  };
   // console.log("selectedCategory", hasRunOnce.current);
   useEffect(() => {
     const intiziliaseData = async () => {
@@ -128,45 +174,7 @@ const ProductListing = ({ onDataLoaded }) => {
         fetchData();
         console.log("Rohan123456");
       } else {
-        console.log("Rohan0987");
-
-        const categoryIds =
-          priceIndex !== -1 ? allParams.slice(0, priceIndex).map(Number) : [];
-        const lastId = categoryIds[categoryIds.length - 1];
-        const subCateogry = localStorage.getItem("subCateogry");
-        const parsedCateogry = subCateogry ? JSON.parse(subCateogry) : [];
-        console.log("Category Ids", categoryIds, lastId, parsedCateogry);
-        setCateogryArray(categoryIds);
-        if (lastId) {
-          setTheLastI(lastId);
-        }
-        const idPath = Array.isArray(categoryIds)
-          ? categoryIds.join("/")
-          : String(categoryIds);
-        setCategoryidList(idPath);
-        const findCategoryById = async (categories, targetId) => {
-          for (const cat of categories) {
-            if (cat.id === targetId) return cat;
-            if (cat.children?.length) {
-              const found = findCategoryById(cat.children, targetId);
-              if (found) return found;
-            }
-          }
-          return null;
-        };
-        const selectedCategory = findCategoryById(parsedCateogry, lastId);
-        console.log("✅ selectedCategory", selectedCategory?.children);
-        if (selectedCategory?.children?.length > 0) {
-          setCategory(selectedCategory?.children);
-          setProducts([]);
-          setLoading(false);
-          console.log("selectedCategory if");
-        } else {
-          console.log("selectedCategory else");
-          setProducts([]);
-          setCategory([]);
-          getProductByCategory(lastId, filterData);
-        }
+        intiziliaseDataChild();
       }
       const data = localStorage.getItem("filterdData");
       if (data) {
@@ -177,7 +185,7 @@ const ProductListing = ({ onDataLoaded }) => {
     };
     setTimeout(() => {
       intiziliaseData();
-    }, 1000);
+    }, 0);
   }, [pathname]);
 
   // const [category, , sortOrder, limit, page, slug] = params?.params || [];
@@ -195,7 +203,6 @@ const ProductListing = ({ onDataLoaded }) => {
     }));
   };
 
-  const { menu } = useAuthStore((state) => state);
   const loading = useMenuStore((state) => state.loading);
   const setLoading = useMenuStore((state) => state.setLoading);
   const sideMenu = useMenuStore((state) => state.sideMenu);
@@ -204,8 +211,6 @@ const ProductListing = ({ onDataLoaded }) => {
 
   const initialPage = 1;
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [colorOptions, setColorOptions] = useState([]);
-  const [variationOption, setVariationOption] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState({
     variations: 0,
     color: 0,
@@ -379,7 +384,9 @@ const ProductListing = ({ onDataLoaded }) => {
   }, [allProduct]);
 
   useEffect(() => {
-    getLevels();
+    setTimeout(() => {
+      getLevels();
+    }, 0);
   }, [sideMenu, cateogryArray]);
 
   // const handleClick = (item) => {

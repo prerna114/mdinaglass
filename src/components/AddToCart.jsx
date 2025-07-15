@@ -1,7 +1,14 @@
 "use client";
-import React from "react";
+import { useCartStore } from "@/store";
+import React, { useMemo } from "react";
 
 const AddToCart = () => {
+  const { cart } = useCartStore((state) => state);
+  let totalPrice = 0;
+  (totalPrice = useMemo(() =>
+    cart.reduce((sum, item) => sum + parseFloat(item.total), 0)
+  )),
+    [];
   return (
     <div className="container my-5">
       <div className="col-md-12">
@@ -55,7 +62,7 @@ const AddToCart = () => {
                 <tbody>
                   <tr>
                     <td>Subtotal:</td>
-                    <td className="text-end">€49.50</td>
+                    <td className="text-end">€{totalPrice}</td>
                   </tr>
                   <tr>
                     <td>Discount:</td>
@@ -77,7 +84,7 @@ const AddToCart = () => {
                       className="text-end fw-bold"
                       style={{ color: "#175E84" }}
                     >
-                      €41.95
+                      €{totalPrice}
                     </td>
                   </tr>
 
@@ -89,7 +96,7 @@ const AddToCart = () => {
                       className="text-end fw-bold"
                       style={{ color: "#175E84" }}
                     >
-                      €49.50
+                      €{totalPrice}
                     </td>
                   </tr>
                 </tbody>

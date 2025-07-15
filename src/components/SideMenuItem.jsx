@@ -1,221 +1,95 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ProductLists } from "@/store/product";
-import { getProductCateogry } from "@/api/productApi";
-import { createUrl, products } from "@/constant";
+import { createUrl } from "@/constant";
 import { useMenuStore } from "@/store/useCategoryStore";
 
-const SideMenuItem = ({
-  item,
-  level = 1,
-  isFirst = false,
-  parentPath = [],
-}) => {
+const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
   const router = useRouter();
   const params = useParams();
-  const allParams = params?.params || [];
-  const priceIndex = allParams.findIndex((p) => p === "price");
-  const categoryIds =
-    priceIndex !== -1
-      ? allParams.slice(0, priceIndex).map(Number)
-      : allParams.map(Number);
+  const allParams = useMemo(() => params?.params || [], [params]);
 
-  // console.log("All Params", params, categoryIds, allParams, priceIndex);
-  const [selectedFilter, setSelectedFilter] = useState({
-    variations: 0,
-    color: 0,
-  });
+  const priceIndex = allParams.findIndex((p) => p === "price");
+  const categoryIds = useMemo(
+    () =>
+      priceIndex !== -1
+        ? allParams.slice(0, priceIndex).map(Number)
+        : allParams.map(Number),
+    [allParams, priceIndex]
+  );
 
   const sortOrder = priceIndex !== -1 ? allParams[priceIndex + 1] : "asc";
   const limit = priceIndex !== -1 ? allParams[priceIndex + 2] : 15;
   const page = priceIndex !== -1 ? allParams[priceIndex + 3] : 1;
-  const slugWithExt =
-    priceIndex !== -1 ? allParams[priceIndex + 4] : "all-product";
-  const cleanSlug = slugWithExt?.replace(/\.htm+$/i, "") || "all-product";
 
+  const [selectedFilter, setSelectedFilter] = useState({
+    variations: 0,
+    color: 0,
+  });
   const { subCategoryMap, setSubCategory } = useMenuStore();
-  const {
-    setProducts,
-    setCategory,
-    setHeading,
-    setAllProduct,
-    products,
-    setFilterOption,
-    category,
-  } = ProductLists((state) => state);
-  const { loading, setLoading } = useMenuStore.getState();
 
-  const fullPathToItem = [...parentPath, item.id];
+  const { setHeading, setFilterOption } = ProductLists((state) => state);
+
+  const fullPathToItem = useMemo(
+    () => [...parentPath, item.id],
+    [parentPath, item.id]
+  );
   const isExpanded = categoryIds.includes(item.id);
-  const isSelected =
-    JSON.stringify(categoryIds) === JSON.stringify(fullPathToItem);
+  const isSelected = useMemo(
+    () => JSON.stringify(categoryIds) === JSON.stringify(fullPathToItem),
+    [categoryIds, fullPathToItem]
+  );
 
   const subCategories = subCategoryMap[item.id] || [];
 
   const handleClick = (item) => {
-    console.log("Handle Clicked Item", item);
     setHeading(item.name);
-    let newPath;
     const indexInPath = categoryIds.indexOf(item.id);
-
-    if (indexInPath > -1 && categoryIds.length > fullPathToItem.length) {
-      // Collapse: remove children
-      newPath = categoryIds.slice(0, indexInPath + 1);
-    } else {
-      // Expand or Select
-      newPath = fullPathToItem;
-    }
+    const newPath =
+      indexInPath > -1 && categoryIds.length > fullPathToItem.length
+        ? categoryIds.slice(0, indexInPath + 1)
+        : fullPathToItem;
 
     const newUrl = createUrl(newPath, item.slug, sortOrder, limit, page);
     router.push(newUrl, { scroll: false });
-
-    if (item?.children?.length > 0) {
-      // setCategory(item.children);
-      console.log("===========Side Menu45", products);
-      console.log("Insde If");
-
-      // getProductByCategory(item.id, selectedFilter);
-    } else {
-      // getProductByCategory(item.id, selectedFilter);
-      console.log("Insde else");
-      // console.log("========= Side Menu1111", products);
-    }
-  };
-
-  const getProductByCategory = async (id, selectedFilter) => {
-    console.log("getProductCateogry sidemenu");
-    setLoading(true);
-    setProducts([]);
-    setCategory([]);
-    if (
-      id &&
-      selectedFilter &&
-      Object.keys(selectedFilter).length > 0 &&
-      (products?.length === 0 || category?.length === 0)
-    ) {
-      const data = await getProductCateogry(id, selectedFilter);
-      console.log(
-        " ====================== Side Menu Insde23",
-        data.data,
-        products.length,
-        category.length
-      );
-
-      if (data?.status === 200) {
-        const FilterData = data.data || [];
-        setAllProduct(data.data);
-        if (data.data.filterable?.length > 0) {
-          const colors = FilterData?.filterable?.find(
-            (item) => item.code == "color"
-          );
-          const variation = FilterData?.filterable?.find(
-            (item) => item.code == "variations"
-          );
-
-          console.log("ColorsSideMenu", variation?.options, colors);
-          if (colors?.options?.length > 0) {
-            // setColorOptions(colors?.options);
-            setFilterOption({
-              colors: colors?.options,
-            });
-          }
-          if (variation?.options?.length > 0) {
-            setFilterOption({
-              variations: variation?.options,
-            });
-            // setVariationOption(variation?.options);
-          }
-        }
-        if (data.data.products && data.data.products.length > 0) {
-          setProducts(data.data.products);
-        }
-        if (
-          data?.data?.sub_categories &&
-          data?.data?.sub_categories.length > 0
-        ) {
-          setCategory(data.data.sub_categories);
-          console.log(
-            "SUb Category inside sidemenu",
-            data?.data.sub_categories
-          );
-        }
-        window.scrollTo({
-          top: 500,
-          behavior: "smooth", // Optional: for smooth scrolling animation
-        });
-        // setProducts(data.data.products || []);
-        console.log("Product Data", data.data);
-      } else {
-        setProducts([]);
-        setCategory([]);
-        window.scrollTo({
-          top: 500,
-          behavior: "smooth", // Optional: for smooth scrolling animation
-        });
-      }
-
-      setLoading(false);
-    }
   };
 
   useEffect(() => {
-    if (item.children && item.children.length > 0 && !subCategoryMap[item.id]) {
+    if (item.children?.length && !subCategoryMap[item.id]) {
       setSubCategory(item.id, item.children);
     }
   }, [item, subCategoryMap, setSubCategory]);
 
   useEffect(() => {
     const lastId = categoryIds[categoryIds.length - 1];
-    if (lastId && lastId === item.id) {
-      console.log(
-        "============= Triggering getProductByCategory for lastId:",
-        lastId
-      );
-      // getProductByCategory(lastId, selectedFilter);
-      console.log("Side Menu");
+    if (lastId === item.id) {
+      const data = localStorage.getItem("filterdData");
+      if (data) {
+        const parsedData = JSON.parse(data);
+        setSelectedFilter({
+          color: parsedData?.color || 0,
+          variations: parsedData?.variations || 0,
+        });
+        setFilterOption(parsedData);
+      }
     }
-    const data = localStorage.getItem("filterdData");
-    if (data) {
-      const parsedData = JSON.parse(data);
-      setSelectedFilter({
-        color: parsedData?.color || 0,
-        variations: parsedData?.variations || 0,
-      });
-      console.log("Parsed Data", parsedData);
-    }
-    console.log("Filter Data", data, selectedFilter);
-  }, []);
-  // console.log("item, subCategoryMap, setSubCategory", item, subCategoryMap);
+  }, [categoryIds, item.id, setFilterOption]);
+
   return (
     <li
-      className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}  `}
-      style={{
-        padding: 0,
-        padding: "5px 10px 5px 10px !important",
-      }}
+      className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}`}
+      style={{ padding: "5px 10px" }}
     >
       <div
         onClick={() => handleClick(item)}
-        className={`list-unstyled category-sidebar 
-    ${isSelected ? "activeSIdeBar" : level >= 3 ? "level-3" : "nonActiveBar"}
-  `}
-        style={{
-          cursor: "pointer",
-          textTransform: "uppercase",
-          padding: "2px 0px 2px",
-        }}
+        className={`category-sidebar ${
+          isSelected ? "activeSIdeBar" : level >= 3 ? "level-3" : "nonActiveBar"
+        }`}
+        style={{ cursor: "pointer", textTransform: "uppercase" }}
       >
-        <p
-          style={{
-            margin: 0,
-            padding: 0,
-          }}
-        >
-          {item.name}
-        </p>{" "}
-        {/* Now valid inside a div */}
+        <p style={{ margin: 0 }}>{item.name}</p>
       </div>
 
       {isExpanded && subCategories.length > 0 && (

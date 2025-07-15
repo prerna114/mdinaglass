@@ -20,9 +20,7 @@ const SideMenu = dynamic(() => import("@/components/SideMenu"), {
   ssr: true,
   loading: () => <span className="visually-hidden">Loading...</span>,
 });
-// import ProductDetails from "@/components/ProductDetails";
-// import ProductShow from "@/components/ProductShow";
-// import SideMenu from "@/components/SideMenu";
+
 const page = () => {
   const { heading } = ProductLists((state) => state);
 

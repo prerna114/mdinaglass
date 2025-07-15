@@ -63,6 +63,21 @@ const page = () => {
           </div>
         </div>
       </div>
+      <div className="container">
+        <div className="login-signup">
+          <div className="row">
+            <div className="shipping-Container">
+              <div className="col-md-6 mb-4">
+                <div className="d-flex align-items-center gap-2">
+                  <input type="radio" name="checkoutType" />
+                  <label className="seller-Text mb-0">Pay by</label>
+                  <label className="cash-Text mb-0">Cash on Delivery</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="container">
         <div className="login-signup">

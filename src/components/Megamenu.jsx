@@ -2,8 +2,6 @@
 import { createUrl } from "@/constant";
 import { ProductLists } from "@/store/product";
 import { useAuthStore } from "@/store/useAuthStore";
-import { buildProductUrl } from "@/utils/buildProductUrl";
-// import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -93,13 +91,6 @@ const MegaMenu = () => {
     // }
   }, []);
 
-  // const createUrl = (categoryID, slug) => {
-  //   // console.log("dsada", slu g, categoryID);
-  //   let sortOrder = "asc";
-  //   let limit = 15;
-  //   let page = 1;
-  //   return buildProductUrl(categoryID, sortOrder, limit, page, slug);
-  // };
   console.log("Catrry data", Array.isArray(categoriesData));
   return (
     <nav className="navbar navbar-expand-lg navbar-light">

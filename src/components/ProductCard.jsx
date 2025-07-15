@@ -8,7 +8,7 @@ import { useCartStore } from "@/store";
 import { SuccessToast } from "./CustomToast";
 import { getAllProduct } from "@/api/productApi";
 import Link from "next/link";
-import { addToTheCart } from "@/api/CartApi";
+import { addToTheCart, testAddCart } from "@/api/CartApi";
 
 const ProductCard = ({ title = "New Arrivals" }) => {
   const { addToCart, cart, clearCart } = useCartStore((state) => state);
@@ -115,13 +115,14 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     }
     console.log("THe data", data);
   };
-  const addItemCart = async () => {
-    // clearCart()
-    const data = await addToTheCart();
+  const addItemCart = async (product) => {
+    console.log("Add", product);
+    const data = await testAddCart(product, 1);
+
     if (data.status == 200) {
       clearCart();
-
-      addToCart(data.result.cart.items);
+      console.log("data", data);
+      addToCart(data.data.cart.items);
 
       SuccessToast("Item added Successfuly", "top-right");
     } else {
@@ -208,7 +209,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                         //   image: "/assets/bracelet1.png",
                         //   gift: false,
                         // });
-                        addItemCart();
+                        addItemCart(product);
                       }}
                     >
                       Add to Cart

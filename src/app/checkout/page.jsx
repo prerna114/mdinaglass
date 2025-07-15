@@ -7,6 +7,7 @@ import React, { useRef, useState } from "react";
 
 const checkout = () => {
   const [shipping, setShipping] = useState(false);
+  const [checbox, setCheckbox] = useState(false);
   const router = useRouter();
   const [filed, setFiled] = useState({
     firstName: "",
@@ -85,7 +86,7 @@ const checkout = () => {
       return false;
     } else {
       localStorage.setItem("billingaddress", JSON.stringify(filed));
-      router.push("/shipping");
+      router.push(`/shipping/?checkbox=${checbox}`);
     }
 
     return true;
@@ -639,6 +640,9 @@ const checkout = () => {
                       <div className="row">
                         <div className="Terms_condition">
                           <input
+                            onChange={(e) => {
+                              setCheckbox(!checbox);
+                            }}
                             type="checkbox"
                             name="checkoutType"
                             className="custom-checkbox"

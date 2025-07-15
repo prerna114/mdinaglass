@@ -1,13 +1,20 @@
 "use client";
 import { CustomToast } from "@/components/CustomToast";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import React, { useEffect, useRef, useState } from "react";
 
-const page = () => {
+const page = ({ props }) => {
+  console.log("Props Shipping", props);
   const [shipping, setShipping] = useState(false);
   const router = useRouter();
+  const params = useSearchParams();
+  const checkboxProps = params.get("checkbox");
+  const [checkbox, setCheckbox] = useState(false);
+
+  // console.log("EMai", email, params);
+
   const [filed, setFiled] = useState({
     firstName: "",
     lastName: "",
@@ -91,13 +98,28 @@ const page = () => {
     return true;
   };
   useEffect(() => {
-    const data = localStorage.getItem("billingaddress");
-    console.log("Billing addr", JSON.parse(data));
-    if (data) {
-      setFiled(JSON.parse(data));
+    if (checkboxProps == true) {
+      const data = localStorage.getItem("billingaddress");
+      console.log("Billing addr", JSON.parse(data));
+      if (data) {
+        setFiled(JSON.parse(data));
+      }
     }
-  }, []);
-  console.log("Hndle text", typeof filed);
+    if (checkbox) {
+      const data = localStorage.getItem("billingaddress");
+      console.log("Billing addr", JSON.parse(data));
+      if (data) {
+        setFiled(JSON.parse(data));
+      }
+    } else {
+      const data = localStorage.getItem("shiipingaddreess");
+      console.log("Billing addr", JSON.parse(data));
+      if (data) {
+        setFiled(JSON.parse(data));
+      }
+    }
+  }, [checkbox]);
+  console.log("Hndle text", checkbox);
 
   return (
     <>
@@ -119,11 +141,29 @@ const page = () => {
               <div className="row">
                 <div className="col-md-12">
                   <div className="login-sec  checkout-sec">
-                    <h2>2. Billing Information</h2>
+                    <h2>3. Shipping Information</h2>
                     <p>
                       Fill in the fields below with your billing information:
                     </p>
-
+                    <div className="bottom-checkout">
+                      <div className="row">
+                        <div className="Terms_condition">
+                          <input
+                            onChange={() => {
+                              setCheckbox(!checkbox);
+                            }}
+                            checked={checkbox}
+                            value={checkbox}
+                            type="checkbox"
+                            name="checkoutType"
+                            className="custom-checkbox"
+                          />{" "}
+                          <label className="label_checkbox">
+                            &nbsp;Use Billing Address
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                     <div className="col-md-12">
                       <input
                         type="text"
@@ -698,12 +738,16 @@ const page = () => {
                       <div className="row">
                         <div className="Terms_condition">
                           <input
+                            onChange={() => {
+                              setCheckbox(!checkbox);
+                            }}
+                            checked={checkbox}
                             type="checkbox"
                             name="checkoutType"
                             className="custom-checkbox"
                           />{" "}
                           <label className="label_checkbox">
-                            &nbsp;Ship to this Address
+                            &nbsp;Use Billing Address
                           </label>
                         </div>
 
