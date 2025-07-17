@@ -1,11 +1,21 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
 import { addToTheCart, testAddCart } from "@/api/CartApi";
+import { useMenuStore } from "@/store/useCategoryStore";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { ProductLists } from "@/store/product";
+import { createUrl } from "@/constant";
+import dynamic from "next/dynamic";
+// import AboveMenu from "./Products/AboveMenu";
+const AboveMenu = dynamic(() => import("./Products/AboveMenu"), {
+  ssr: true,
+  loading: () => <span className="visually-hidden">Loading...</span>,
+});
 
 // Utility function to get unique variant options
 const extractUniqueOptions = (variants = []) => {
@@ -35,6 +45,16 @@ const extractUniqueOptions = (variants = []) => {
 
 export default function ProductDetails({ productDetails }) {
   const [quantity, setQuantity] = useState(1);
+  const [levels, setLevels] = useState([]);
+  const sideMenu = useMenuStore((state) => state.sideMenu);
+  const setLoading = useMenuStore((state) => state.setLoading);
+
+  const [cateogryArray, setCateogryArray] = useState([]);
+  const [theLastI, setTheLastI] = useState("");
+  const router = useRouter();
+
+  const [categoryidList, setCategoryidList] = useState([]);
+
   const [selectedImage, setSelectedImage] = useState(
     productDetails?.images?.[0]?.url || "/assets/bracelet1.png"
   );
@@ -54,7 +74,6 @@ export default function ProductDetails({ productDetails }) {
     () => extractUniqueOptions(productDetails?.variants),
     [productDetails?.variants]
   );
-
   const addItemCart = async () => {
     const tokenData = localStorage.getItem("token");
     const parsed = tokenData ? JSON.parse(tokenData) : null;
@@ -75,9 +94,23 @@ export default function ProductDetails({ productDetails }) {
 
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
+      {/* <div className="filter-are">
+        <div className="row mb-4">
+          <div className="side-bar-mobi">
+            <div className="row">
+              <div className="col-12">
+                <h4 className="mb-3">Filter</h4>
+
+                {renderedDropdowns}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> */}
+      <AboveMenu />
       <div className="row">
         {/* Product Image */}
-        <div className="col-lg-6">
+        <div className="col-md-12 col-lg-6 mt-2">
           <div className="border text-center">
             <Image
               src={productDetails?.images[0]?.url || selectedImage}
@@ -109,12 +142,12 @@ export default function ProductDetails({ productDetails }) {
         </div>
 
         {/* Product Info */}
-        <div className="col-lg-6">
+        <div className="col-md-12 col-lg-6 ">
           <div className="products-detailing">
             <h2>{productDetails?.name}</h2>
-            <p className="text-muted">
+            <p className="text-muted sku-detail">
               SKU: {productDetails?.sku || "n/a"}
-              <span className="float-end">
+              <span className="wishlist float-right">
                 <Heart
                   size={24}
                   color="#c6302c"
@@ -123,16 +156,23 @@ export default function ProductDetails({ productDetails }) {
                 />
               </span>
             </p>
-
+            <p className="sku-detail mb-0">Description </p>
             <p
               dangerouslySetInnerHTML={{
                 __html: productDetails?.description || "",
               }}
             />
 
-            <p className="text-success">Availability: In Stock</p>
-            <p className="fs-4 text-dark">
-              Price: {productDetails?.formatted_price}
+            <p className="sku-detail">
+              Availability:
+              <span className="text-success">In Stock</span>
+            </p>
+
+            <p className="sku-detail">
+              Price:{" "}
+              <span className="fs-4 text-dark">
+                {productDetails?.formatted_price}
+              </span>
             </p>
 
             {uniqueOptions.size > 0 && (
@@ -149,8 +189,16 @@ export default function ProductDetails({ productDetails }) {
               </div>
             )}
 
-            <div className="mb-4">
-              <label className="form-label fw-semibold">Quantity:</label>
+            <div className="mb-4 d-flex choose-category align-items-center">
+              <label
+                className="form-label fw-semibold"
+                style={{
+                  color: "rgb(0, 94, 132)",
+                }}
+              >
+                Quantity:
+              </label>
+
               <select
                 className="form-select w-auto"
                 value={quantity}
@@ -165,7 +213,7 @@ export default function ProductDetails({ productDetails }) {
             </div>
 
             <button
-              className="w-100 py-3 btn btn-primary"
+              className="w-100 py-3 text-uppercase addtocart"
               onClick={addItemCart}
             >
               <Image
@@ -178,7 +226,7 @@ export default function ProductDetails({ productDetails }) {
               Add to Cart
             </button>
 
-            <div className="mt-3 text-center">
+            <div className="mt-3 text-center a_color">
               <a href="#" className="me-2">
                 View Cart
               </a>

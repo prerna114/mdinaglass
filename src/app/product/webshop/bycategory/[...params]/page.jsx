@@ -4,6 +4,7 @@ import ListingSkeleton from "@/components/Skeleton/ListingSkeleton";
 import SideMenuSkeleton from "@/components/Skeleton/SideMenuSkeleton";
 
 import dynamic from "next/dynamic";
+import { useLinkStatus } from "next/link";
 const SideMenu = dynamic(() => import("@/components/SideMenu"), {
   ssr: true,
   loading: () => (
@@ -22,6 +23,9 @@ ProductListing.preload?.();
 SideMenu.preload?.();
 
 const ShopPage = () => {
+  const { pending } = useLinkStatus();
+
+  console.log("pending", pending);
   return (
     <>
       {/* <Header /> */}

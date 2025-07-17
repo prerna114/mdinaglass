@@ -552,8 +552,8 @@ ul.list-unstyled.category-sidebar li.jewels:hover a {
   font-family: var(--font-domine) !important;
 }
 .category-sidebar {
-  margin: 0 25px;
-  padding-bottom: 15px;
+  margin: 0 12px;
+  padding-bottom: 3px;
   font-family: var(--font-domine) !important;
 }
 ul.category-sidebar li a {
@@ -2942,12 +2942,16 @@ input[type="checkbox"].custom-checkbox {
 
 ul.category-sidebar li .activeSIdeBar {
   color: #005e84 !important;
-  font-family: var(--font-domine) !important;
+  font-family: var(--font-domine);
+}
+ul.category-sidebar li .activeSIdeBar .fontFamily {
+  color: #005e84 !important;
+  font-family: var(--font-raleway) !important;
 }
 ul.category-sidebar li .nonActiveBar {
   color: #808080 !important;
   /* color: #76d2d3 !important; */
-  font-family: var(--font-domine) !important;
+  font-family: var(--font-domine);
 }
 ul.category-sidebar li .level-3 {
   /* color: #808080 !important; */
@@ -3019,13 +3023,13 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
   color: #666666;
 }
 .nonActiveBar {
-  padding: 10px 0px;
+  padding: 3px 0px;
   color: #000;
 }
 
 .activeTab {
   color: #76d2d3;
-  padding: 10px 0px;
+  padding: 3px 0px;
 }
 .information h2 {
   color: #4d4d4d;

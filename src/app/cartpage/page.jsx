@@ -10,7 +10,7 @@ import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import { useAuthStore } from "@/store/useAuthStore";
 import { RemoveItemCart, updateQuantity } from "@/api/CartApi";
-
+import TrustPaymentForm from "@/components/TrustPaymentForm";
 const page = () => {
   const { cart, removeFromCart, updateQuantity } = useCartStore(
     (state) => state
@@ -112,7 +112,6 @@ const page = () => {
           </div>
         </div>
       )}
-
       {cart?.length != 0 && (
         <div
           className="cart-page-main"
@@ -442,6 +441,7 @@ const page = () => {
           </div>
         </div>
       )}
+      <TrustPaymentForm />
 
       {/* <Footer /> */}
     </div>

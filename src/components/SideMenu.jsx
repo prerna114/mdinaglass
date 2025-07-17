@@ -11,6 +11,8 @@ const SideMenu = ({}) => {
   // const [sideMenu, setSideMenu] = useState();
   const [subCategory, setSubCategory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const sideMenu = useMenuStore((state) => state.sideMenu);
+  const setSideMenu = useMenuStore((state) => state.setSideMenu);
 
   const hasRunOnce = useRef(false);
 
@@ -26,6 +28,7 @@ const SideMenu = ({}) => {
         "subCateogry",
         JSON.stringify(data?.data?.sub_categories)
       );
+      setSideMenu(data?.data?.sub_categories);
       setLoading(false);
     } else {
       setLoading(false);
@@ -37,7 +40,7 @@ const SideMenu = ({}) => {
       const paresed = JSON.parse(stored);
       if (paresed?.length > 0) {
         setSubCategory(paresed);
-
+        setSideMenu(paresed);
         setLoading(false);
       } else {
         CategoryById();

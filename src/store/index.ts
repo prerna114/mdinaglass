@@ -27,7 +27,7 @@ export const useCartStore = create<CartState>()(
             if (existing) {
               return {
                 ...existing,
-                qty: existing.qty + newItem.qty,
+                quantity: existing.quantity + newItem.quantity,
               };
             }
             return newItem;

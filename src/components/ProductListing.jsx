@@ -33,6 +33,11 @@ const CategoryGrid = dynamic(
     loading: () => <ListingSkeleton />,
   }
 );
+const AboveMenu = dynamic(() => import("./Products/AboveMenu"), {
+  ssr: true,
+  loading: () => <span className="visually-hidden">Loading...</span>,
+});
+
 const ProductListing = ({ onDataLoaded }) => {
   const [productList, setProductList] = useState([]);
   const [categoryidList, setCategoryidList] = useState([]);
@@ -281,20 +286,6 @@ const ProductListing = ({ onDataLoaded }) => {
     [levels, cateogryArray]
   );
 
-  const SaveColor = () => {
-    // const colors = allProduct?.filterable?.find((item) => item.code == "color");
-    // const variation = allProduct?.filterable?.find(
-    //   (item) => item.code == "variations"
-    // );
-    // console.log("Colors", variation?.options);
-    // if (colors?.options?.length > 0) {
-    //   setColorOptions(colors?.options);
-    // }
-    // if (variation?.options?.length > 0) {
-    //   setVariationOption(variation?.options);
-    // }
-  };
-
   function sortProductsByPriceLowToHigh(products) {
     const data = [...products].sort(
       (a, b) =>
@@ -344,7 +335,7 @@ const ProductListing = ({ onDataLoaded }) => {
   };
 
   const getLevels = () => {
-    console.log("GetLEVELcall");
+    console.log("GetLEVELcall", sideMenu, cateogryArray);
     if (!sideMenu || !Array.isArray(cateogryArray)) return;
 
     let currentLevel = Array.isArray(sideMenu) ? sideMenu : [];
@@ -421,149 +412,11 @@ const ProductListing = ({ onDataLoaded }) => {
   //   //   console.log("========= Side Menu1111", products);
   //   // }
   // };
-  console.log("filterOption", category);
+  console.log("filterOption", cateogryArray, allParams);
   return (
     <div className="productListing">
       {/* Filter Controls */}
-      <div className="filter-are">
-        <div className="row mb-4">
-          <div className="side-bar-mobi">
-            <div className="row">
-              <div className="col-12">
-                <h4 className="mb-3">Filter</h4>
-                {/* {levels?.length > 0 &&
-                  levels.map((levelItems, index) => (
-                    <select
-                      key={index}
-                      className="form-select mt-2"
-                      value={cateogryArray[index] ?? ""} // 👈 Set selected value
-                      onChange={(e) => {
-                        const selectedId = Number(e.target.value);
-                        const element = levelItems.find(
-                          (cat) => cat.id == selectedId
-                        );
-                        console.log("Selected Category", element);
-                        // handleClick(element);
-
-                        // Replace category IDs after this level
-                        const newArray = [
-                          ...cateogryArray.slice(0, index),
-                          selectedId,
-                        ];
-                        setCateogryArray(newArray);
-                        //  const selectedId = Number(e.target.value);
-                        const newPath = [
-                          ...cateogryArray.slice(0, index),
-                          selectedId,
-                        ];
-                        setCateogryArray(newPath);
-
-                        // Get selected item for slug
-                        const selectedItem = levels[index].find(
-                          (cat) => cat.id === selectedId
-                        );
-                        const slug = selectedItem?.slug || "category";
-
-                        // Push to new URL
-                        const newUrl = createUrl(newPath, slug);
-                        console.log("New URL", newUrl);
-                        getProductByCategory(selectedId, filterData);
-
-                        router.push(newUrl, { scroll: false, shallow: false });
-                        setHeading(element?.name);
-
-                        // Optional: update URL here or use router.push(...)
-                      }}
-                    >
-                      <option value="">Select</option>
-                      {levelItems?.length > 0 &&
-                        levelItems.map((cat, index) => (
-                          <option key={index} value={cat?.id}>
-                            {cat?.name}
-                          </option>
-                        ))}
-                    </select>
-                  ))} */}
-                {renderedDropdowns}
-              </div>
-            </div>
-          </div>
-
-          {(category?.length == 0 ||
-            (category?.length == 0 && products?.length == 0)) && (
-            <>
-              {filterOption?.colors?.length > 0 && (
-                <div className="col-md-4 col-lg-3">
-                  <select
-                    defaultValue={selectedFilter.color}
-                    className="form-select  mt-2"
-                    onChange={(e) => {
-                      console.log("Selected Color", e.target.value);
-                      setSelectedFilter((prev) => ({
-                        ...prev,
-                        ["color"]: e.target.value,
-                      }));
-                      setProducts([]);
-                      setCategory([]);
-                      getProductByCategory(theLastI, {
-                        ...selectedFilter,
-                        color: e.target.value,
-                      });
-                    }}
-                  >
-                    <option value="0">ALL COLOURS</option>
-
-                    {filterOption?.colors?.length > 0 &&
-                      filterOption?.colors?.map((item, index) => (
-                        <option value={item.id} key={index}>
-                          {item.label}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              )}
-              {/* <div className="col-md-4 col-lg-3">
-                <select className="form-select  mt-2">
-                  <option>ALL PRICES</option>
-                  <option>Under €20</option>
-                  <option>€20 - €50</option>
-                  <option>Over €50</option>
-                </select>
-              </div> */}
-              {filterOption?.variations?.length > 0 && (
-                <div className="col-md-4 col-lg-3">
-                  <select
-                    defaultValue={selectedFilter.variations}
-                    className="form-select  mt-2"
-                    onChange={(e) => {
-                      console.log("Selected Color", e.target.value);
-                      setSelectedFilter((prev) => ({
-                        ...prev,
-                        ["variations"]: e.target.value,
-                      }));
-                      setProducts([]);
-                      setCategory([]);
-                      getProductByCategory(theLastI, {
-                        ...selectedFilter,
-                        variations: e.target.value,
-                      });
-                      // getProductByCategory(theLastI);
-                    }}
-                  >
-                    <option value={0}>All Variations</option>
-                    {filterOption?.variations?.length > 0 &&
-                      filterOption?.variations?.map((item, index) => (
-                        <option value={item.id} key={index}>
-                          {item.label}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </div>
+      <AboveMenu />
       {/* Sort and Items Control */}
       {category?.length == 0 && (
         <>

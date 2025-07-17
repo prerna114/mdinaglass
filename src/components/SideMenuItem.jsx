@@ -46,6 +46,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
 
   const handleClick = (item) => {
     setHeading(item.name);
+    console.log("levellevel", level, item);
     const indexInPath = categoryIds.indexOf(item.id);
     const newPath =
       indexInPath > -1 && categoryIds.length > fullPathToItem.length
@@ -86,8 +87,11 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
         onClick={() => handleClick(item)}
         className={`category-sidebar ${
           isSelected ? "activeSIdeBar" : level >= 3 ? "level-3" : "nonActiveBar"
-        }`}
-        style={{ cursor: "pointer", textTransform: "uppercase" }}
+        } ${level > 1 ? "fontFamily" : ""}`}
+        style={{
+          cursor: "pointer",
+          textTransform: "uppercase",
+        }}
       >
         <p style={{ margin: 0 }}>{item.name}</p>
       </div>

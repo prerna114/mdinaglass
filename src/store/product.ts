@@ -12,11 +12,13 @@ type ProdutList = {
   category: [];
   allProduct: {};
   heading: string;
+  description: string;
   filterOption: {
     colors?: FilterItem[];
     variations?: FilterItem[];
   };
   setHeading: (state: string) => void;
+  setDescription: (state: string) => void;
   setProducts: (state: []) => void;
   setCategory: (state: []) => void;
   setAllProduct: (state: []) => void;
@@ -34,7 +36,10 @@ export const ProductLists = create<ProdutList>()(
       allProduct: {},
       heading: "Products",
       filterOption: {},
-
+      description: "",
+      setDescription: (item) => {
+        set({ description: item });
+      },
       setProducts: (item) => {
         set({ products: item });
       },

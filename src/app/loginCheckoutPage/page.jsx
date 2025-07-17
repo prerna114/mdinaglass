@@ -74,7 +74,7 @@ const loginCheckoutPage = () => {
     const data = await getCartListing();
     if (data?.status == 200) {
       // addToCart(data.result.items);
-      data.result.items.forEach((item) => {
+      data.result.cart.items.forEach((item) => {
         addToCart(item);
       });
       setLoading(false);

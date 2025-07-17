@@ -1,7 +1,9 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 const page = () => {
+  const [method, setMethod] = useState("");
   return (
     <div
       style={{
@@ -30,7 +32,16 @@ const page = () => {
             <div className="shipping-Container">
               <div className="col-md-6 mb-4">
                 <div className="d-flex align-items-center gap-2">
-                  <input type="radio" name="checkoutType" />
+                  <input
+                    type="radio"
+                    name="checkoutType"
+                    value="visa"
+                    checked={method === "visa"}
+                    onChange={(e) => {
+                      setMethod(e.target.value);
+                      console.log("on click e", e.target.value);
+                    }}
+                  />
                   <label className="seller-Text mb-0">Pay by</label>
                   <img
                     src="/assets/visa.png"
@@ -50,7 +61,16 @@ const page = () => {
             <div className="shipping-Container">
               <div className="col-md-6 mb-4">
                 <div className="d-flex align-items-center gap-2">
-                  <input type="radio" name="checkoutType" />
+                  <input
+                    type="radio"
+                    name="checkoutType"
+                    checked={method === "paypal"}
+                    value="paypal"
+                    onChange={(e) => {
+                      setMethod(e.target.value);
+                      console.log("on click e", e.target.value);
+                    }}
+                  />
                   <label className="seller-Text mb-0">Pay by</label>
                   <img
                     src="/assets/paypal.png"
@@ -69,7 +89,16 @@ const page = () => {
             <div className="shipping-Container">
               <div className="col-md-6 mb-4">
                 <div className="d-flex align-items-center gap-2">
-                  <input type="radio" name="checkoutType" />
+                  <input
+                    type="radio"
+                    name="checkoutType"
+                    value="cash"
+                    checked={method === "cash"}
+                    onChange={(e) => {
+                      setMethod(e.target.value);
+                      console.log("on click e", e.target.value);
+                    }}
+                  />
                   <label className="seller-Text mb-0">Pay by</label>
                   <label className="cash-Text mb-0">Cash on Delivery</label>
                 </div>
@@ -92,7 +121,7 @@ const page = () => {
                 </button>
               </Link>
 
-              <Link href={"/orderReview"}>
+              <Link href={`/orderReview?method=${method}`}>
                 <button className="btn btn-cart btn-info text-white back-button">
                   Continue
                 </button>

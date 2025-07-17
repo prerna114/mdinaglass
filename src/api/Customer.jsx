@@ -1,30 +1,32 @@
 import { API_BASE_URL } from "@/constant";
 import { appAxios } from "./intercepter";
+import { fetchGlobal } from "./fetchAPI";
 
-export const registerCustomer = async (id) => {
+export const registerCustomer = async (userDetails) => {
   const data = {
-    email: "customer@example.com",
-    first_name: "John",
-    last_name: "Doe",
-    password: "customer123",
-    password_confirmation: "customer123",
+    email: userDetails.email,
+    first_name: userDetails.firstName,
+    last_name: userDetails.lastName,
+    password: userDetails.password,
+    password_confirmation: userDetails.confirmPassword,
   };
 
   try {
     const response = await appAxios.post(
-      `${API_BASE_URL}api/v1/customer/register`,
+      `${API_BASE_URL}api/customer/register`,
       data,
       {
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
       }
     );
-    console.log("Data", response.data.data); // Optional: for debugging
-    return response.data.data;
+    console.log("Data", response); // Optional: for debugging
+    return response;
   } catch (error) {
     console.error("Error fetching products:", error);
-    return null;
+    return error.response.data.message;
   }
 };
 

@@ -1,13 +1,38 @@
 "use client";
 
 import { useCartStore } from "@/store";
+import Link from "next/link";
+import { useParams, useSearchParams } from "next/navigation";
 
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 const page = () => {
+  const searchParams = useSearchParams();
+  console.log("searchParams", searchParams.get("method"));
+
+  const [billingAddress, setBillingAddress] = useState({});
+  const [shippingAddress, setShippingAddress] = useState({});
+  const [method, setMethod] = useState(searchParams.get("method"));
+
   const { cart } = useCartStore((state) => state);
   const subtotal = (price, qty) => (price * qty).toFixed(2);
 
+  useEffect(() => {
+    const bill = localStorage.getItem("billingaddress");
+    const ship = localStorage.getItem("shiipingaddreess");
+    const parseBill = JSON.parse(bill);
+    const parseShip = JSON.parse(ship);
+    // console.log("parse", parse.firstName);
+    setBillingAddress(parseBill);
+    setShippingAddress(parseShip);
+  }, []);
+
+  let totalPrice = 0;
+  (totalPrice = useMemo(() =>
+    cart.reduce((sum, item) => sum + parseFloat(item.total), 0)
+  )),
+    [];
+  console.log("bill", billingAddress.firstName);
   return (
     <div
       style={{
@@ -43,23 +68,32 @@ const page = () => {
           >
             {/* Billing Info Box 1 */}
             <div className="col-12 col-md-4">
-              <div className=" p-3 mb-3 h-100">
+              <div className="p-3 mb-3 h-100">
                 <div className="d-flex justify-content-between">
-                  <h5 className="billing-text">Billing Information:</h5>
+                  <h5 className="billing-text">Shipping Information</h5>
                 </div>
-                <p className="mb-1 billing-text-name">Rohan Rohan</p>
-                <p className="mb-1 billing-text-name">dec5377@gmail.com</p>
-                <p className="mb-1 billing-text-name">
-                  B 64 A Vikas Vihar Kakrolla
+                <p className="mb-1 billing-text-name ">
+                  {billingAddress?.firstName}
                 </p>
-                <p className="mb-1 billing-text-name">Address 2</p>
-                <p className="mb-1 billing-text-name">
-                  New Delhi, Delhi, 110078, India
+                <p className="mb-1 billing-text-name ">
+                  {billingAddress?.email}
                 </p>
-                <p className="mb-0 billing-text-name">Tel: 07011391100</p>
-                <a href="#" className="text-primary">
+                <p className="mb-1 billing-text-name ">
+                  {billingAddress?.addressOne}
+                </p>
+                <p className="mb-1 billing-text-name ">
+                  {billingAddress?.addressTwo}
+                </p>
+                <p className="mb-1 billing-text-name ">
+                  {billingAddress.city}, {billingAddress?.state},{" "}
+                  {billingAddress?.zipCode}, {billingAddress?.country}
+                </p>
+                <p className="mb-0 billing-text-name ">
+                  Tel: {billingAddress?.telePhone}
+                </p>
+                <Link href="/checkout" className="text-primary">
                   Edit
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -69,19 +103,28 @@ const page = () => {
                 <div className="d-flex justify-content-between">
                   <h5 className="billing-text">Shipping Information</h5>
                 </div>
-                <p className="mb-1 billing-text-name ">Rohan Rohan</p>
-                <p className="mb-1 billing-text-name ">dec5377@gmail.com</p>
                 <p className="mb-1 billing-text-name ">
-                  B 64 A Vikas Vihar Kakrolla
+                  {shippingAddress?.firstName}
                 </p>
-                <p className="mb-1 billing-text-name ">Address 2</p>
                 <p className="mb-1 billing-text-name ">
-                  New Delhi, Delhi, 110078, India
+                  {shippingAddress?.email}
                 </p>
-                <p className="mb-0 billing-text-name ">Tel: 07011391100</p>
-                <a href="#" className="text-primary">
+                <p className="mb-1 billing-text-name ">
+                  {shippingAddress?.addressOne}
+                </p>
+                <p className="mb-1 billing-text-name ">
+                  {shippingAddress?.addressTwo}
+                </p>
+                <p className="mb-1 billing-text-name ">
+                  {shippingAddress.city}, {shippingAddress?.state},{" "}
+                  {shippingAddress?.zipCode}, {shippingAddress?.country}
+                </p>
+                <p className="mb-0 billing-text-name ">
+                  Tel: {shippingAddress?.telePhone}
+                </p>
+                <Link href="/shipping?checkbox=false" className="text-primary">
                   Edit
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -91,20 +134,21 @@ const page = () => {
                   <h5 className="billing-text">Shipping Method:</h5>
                 </div>
                 <p className="mb-1 billing-text-name ">eSeller International</p>
-                <a href="#" className="text-primary">
+                <Link href="/shippingMethod" className="text-primary">
                   Edit
-                </a>
+                </Link>
                 <div>
                   <div className="d-flex justify-content-between">
                     <h5 className="billing-text mt-2">Payment Method:</h5>
                   </div>
                   <p className="mb-1 billing-text-name ">
-                    Card Payment (Using Trust Payments 3D Secure Hosted
-                    Checkout)
+                    {/* Card Payment (Using Trust Payments 3D Secure Hosted
+                    Checkout) */}
+                    {method}
                   </p>
-                  <a href="#" className="text-primary">
+                  <Link href={"/payment"} className="text-primary">
                     Edit
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -132,129 +176,86 @@ const page = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {cart.map((item) => (
-                      <tr key={item.id}>
-                        {/* <td>
+                    {cart.map((item) => {
+                      console.log("The item", item);
+                      return (
+                        <tr key={item.id}>
+                          {/* <td>
                           <img src={item.image} alt={item.name} width="80" />
                         </td> */}
-                        <td>{item.name}</td>
-                        <td>€{item.price.toFixed(2)}</td>
-                        <td>
-                          <input
-                            type="number"
-                            value={item.qty}
-                            min="1"
-                            className="form-control"
-                            style={{ width: "70px" }}
-                            onChange={(e) =>
-                              updateQuantity(item.id, parseInt(e.target.value))
-                            }
-                          />
-                        </td>
-                        <td>€{subtotal(item.price, item.qty)}</td>
-                      </tr>
-                    ))}
+                          <td>{item.name}</td>
+                          <td>€{Number(item?.price)?.toFixed(2)}</td>
+                          <td>
+                            <input
+                              disabled
+                              type="number"
+                              value={item.quantity}
+                              min="1"
+                              className="form-control bg-white"
+                              style={{ width: "70px" }}
+                              onChange={(e) =>
+                                updateQuantity(
+                                  item.id,
+                                  parseInt(e.target.value)
+                                )
+                              }
+                            />
+                          </td>
+                          <td>€{subtotal(item.price, item.quantity)}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
+                  <thead>
+                    <tr key="2">
+                      {/* <td>
+                          <img src={item.image} alt={item.name} width="80" />
+                        </td> */}
+                      <td
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      >
+                        Grand Total
+                      </td>
+                      <td></td>
+                      <td></td>
+
+                      <td>{totalPrice}</td>
+                    </tr>
+                  </thead>
                 </table>
               </div>
 
-              <table className="checkout-table table-row-1 checkout-table-mobile">
-                <thead>
-                  <tr>
-                    <td className="col-item">Item</td>
-                    <td className="col-name">Product Name</td>
-                    <td className="col-price">Unit Price</td>
-                    <td className="col-subtotal">Subtotal</td>
-                  </tr>
-                </thead>
-              </table>
+              <div className="container">
+                <div className="login-signup">
+                  <div className="col-md-12">
+                    <div
+                      className="d-flex pb-3 mt-3"
+                      style={{ justifyContent: "space-between" }}
+                    >
+                      <div>
+                        <Link href={"/payment"}>
+                          <button className="btn btn-shop btn-primary back-button">
+                            Back
+                          </button>
+                        </Link>
+                        <Link href={"/cartpage"}>
+                          <button className="btn btn-shop btn-primary back-button ms-3">
+                            Edit
+                          </button>
+                        </Link>
+                      </div>
 
-              <div className="table-row-3">
-                <div className="row">
-                  <div className="col-item">
-                    <div>
-                      <img src="/assets/bracelet1.png" className="w-100" />
+                      <Link href={`/orderReview?method=${method}`}>
+                        <button className="btn btn-cart btn-info text-white back-button">
+                          Proceed to Payment
+                        </button>
+                      </Link>
                     </div>
-                  </div>
-
-                  <div className=" col-name">
-                    <h6>Dog (standing) - Brown</h6>
-                  </div>
-                  <div className=" col-price">
-                    <h6>€17.00</h6>
-                  </div>
-
-                  <div className=" col-subtotal">
-                    <h6>€17.00</h6>
-                  </div>
-
-                  <div className="col-input mt-3">
-                    <h6>
-                      Qty{" "}
-                      <span>
-                        <input type="number"></input>
-                      </span>
-                    </h6>
-                  </div>
-
-                  <div className="col-gift mt-3">
-                    <h6>
-                      Gift{" "}
-                      <span>
-                        <input type="checkbox"></input>
-                      </span>
-                    </h6>
-                  </div>
-                  <div className="col-remove mt-3">
-                    <h6>x Remove</h6>
                   </div>
                 </div>
               </div>
-              <hr className="display-option" />
-              <div className="table-row-3">
-                <div className="row">
-                  <div className="col-item">
-                    <div>
-                      <img src="/assets/bracelet1.png" className="w-100" />
-                    </div>
-                  </div>
-
-                  <div className=" col-name">
-                    <h6>Dog (standing) - Brown</h6>
-                  </div>
-                  <div className=" col-price">
-                    <h6>€17.00</h6>
-                  </div>
-
-                  <div className=" col-subtotal">
-                    <h6>€17.00</h6>
-                  </div>
-
-                  <div className="col-input mt-3">
-                    <h6>
-                      Qty{" "}
-                      <span>
-                        <input type="number"></input>
-                      </span>
-                    </h6>
-                  </div>
-
-                  <div className="col-gift mt-3">
-                    <h6>
-                      Gift{" "}
-                      <span>
-                        <input type="checkbox"></input>
-                      </span>
-                    </h6>
-                  </div>
-                  <div className="col-remove mt-3">
-                    <h6>x Remove</h6>
-                  </div>
-                </div>
-              </div>
-              {/* 
-              <AddToCart />
-              <GiftVoucher /> */}
             </div>
           </div>
         </div>

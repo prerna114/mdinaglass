@@ -1,10 +1,12 @@
 "use client";
 import CategoryGrid from "../components/CategoryGrid";
+import VideoSkeleton from "../components/Skeleton/VideoSkeleton";
+
 import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 const Video = dynamic(() => import("../components/Video"), {
   ssr: false,
-  loading: () => <div style={{ height: 300 }}>Loading video...</div>,
+  loading: () => <VideoSkeleton />,
 });
 const ProductCarousel = dynamic(() => import("../components/ProductCarousel"), {
   ssr: false,
@@ -28,8 +30,6 @@ const Testimonials = dynamic(() => import("../components/Testimonials"), {
 export default function Page() {
   return (
     <>
-      {/* <Header /> */}
-      {/* <Megamenu /> */}
       <Video />
 
       <section
