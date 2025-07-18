@@ -1,14 +1,27 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
 import React from "react";
+import CmsAboveMenu from "../CmsAboveMenu";
 
 const InfoContent = ({ content }) => {
   const { cmsInfo } = useAuthStore((state) => state);
 
   console.log("cmdinfor", cmsInfo);
-
+  const links = [
+    { id: 1, label: "International Delivery", slug: "international-delivery" },
+    { id: 2, label: "Terms & Conditions", slug: "terms-conditions" },
+    { id: 3, label: "Privacy Policy", slug: "privacy-policy" },
+    {
+      id: 4,
+      label: "Returns & Cancellations",
+      slug: "return-policy",
+    },
+  ];
   return (
     <div className="information px-5">
+      {/* <InfoAboveMenu /> */}
+      <CmsAboveMenu link={links} route={"information"} />
+
       <h2>{cmsInfo?.page_title}</h2>
       <p dangerouslySetInnerHTML={{ __html: cmsInfo?.html_content }}></p>
     </div>

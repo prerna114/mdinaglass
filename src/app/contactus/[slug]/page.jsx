@@ -2,6 +2,7 @@
 import ContactContent from "@/components/ContactUs/ContactContent";
 import ContactSideMenu from "@/components/ContactUs/ContactSideMenu";
 import React from "react";
+
 const page = () => {
   return (
     <div className="InfoContainer">
@@ -19,6 +20,7 @@ const page = () => {
           flexDirection: "row",
           display: "flex",
           marginTop: "20px",
+          justifyContent: "space-around",
         }}
       >
         <ContactSideMenu />

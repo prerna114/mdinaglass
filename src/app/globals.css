@@ -14,6 +14,10 @@
     max-width: 1041px !important;
     margin: 0 auto;
   }
+  .checkout-sec .contact-input {
+    width: 100% !important;
+    padding-left: 10px;
+  }
   .checkout-sec input {
     width: 65% !important;
     height: 62px;
@@ -2222,6 +2226,12 @@ hr.display-option {
 .svg-design {
   margin-right: 15px !important;
 }
+@media screen and (min-width: 300px) and (max-width: 1000px) {
+  aside.sidebar {
+    display: none !important;
+  }
+}
+
 @media screen and (min-width: 1301px) and (max-width: 1500px) {
   h2.product-show {
     font-size: 30px;
@@ -3083,4 +3093,8 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
   font-family: var(--font-raleway);
   font-weight: 500;
   font-size: 14px !important;
+}
+.contact-input {
+  width: 100% !important;
+  padding-left: 10px;
 }

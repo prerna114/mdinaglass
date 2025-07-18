@@ -55,15 +55,17 @@ const Header = () => {
 
   const getCart = async () => {
     // clearCart();
-    await testCartAPi();
+    // await testCartAPi();
     const data = await getCartListing();
+    // const data = await testCartAPi();
+    console.log("getCart", data.data);
+
     if (data?.status == 200) {
       // addToCart(data.result.items);
-      data.result.cart.items.forEach((item) => {
+      data.data.cart.items.forEach((item) => {
         addToCart(item);
       });
     }
-    console.log("getCart", data);
   };
 
   useEffect(() => {

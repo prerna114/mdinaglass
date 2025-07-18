@@ -3,14 +3,19 @@ import { API_BASE_URL } from "@/constant";
 // utils/fetchGlobal.js
 export const fetchGlobal = async (
   url,
-  { method = "GET", body, headers = {}, cache = "no-cache" } = {}
+  { method = "GET", body, headers = {}, cache = "no-cache", params = {} } = {}
 ) => {
   const tokenData = localStorage.getItem("token");
   const parsed = tokenData ? JSON.parse(tokenData) : null;
   const accessToken = parsed?.token;
+
+  const queryString = new URLSearchParams(params).toString();
+  const fullUrl = `${API_BASE_URL}${url}${
+    queryString ? `?${queryString}` : ""
+  }`;
   console.log("Method", method);
   try {
-    const res = await fetch(`${API_BASE_URL}${url}`, {
+    const res = await fetch(`${fullUrl}`, {
       method,
       headers: {
         "Content-Type": "application/json",
@@ -18,7 +23,7 @@ export const fetchGlobal = async (
         ...headers,
         redirect: "follow",
       },
-      ...(body && { body: body }),
+      ...(body && { body: JSON.stringify(body) }),
       cache,
     });
 

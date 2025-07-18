@@ -1,0 +1,21 @@
+// ✅ Core foundation files (MUST come first)
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps"; // includes $theme-colors-rgb etc.
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+// ✅ Required for Navbar, Dropdown, and Forms to behave
+@import "bootstrap/scss/root"; // normalize + CSS vars
+@import "bootstrap/scss/reboot"; // resets
+@import "bootstrap/scss/type"; // typography
+@import "bootstrap/scss/buttons"; // btn styles
+@import "bootstrap/scss/forms"; // form controls
+@import "bootstrap/scss/nav"; // nav-link & nav
+@import "bootstrap/scss/navbar"; // navbar styling
+@import "bootstrap/scss/dropdown"; // dropdown menu styles
+@import "bootstrap/scss/transitions"; // dropdown show/hide animation
+@import "bootstrap/scss/grid"; // grid classes like container, row, col
+
+// ✅ Optional but helpful
+@import "bootstrap/scss/utilities/api"; // generates utility classes (w-100, d-flex, etc.)

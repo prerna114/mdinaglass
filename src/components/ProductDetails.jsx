@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Heart } from "lucide-react";
 import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
-import { addToTheCart, testAddCart } from "@/api/CartApi";
+import { addToTheCart } from "@/api/CartApi";
 import { useMenuStore } from "@/store/useCategoryStore";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ProductLists } from "@/store/product";
@@ -79,7 +79,7 @@ export default function ProductDetails({ productDetails }) {
     const parsed = tokenData ? JSON.parse(tokenData) : null;
     const accessToken = parsed?.token;
     if (accessToken) {
-      const data = await testAddCart(productDetails, quantity);
+      const data = await addToTheCart(productDetails, quantity);
       if (data?.status === 200) {
         clearCart();
         addToCart(data.data?.cart.items);

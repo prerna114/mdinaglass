@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { CustomToast } from "../CustomToast";
 
-const ContactSideMenu = () => {
+const CmsSideMenu = () => {
   const [active, setActive] = useState();
   const params = useParams();
   const { setCmsInfo } = useAuthStore((state) => state);
@@ -65,4 +65,4 @@ const ContactSideMenu = () => {
   );
 };
 
-export default ContactSideMenu;
+export default CmsSideMenu;

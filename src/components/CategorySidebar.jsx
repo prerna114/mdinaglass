@@ -1,6 +1,4 @@
 "use client";
-
-import { getMenuCategories } from "@/api/menuAPI";
 import { getProductCateogry } from "@/api/productApi";
 import { createUrl } from "@/constant";
 import { useAuthStore } from "@/store/useAuthStore";

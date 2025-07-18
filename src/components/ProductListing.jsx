@@ -231,6 +231,9 @@ const ProductListing = ({ onDataLoaded }) => {
     setFilterOption,
     setHeading,
   } = ProductLists((state) => state);
+
+  console.log("Prodcts listing", products, category);
+
   const renderedDropdowns = useMemo(
     () => (
       <>
@@ -412,7 +415,7 @@ const ProductListing = ({ onDataLoaded }) => {
   //   //   console.log("========= Side Menu1111", products);
   //   // }
   // };
-  console.log("filterOption", cateogryArray, allParams);
+  // console.log("filterOption", prod);
   return (
     <div className="productListing">
       {/* Filter Controls */}

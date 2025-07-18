@@ -1,13 +1,19 @@
 "use client";
 import { useAuthStore } from "@/store/useAuthStore";
 import React from "react";
+import CmsAboveMenu from "../CmsAboveMenu";
 
 const ContactContent = ({ content }) => {
   const { cmsInfo } = useAuthStore((state) => state);
   console.log("cmsInfo", cmsInfo);
-
+  const links = [
+    { id: 1, label: "Contact Details & Outlets", slug: "contact-details" },
+    { id: 2, label: "Contact Form", slug: "contact-form" },
+  ];
   return (
-    <div className="information px-5">
+    <div className="information px-5 mb-5">
+      {/* <ContactAboveMenu /> */}
+      <CmsAboveMenu link={links} route={"contactus"} />
       {cmsInfo && Object.keys(cmsInfo).length > 0 ? (
         <div className="container">
           <h2>{cmsInfo?.page_title}</h2>
@@ -31,13 +37,10 @@ const ContactContent = ({ content }) => {
                   <div className="col-md-12 mb-3">
                     <input
                       type="text"
+                      className="contact-input"
                       required
                       onChange={(e) => {
                         handleText("firstName", e.target.value);
-                      }}
-                      style={{
-                        paddingLeft: 10,
-                        width: "100% !important",
                       }}
                       placeholder="FIRST NAME*"
                     ></input>
@@ -50,10 +53,7 @@ const ContactContent = ({ content }) => {
                       onChange={(e) => {
                         handleText("firstName", e.target.value);
                       }}
-                      style={{
-                        paddingLeft: 10,
-                        width: "100% !important",
-                      }}
+                      className="contact-input"
                       placeholder="LAST NAME*"
                     ></input>
                   </div>
@@ -65,10 +65,7 @@ const ContactContent = ({ content }) => {
                       onChange={(e) => {
                         handleText("firstName", e.target.value);
                       }}
-                      style={{
-                        paddingLeft: 10,
-                        width: "100% !important",
-                      }}
+                      className="contact-input"
                       placeholder="EMAIL*"
                     ></input>
                   </div>
@@ -80,10 +77,7 @@ const ContactContent = ({ content }) => {
                       onChange={(e) => {
                         handleText("firstName", e.target.value);
                       }}
-                      style={{
-                        paddingLeft: 10,
-                        width: "100% !important",
-                      }}
+                      className="contact-input"
                       placeholder="SUBJECT*"
                     ></input>
                   </div>

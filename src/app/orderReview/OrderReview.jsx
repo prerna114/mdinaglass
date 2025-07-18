@@ -1,0 +1,275 @@
+"use client";
+
+import { useCartStore } from "@/store";
+import Link from "next/link";
+import { useParams, useSearchParams } from "next/navigation";
+
+import React, { useEffect, useMemo, useState } from "react";
+
+const OrderReview = () => {
+  const searchParams = useSearchParams();
+  console.log("searchParams", searchParams.get("method"));
+
+  const [billingAddress, setBillingAddress] = useState({});
+  const [shippingAddress, setShippingAddress] = useState({});
+  const [method, setMethod] = useState(searchParams.get("method"));
+
+  const { cart } = useCartStore((state) => state);
+  const subtotal = (price, qty) => (price * qty).toFixed(2);
+
+  useEffect(() => {
+    const bill = localStorage.getItem("billingaddress");
+    const ship = localStorage.getItem("shiipingaddreess");
+    const parseBill = JSON.parse(bill);
+    const parseShip = JSON.parse(ship);
+    // console.log("parse", parse.firstName);
+    setBillingAddress(parseBill);
+    setShippingAddress(parseShip);
+  }, []);
+
+  let totalPrice = 0;
+  (totalPrice = useMemo(() =>
+    cart.reduce((sum, item) => sum + parseFloat(item.total), 0)
+  )),
+    [];
+
+  console.log("billingAddress", billingAddress);
+  return (
+    <div
+      style={{
+        background: "#f1f1f1",
+      }}
+    >
+      <div className="header-product bg-white">
+        <h1>Checkout: Order Review</h1>
+      </div>
+      <div className="container">
+        <div className="login-signup">
+          <div className="row">
+            <div className="col-md-12">
+              <div className="login-sec  checkout-sec">
+                <h2>6. Order Review</h2>
+                <p>
+                  Please confirm your order below before proceeding to payment.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {billingAddress != null && (
+        <div className="container">
+          <div className="subContainer">
+            <div
+              className="row mt-3"
+              style={{
+                backgroundColor: "white",
+                padding: 20,
+              }}
+            >
+              {/* Billing Info Box 1 */}
+              <div className="col-12 col-md-4">
+                <div className="p-3 mb-3 h-100">
+                  <div className="d-flex justify-content-between">
+                    <h5 className="billing-text">Shipping Information</h5>
+                  </div>
+                  <p className="mb-1 billing-text-name ">
+                    {billingAddress?.firstName}
+                  </p>
+                  <p className="mb-1 billing-text-name ">
+                    {billingAddress?.email}
+                  </p>
+                  <p className="mb-1 billing-text-name ">
+                    {billingAddress?.addressOne}
+                  </p>
+                  <p className="mb-1 billing-text-name ">
+                    {billingAddress?.addressTwo}
+                  </p>
+                  <p className="mb-1 billing-text-name ">
+                    {billingAddress.city}, {billingAddress?.state},{" "}
+                    {billingAddress?.zipCode}, {billingAddress?.country}
+                  </p>
+                  <p className="mb-0 billing-text-name ">
+                    Tel: {billingAddress?.telePhone}
+                  </p>
+                  <Link href="/checkout" className="text-primary">
+                    Edit
+                  </Link>
+                </div>
+              </div>
+
+              {/* Billing Info Box 2 */}
+              <div className="col-12 col-md-4">
+                <div className="p-3 mb-3 h-100">
+                  <div className="d-flex justify-content-between">
+                    <h5 className="billing-text">Shipping Information</h5>
+                  </div>
+                  <p className="mb-1 billing-text-name ">
+                    {shippingAddress?.firstName}
+                  </p>
+                  <p className="mb-1 billing-text-name ">
+                    {shippingAddress?.email}
+                  </p>
+                  <p className="mb-1 billing-text-name ">
+                    {shippingAddress?.addressOne}
+                  </p>
+                  <p className="mb-1 billing-text-name ">
+                    {shippingAddress?.addressTwo}
+                  </p>
+                  <p className="mb-1 billing-text-name ">
+                    {shippingAddress.city}, {shippingAddress?.state},{" "}
+                    {shippingAddress?.zipCode}, {shippingAddress?.country}
+                  </p>
+                  <p className="mb-0 billing-text-name ">
+                    Tel: {shippingAddress?.telePhone}
+                  </p>
+                  <Link
+                    href="/shipping?checkbox=false"
+                    className="text-primary"
+                  >
+                    Edit
+                  </Link>
+                </div>
+              </div>
+
+              <div className="col-12 col-md-4">
+                <div className="p-3 mb-3 h-100">
+                  <div className="d-flex justify-content-between">
+                    <h5 className="billing-text">Shipping Method:</h5>
+                  </div>
+                  <p className="mb-1 billing-text-name ">
+                    eSeller International
+                  </p>
+                  <Link href="/shippingMethod" className="text-primary">
+                    Edit
+                  </Link>
+                  <div>
+                    <div className="d-flex justify-content-between">
+                      <h5 className="billing-text mt-2">Payment Method:</h5>
+                    </div>
+                    <p className="mb-1 billing-text-name ">
+                      {/* Card Payment (Using Trust Payments 3D Secure Hosted
+                    Checkout) */}
+                      {method}
+                    </p>
+                    <Link href={"/payment"} className="text-primary">
+                      Edit
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {cart?.length != 0 && (
+        <div
+          className="cart-page-main"
+          style={{
+            background: "#f1f1f1",
+          }}
+        >
+          <div className="container">
+            <div className="align-cart">
+              <div className="table-responsive-sm">
+                <table className="table cart-table table-bordered">
+                  <thead className="thead-dark">
+                    <tr className="tr-bg">
+                      <th>PRODUCT NAME</th>
+                      <th>PRICE</th>
+                      <th>QTY</th>
+                      <th>SUBTOTAL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cart.map((item) => {
+                      console.log("The item", item);
+                      return (
+                        <tr key={item.id}>
+                          {/* <td>
+                          <img src={item.image} alt={item.name} width="80" />
+                        </td> */}
+                          <td>{item.name}</td>
+                          <td>€{Number(item?.price)?.toFixed(2)}</td>
+                          <td>
+                            <input
+                              disabled
+                              type="number"
+                              value={item.quantity}
+                              min="1"
+                              className="form-control bg-white"
+                              style={{ width: "70px" }}
+                              onChange={(e) =>
+                                updateQuantity(
+                                  item.id,
+                                  parseInt(e.target.value)
+                                )
+                              }
+                            />
+                          </td>
+                          <td>€{subtotal(item.price, item.quantity)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                  <thead>
+                    <tr key="2">
+                      {/* <td>
+                          <img src={item.image} alt={item.name} width="80" />
+                        </td> */}
+                      <td
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      >
+                        Grand Total
+                      </td>
+                      <td></td>
+                      <td></td>
+
+                      <td>{totalPrice}</td>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+
+              <div className="container">
+                <div className="login-signup">
+                  <div className="col-md-12">
+                    <div
+                      className="d-flex pb-3 mt-3"
+                      style={{ justifyContent: "space-between" }}
+                    >
+                      <div>
+                        <Link href={"/payment"}>
+                          <button className="btn btn-shop btn-primary back-button">
+                            Back
+                          </button>
+                        </Link>
+                        <Link href={"/cartpage"}>
+                          <button className="btn btn-shop btn-primary back-button ms-3">
+                            Edit
+                          </button>
+                        </Link>
+                      </div>
+
+                      <Link href={`/orderReview?method=${method}`}>
+                        <button className="btn btn-cart btn-info text-white back-button">
+                          Proceed to Payment
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default OrderReview;

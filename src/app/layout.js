@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css"; // ✅ Bootstrap CSS
+// import "@/styles/bootstrap-custom.scss"; // instead of bootstrap.min.css
 
 import {
   Geist,

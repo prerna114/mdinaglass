@@ -6,11 +6,13 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { CustomToast } from "../CustomToast";
+import { useMenuStore } from "@/store/useCategoryStore";
 
 const AboutSideMenu = () => {
   const [active, setActive] = useState();
   const params = useParams();
   const { setCmsInfo } = useAuthStore((state) => state);
+  const setLoading = useMenuStore((state) => state.setLoading);
 
   const links = [
     { id: 1, label: "What We Do", slug: "about-mdina-glass" },
@@ -24,15 +26,20 @@ const AboutSideMenu = () => {
   ];
 
   const getInformation = async () => {
+    setLoading(true);
     const data = await CmsInformation(params.slug);
     if (data.status == 200) {
       if (data?.data) {
         setCmsInfo(data?.data);
+        setLoading(false);
         console.log("CMSINFROMTIOn", data?.data);
       } else {
         setCmsInfo(null);
+        setLoading(false);
+
         CustomToast("Something went wrong", "top-right");
       }
+      setLoading(false);
     }
     // if()
   };

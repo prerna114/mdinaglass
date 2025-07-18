@@ -8,7 +8,7 @@ import { useCartStore } from "@/store";
 import { SuccessToast } from "./CustomToast";
 import { getAllProduct } from "@/api/productApi";
 import Link from "next/link";
-import { addToTheCart, testAddCart } from "@/api/CartApi";
+import { addToTheCart } from "@/api/CartApi";
 
 const ProductCard = ({ title = "New Arrivals" }) => {
   const { addToCart, cart, clearCart } = useCartStore((state) => state);
@@ -107,7 +107,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
 
   const fetchData = async () => {
     const data = await getAllProduct();
-    console.log("Product car", data);
+    console.log("Product car 123", data);
     if (data.status == 200) {
       setProductData([...data?.data?.data, ...data?.data?.data]);
     } else {
@@ -117,7 +117,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
   };
   const addItemCart = async (product) => {
     console.log("Add", product);
-    const data = await testAddCart(product, 1);
+    const data = await addToTheCart(product, 1);
 
     if (data.status == 200) {
       clearCart();

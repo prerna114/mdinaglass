@@ -7,7 +7,7 @@ import Make from "@/components/Profile";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 
-import { Login, registerCustomer } from "@/api/Customer";
+import { Login, registerCustomer, testLogin } from "@/api/Customer";
 import Link from "next/link";
 import { useCartStore } from "@/store";
 import { getCartListing } from "@/api/CartApi";

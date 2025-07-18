@@ -48,9 +48,17 @@ export default function Page() {
 
       <div className="flex-container">
         {/* <h1 className="mb-3">{content.title}</h1> */}
-
-        <InformationSideMenu />
-        <InfoContent />
+        <div
+          style={{
+            flexDirection: "row",
+            display: "flex",
+            marginTop: "20px",
+            justifyContent: "space-around",
+          }}
+        >
+          <InformationSideMenu />
+          <InfoContent />
+        </div>
       </div>
     </div>
   );
