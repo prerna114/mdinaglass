@@ -1,19 +1,24 @@
 "use client";
 
+import { checkOut } from "@/api/CartApi";
+import { SuccessToast } from "@/components/CustomToast";
 import { useCartStore } from "@/store";
+import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import React, { useEffect, useMemo, useState } from "react";
 
 const OrderReview = () => {
   const searchParams = useSearchParams();
   console.log("searchParams", searchParams.get("method"));
+  const giftMessage = useAuthStore((state) => state.giftMessage);
 
   const [billingAddress, setBillingAddress] = useState({});
   const [shippingAddress, setShippingAddress] = useState({});
   const [method, setMethod] = useState(searchParams.get("method"));
 
+  const router = useRouter();
   const { cart } = useCartStore((state) => state);
   const subtotal = (price, qty) => (price * qty).toFixed(2);
 
@@ -33,6 +38,14 @@ const OrderReview = () => {
   )),
     [];
 
+  const PaymentSuccess = async () => {
+    const response = await checkOut();
+    if (response.status == 200) {
+      SuccessToast(response.data.message, "top-right");
+      router.push("/");
+    }
+    console.log("Response pAymnt", response);
+  };
   console.log("billingAddress", billingAddress);
   return (
     <div
@@ -157,6 +170,15 @@ const OrderReview = () => {
                       Edit
                     </Link>
                   </div>
+
+                  {giftMessage?.length > 0 && (
+                    <div>
+                      <div className="d-flex justify-content-between">
+                        <h5 className="billing-text mt-2">Gift Message::</h5>
+                      </div>
+                      <p className="mb-1 billing-text-name ">{giftMessage}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -255,7 +277,12 @@ const OrderReview = () => {
                         </Link>
                       </div>
 
-                      <Link href={`/orderReview?method=${method}`}>
+                      <Link
+                        href={`/orderReview?method=${method}`}
+                        onClick={() => {
+                          PaymentSuccess();
+                        }}
+                      >
                         <button className="btn btn-cart btn-info text-white back-button">
                           Proceed to Payment
                         </button>

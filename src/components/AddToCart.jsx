@@ -1,14 +1,37 @@
 "use client";
+import { updateQuantity } from "@/api/CartApi";
 import { useCartStore } from "@/store";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { CustomToast, SuccessToast } from "./CustomToast";
 
 const AddToCart = () => {
-  const { cart } = useCartStore((state) => state);
+  const { cart, setInsurance, insurance } = useCartStore((state) => state);
+  const [loading, setLoading] = useState(false);
   let totalPrice = 0;
   (totalPrice = useMemo(() =>
     cart.reduce((sum, item) => sum + parseFloat(item.total), 0)
   )),
     [];
+
+  const updateCart = async () => {
+    setLoading(true);
+    const id = cart[0].id;
+    const qty = cart[0].quantity;
+    const response = await updateQuantity(id, qty);
+    console.log("Update cart repsonse", response);
+    if (response.status == 200) {
+      SuccessToast(response.data?.message, "top-right");
+      setLoading(false);
+    } else {
+      CustomToast("Something went wrong", "top-right");
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setInsurance(15.0);
+  }, []);
+
   return (
     <div className="container my-5">
       <div className="col-md-12">
@@ -19,8 +42,20 @@ const AddToCart = () => {
               <button className="btn btn-shop btn-primary me-3">
                 Countinue Shopping
               </button>
-              <button className="btn btn-cart btn-info text-white">
-                Update Shopping Cart
+              <button
+                className="btn btn-cart btn-info text-white"
+                onClick={() => {
+                  updateCart();
+                }}
+              >
+                {loading ? (
+                  <div
+                    className="spinner-border text-light"
+                    role="status"
+                  ></div>
+                ) : (
+                  <div>Update Shopping Cart</div>
+                )}
               </button>
             </div>
           </div>
@@ -74,7 +109,7 @@ const AddToCart = () => {
                   </tr>
                   <tr>
                     <td>Insurance:</td>
-                    <td className="text-end">€0.00</td>
+                    <td className="text-end">€{insurance}.00</td>
                   </tr>
                   <tr>
                     <td className="fw-bold" style={{ color: "#175E84" }}>
@@ -84,7 +119,7 @@ const AddToCart = () => {
                       className="text-end fw-bold"
                       style={{ color: "#175E84" }}
                     >
-                      €{totalPrice}
+                      €{totalPrice + insurance}
                     </td>
                   </tr>
 
@@ -96,7 +131,7 @@ const AddToCart = () => {
                       className="text-end fw-bold"
                       style={{ color: "#175E84" }}
                     >
-                      €{totalPrice}
+                      €{totalPrice + insurance}
                     </td>
                   </tr>
                 </tbody>
@@ -107,6 +142,13 @@ const AddToCart = () => {
                   className="form-check-input"
                   type="checkbox"
                   defaultChecked
+                  onChange={() => {
+                    if (insurance == 0) {
+                      setInsurance(15.0);
+                    } else {
+                      setInsurance(0);
+                    }
+                  }}
                 />
                 <label className="form-check-label small">
                   <strong>

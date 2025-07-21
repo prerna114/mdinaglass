@@ -10,8 +10,10 @@ type AuthStore = {
   setLoginState: (state: boolean) => void;
   menu: [];
   cmsInfo: {};
+  giftMessage: {};
   setMenu: (state: []) => void;
   setCmsInfo: (state: {}) => void;
+  setGiftMessage: (state: string) => void;
 };
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -26,9 +28,11 @@ export const useAuthStore = create<AuthStore>()(
         useCartStore.getState().clearCart();
         set({ isLogin: false });
       },
+      giftMessage: "",
       setLoginState: (state: boolean) => set({ isLogin: state }),
       setMenu: (data) => set({ menu: data }),
       setCmsInfo: (data) => set({ cmsInfo: data }),
+      setGiftMessage: (data) => set({ giftMessage: data }),
     }),
     {
       name: "auth-storage", // localStorage key

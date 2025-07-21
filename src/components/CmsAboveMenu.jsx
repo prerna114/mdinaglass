@@ -36,10 +36,10 @@ const CmsAboveMenu = ({ link, route }) => {
     } else {
       setActive(1);
     }
-    if (current.id == 1) {
+    if (current && current.id == 1) {
       getInformation();
     } else {
-      setCmsInfo(null);
+      getInformation();
     }
   }, [params?.slug]);
 

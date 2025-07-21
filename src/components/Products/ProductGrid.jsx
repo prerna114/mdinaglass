@@ -5,7 +5,7 @@ import React from "react";
 import Image from "next/image";
 
 const ProductGrid = ({ products, categoryidList }) => {
-  //   console.log("Products in Grid", products, loading, theloading);
+  console.log("Products in Grid", products);
   return (
     <div className="row">
       {products?.length > 0 &&
@@ -15,9 +15,13 @@ const ProductGrid = ({ products, categoryidList }) => {
               <div className="position-relative">
                 <Image
                   //   src={"/assets/bg-image.png"}
-                  src={product?.images[0]?.url || "/fallback.jpg"}
+                  src={
+                    product?.images[0]?.url ||
+                    product.images[0].medium_image_url ||
+                    "/fallback.jpg"
+                  }
                   className="card-img-top"
-                  alt={product.name}
+                  alt={product.name || "product list image"}
                   width={214}
                   height={214}
                 />
@@ -42,7 +46,9 @@ const ProductGrid = ({ products, categoryidList }) => {
               <div className="card-body text-center">
                 <Link
                   href={{
-                    pathname: `/product-details/webshop/${categoryidList}`,
+                    pathname: `/product-details/webshop/${
+                      categoryidList?.length > 0 ? categoryidList : ["1"]
+                    }`,
                     query: { sku: product?.sku, id: product?.id },
                   }}
                   scroll={false}
@@ -57,8 +63,10 @@ const ProductGrid = ({ products, categoryidList }) => {
                 <p className="card-text text-info fw-bold">
                   Price €
                   {product?.min_price
-                    ? Number(product?.min_price).toFixed(2)
-                    : Number(product?.price).toFixed(2)
+                    ? isNaN(Number(product?.min_price))
+                      ? product.min_price
+                      : Number(product?.min_price).toFixed(2)
+                    : Number(product?.price)
                     ? Number(product?.price).toFixed(2)
                     : "120"}
                 </p>

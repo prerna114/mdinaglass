@@ -1,6 +1,25 @@
-import React from "react";
+"use client";
+import { ProductLists } from "@/store/product";
+import { useMenuStore } from "@/store/useCategoryStore";
+import React, { useEffect, useState } from "react";
 
-const FilterProduct = () => {
+const FilterProduct = ({ apiCall }) => {
+  const [data, setData] = useState(null);
+  const initialPage = 1;
+
+  const loading = useMenuStore((state) => state.loading);
+  const setLoading = useMenuStore((state) => state.setLoading);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  const {
+    setProducts,
+    products,
+    allProductwithFilter,
+    paginationOption,
+    setAllProductwithFilter,
+  } = ProductLists((state) => state);
+
+  console.log("paginationList Filter", paginationOption);
   return (
     <>
       <div className="row mb-3">
@@ -21,15 +40,8 @@ const FilterProduct = () => {
                   }}
                 >
                   <option>Select</option>
-
                   <option>Price</option>
                   <option>Name</option>
-                  <option value={"Newest"}>Newest</option>
-                  <option>Popular</option>
-                  <option>Date Published</option>
-                  <option>Date Archived</option>
-                  <option>Date Created</option>
-                  <option>Date Modified</option>
                 </select>
               </div>
             </div>
@@ -46,6 +58,7 @@ const FilterProduct = () => {
                   onChange={(e) => {
                     // handleFilter("limit", e.target.value);
                     // console.log("New", e.target.value);
+                    setAllProductwithFilter(per_page, e.target.value);
                   }}
                 >
                   <option value={15}>15 Items</option>
@@ -64,6 +77,66 @@ const FilterProduct = () => {
       <div className="mb-3">
         <small className="text-muted">Items 1-9 of 9 total</small>
       </div>
+
+      {products?.length > 15 && (
+        <div className="col-md-12 col-lg-5">
+          <nav aria-label="Product pagination">
+            <ul className="pagination">
+              <li
+                className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => {
+                    // if (currentPage > 1) {
+                    //   handlePrevious(currentPage);
+                    // }
+                  }}
+                  // disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+              </li>
+
+              {/* {paginationList.map((item, index) => {
+                return (
+                  <li
+                    key={index}
+                    className={`page-item ${
+                      currentPage === item ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={(e) => {
+                        setCurrentPage(item);
+                        if (
+                          paginationList[paginationList?.length - 1] == item
+                        ) {
+                          handlePagination(item, "next");
+                        } else if (paginationList[0] == item && item > 1) {
+                          handlePagination(item, "prev");
+                        }
+                      }}
+                    >
+                      {item}
+                    </button>
+                  </li>
+                );
+              })} */}
+
+              <li className="page-item">
+                <button
+                  className="page-link"
+                  onClick={() => handleNext(currentPage)}
+                >
+                  Next &gt;
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
     </>
   );
 };

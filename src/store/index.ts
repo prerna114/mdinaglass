@@ -11,13 +11,16 @@ type CartState = {
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number, qty?: number) => void;
   clearCart: () => void;
+  insurance: {};
+  setInsurance: (state: string) => void;
 };
 
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       cart: [],
-
+      insurance: "15.00",
+      setInsurance: (data) => set({ insurance: data }),
       addToCart: (item) => {
         const currentCart = get().cart;
 
@@ -47,16 +50,16 @@ export const useCartStore = create<CartState>()(
         }
       },
 
-      removeFromCart: (id) =>
-        set({
-          cart: get().cart.filter((item) => item.id !== id),
-        }),
+      removeFromCart: (id) => {
+        const updatedCart = get().cart.filter((item) => item.id !== id);
+        set({ cart: updatedCart }); // important for persist
+      },
 
       updateQuantity: (id, quantity, qty) =>
         set({
           cart: get().cart.map((item) =>
             item.id === id
-              ? { ...item, qty: quantity !== undefined ? quantity : qty }
+              ? { ...item, quantity: quantity !== undefined ? quantity : qty }
               : item
           ),
         }),

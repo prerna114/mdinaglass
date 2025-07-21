@@ -14,6 +14,7 @@ import Header from "../components/Header";
 import { ToastContainer } from "react-toastify";
 import MegaMenu from "../components/Megamenu";
 import dynamic from "next/dynamic";
+import GloblaLoader from "@/components/GloblaLoader";
 
 const Footer = dynamic(() => import("../components/Footer"), {
   ssr: true,
@@ -63,7 +64,7 @@ export default function RootLayout({ children }) {
       >
         <Header />
         <MegaMenu />
-
+        <GloblaLoader />
         {children}
         <ToastContainer />
         <Footer />

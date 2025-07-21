@@ -54,7 +54,7 @@ const Header = () => {
   };
 
   const getCart = async () => {
-    // clearCart();
+    clearCart();
     // await testCartAPi();
     const data = await getCartListing();
     // const data = await testCartAPi();

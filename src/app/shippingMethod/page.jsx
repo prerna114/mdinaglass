@@ -1,7 +1,28 @@
+"use client";
+import { CustomToast } from "@/components/CustomToast";
+import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 const page = () => {
+  const [giftOption, setGiftOption] = useState(false);
+  const [seller, setSeller] = useState(false);
+
+  const router = useRouter();
+  const setGiftMessage = useAuthStore((state) => state.setGiftMessage);
+
+  const handleChange = (e) => {
+    setGiftMessage(e);
+  };
+  const handleClick = () => {
+    console.log("seller", seller);
+    if (seller) {
+      router.push("/payment");
+    } else {
+      CustomToast("Please Select shipping Method", "top-right");
+    }
+  };
   return (
     <div
       style={{
@@ -30,7 +51,13 @@ const page = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="shipping-Container">
-                <input type="radio" name="checkoutType" />{" "}
+                <input
+                  type="radio"
+                  name="checkoutType"
+                  onChange={() => {
+                    setSeller(!seller);
+                  }}
+                />{" "}
                 <label className="seller-Text">
                   eSeller International - €39.02
                 </label>
@@ -61,11 +88,24 @@ const page = () => {
               type="checkbox"
               name="checkoutType"
               className="custom-checkbox"
+              onChange={(e) => {
+                console.log("Log", e.target.value);
+                setGiftOption(!giftOption);
+              }}
             />{" "}
             <label className="shipping-Checkbox-text">
               &nbsp; Add Gift Options
             </label>
           </div>
+          {giftOption && (
+            <textarea
+              required
+              onChange={(e) => console.log("EEE", handleChange(e.target.value))}
+              style={{ paddingLeft: 10, height: 150, width: "23%" }} // you can adjust height as needed
+              placeholder="Gift Message*"
+              rows={5}
+            />
+          )}
           <div className="col-md-12">
             <div
               className="d-flex pb-3 mt-3"
@@ -77,11 +117,16 @@ const page = () => {
                 </button>
               </Link>
 
-              <Link href={"/payment"}>
-                <button className="btn btn-cart btn-info text-white back-button">
-                  Continue
-                </button>
-              </Link>
+              {/* <Link href={"/payment" }> */}
+              <button
+                onClick={() => {
+                  handleClick();
+                }}
+                className="btn btn-cart btn-info text-white back-button"
+              >
+                Continue
+              </button>
+              {/* </Link> */}
             </div>
           </div>
         </div>

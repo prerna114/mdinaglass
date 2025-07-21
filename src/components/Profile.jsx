@@ -5,18 +5,30 @@ import { SquarePen } from "lucide-react";
 
 import { products } from "@/constant";
 import Link from "next/link";
+import { getOrderList } from "@/api/CartApi";
+import moment from "moment";
 
 export default function Make() {
   const [tab, setTab] = useState("profile");
   const subtotal = (price, qty) => (price * qty).toFixed(2);
   const [userDetails, setUserDetails] = useState();
-
+  const [orderList, setOrderList] = useState([]);
+  const getTheOrderList = async () => {
+    const response = await getOrderList();
+    if (response.status == 200) {
+      setOrderList(response.data.data);
+    }
+  };
   useEffect(() => {
     const data = localStorage.getItem("token");
     if (data) {
       setUserDetails(data);
+      getTheOrderList();
     }
   }, []);
+
+  console.log("Get the Orderlsit", orderList);
+
   return (
     <div className="container mt-5">
       <div className="row">
@@ -99,22 +111,27 @@ export default function Make() {
                         </tr>
                       </thead>
                       <tbody>
-                        {products.map((item) => (
-                          <tr key={item.id}>
-                            <td>{item.orderId}</td>
-                            <td>{item.orderDate}</td>
-
-                            {/* <td>€{item.price.toFixed(2)}</td> */}
-                            <td>€{subtotal(item.price, item.qty)}</td>
-                            <td>{item.qty}</td>
-                            <td>{item.orderStatus}</td>
-                            <td>
-                              <Link href={"/loginCheckoutPage"}>
-                                <p>View Details</p>
-                              </Link>
-                            </td>
-                          </tr>
-                        ))}
+                        {orderList.map((item) =>
+                          item.items.map((data) => (
+                            <tr key={data.id}>
+                              <td>{item.orderId}</td>
+                              <td>
+                                {moment(data.created_at).format(
+                                  "MMMM Do YYYY, h:mm A"
+                                )}
+                              </td>
+                              {/* <td>€{item.price.toFixed(2)}</td> */}
+                              <td>€{subtotal(item.price, item.qty)}</td>
+                              <td>{data.qty_ordered}</td>
+                              <td>{item.status}</td>
+                              <td>
+                                <Link href={"/loginCheckoutPage"}>
+                                  <p>View Details</p>
+                                </Link>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>

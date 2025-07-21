@@ -133,47 +133,60 @@ export const RemoveItemCart = async (id) => {
 };
 
 export const updateQuantity = async (id, qty) => {
-  const tokenData = localStorage.getItem("token");
-  const parsed = tokenData ? JSON.parse(tokenData) : null;
-  const accessToken = parsed?.token;
-  const myHeaders = new Headers();
-  const raw = JSON.stringify({
-    item_id: "1",
-    qty: 1,
-  });
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Authorization", `Bearer ${accessToken}`);
-
-  const requestOptions = {
-    method: "PUT",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow",
+  const raw = {
+    item_id: id,
+    qty: qty,
   };
-  const response = await fetch(
-    `${API_BASE_URL}api/blackbull/cart/update`,
-    requestOptions
-  );
-  if (response.status == 200) {
-    console.log("response", response);
-    const text = await response.text(); // first read as text to inspect
-
-    try {
-      const result = JSON.parse(text); // then try to parse manually
-      return {
-        status: response.status,
-        result,
-      };
-    } catch (e) {
-      console.error("Invalid JSON response. Raw body:", text);
-      return null;
-    }
-  } else if (response.status == 401) {
-    // logout();
-  } else {
-    return null;
-  }
+  const data = await fetchGlobal("api/blackbull/cart/update", {
+    method: "PUT",
+    body: raw,
+  });
+  console.log("Update Data", data);
+  return data;
 };
+// export const updateQuantity = async (id, qty) => {
+//   const tokenData = localStorage.getItem("token");
+//   const parsed = tokenData ? JSON.parse(tokenData) : null;
+//   const accessToken = parsed?.token;
+//   const myHeaders = new Headers();
+//   const raw = {
+//     item_id: id,
+//     qty: qty,
+//   };
+
+//   myHeaders.append("Content-Type", "application/json");
+//   myHeaders.append("Authorization", `Bearer ${accessToken}`);
+
+//   const requestOptions = {
+//     method: "PUT",
+//     headers: myHeaders,
+//     body: raw,
+//     redirect: "follow",
+//   };
+//   const response = await fetch(
+//     `${API_BASE_URL}api/blackbull/cart/update`,
+//     requestOptions
+//   );
+//   if (response.status == 200) {
+//     console.log("response", response);
+//     const text = await response.text(); // first read as text to inspect
+
+//     try {
+//       const result = JSON.parse(text); // then try to parse manually
+//       return {
+//         status: response.status,
+//         result,
+//       };
+//     } catch (e) {
+//       console.error("Invalid JSON response. Raw body:", text);
+//       return null;
+//     }
+//   } else if (response.status == 401) {
+//     // logout();
+//   } else {
+//     return null;
+//   }
+// };
 
 export const getCartListing = async () => {
   const data = await fetchGlobal("api/blackbull/cart");
@@ -190,5 +203,52 @@ export const addToTheCart = async (product, qty) => {
     method: "POST",
     body: raw,
   });
+  return data;
+};
+
+export const checkOut = async () => {
+  const billing = localStorage.getItem("billingaddress");
+  const billingParse = JSON.parse(billing);
+
+  const shipping = localStorage.getItem("shiipingaddreess");
+  const shippingParse = JSON.parse(shipping);
+
+  const raw = {
+    billing: {
+      first_name: billingParse.firstName,
+      last_name: billingParse.lastName,
+      email: billingParse.email,
+      address: billingParse.addressOne + billingParse.addressTwo,
+      city: billingParse.city,
+      state: billingParse.state,
+      country: billingParse.country,
+      postcode: billingParse.zipCode,
+      phone: billingParse.telePhone,
+    },
+    shipping: {
+      first_name: shippingParse.firstName,
+      last_name: shippingParse.lastName,
+      email: shippingParse.email,
+      address: shippingParse.addressOne + shippingParse.addressTwo,
+      city: shippingParse.city,
+      state: shippingParse.state,
+      country: shippingParse.country,
+      postcode: shippingParse.zipCode,
+      phone: shippingParse.telePhone,
+    },
+    shipping_method: "eSeller International",
+    payment_method: "cashondelivery",
+  };
+  const data = await fetchGlobal("api/blackbull/checkout", {
+    method: "POST",
+    body: raw,
+  });
+  console.log("Update Data", data);
+  return data;
+};
+
+export const getOrderList = async () => {
+  const data = await fetchGlobal("api/blackbull/orders");
+
   return data;
 };

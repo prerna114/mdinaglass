@@ -1,9 +1,20 @@
 "use client";
+import { CustomToast } from "@/components/CustomToast";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const page = () => {
   const [method, setMethod] = useState("");
+
+  const router = useRouter();
+  const handleButton = () => {
+    if (method?.length == 0) {
+      CustomToast("Please Select Payment Method");
+    } else {
+      router.push(`/orderReview?method=${method}`);
+    }
+  };
   return (
     <div
       style={{
@@ -121,11 +132,16 @@ const page = () => {
                 </button>
               </Link>
 
-              <Link href={`/orderReview?method=${method}`}>
-                <button className="btn btn-cart btn-info text-white back-button">
-                  Continue
-                </button>
-              </Link>
+              {/* <Link href={`/orderReview?method=${method}`}> */}
+              <button
+                onClick={() => {
+                  handleButton();
+                }}
+                className="btn btn-cart btn-info text-white back-button"
+              >
+                Continue
+              </button>
+              {/* </Link> */}
             </div>
           </div>
         </div>

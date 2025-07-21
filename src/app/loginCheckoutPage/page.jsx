@@ -10,7 +10,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { Login, registerCustomer, testLogin } from "@/api/Customer";
 import Link from "next/link";
 import { useCartStore } from "@/store";
-import { getCartListing } from "@/api/CartApi";
+import { getCartListing, getOrderList } from "@/api/CartApi";
 import { useMenuStore } from "@/store/useCategoryStore";
 
 const loginCheckoutPage = () => {
@@ -36,6 +36,7 @@ const loginCheckoutPage = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [userLogin, setUserLogin] = useState(false);
+  const [orderList, setOrderList] = useState([]);
   const handleLogin = () => {
     if (!userName) {
       CustomToast("User Name required!", "top-right");
@@ -62,7 +63,6 @@ const loginCheckoutPage = () => {
       setTimeout(() => {
         getCart();
       }, 1000);
-      getCart();
     } else {
       // console.error("Data", data?.response?.data?.message);
       CustomToast(data?.response?.data?.message, "top-right");
@@ -70,11 +70,11 @@ const loginCheckoutPage = () => {
   };
   const getCart = async () => {
     setLoading(true);
-    // clearCart();
+    clearCart();
     const data = await getCartListing();
     if (data?.status == 200) {
       // addToCart(data.result.items);
-      data.result.cart.items.forEach((item) => {
+      data.data.cart.items.forEach((item) => {
         addToCart(item);
       });
       setLoading(false);

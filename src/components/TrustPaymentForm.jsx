@@ -49,9 +49,9 @@ export default function TrustPaymentForm() {
       <div id="st-expiration-date"></div>
       <div id="st-security-code"></div>
       <div id="st-notification-frame"></div>
-      <button type="submit" id="pay-btn">
+      {/* <button type="submit" id="pay-btn">
         Pay securely
-      </button>
+      </button> */}
     </form>
   );
 }

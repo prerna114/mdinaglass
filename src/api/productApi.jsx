@@ -101,7 +101,7 @@ export const getProductByID = async (id) => {
 //   }
 // };
 
-export const getProductCateogry = async (id) => {
+export const getProductCateogry = async (id, page, perpage) => {
   const filter =
     localStorage.getItem("filterdData") &&
     JSON.parse(localStorage.getItem("filterdData"));
@@ -111,17 +111,22 @@ export const getProductCateogry = async (id) => {
   };
   const data = {
     id: id,
+    per_page: 25,
+    page: 1,
+    sort_by: "price",
+    sort_dir: "asc",
     filters: {
-      ...(filterData != undefined &&
-        filterData?.color !== 0 && { color: filterData?.color }),
-      ...(filterData?.variations !== undefined &&
-        filterData?.variations !== 0 && {
-          variations: filterData?.variations,
-        }),
+      // ...(filterData != undefined &&
+      //   filterData?.color !== 0 && { color: filterData?.color }),
+      // ...(filterData?.variations !== undefined &&
+      //   filterData?.variations !== 0 && {
+      //     variations: filterData?.variations,
+      //   }),
 
-      // variations: 22,
-      per_page: 10,
-      page: 1,
+      // // variations: 22,
+      // per_page: 10,
+      // page: 1,
+      color: "1",
     },
   };
   const response = await fetchGlobal("api/categories/products-with-filters", {

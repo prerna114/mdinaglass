@@ -73,12 +73,13 @@ const page = () => {
   const removeItem = async (id) => {
     const data = await RemoveItemCart(id);
     console.log("Data", data);
-    // if (data.status == 200) {
-    //   SuccessToast("Item Remove succusfully", "top-right");
-    //   removeFromCart(id);
-    // } else {
-    //   CustomToast("Something went wrong", "top-right");
-    // }
+    if (data.status == 200) {
+      SuccessToast("Item Remove succusfully", "top-right");
+      removeFromCart(id);
+      console.log("removeFromCart", id);
+    } else {
+      CustomToast("Something went wrong", "top-right");
+    }
   };
 
   const subtotal = (price, qty) => Number(price * qty).toFixed(2);

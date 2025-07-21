@@ -47,10 +47,8 @@ export default function ProductDetails({ productDetails }) {
   const [quantity, setQuantity] = useState(1);
   const [levels, setLevels] = useState([]);
   const sideMenu = useMenuStore((state) => state.sideMenu);
-  const setLoading = useMenuStore((state) => state.setLoading);
-
-  const [cateogryArray, setCateogryArray] = useState([]);
-  const [theLastI, setTheLastI] = useState("");
+  // const setLoading = useMenuStore((state) => state.setLoading);
+  const [loading, setLaoding] = useState(false);
   const router = useRouter();
 
   const [categoryidList, setCategoryidList] = useState([]);
@@ -75,6 +73,7 @@ export default function ProductDetails({ productDetails }) {
     [productDetails?.variants]
   );
   const addItemCart = async () => {
+    setLaoding(true);
     const tokenData = localStorage.getItem("token");
     const parsed = tokenData ? JSON.parse(tokenData) : null;
     const accessToken = parsed?.token;
@@ -83,13 +82,20 @@ export default function ProductDetails({ productDetails }) {
       if (data?.status === 200) {
         clearCart();
         addToCart(data.data?.cart.items);
+        setLaoding(false);
+
         SuccessToast("Item added Successfully", "top-right");
       } else {
+        setLaoding(false);
+
         CustomToast("Something went wrong", "top-right");
       }
+      setLaoding(false);
     } else {
-      addToCart({ ...productDetails, qty: quantity });
+      addToCart({ ...productDetails, quantity: quantity });
+      setLaoding(false);
     }
+    setLaoding(false);
   };
 
   return (
@@ -121,7 +127,7 @@ export default function ProductDetails({ productDetails }) {
               className="img-fluid"
             />
           </div>
-          <div className="d-flex justify-content-center gap-2 mt-3">
+          {/* <div className="d-flex justify-content-center gap-2 mt-3">
             {imageList.map((src, index) => (
               <Image
                 key={index}
@@ -138,7 +144,7 @@ export default function ProductDetails({ productDetails }) {
                 }}
               />
             ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Product Info */}
@@ -216,14 +222,20 @@ export default function ProductDetails({ productDetails }) {
               className="w-100 py-3 text-uppercase addtocart"
               onClick={addItemCart}
             >
-              <Image
-                src="/assets/bag_white.webp"
-                alt="Cart Icon"
-                width={27}
-                height={27}
-                className="me-2"
-              />
-              Add to Cart
+              {loading ? (
+                <div className="spinner-border text-light" role="status"></div>
+              ) : (
+                <div>
+                  <Image
+                    src="/assets/bag_white.webp"
+                    alt="Cart Icon"
+                    width={27}
+                    height={27}
+                    className="me-2"
+                  />
+                  Add to Cart
+                </div>
+              )}
             </button>
 
             <div className="mt-3 text-center a_color">

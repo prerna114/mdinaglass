@@ -60,10 +60,13 @@ const ProductListing = ({ onDataLoaded }) => {
     setLoading(true);
 
     if (id && filter && Object.keys(filter).length > 0) {
-      console.log("=================Inside Prodct listing");
       const data = await getProductCateogry(id, filter);
+      console.log("=================Inside Prodct listing", data);
+
       if (data?.status === 200) {
+        // setAllProductwithFilter()
         const FilterData = data.data || [];
+        setAllProductwithFilter(data.data);
 
         if (data.data.filterable?.length > 0) {
           const colors = FilterData?.filterable?.find(
@@ -223,7 +226,7 @@ const ProductListing = ({ onDataLoaded }) => {
 
   const {
     setProducts,
-    filterOption,
+    setAllProductwithFilter,
     products,
     category,
     setCategory,
@@ -423,7 +426,7 @@ const ProductListing = ({ onDataLoaded }) => {
       {/* Sort and Items Control */}
       {category?.length == 0 && (
         <>
-          <FilterProduct />
+          <FilterProduct apiCall={getProductByCategory} />
         </>
       )}
       {products?.length > 15 && (

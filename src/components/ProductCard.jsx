@@ -5,7 +5,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useCartStore } from "@/store";
-import { SuccessToast } from "./CustomToast";
+import { CustomToast, SuccessToast } from "./CustomToast";
 import { getAllProduct } from "@/api/productApi";
 import Link from "next/link";
 import { addToTheCart } from "@/api/CartApi";
@@ -13,6 +13,8 @@ import { addToTheCart } from "@/api/CartApi";
 const ProductCard = ({ title = "New Arrivals" }) => {
   const { addToCart, cart, clearCart } = useCartStore((state) => state);
   const [productData, setProductData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingProductId, setLoadingProductId] = useState(null);
 
   const CustomPrevArrow = ({ onClick }) => (
     <div
@@ -116,6 +118,8 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     console.log("THe data", data);
   };
   const addItemCart = async (product) => {
+    setLoadingProductId(product.id);
+    setLoading(true);
     console.log("Add", product);
     const data = await addToTheCart(product, 1);
 
@@ -123,11 +127,14 @@ const ProductCard = ({ title = "New Arrivals" }) => {
       clearCart();
       console.log("data", data);
       addToCart(data.data.cart.items);
+      setLoading(false);
 
       SuccessToast("Item added Successfuly", "top-right");
     } else {
       CustomToast("Something went Wrong", "top-right");
+      setLoading(false);
     }
+    setLoading(false);
   };
   useEffect(() => {
     fetchData();
@@ -144,7 +151,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
           {title}
         </h3>
         <Slider {...settings}>
-          {productData.map((product) => (
+          {productData.map((product, index) => (
             <div key={product.id} className="px-2">
               <div
                 className=" bestseller-account border rounded p-3 d-flex flex-column align-items-center new-arrival-design "
@@ -212,7 +219,14 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                         addItemCart(product);
                       }}
                     >
-                      Add to Cart
+                      {loading && product.id === loadingProductId ? (
+                        <div
+                          className="spinner-border text-dark"
+                          role="status"
+                        ></div>
+                      ) : (
+                        <div>Add to Cart</div>
+                      )}
                     </button>
                   </div>
                 </div>

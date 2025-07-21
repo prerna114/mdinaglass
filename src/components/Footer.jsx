@@ -87,7 +87,9 @@ const Footer = () => {
                   Privacy Policy & Data Protection
                 </Link>
               </li>
-              <li>Cookies Policy</li>
+              <li>
+                {/* <Link href={"/information/cookies-policy"}>Cookies Policy</Link> */}
+              </li>
               <li>
                 <Link href={"/information/return-policy"}>
                   Returns & Cancellations
