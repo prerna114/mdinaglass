@@ -35,7 +35,7 @@ const page = () => {
   const getProductDetails = async () => {
     // const data = await getProductByID(params?.productId);
     const data = await getProductByID(productId);
-    console.log("getProductDetails", data);
+    // console.log("getProductDetails", data);
     // if()
     if (data?.status == 200) {
       setProductDetails(data?.data?.data);

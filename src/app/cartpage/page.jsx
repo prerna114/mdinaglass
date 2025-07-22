@@ -60,10 +60,15 @@ const page = () => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this item?"
     );
-    if (confirmed) {
+    const tokenData = localStorage.getItem("token");
+    const parsed = tokenData ? JSON.parse(tokenData) : null;
+    const accessToken = parsed?.token;
+    if (confirmed && accessToken) {
       removeItem(id);
       // User clicked "Yes"
       console.log("Item deleted");
+    } else if (confirmed && !accessToken) {
+      removeTheItem(id);
     } else {
       // User clicked "No"
       console.log("Action cancelled");
@@ -82,7 +87,10 @@ const page = () => {
     }
   };
 
-  const subtotal = (price, qty) => Number(price * qty).toFixed(2);
+  const subtotal = (price, qty) => {
+    console.log("Sub totle", price, qty);
+    return Number(price * qty).toFixed(2);
+  };
 
   console.log("Cart", cart);
   return (
@@ -155,19 +163,37 @@ const page = () => {
                     {cart.map((item, index) => (
                       <tr key={index}>
                         <td>
-                          {/* <img
-                            src={item?.images[0]?.url}
-                            alt={item.name}
-                            width="80"
-                          /> */}
+                          {item?.images?.length > 0 &&
+                            item?.images[0]?.small_image_url && (
+                              <img
+                                src={item?.images[0]?.small_image_url}
+                                alt={item.name}
+                                width="80"
+                              />
+                            )}
                         </td>
                         <td>{item.name}</td>
-                        <td>€{Number(item.price).toFixed(2)}</td>
-                        <td>€{subtotal(item.price, item.quantity)}</td>
+                        <td>
+                          €
+                          {isNaN(Number(item.price))
+                            ? parseFloat(item.min_price.replace(/[^0-9.]/g, ""))
+                            : Number(item.price).toFixed(2)}
+                        </td>
+                        <td>
+                          €
+                          {subtotal(
+                            item.min_price
+                              ? parseFloat(
+                                  item.min_price.replace(/[^0-9.]/g, "")
+                                )
+                              : item.price,
+                            item.quantity ? item?.quantity : item.qty
+                          )}
+                        </td>
                         <td>
                           <input
                             type="number"
-                            value={item.quantity}
+                            value={item.quantity ? item.quantity : item.qty}
                             min="1"
                             className="form-control"
                             style={{ width: "70px" }}

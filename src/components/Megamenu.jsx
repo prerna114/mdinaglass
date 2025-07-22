@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 const MegaMenu = () => {
   const [categoriesData, setCategoriesData] = useState([]);
-  const { heading, setHeading } = ProductLists((state) => state);
+  const { heading, setHeading, setPagination } = ProductLists((state) => state);
 
   const [showMenu, setShowMenu] = useState(true);
   const { setMenu } = useAuthStore((state) => state);
@@ -119,6 +119,12 @@ const MegaMenu = () => {
                     )}
                     onClick={() => {
                       setHeading(category.name);
+                      setPagination({
+                        per_page: 15,
+                        page: 1,
+                        sort_by: "price",
+                        sort_dir: "asc",
+                      });
                     }}
                   >
                     {category.name}
@@ -157,6 +163,12 @@ const MegaMenu = () => {
                                           child?.translations[0]?.slug
                                         )
                                       );
+                                      setPagination({
+                                        per_page: 15,
+                                        page: 1,
+                                        sort_by: "price",
+                                        sort_dir: "asc",
+                                      });
                                       setHeading(child.name);
                                     }}
                                   >

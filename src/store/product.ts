@@ -91,12 +91,24 @@ export const ProductLists = create<ProdutList>()(
         }));
       },
       setPagination: (item) => {
-        set({ paginationOption: item });
+        const current = get().paginationOption;
+        set({
+          paginationOption: {
+            per_page: item.per_page ?? current.per_page,
+            page: item.page ?? current.page,
+            sort_by: item.sort_by ?? current.sort_by,
+            sort_dir: item.sort_dir ?? current.sort_dir,
+          },
+        });
       },
     }),
     {
       name: "productList", // name in localStorage
-      partialize: (state) => ({ cart: state.products, heading: state.heading }), // only persist `cart`
+      partialize: (state) => ({
+        cart: state.products,
+        heading: state.heading,
+        paginationOption: state.paginationOption,
+      }), // only persist `cart`
     }
   )
 );

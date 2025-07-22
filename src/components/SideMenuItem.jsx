@@ -30,7 +30,9 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
   });
   const { subCategoryMap, setSubCategory } = useMenuStore();
 
-  const { setHeading, setFilterOption } = ProductLists((state) => state);
+  const { setHeading, setFilterOption, setPagination } = ProductLists(
+    (state) => state
+  );
 
   const fullPathToItem = useMemo(
     () => [...parentPath, item.id],
@@ -52,7 +54,12 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
       indexInPath > -1 && categoryIds.length > fullPathToItem.length
         ? categoryIds.slice(0, indexInPath + 1)
         : fullPathToItem;
-
+    setPagination({
+      per_page: 15,
+      page: 1,
+      sort_by: "price",
+      sort_dir: "asc",
+    });
     const newUrl = createUrl(newPath, item.slug, sortOrder, limit, page);
     router.push(newUrl, { scroll: false });
   };

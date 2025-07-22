@@ -41,7 +41,9 @@ export const useCartStore = create<CartState>()(
           if (existing) {
             set({
               cart: currentCart.map((i) =>
-                i.id === item.id ? { ...i, qty: i.qty + item.qty } : i
+                i.id === item.id
+                  ? { ...i, quantity: i.quantity + item.quantity }
+                  : i
               ),
             });
           } else {
@@ -64,10 +66,17 @@ export const useCartStore = create<CartState>()(
           ),
         }),
 
-      clearCart: () => set({ cart: [] }),
+      clearCart: () => {
+        console.log("Cart cleared");
+        set({ cart: [] });
+      },
     }),
     {
-      name: "cart-storage", // key in localStorage
+      name: "the-cart-storage", // key in localStorage
+      partialize: (state) => ({
+        cart: state.cart,
+      }),
+      // skipHydration: true,
       // skipHydration: true, // optional: to avoid hydration mismatch in SSR apps
     }
   )

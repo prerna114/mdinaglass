@@ -36,7 +36,7 @@ const loginCheckoutPage = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [userLogin, setUserLogin] = useState(false);
-  const [orderList, setOrderList] = useState([]);
+  const [loadingScroll, setLoadingScroll] = useState(false);
   const handleLogin = () => {
     if (!userName) {
       CustomToast("User Name required!", "top-right");
@@ -50,6 +50,7 @@ const loginCheckoutPage = () => {
   };
 
   const LoginUser = async () => {
+    setLoadingScroll(true);
     // const data = await registerCustomer();
     console.log("userName", userName, password);
     const data = await Login(userName, password);
@@ -60,19 +61,24 @@ const loginCheckoutPage = () => {
       localStorage.setItem("token", JSON.stringify(data?.data));
       login();
       setUserLogin(true);
+      setLoadingScroll(false);
       setTimeout(() => {
         getCart();
       }, 1000);
     } else {
+      setLoadingScroll(false);
+
       // console.error("Data", data?.response?.data?.message);
       CustomToast(data?.response?.data?.message, "top-right");
     }
   };
   const getCart = async () => {
     setLoading(true);
-    clearCart();
+    console.log("Cart listing caal");
     const data = await getCartListing();
     if (data?.status == 200) {
+      clearCart();
+
       // addToCart(data.result.items);
       data.data.cart.items.forEach((item) => {
         addToCart(item);
@@ -130,7 +136,14 @@ const loginCheckoutPage = () => {
                       <div className="col-md-6">
                         <div className="float-right">
                           <button className="btn-cart" onClick={handleLogin}>
-                            Login
+                            {loadingScroll ? (
+                              <div
+                                className="spinner-border text-light"
+                                role="status"
+                              ></div>
+                            ) : (
+                              "Login"
+                            )}
                           </button>
                         </div>
                       </div>

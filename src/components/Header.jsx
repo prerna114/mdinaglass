@@ -54,13 +54,15 @@ const Header = () => {
   };
 
   const getCart = async () => {
-    clearCart();
     // await testCartAPi();
     const data = await getCartListing();
     // const data = await testCartAPi();
-    console.log("getCart", data.data);
+    console.log("getCart Header", data.data);
 
     if (data?.status == 200) {
+      clearCart();
+      console.log("getCart Header", data.data);
+
       // addToCart(data.result.items);
       data.data.cart.items.forEach((item) => {
         addToCart(item);

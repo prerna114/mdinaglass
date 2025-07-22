@@ -53,10 +53,9 @@ export default function ProductDetails({ productDetails }) {
 
   const [categoryidList, setCategoryidList] = useState([]);
 
-  const [selectedImage, setSelectedImage] = useState(
-    productDetails?.images?.[0]?.url || "/assets/bracelet1.png"
-  );
+  const [selectedImage, setSelectedImage] = useState("");
   const { addToCart, clearCart } = useCartStore((state) => state);
+  const cart = useCartStore((state) => state.cart);
 
   const imageList = useMemo(
     () => [
@@ -92,12 +91,21 @@ export default function ProductDetails({ productDetails }) {
       }
       setLaoding(false);
     } else {
-      addToCart({ ...productDetails, quantity: quantity });
+      console.log("quantity", quantity, typeof productDetails);
+
+      addToCart({ ...productDetails, quantity });
+      SuccessToast("Item added Successfully", "top-right");
+
       setLaoding(false);
     }
     setLaoding(false);
   };
 
+  console.log("cart", cart, selectedImage, productDetails);
+
+  useEffect(() => {
+    setSelectedImage(productDetails?.images?.[0]?.url);
+  }, [productDetails?.images]);
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       {/* <div className="filter-are">
@@ -118,33 +126,37 @@ export default function ProductDetails({ productDetails }) {
         {/* Product Image */}
         <div className="col-md-12 col-lg-6 mt-2">
           <div className="border text-center">
-            <Image
-              src={productDetails?.images[0]?.url || selectedImage}
-              alt="Product Image"
-              width={600}
-              height={400}
-              priority
-              className="img-fluid"
-            />
-          </div>
-          {/* <div className="d-flex justify-content-center gap-2 mt-3">
-            {imageList.map((src, index) => (
+            {selectedImage && (
               <Image
-                key={index}
-                src={src}
-                alt={`Thumbnail ${index + 1}`}
-                width={100}
-                height={100}
-                className="img-thumbnail"
-                onClick={() => setSelectedImage(src)}
-                loading="lazy"
-                style={{
-                  cursor: "pointer",
-                  border: selectedImage === src ? "2px solid #007bff" : "none",
-                }}
+                src={productDetails?.images[0]?.url || selectedImage}
+                alt="Product Image"
+                width={600}
+                height={400}
+                priority
+                className="img-fluid"
               />
-            ))}
-          </div> */}
+            )}
+          </div>
+          <div className="d-flex justify-content-center gap-2 mt-3">
+            {productDetails?.images?.length > 0 &&
+              productDetails?.images.map((src, index) => (
+                <Image
+                  key={index}
+                  src={src.url}
+                  alt={`Thumbnail ${index + 1}`}
+                  width={100}
+                  height={100}
+                  className="img-thumbnail"
+                  onClick={() => setSelectedImage(src.url)}
+                  loading="lazy"
+                  style={{
+                    cursor: "pointer",
+                    border:
+                      selectedImage === src.url ? "2px solid #007bff" : "none",
+                  }}
+                />
+              ))}
+          </div>
         </div>
 
         {/* Product Info */}

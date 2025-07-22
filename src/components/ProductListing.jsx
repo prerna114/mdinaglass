@@ -43,25 +43,42 @@ const ProductListing = ({ onDataLoaded }) => {
   const [categoryidList, setCategoryidList] = useState([]);
   const [cateogryArray, setCateogryArray] = useState([]);
   const [theLastI, setTheLastI] = useState("");
+  const pagination = ProductLists.getState().paginationOption;
 
   const pathname = usePathname();
   const params = useParams();
   const allParams = useMemo(() => params?.params || [], [params]);
+  const sortBy = pagination.sort_by;
 
+  console.log("sortBysortBy", sortBy);
   const priceIndex = useMemo(
-    () => allParams.findIndex((p) => p === "price"),
+    () => allParams.findIndex((p) => p === sortBy),
     [params]
   );
 
+  // console.log("All Params", sort_dir, per_page, page, slug);
+  const {
+    setProducts,
+    setAllProductwithFilter,
+    products,
+    category,
+    setCategory,
+    allProduct,
+    setFilterOption,
+  } = ProductLists((state) => state);
+
   const sku = useMemo(() => allParams[allParams.length - 1], [allParams]);
-  const getProductByCategory = async (id, filter) => {
-    localStorage.setItem("filterdData", JSON.stringify(filter));
-
+  const getProductByCategory = async (id) => {
+    console.log("getProductByCategory");
+    // localStorage.setItem("filterdData", JSON.stringify(filter));
+    const pagination = ProductLists.getState().paginationOption;
     setLoading(true);
+    console.log("getProductByCategory", pagination, id);
 
-    if (id && filter && Object.keys(filter).length > 0) {
-      const data = await getProductCateogry(id, filter);
-      console.log("=================Inside Prodct listing", data);
+    if (id && pagination && Object.keys(pagination).length > 0) {
+      console.log("getProductByCategory qwe", pagination);
+
+      const data = await getProductCateogry(id, pagination);
 
       if (data?.status === 200) {
         // setAllProductwithFilter()
@@ -135,6 +152,7 @@ const ProductListing = ({ onDataLoaded }) => {
     const categoryIds =
       priceIndex !== -1 ? allParams.slice(0, priceIndex).map(Number) : [];
     const lastId = categoryIds[categoryIds.length - 1];
+    console.log("categoryIds", categoryIds, lastId);
     const subCateogry = localStorage.getItem("subCateogry");
     const parsedCateogry = subCateogry ? JSON.parse(subCateogry) : [];
     console.log("Category Ids", categoryIds, lastId, parsedCateogry);
@@ -146,6 +164,7 @@ const ProductListing = ({ onDataLoaded }) => {
       ? categoryIds.join("/")
       : String(categoryIds);
     setCategoryidList(idPath);
+
     const findCategoryById = async (categories, targetId) => {
       for (const cat of categories) {
         if (cat.id === targetId) return cat;
@@ -167,7 +186,7 @@ const ProductListing = ({ onDataLoaded }) => {
       console.log("selectedCategory else");
       setProducts([]);
       setCategory([]);
-      getProductByCategory(lastId, filterData);
+      getProductByCategory(lastId);
     }
   };
   // console.log("selectedCategory", hasRunOnce.current);
@@ -203,14 +222,6 @@ const ProductListing = ({ onDataLoaded }) => {
     limit: initialLimit,
   });
 
-  const router = useRouter();
-  const handleFilter = (name, value) => {
-    setFilterData((prev) => ({
-      ...prev,
-      [name]: name === "limit" ? Number(value) : value,
-    }));
-  };
-
   const loading = useMenuStore((state) => state.loading);
   const setLoading = useMenuStore((state) => state.setLoading);
   const sideMenu = useMenuStore((state) => state.sideMenu);
@@ -224,82 +235,8 @@ const ProductListing = ({ onDataLoaded }) => {
     color: 0,
   });
 
-  const {
-    setProducts,
-    setAllProductwithFilter,
-    products,
-    category,
-    setCategory,
-    allProduct,
-    setFilterOption,
-    setHeading,
-  } = ProductLists((state) => state);
-
   console.log("Prodcts listing", products, category);
 
-  const renderedDropdowns = useMemo(
-    () => (
-      <>
-        {levels?.length > 0 &&
-          levels.map((levelItems, index) => (
-            <select
-              key={index}
-              className="form-select mt-2"
-              value={cateogryArray[index] ?? ""} // 👈 Set selected value
-              onChange={(e) => {
-                const selectedId = Number(e.target.value);
-                const element = levelItems.find((cat) => cat.id == selectedId);
-                console.log("Selected Category", element);
-                // handleClick(element);
-
-                // Replace category IDs after this level
-                const newArray = [...cateogryArray.slice(0, index), selectedId];
-                setCateogryArray(newArray);
-                //  const selectedId = Number(e.target.value);
-                const newPath = [...cateogryArray.slice(0, index), selectedId];
-                setCateogryArray(newPath);
-
-                // Get selected item for slug
-                const selectedItem = levels[index].find(
-                  (cat) => cat.id === selectedId
-                );
-                const slug = selectedItem?.slug || "category";
-
-                // Push to new URL
-                const newUrl = createUrl(newPath, slug);
-                console.log("New URL", newUrl);
-                setProducts([]);
-                setCategory([]);
-                getProductByCategory(selectedId, filterData);
-
-                router.push(newUrl, { scroll: false, shallow: false });
-                setHeading(element?.name);
-
-                // Optional: update URL here or use router.push(...)
-              }}
-            >
-              <option value="">Select</option>
-              {levelItems?.length > 0 &&
-                levelItems.map((cat, index) => (
-                  <option key={index} value={cat?.id}>
-                    {cat?.name}
-                  </option>
-                ))}
-            </select>
-          ))}
-      </>
-    ),
-    [levels, cateogryArray]
-  );
-
-  function sortProductsByPriceLowToHigh(products) {
-    const data = [...products].sort(
-      (a, b) =>
-        parseFloat(a.prices.final.price) - parseFloat(b.prices.final.price)
-    );
-    console.log("Sorted Products by Price", data);
-    setProducts(data);
-  }
   const handlePagination = (item, action) => {
     const totalLEnght = productList?.meta?.total;
     //  if(item> )
@@ -386,39 +323,6 @@ const ProductListing = ({ onDataLoaded }) => {
     }, 0);
   }, [sideMenu, cateogryArray]);
 
-  // const handleClick = (item) => {
-  //   const newPath = [...cateogryArray.slice(0, index), selectedId];
-  //   setCategoryArray(newPath);
-
-  //   // Get selected item for slug
-  //   const selectedItem = levels[index].find((cat) => cat.id === selectedId);
-  //   const slug = selectedItem?.slug || "category";
-
-  //   // Push to new URL
-  //   const newUrl = createUrl(newPath, slug);
-  //   console.log("New URL", newUrl);
-  //   // if (indexInPath > -1 && cateogryArray.length > fullPathToItem.length) {
-  //   //   // Collapse: remove children
-  //   //   newPath = cateogryArray.slice(0, indexInPath + 1);
-  //   // } else {
-  //   //   // Expand or Select
-  //   //   newPath = fullPathToItem;
-  //   // }
-
-  //   // const newUrl = createUrl(newPath, item.slug, sortOrder, limit, page);
-  //   // router.push(newUrl, { scroll: false });
-  //   // console.log("New URL", newUrl);
-
-  //   // if (item?.children?.length > 0) {
-  //   //   // setCategory(item.children);
-  //   //   console.log("===========Side Menu45", products);
-  //   //   getProductByCategory(item.id, selectedFilter);
-  //   // } else {
-  //   //   getProductByCategory(item.id, selectedFilter);
-  //   //   console.log("========= Side Menu1111", products);
-  //   // }
-  // };
-  // console.log("filterOption", prod);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -426,137 +330,12 @@ const ProductListing = ({ onDataLoaded }) => {
       {/* Sort and Items Control */}
       {category?.length == 0 && (
         <>
-          <FilterProduct apiCall={getProductByCategory} />
+          <FilterProduct down={false} />
         </>
       )}
-      {products?.length > 15 && (
-        <div className="col-md-12 col-lg-5">
-          <nav aria-label="Product pagination">
-            <ul className="pagination">
-              {currentPage == 1 ? (
-                <></>
-              ) : (
-                <li
-                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
-                >
-                  <button
-                    className="page-link"
-                    onClick={() => {
-                      if (currentPage > 1) {
-                        handlePrevious(currentPage);
-                      }
-                    }}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </button>
-                </li>
-              )}
 
-              {paginationList.map((item, index) => {
-                return (
-                  <li
-                    key={index}
-                    className={`page-item ${
-                      currentPage === item ? "active" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      onClick={(e) => {
-                        setCurrentPage(item);
-                        if (
-                          paginationList[paginationList?.length - 1] == item
-                        ) {
-                          handlePagination(item, "next");
-                        } else if (paginationList[0] == item && item > 1) {
-                          handlePagination(item, "prev");
-                        }
-                      }}
-                    >
-                      {item}
-                    </button>
-                  </li>
-                );
-              })}
+      {loading && <ListingSkeleton />}
 
-              <li className="page-item">
-                <button
-                  className="page-link"
-                  onClick={() => handleNext(currentPage)}
-                >
-                  Next &gt;
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      )}
-
-      {loading && (
-        // <div
-        //   className="d-flex justify-content-center align-items-center"
-        //   style={{ height: "50vh" }}
-        // >
-        //   <div
-        //     className="spinner-border text-primary"
-        //     role="status"
-        //     style={{ width: "5rem", height: "5rem" }}
-        //   >
-        //     <span className="visually-hidden">Loading...</span>
-        //   </div>
-        // </div>
-        <ListingSkeleton />
-      )}
-
-      {/* Category Grid */}
-      {/* <div className="row">
-        {category?.length > 0 &&
-          !loading &&
-          category?.map((product) => (
-            <div key={product.id} className="col-lg-4 col-md-6 mb-4">
-              <div className=" product-card">
-                <div className="position-relative">
-                  <img
-                    src={
-                      product.logo_image
-                        ? product.logo_image
-                        : "/assets/lamp.png"
-                    }
-                    className="card-img-top"
-                    alt={product.name}
-                    style={{}}
-                  />
-                </div>
-                <div className="card-body text-center">
-                  <a
-                    style={{
-                      cursor: "pointer",
-                    }}
-                    href={"#"}
-                    onClick={() => {
-                      // console.log("dsada", product);
-                      const pathToId = buildCategoryPath(product?.id);
-                      useMenuStore.getState().setExpanded(pathToId);
-                      const newUrl = createUrl(pathToId, product.slug);
-
-                      // console.log("New url ,", newUrl);
-                      router.push(newUrl);
-                    }}
-                  >
-                    <h6 className="card-title mb-3">{product.name}</h6>
-                  </a>
-                  <p className="card-text text-info fw-bold">
-                    Price €
-                    {product.min_price
-                      ? Number(product.min_price).toFixed(2)
-                      : "120.00"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-      </div> */}
       {category?.length > 0 && !loading && <CategoryGrid category={category} />}
 
       {products?.length == 0 && category?.length == 0 && !loading && (
@@ -576,8 +355,11 @@ const ProductListing = ({ onDataLoaded }) => {
       )}
 
       {/* Sort and Items Control */}
-      {category?.length == 0 ||
-        (category?.length == 0 && products?.length == 0 && <FilterProduct />)}
+      {category?.length == 0 && (
+        <>
+          <FilterProduct down={true} />
+        </>
+      )}
     </div>
   );
 };

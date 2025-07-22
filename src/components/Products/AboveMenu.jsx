@@ -23,6 +23,7 @@ const AboveMenu = () => {
     allProduct,
     setFilterOption,
     setHeading,
+    setPagination,
   } = ProductLists((state) => state);
   const pathname = usePathname();
   const params = useParams();
@@ -58,6 +59,12 @@ const AboveMenu = () => {
                 // Push to new URL
                 const newUrl = createUrl(newPath, slug);
                 console.log("New URL", newUrl);
+                setPagination({
+                  per_page: 15,
+                  page: 1,
+                  sort_by: "price",
+                  sort_dir: "asc",
+                });
                 setProducts([]);
                 setCategory([]);
                 // getProductByCategory(selectedId, filterData);

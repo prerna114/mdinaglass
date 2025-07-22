@@ -20,7 +20,10 @@ const OrderReview = () => {
 
   const router = useRouter();
   const { cart } = useCartStore((state) => state);
-  const subtotal = (price, qty) => (price * qty).toFixed(2);
+  const subtotal = (price, qty) => {
+    console.log("Price ", price, qty);
+    return (price * qty).toFixed(2);
+  };
 
   useEffect(() => {
     const bill = localStorage.getItem("billingaddress");
@@ -37,6 +40,32 @@ const OrderReview = () => {
     cart.reduce((sum, item) => sum + parseFloat(item.total), 0)
   )),
     [];
+  function getGrandTotal(cartItems) {
+    let total = 0;
+
+    for (const item of cartItems) {
+      // Handle various price sources
+      let rawPrice =
+        item?.prices?.final?.price ??
+        item?.price ??
+        parseFloat(item?.min_price?.replace("$", "")) ??
+        0;
+
+      // Ensure price is a number
+      const price =
+        typeof rawPrice === "string" ? parseFloat(rawPrice) : rawPrice;
+
+      // Handle various quantity keys
+      const quantity = item?.quantity ?? item?.qty ?? 1;
+
+      if (!isNaN(price) && !isNaN(quantity)) {
+        total += price * quantity;
+      }
+    }
+
+    console.log("Total", total);
+    return total; // Return string like "58.00"
+  }
 
   const PaymentSuccess = async () => {
     const response = await checkOut();
@@ -73,7 +102,14 @@ const OrderReview = () => {
 
       {billingAddress != null && (
         <div className="container">
-          <div className="subContainer">
+          <div
+            className="login-signup"
+            style={{
+              // width: "50%",
+              // margin: "0 90px",
+              marginBottom: "30px",
+            }}
+          >
             <div
               className="row mt-3"
               style={{
@@ -194,7 +230,7 @@ const OrderReview = () => {
           }}
         >
           <div className="container">
-            <div className="align-cart">
+            <div className="login-signup">
               <div className="table-responsive-sm">
                 <table className="table cart-table table-bordered">
                   <thead className="thead-dark">
@@ -214,7 +250,12 @@ const OrderReview = () => {
                           <img src={item.image} alt={item.name} width="80" />
                         </td> */}
                           <td>{item.name}</td>
-                          <td>€{Number(item?.price)?.toFixed(2)}</td>
+                          <td>
+                            €
+                            {item.price
+                              ? Number(item?.price)?.toFixed(2)
+                              : item.min_price.replace(/[^0-9.]/g, "")}
+                          </td>
                           <td>
                             <input
                               disabled
@@ -231,7 +272,15 @@ const OrderReview = () => {
                               }
                             />
                           </td>
-                          <td>€{subtotal(item.price, item.quantity)}</td>
+                          <td>
+                            €
+                            {subtotal(
+                              item.price
+                                ? item.price
+                                : item.min_price.replace(/[^0-9.]/g, ""),
+                              item.quantity ? item.quantity : item.qty
+                            )}
+                          </td>
                         </tr>
                       );
                     })}
@@ -251,14 +300,22 @@ const OrderReview = () => {
                       <td></td>
                       <td></td>
 
-                      <td>{totalPrice}</td>
+                      <td>
+                        €{isNaN(totalPrice) ? getGrandTotal(cart) : totalPrice}
+                      </td>
                     </tr>
                   </thead>
                 </table>
               </div>
 
               <div className="container">
-                <div className="login-signup">
+                <div
+                  className="login-signup"
+                  style={{
+                    margin: "0 !important",
+                    width: "100%",
+                  }}
+                >
                   <div className="col-md-12">
                     <div
                       className="d-flex pb-3 mt-3"

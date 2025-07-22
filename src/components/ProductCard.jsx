@@ -119,21 +119,31 @@ const ProductCard = ({ title = "New Arrivals" }) => {
   };
   const addItemCart = async (product) => {
     setLoadingProductId(product.id);
+    const tokenData = localStorage.getItem("token");
+    const parsed = tokenData ? JSON.parse(tokenData) : null;
+    const accessToken = parsed?.token;
+
     setLoading(true);
-    console.log("Add", product);
-    const data = await addToTheCart(product, 1);
+    if (accessToken) {
+      const data = await addToTheCart(product, 1);
 
-    if (data.status == 200) {
-      clearCart();
-      console.log("data", data);
-      addToCart(data.data.cart.items);
-      setLoading(false);
+      if (data.status == 200) {
+        clearCart();
+        console.log("data", data);
+        addToCart(data.data.cart.items);
+        setLoading(false);
 
-      SuccessToast("Item added Successfuly", "top-right");
+        SuccessToast("Item added Successfuly", "top-right");
+      } else {
+        CustomToast("Something went Wrong", "top-right");
+        setLoading(false);
+      }
     } else {
-      CustomToast("Something went Wrong", "top-right");
-      setLoading(false);
+      addToCart({ ...product, quantity: "1" });
+      SuccessToast("Item added Successfuly", "top-right");
     }
+    console.log("Add", product);
+
     setLoading(false);
   };
   useEffect(() => {

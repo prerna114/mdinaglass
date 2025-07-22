@@ -101,7 +101,7 @@ export const getProductByID = async (id) => {
 //   }
 // };
 
-export const getProductCateogry = async (id, page, perpage) => {
+export const getProductCateogry = async (id, pagination) => {
   const filter =
     localStorage.getItem("filterdData") &&
     JSON.parse(localStorage.getItem("filterdData"));
@@ -109,12 +109,13 @@ export const getProductCateogry = async (id, page, perpage) => {
     color: filter?.color || 0,
     variations: filter?.variations || 0,
   };
+  console.log("Inside ProductlIst", pagination);
   const data = {
     id: id,
-    per_page: 25,
-    page: 1,
-    sort_by: "price",
-    sort_dir: "asc",
+    per_page: pagination.per_page || 15,
+    page: pagination.page || 1,
+    sort_by: pagination.sort_by || "price",
+    sort_dir: pagination.sort_dir || "asc",
     filters: {
       // ...(filterData != undefined &&
       //   filterData?.color !== 0 && { color: filterData?.color }),

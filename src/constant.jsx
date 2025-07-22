@@ -39,7 +39,8 @@ export const createUrl = (
   slug,
   thesortORder,
   theLimit,
-  thePage
+  thePage,
+  sortBy
 ) => {
   // console.log("dsadadsadadsada", categoryID);
   let sortOrder = thesortORder ? thesortORder : "asc";
@@ -59,7 +60,7 @@ export const createUrl = (
     : String(categoryID);
   // console.log("rohanrohanrohan123", categoryID);
   const cleanSlug = slug ? slug.replace(/\.htm+$/i, "") : "all-product";
-  return buildProductUrl(idPath, sortOrder, limit, page, cleanSlug);
+  return buildProductUrl(idPath, sortOrder, limit, page, cleanSlug, sortBy);
 };
 // Move this outside the component
 export const extractUniqueOptions = (variants = []) => {

@@ -1,11 +1,13 @@
 "use client";
 
 import { createUrl } from "@/constant";
+import { ProductLists } from "@/store/product";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
 const ProductShow = ({ productDetails }) => {
   const params = useParams();
+  const { setPagination } = ProductLists((state) => state);
 
   console.log("productDetails", productDetails);
   const products = [
@@ -72,7 +74,17 @@ const ProductShow = ({ productDetails }) => {
 
         <div className="col-md-12">
           <div className="view-more  text-right button-margin float-right mb-3">
-            <Link href={createUrl(productDetails?.id, "", "", 15, 1)}>
+            <Link
+              href={createUrl(productDetails?.id, "", "", 15, 1)}
+              onClick={() => {
+                setPagination({
+                  per_page: 15,
+                  page: 1,
+                  sort_by: "price",
+                  sort_dir: "asc",
+                });
+              }}
+            >
               <button className="btn btn-info text-white">VIEW ALL</button>
             </Link>
           </div>

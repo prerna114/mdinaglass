@@ -4,6 +4,7 @@ import { buildProductUrl } from "@/utils/buildProductUrl";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
+import { ProductLists } from "@/store/product";
 
 const ResponsiveNav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +12,7 @@ const ResponsiveNav = () => {
   const [categoriesData, setCategoriesData] = useState([]);
   const [showMenu, setShowMenu] = useState(true);
   const { setMenu } = useAuthStore((state) => state);
+  const { setPagination } = ProductLists((state) => state);
 
   const getMenuCategories = async () => {
     console.log("Get Catrogires is clling");
@@ -87,7 +89,19 @@ const ResponsiveNav = () => {
 
                 { label: "Gift Registry", href: "/giftRegistry" },
               ].map(({ label, href }) => (
-                <Link key={label} href={href} className="navlink nav-link mx-4">
+                <Link
+                  key={label}
+                  href={href}
+                  className="navlink nav-link mx-4"
+                  onClick={() => {
+                    setPagination({
+                      per_page: 15,
+                      page: 1,
+                      sort_by: "price",
+                      sort_dir: "asc",
+                    });
+                  }}
+                >
                   {label}
                 </Link>
               ))}
@@ -173,6 +187,12 @@ const ResponsiveNav = () => {
                       onClick={() => {
                         console.log("item", item);
                         setIsOpen(false);
+                        setPagination({
+                          per_page: 15,
+                          page: 1,
+                          sort_by: "price",
+                          sort_dir: "asc",
+                        });
                       }}
                       className="navlink nav-link mx-3"
                     >

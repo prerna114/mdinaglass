@@ -4,8 +4,10 @@ import { createUrl } from "@/constant";
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
+import { ProductLists } from "@/store/product";
 
 const Footer = () => {
+  const { setPagination } = ProductLists((state) => state);
   return (
     <footer style={{ backgroundColor: "#F1F1F1" }}>
       {/* Top Footer */}
@@ -48,7 +50,19 @@ const Footer = () => {
                 <Link href={"/about/about-mdina-glass"}>About Us</Link>
               </li>
               <li>
-                <Link href={createUrl("all", "all-product")}>All Products</Link>
+                <Link
+                  onClick={() => {
+                    setPagination({
+                      per_page: 15,
+                      page: 1,
+                      sort_by: "price",
+                      sort_dir: "asc",
+                    });
+                  }}
+                  href={createUrl("all", "all-product")}
+                >
+                  All Products
+                </Link>
               </li>
               <li>
                 <Link href={"/cartpage"}>New Arrivals</Link>

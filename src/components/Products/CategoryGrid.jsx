@@ -96,27 +96,21 @@ const CategoryGrid = ({ category }) => {
         <div key={product.id} className="col-lg-4 col-md-6 mb-4">
           <div className=" product-card">
             <div className="position-relative">
-              <img
-                src={
-                  product.logo_image ? product.logo_image : "/assets/lamp.png"
-                }
-                className="card-img-top"
-                alt={product.name}
-                style={{}}
-              />
+              <a href={createUrl(buildCategoryPath(product?.id), product.slug)}>
+                <img
+                  src={
+                    product.logo_image ? product.logo_image : "/assets/lamp.png"
+                  }
+                  className="card-img-top"
+                  alt={product.name}
+                  style={{}}
+                />
+              </a>
             </div>
             <div className="card-body text-center">
-              <Link
-                href={createUrl(buildCategoryPath(product?.id), product.slug)}
-                onClick={(e) => {
-                  e.preventDefault(); // prevent default to handle navigation manually
-                  const pathToId = buildCategoryPath(product?.id);
-                  useMenuStore.getState().setExpanded(pathToId);
-                  router.push(createUrl(pathToId, product.slug));
-                }}
-              >
+              <a href={createUrl(buildCategoryPath(product?.id), product.slug)}>
                 <h6 className="card-title mb-3">{product.name}</h6>
-              </Link>
+              </a>
               {/* <h6 className="card-title mb-3">{product.name}</h6> */}
               <p className="card-text text-info fw-bold">
                 Price €

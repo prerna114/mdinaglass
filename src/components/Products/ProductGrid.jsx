@@ -13,18 +13,27 @@ const ProductGrid = ({ products, categoryidList }) => {
           <div key={product.id} className="col-lg-4 col-md-6 mb-4">
             <div className=" product-card">
               <div className="position-relative">
-                <Image
-                  //   src={"/assets/bg-image.png"}
-                  src={
-                    product?.images[0]?.url ||
-                    product.images[0].medium_image_url ||
-                    "/fallback.jpg"
-                  }
-                  className="card-img-top"
-                  alt={product.name || "product list image"}
-                  width={214}
-                  height={214}
-                />
+                <Link
+                  href={{
+                    pathname: `/product-details/webshop/${
+                      categoryidList?.length > 0 ? categoryidList : ["1"]
+                    }`,
+                    query: { sku: product?.sku, id: product?.id },
+                  }}
+                >
+                  <Image
+                    //   src={"/assets/bg-image.png"}
+                    src={
+                      product?.images[0]?.url ||
+                      product.images[0].medium_image_url
+                    }
+                    className="card-img-top"
+                    alt={product.name || "product list image"}
+                    width={214}
+                    height={214}
+                  />
+                </Link>
+
                 {/* {product.hasOptions && (
                   <div className="m-2">
                     <div className="form-check">

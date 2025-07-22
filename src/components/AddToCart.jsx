@@ -6,12 +6,40 @@ import { CustomToast, SuccessToast } from "./CustomToast";
 
 const AddToCart = () => {
   const { cart, setInsurance, insurance } = useCartStore((state) => state);
+
   const [loading, setLoading] = useState(false);
   let totalPrice = 0;
   (totalPrice = useMemo(() =>
     cart.reduce((sum, item) => sum + parseFloat(item.total), 0)
   )),
     [];
+
+  function getGrandTotal(cartItems) {
+    let total = 0;
+
+    for (const item of cartItems) {
+      // Handle various price sources
+      let rawPrice =
+        item?.prices?.final?.price ??
+        item?.price ??
+        parseFloat(item?.min_price?.replace("$", "")) ??
+        0;
+
+      // Ensure price is a number
+      const price =
+        typeof rawPrice === "string" ? parseFloat(rawPrice) : rawPrice;
+
+      // Handle various quantity keys
+      const quantity = item?.quantity ?? item?.qty ?? 1;
+
+      if (!isNaN(price) && !isNaN(quantity)) {
+        total += price * quantity;
+      }
+    }
+
+    console.log("Total", total);
+    return total; // Return string like "58.00"
+  }
 
   const updateCart = async () => {
     setLoading(true);
@@ -97,7 +125,12 @@ const AddToCart = () => {
                 <tbody>
                   <tr>
                     <td>Subtotal:</td>
-                    <td className="text-end">€{totalPrice}</td>
+                    <td className="text-end">
+                      €
+                      {isNaN(totalPrice)
+                        ? getGrandTotal(cart).toFixed(2)
+                        : totalPrice}
+                    </td>
                   </tr>
                   <tr>
                     <td>Discount:</td>
@@ -119,7 +152,11 @@ const AddToCart = () => {
                       className="text-end fw-bold"
                       style={{ color: "#175E84" }}
                     >
-                      €{totalPrice + insurance}
+                      €
+                      {isNaN(totalPrice)
+                        ? Number(getGrandTotal(cart) + insurance).toFixed(2)
+                        : totalPrice + insurance}
+                      {/* €{totalPrice + insurance} */}
                     </td>
                   </tr>
 
@@ -131,7 +168,10 @@ const AddToCart = () => {
                       className="text-end fw-bold"
                       style={{ color: "#175E84" }}
                     >
-                      €{totalPrice + insurance}
+                      €
+                      {isNaN(totalPrice)
+                        ? Number(getGrandTotal(cart) + insurance).toFixed(2)
+                        : totalPrice + insurance}
                     </td>
                   </tr>
                 </tbody>
