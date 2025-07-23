@@ -138,7 +138,7 @@ export default function ProductDetails({ productDetails }) {
             )}
           </div>
           <div className="d-flex justify-content-center gap-2 mt-3">
-            {productDetails?.images?.length > 0 &&
+            {productDetails?.images?.length > 1 &&
               productDetails?.images.map((src, index) => (
                 <Image
                   key={index}
@@ -251,7 +251,7 @@ export default function ProductDetails({ productDetails }) {
             </button>
 
             <div className="mt-3 text-center a_color">
-              <a href="#" className="me-2">
+              <a href="/cartpage" className="me-2">
                 View Cart
               </a>
               |

@@ -5,7 +5,7 @@ import VideoSkeleton from "../components/Skeleton/VideoSkeleton";
 import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 const Video = dynamic(() => import("../components/Video"), {
-  ssr: false,
+  ssr: true,
   loading: () => <VideoSkeleton />,
 });
 const ProductCarousel = dynamic(() => import("../components/ProductCarousel"), {

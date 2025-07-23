@@ -1,21 +1,25 @@
 "use client";
+import { useNavigationStore } from "@/store/useNavigationstore";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function GloblaLoader() {
   const pathname = usePathname();
   const [loading, setLoading] = useState(false);
+  const isNavigating = useNavigationStore((s) => s.isNavigating);
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
 
   useEffect(() => {
     setLoading(true);
     const timeout = setTimeout(() => {
       setLoading(false);
+      setNavigating(false);
     }, 700); // simulate page transition
 
     return () => clearTimeout(timeout);
   }, [pathname]);
 
-  if (!loading) return null;
+  if (!isNavigating) return null;
 
   return (
     <div

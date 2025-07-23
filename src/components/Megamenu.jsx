@@ -5,6 +5,7 @@ import { ProductLists } from "@/store/product";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { InstantLink } from "./InstantClick";
 
 const MegaMenu = () => {
   const [categoriesData, setCategoriesData] = useState([]);
@@ -125,6 +126,11 @@ const MegaMenu = () => {
                         sort_by: "price",
                         sort_dir: "asc",
                       });
+                      createUrl(
+                        [category.id],
+
+                        category?.slug
+                      );
                     }}
                   >
                     {category.name}
@@ -139,7 +145,7 @@ const MegaMenu = () => {
                               // .reverse()
                               .map((child) => (
                                 <li key={child.id}>
-                                  <Link
+                                  <InstantLink
                                     href={createUrl(
                                       [
                                         category.id,
@@ -173,7 +179,7 @@ const MegaMenu = () => {
                                     }}
                                   >
                                     {child.name}
-                                  </Link>
+                                  </InstantLink>
                                 </li>
                               ))}
                           </ul>

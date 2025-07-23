@@ -187,10 +187,13 @@ const Header = () => {
         >
           {/* Logo */}
           <Link href={"/"} className="mb-3 mb-md-0 mobi-logo">
-            <img
+            <Image
               src="/assets/logo.png"
               alt="Mdina Glass Logo"
               style={{ height: "90px" }}
+              width={230}
+              height={90}
+              priority={true}
             />
           </Link>
 
