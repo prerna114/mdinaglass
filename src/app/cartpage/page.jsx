@@ -10,7 +10,19 @@ import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import { useAuthStore } from "@/store/useAuthStore";
 import { RemoveItemCart, updateQuantity } from "@/api/CartApi";
-import TrustPaymentForm from "@/components/TrustPaymentForm";
+import dynamic from "next/dynamic";
+// import TrustPaymentForm from "@/components/TrustPaymentForm";
+const TrustPaymentForm = dynamic(
+  () => import("../../components/TrustPaymentForm"),
+  {
+    ssr: false,
+  }
+);
+
+const PaymentLink = dynamic(() => import("../../components/PaymentLink"), {
+  ssr: false,
+});
+
 const page = () => {
   const { cart, removeFromCart, updateQuantity } = useCartStore(
     (state) => state
@@ -332,6 +344,7 @@ const page = () => {
         </div>
       )}
       <TrustPaymentForm />
+      {/* <PaymentLink /> */}
 
       {/* <Footer /> */}
     </div>

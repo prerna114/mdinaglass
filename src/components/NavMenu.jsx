@@ -5,6 +5,8 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { ProductLists } from "@/store/product";
+import dynamic from "next/dynamic";
+const InstantLink = dynamic(() => import("./InstantClick"), { ssr: false });
 
 const ResponsiveNav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -89,7 +91,7 @@ const ResponsiveNav = () => {
 
                 { label: "Gift Registry", href: "/giftRegistry" },
               ].map(({ label, href }) => (
-                <Link
+                <InstantLink
                   key={label}
                   href={href}
                   className="navlink nav-link mx-4"
@@ -103,7 +105,7 @@ const ResponsiveNav = () => {
                   }}
                 >
                   {label}
-                </Link>
+                </InstantLink>
               ))}
             </div>
 

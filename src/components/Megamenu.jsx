@@ -5,7 +5,7 @@ import { ProductLists } from "@/store/product";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { InstantLink } from "./InstantClick";
+import InstantLink from "./InstantClick";
 
 const MegaMenu = () => {
   const [categoriesData, setCategoriesData] = useState([]);
@@ -107,7 +107,7 @@ const MegaMenu = () => {
                   className="nav-item dropdown position-static"
                   key={category.id}
                 >
-                  <Link
+                  <InstantLink
                     className="nav-link"
                     role="button"
                     data-bs-toggle="dropdown"
@@ -134,7 +134,7 @@ const MegaMenu = () => {
                     }}
                   >
                     {category.name}
-                  </Link>
+                  </InstantLink>
                   <div className="dropdown-menu w-100 mt-0 p-4 border-0 shadow">
                     <div className="container">
                       <div className="row">

@@ -13,6 +13,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 import Image from "next/image";
 import { getCartListing, testCartAPi } from "@/api/CartApi";
+import InstantLink from "./InstantClick";
 
 const Header = () => {
   const [isBannerVisible, setIsBannerVisible] = useState(true);
@@ -146,30 +147,6 @@ const Header = () => {
         </div>
       )}
 
-      {/* Navigation Links */}
-      {/* <nav className="border-top navContainer">
-        <div className="container">
-          <div className={`${isMenuOpen ? "d-block" : "d-none"} d-md-block`}>
-            <div className="row navrow">
-              <div className="col-12 d-flex justify-content-center flex-wrap">
-                {[
-                  "Home",
-                  "About Us",
-                  "All Products",
-                  "New Arrivals",
-                  "Limited Editions",
-                  "Gift Registry",
-                ].map((item) => (
-                  <a key={item} href="#" className="navlink nav-link mx-4 ">
-                    {item}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav> */}
-
       <ResponsiveNav />
 
       {/* Logo + Search + Currency + Signup */}
@@ -259,7 +236,7 @@ const Header = () => {
                         margin: "5px 0px 5px 5px",
                       }}
                     />
-                    <Link href={"/cartpage"}>
+                    <InstantLink href={"/cartpage"}>
                       <div className="shopping-cart">
                         <ShoppingCart
                           color="#888888"
@@ -272,8 +249,8 @@ const Header = () => {
                         />
                         <span>{cart?.length}</span>
                       </div>
-                    </Link>
-                    <Link
+                    </InstantLink>
+                    <InstantLink
                       href={"/loginCheckoutPage"}
                       aria-label="Go to login or checkout page"
                     >
@@ -286,7 +263,7 @@ const Header = () => {
                           margin: "5px 0px 5px 5px",
                         }}
                       />
-                    </Link>
+                    </InstantLink>
                   </div>
                   <div
                     style={{

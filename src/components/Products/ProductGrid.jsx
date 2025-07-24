@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 // const { loading } = useMenuStore.getState();
 import Image from "next/image";
+import InstantLink from "../InstantClick";
 
 const ProductGrid = ({ products, categoryidList }) => {
   console.log("Products in Grid", products);
@@ -13,7 +14,7 @@ const ProductGrid = ({ products, categoryidList }) => {
           <div key={product.id} className="col-lg-4 col-md-6 mb-4">
             <div className=" product-card">
               <div className="position-relative">
-                <Link
+                <InstantLink
                   href={{
                     pathname: `/product-details/webshop/${
                       categoryidList?.length > 0 ? categoryidList : ["1"]
@@ -32,7 +33,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                     width={214}
                     height={214}
                   />
-                </Link>
+                </InstantLink>
 
                 {/* {product.hasOptions && (
                   <div className="m-2">
@@ -53,7 +54,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                 )} */}
               </div>
               <div className="card-body text-center">
-                <Link
+                <InstantLink
                   href={{
                     pathname: `/product-details/webshop/${
                       categoryidList?.length > 0 ? categoryidList : ["1"]
@@ -67,7 +68,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                   }}
                 >
                   <h6 className="card-title mb-3">{product.name}</h6>
-                </Link>
+                </InstantLink>
                 {/* <h6 className="card-title mb-3">{product.name}</h6> */}
                 <p className="card-text text-info fw-bold">
                   Price €

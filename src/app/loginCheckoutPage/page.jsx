@@ -6,7 +6,7 @@ import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import Make from "@/components/Profile";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
-
+import InstantLink from "../../components/InstantClick";
 import { Login, registerCustomer, testLogin } from "@/api/Customer";
 import Link from "next/link";
 import { useCartStore } from "@/store";
@@ -193,7 +193,7 @@ const loginCheckoutPage = () => {
 
                     <div className="row">
                       <div className="col-md-12">
-                        <Link
+                        <InstantLink
                           href={
                             checkoutType == "register"
                               ? "/register"
@@ -201,7 +201,7 @@ const loginCheckoutPage = () => {
                           }
                         >
                           <button className="btn-cart">Continue</button>
-                        </Link>
+                        </InstantLink>
                       </div>
                     </div>
                   </div>

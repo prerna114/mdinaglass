@@ -1,19 +1,26 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { useNavigationStore } from "@/store/useNavigationstore";
 import Link from "next/link";
-import { useState } from "react";
 
-export function InstantLink({ href, children, className }) {
+export default function InstantLink({ href, children, className }) {
+  const [isClient, setIsClient] = useState(false);
   const setNavigating = useNavigationStore((s) => s.setNavigating);
   const isNavigating = useNavigationStore((s) => s.isNavigating);
 
-  console.log("INstant click", isNavigating);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null; // or return fallback link
 
   return (
     <Link
       href={href}
       className={className}
       onClick={() => {
-        setNavigating(true); // trigger loader
+        setNavigating(true);
         console.log("ISNAVGIATION", isNavigating);
       }}
     >

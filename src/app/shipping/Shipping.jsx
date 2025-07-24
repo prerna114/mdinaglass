@@ -1,5 +1,6 @@
 "use client";
 import { CustomToast } from "@/components/CustomToast";
+import { useNavigationStore } from "@/store/useNavigationstore";
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
@@ -11,6 +12,7 @@ const Shipping = () => {
   const params = useSearchParams();
   const checkboxProps = params.get("checkbox");
   const [checkbox, setCheckbox] = useState(false);
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
 
   // console.log("EMai", email, params);
 
@@ -92,11 +94,13 @@ const Shipping = () => {
     } else {
       localStorage.setItem("shiipingaddreess", JSON.stringify(filed));
       router.push("/shippingMethod");
+      setNavigating(true);
     }
 
     return true;
   };
   useEffect(() => {
+    setNavigating(false);
     if (checkboxProps == true) {
       const data = localStorage.getItem("billingaddress");
       console.log("Billing addr", JSON.parse(data));

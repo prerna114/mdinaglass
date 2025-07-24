@@ -1,35 +1,42 @@
-import { useEffect } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 
 export default function TrustPaymentForm() {
+  const [token, setToken] = useState(null);
+  const [sdkReady, setSdkReady] = useState(false);
+
+  // 1. Load SDK
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://cdn.eu.trustpayments.com/js/latest/st.js";
-    script.onload = () => {
-      waitForSecureTrading(); // call below-defined function
-    };
+    script.async = true;
+    script.onload = () => setSdkReady(true);
     document.head.appendChild(script);
   }, []);
-  function waitForSecureTrading(retries = 10) {
-    if (typeof SecureTrading === "undefined") {
-      if (retries > 0) {
-        setTimeout(() => waitForSecureTrading(retries - 1), 300);
+
+  // 2. Fetch Token
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const res = await fetch("/api/trust-jwt");
+        const { token } = await res.json();
+        setToken(token);
+      } catch (err) {
+        console.error("Failed to fetch JWT token:", err);
       }
-      return;
-    }
+    };
+
+    fetchToken();
+  }, []);
+
+  // 3. Initialize when both SDK + Token are ready
+  useEffect(() => {
+    if (!sdkReady || !token) return;
 
     const st = SecureTrading({
-      jwt: "56-ed450fa5fd8ab541bbe65933c3bc68453798e707fe43d12d94ebc8e42305dee9",
+      jwt: token,
       livestatus: 0,
-      components: {
-        callbacks: {
-          onPaymentFormValidityChange(data) {
-            console.log("Form valid:", data.isFormValid);
-          },
-        },
-      },
-    });
-
-    st.Components({
       componentIds: {
         cardNumber: "st-card-number",
         expirationDate: "st-expiration-date",
@@ -37,7 +44,15 @@ export default function TrustPaymentForm() {
         notificationFrame: "st-notification-frame",
       },
     });
-  }
+
+    st.Components({
+      callbacks: {
+        onPaymentFormValidityChange(data) {
+          console.log("Form valid:", data.isFormValid);
+        },
+      },
+    });
+  }, [sdkReady, token]);
 
   return (
     <form
@@ -49,9 +64,7 @@ export default function TrustPaymentForm() {
       <div id="st-expiration-date"></div>
       <div id="st-security-code"></div>
       <div id="st-notification-frame"></div>
-      {/* <button type="submit" id="pay-btn">
-        Pay securely
-      </button> */}
+      <button type="submit">Pay securely</button>
     </form>
   );
 }

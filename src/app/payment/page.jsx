@@ -1,20 +1,27 @@
 "use client";
 import { CustomToast } from "@/components/CustomToast";
+import { useNavigationStore } from "@/store/useNavigationstore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const page = () => {
   const [method, setMethod] = useState("");
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
 
   const router = useRouter();
   const handleButton = () => {
     if (method?.length == 0) {
       CustomToast("Please Select Payment Method");
     } else {
+      setNavigating(true);
       router.push(`/orderReview?method=${method}`);
     }
   };
+
+  useEffect(() => {
+    setNavigating(false);
+  }, []);
   return (
     <div
       style={{

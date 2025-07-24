@@ -11,6 +11,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { ProductLists } from "@/store/product";
 import { createUrl } from "@/constant";
 import dynamic from "next/dynamic";
+import InstantLink from "./InstantClick";
 // import AboveMenu from "./Products/AboveMenu";
 const AboveMenu = dynamic(() => import("./Products/AboveMenu"), {
   ssr: true,
@@ -251,13 +252,13 @@ export default function ProductDetails({ productDetails }) {
             </button>
 
             <div className="mt-3 text-center a_color">
-              <a href="/cartpage" className="me-2">
+              <InstantLink href="/cartpage" className="me-2">
                 View Cart
-              </a>
+              </InstantLink>
               |
-              <a href="#" className="ms-2">
+              <InstantLink href="#" className="ms-2">
                 Add to Gift Registry
-              </a>
+              </InstantLink>
             </div>
 
             <div className="mt-4 small text-muted">

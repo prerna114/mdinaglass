@@ -1,5 +1,6 @@
 "use client";
 import { CustomToast } from "@/components/CustomToast";
+import { useNavigationStore } from "@/store/useNavigationstore";
 
 import { useRouter } from "next/navigation";
 
@@ -9,6 +10,8 @@ const checkout = () => {
   const [shipping, setShipping] = useState(false);
   const [checbox, setCheckbox] = useState(false);
   const router = useRouter();
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
+  const isNavigating = useNavigationStore((s) => s.isNavigating);
   const [filed, setFiled] = useState({
     firstName: "",
     lastName: "",
@@ -87,6 +90,7 @@ const checkout = () => {
     } else {
       localStorage.setItem("billingaddress", JSON.stringify(filed));
       router.push(`/shipping/?checkbox=${checbox}`);
+      setNavigating(true);
     }
 
     return true;

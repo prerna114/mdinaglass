@@ -1,9 +1,10 @@
 "use client";
 import { CustomToast } from "@/components/CustomToast";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useNavigationStore } from "@/store/useNavigationstore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const page = () => {
   const [giftOption, setGiftOption] = useState(false);
@@ -11,6 +12,7 @@ const page = () => {
 
   const router = useRouter();
   const setGiftMessage = useAuthStore((state) => state.setGiftMessage);
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
 
   const handleChange = (e) => {
     setGiftMessage(e);
@@ -19,10 +21,14 @@ const page = () => {
     console.log("seller", seller);
     if (seller) {
       router.push("/payment");
+      setNavigating(true);
     } else {
       CustomToast("Please Select shipping Method", "top-right");
     }
   };
+  useEffect(() => {
+    setNavigating(false);
+  }, []);
   return (
     <div
       style={{
