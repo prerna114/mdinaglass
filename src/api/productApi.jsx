@@ -151,3 +151,25 @@ export const getProductCateogrybyId = async (id) => {
   const data = await fetchGlobal(`api/categories/${id}`);
   return data;
 };
+
+export const getNewArrivalProduct = async () => {
+  const response = await fetchGlobal(
+    "api/blackbull/products/newArrivalProducts",
+    {
+      method: "POST",
+      // body: data,
+    }
+  );
+  return response;
+};
+
+export const getRangeProduct = async (range) => {
+  const response = await fetchGlobal(
+    `api/blackbull/products/otherRangeProducts?range=${range}`,
+    {
+      method: "POST",
+      // body: data,
+    }
+  );
+  return response;
+};

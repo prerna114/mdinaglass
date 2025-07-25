@@ -16,10 +16,7 @@ const ProductGrid = ({ products, categoryidList }) => {
               <div className="position-relative">
                 <InstantLink
                   href={{
-                    pathname: `/product-details/webshop/${
-                      categoryidList?.length > 0 ? categoryidList : ["1"]
-                    }`,
-                    query: { sku: product?.sku, id: product?.id },
+                    pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
                   }}
                 >
                   <Image
@@ -78,7 +75,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                       : Number(product?.min_price).toFixed(2)
                     : Number(product?.price)
                     ? Number(product?.price).toFixed(2)
-                    : "120"}
+                    : "0"}
                 </p>
               </div>
             </div>

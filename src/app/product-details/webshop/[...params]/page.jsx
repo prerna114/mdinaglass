@@ -5,15 +5,16 @@ import { useParams, useSearchParams } from "next/navigation";
 import { getProductByID } from "@/api/productApi";
 import { ProductLists } from "@/store/product";
 import dynamic from "next/dynamic";
+import ListingSkeleton from "@/components/Skeleton/ListingSkeleton";
 
 const ProductDetails = dynamic(() => import("@/components/ProductDetails"), {
-  ssr: false,
+  ssr: true,
   loading: () => <span className="visually-hidden">Loading...</span>,
 });
 
 const ProductShow = dynamic(() => import("@/components/ProductShow"), {
   ssr: true,
-  loading: () => <span className="visually-hidden">Loading...</span>,
+  loading: () => <ListingSkeleton />,
 });
 
 const SideMenu = dynamic(() => import("@/components/SideMenu"), {
@@ -23,30 +24,39 @@ const SideMenu = dynamic(() => import("@/components/SideMenu"), {
 
 const page = () => {
   const { heading } = ProductLists((state) => state);
-
+  const [productId, setProductId] = useState(null);
   const [productDetails, setProductDetails] = useState();
   const searchParams = useSearchParams();
   const sku = searchParams.get("sku");
-  const productId = searchParams.get("id");
+
+  console.log("searchParams", searchParams);
 
   const params = useParams();
 
-  console.log("paramsdsdsds", params, productId);
-  const getProductDetails = async () => {
+  console.log("paramsdsdsds", params.params[1], productId);
+  const getProductDetails = async (id) => {
     // const data = await getProductByID(params?.productId);
-    const data = await getProductByID(productId);
-    // console.log("getProductDetails", data);
+    const data = await getProductByID(id);
     // if()
     if (data?.status == 200) {
-      setProductDetails(data?.data?.data);
+      setProductDetails(data?.data?.product);
+      console.log("getProductDetails", data.data.product);
     }
   };
 
   useEffect(() => {
-    getProductDetails();
+    // getProductDetails();
   }, []);
+  useEffect(() => {
+    const id = params.params[1];
+    if (id) {
+      setProductId(id);
+      // Now fetch your product
+      getProductDetails(id);
+    }
+  }, [searchParams]);
 
-  console.log("Product details", productDetails);
+  console.log("Product details 123", productDetails);
   return (
     <>
       {/* <Header /> */}
@@ -78,7 +88,9 @@ const page = () => {
                   <div className="container">
                     <ProductDetails productDetails={productDetails} />
                   </div>
-                  <ProductShow productDetails={productDetails} />
+                  {productDetails?.range != null && (
+                    <ProductShow productDetails={productDetails} />
+                  )}
                 </div>
               </div>
             </div>

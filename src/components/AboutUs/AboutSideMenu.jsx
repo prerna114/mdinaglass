@@ -28,6 +28,7 @@ const AboutSideMenu = () => {
   const getInformation = async () => {
     setLoading(true);
     const data = await CmsInformation(params.slug);
+    console.log("getInformation123", data);
     if (data.status == 200) {
       if (data?.data) {
         setCmsInfo(data?.data);
@@ -40,6 +41,9 @@ const AboutSideMenu = () => {
         CustomToast("Something went wrong", "top-right");
       }
       setLoading(false);
+    } else {
+      setLoading(false);
+      CustomToast("Something went wrong", "top-right");
     }
     // if()
   };

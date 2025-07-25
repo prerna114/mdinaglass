@@ -21,6 +21,7 @@ export default function TrustPaymentForm() {
       try {
         const res = await fetch("/api/trust-jwt");
         const { token } = await res.json();
+
         setToken(token);
       } catch (err) {
         console.error("Failed to fetch JWT token:", err);
@@ -36,7 +37,7 @@ export default function TrustPaymentForm() {
 
     const st = SecureTrading({
       jwt: token,
-      livestatus: 0,
+      livestatus: 1,
       componentIds: {
         cardNumber: "st-card-number",
         expirationDate: "st-expiration-date",
@@ -57,8 +58,8 @@ export default function TrustPaymentForm() {
   return (
     <form
       id="st-form"
-      method="POST"
-      action="https://your-backend.com/handle-payment"
+      // method="POST"
+      // action="https://your-backend.com/handle-payment"
     >
       <div id="st-card-number"></div>
       <div id="st-expiration-date"></div>

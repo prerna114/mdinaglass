@@ -2,6 +2,7 @@
 
 import { CmsInformation } from "@/api/Customer";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useMenuStore } from "@/store/useCategoryStore";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -10,6 +11,7 @@ const InformationSideMenu = () => {
   const [active, setActive] = useState();
   const params = useParams();
   const { setCmsInfo } = useAuthStore((state) => state);
+  const setLoading = useMenuStore((state) => state.setLoading);
 
   const links = [
     { id: 1, label: "International Delivery", slug: "international-delivery" },
@@ -23,13 +25,16 @@ const InformationSideMenu = () => {
   ];
 
   const getInformation = async () => {
+    setLoading(true);
     const data = await CmsInformation(params.slug);
     if (data.status == 200) {
       if (data?.data) {
         setCmsInfo(data?.data);
         console.log("CMSINFROMTIOn", data?.data);
+        setLoading(false);
       } else {
         setCmsInfo(null);
+        setLoading(false);
       }
     }
     // if()

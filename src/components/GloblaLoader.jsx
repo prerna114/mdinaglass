@@ -18,6 +18,14 @@ export default function GloblaLoader() {
 
     return () => clearTimeout(timeout);
   }, [pathname]);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+      setNavigating(false);
+    }, 700); // simulate page transition
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   if (!isNavigating) return null;
 

@@ -44,7 +44,7 @@ const extractUniqueOptions = (variants = []) => {
   return uniqueOptions;
 };
 
-export default function ProductDetails({ productDetails }) {
+export default function ProductDetails({ productDetails, productDetail }) {
   const [quantity, setQuantity] = useState(1);
   const [levels, setLevels] = useState([]);
   const sideMenu = useMenuStore((state) => state.sideMenu);
@@ -102,7 +102,7 @@ export default function ProductDetails({ productDetails }) {
     setLaoding(false);
   };
 
-  console.log("cart", cart, selectedImage, productDetails);
+  console.log("productDetails", productDetail);
 
   useEffect(() => {
     setSelectedImage(productDetails?.images?.[0]?.url);

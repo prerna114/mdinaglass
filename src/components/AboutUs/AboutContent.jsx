@@ -13,6 +13,7 @@ const AboutContent = ({ content }) => {
     "https://mdinaglasses.blackbullsolution.com",
     ""
   );
+  console.log("Loading123", loading);
   const links = [
     { id: 1, label: "What We Do", slug: "about-mdina-glass" },
     { id: 2, label: "A Family Tradition", slug: "a-family-tradition" },
@@ -26,7 +27,15 @@ const AboutContent = ({ content }) => {
   return (
     <div className="information px-5">
       <CmsAboveMenu link={links} route={"about"} />
-      {loading && <ParagraphSkeleton />}
+      {loading ? (
+        <ParagraphSkeleton />
+      ) : (
+        cmsInfo == null && (
+          <div className="no-data-found">
+            <h1>No data found </h1>
+          </div>
+        )
+      )}
       <h2>{cmsInfo?.page_title}</h2>
       <p dangerouslySetInnerHTML={{ __html: cleanedHtml }}></p>{" "}
     </div>

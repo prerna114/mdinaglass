@@ -10,6 +10,7 @@ import { useParams, useRouter, usePathname } from "next/navigation";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import ListingSkeleton from "./Skeleton/ListingSkeleton";
+import { useNavigationStore } from "@/store/useNavigationstore";
 const FilterProduct = dynamic(
   () => import("../components/Products/FilterProduct"),
   {
@@ -44,6 +45,7 @@ const ProductListing = ({ onDataLoaded }) => {
   const [cateogryArray, setCateogryArray] = useState([]);
   const [theLastI, setTheLastI] = useState("");
   const pagination = ProductLists.getState().paginationOption;
+  const isNavigating = useNavigationStore((s) => s.isNavigating);
 
   const pathname = usePathname();
   const params = useParams();
@@ -118,6 +120,7 @@ const ProductListing = ({ onDataLoaded }) => {
 
       setLoading(false);
     } else {
+      setLoading(false);
       // console.log(
       //   "IdELse nsde",
       //   id,
@@ -237,46 +240,6 @@ const ProductListing = ({ onDataLoaded }) => {
 
   console.log("Prodcts listing", products, category);
 
-  const handlePagination = (item, action) => {
-    const totalLEnght = productList?.meta?.total;
-    //  if(item> )
-    let array = [];
-    console.log("TH elnght ", item, action);
-    if (action == "prev" && item > 1) {
-      array = [item - 2, item - 1, item];
-    } else if (action == "next" && item > 1) {
-      array = [item, item + 1, item + 2];
-    } else if (item == 1) {
-      setPaginationList([1, 2, 3]);
-    } else {
-      if (item > 1) {
-        array = [item, item + 1, item + 2];
-      }
-    }
-    setPaginationList(array);
-  };
-
-  const handlePrevious = (currentPage) => {
-    if (currentPage == paginationList[0]) {
-      setCurrentPage((prev) => prev - 1);
-
-      const array = [currentPage - 2, currentPage - 1, currentPage];
-      setPaginationList(array);
-    } else {
-      setCurrentPage((prev) => prev - 1);
-    }
-  };
-
-  const handleNext = (currentPage) => {
-    if (currentPage == paginationList[paginationList?.length - 1]) {
-      setCurrentPage((prev) => prev + 1);
-      const array = [currentPage, currentPage + 1, currentPage + 2];
-      setPaginationList(array);
-    } else {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
-
   const getLevels = () => {
     console.log("GetLEVELcall", sideMenu, cateogryArray);
     if (!sideMenu || !Array.isArray(cateogryArray)) return;
@@ -323,6 +286,7 @@ const ProductListing = ({ onDataLoaded }) => {
     }, 0);
   }, [sideMenu, cateogryArray]);
 
+  console.log("isNavigating", isNavigating);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -340,7 +304,7 @@ const ProductListing = ({ onDataLoaded }) => {
 
       {products?.length == 0 && category?.length == 0 && !loading && (
         <div className="no-data-found">
-          <h1>No data found</h1>
+          <h1>No data found </h1>
         </div>
       )}
 

@@ -9,76 +9,6 @@ import InstantLink from "../InstantClick";
 const CategoryGrid = ({ category }) => {
   const router = useRouter();
 
-  // const getProductByCategory = async (id, selectedFilter) => {
-  //   setLoading(true);
-  //   setProducts([]);
-  //   setCategory([]);
-  //   if (
-  //     id &&
-  //     selectedFilter &&
-  //     Object.keys(selectedFilter).length > 0 &&
-  //     (products?.length === 0 || category?.length === 0)
-  //   ) {
-  //     const data = await getProductCateogry(id, selectedFilter);
-  //     console.log(
-  //       " ====================== Side Menu Insde23",
-  //       data.data,
-  //       products.length,
-  //       category.length
-  //     );
-
-  //     if (data?.status === 200) {
-  //       const FilterData = data.data || [];
-  //       setAllProduct(data.data);
-  //       if (data.data.filterable?.length > 0) {
-  //         const colors = FilterData?.filterable?.find(
-  //           (item) => item.code == "color"
-  //         );
-  //         const variation = FilterData?.filterable?.find(
-  //           (item) => item.code == "variations"
-  //         );
-
-  //         console.log("ColorsSideMenu", variation?.options, colors);
-  //         if (colors?.options?.length > 0) {
-  //           // setColorOptions(colors?.options);
-  //           setFilterOption({
-  //             colors: colors?.options,
-  //           });
-  //         }
-  //         if (variation?.options?.length > 0) {
-  //           setFilterOption({
-  //             variations: variation?.options,
-  //           });
-  //           // setVariationOption(variation?.options);
-  //         }
-  //       }
-  //       if (data.data.products && data.data.products.length > 0) {
-  //         setProducts(data.data.products);
-  //       } else if (
-  //         data?.data?.sub_categories &&
-  //         data?.data?.sub_categories.length > 0
-  //       ) {
-  //         setCategory(data.data.sub_categories);
-  //       }
-  //       window.scrollTo({
-  //         top: 500,
-  //         behavior: "smooth", // Optional: for smooth scrolling animation
-  //       });
-  //       // setProducts(data.data.products || []);
-  //       console.log("Product Data", data.data);
-  //     } else {
-  //       setProducts([]);
-  //       setCategory([]);
-  //       window.scrollTo({
-  //         top: 500,
-  //         behavior: "smooth", // Optional: for smooth scrolling animation
-  //       });
-  //     }
-
-  //     setLoading(false);
-  //   }
-  // };
-
   const buildCategoryPath = (id) => {
     const { parentMap } = useMenuStore.getState();
     const path = [id];
@@ -121,7 +51,7 @@ const CategoryGrid = ({ category }) => {
                 Price €
                 {product.min_price
                   ? Number(product.min_price).toFixed(2)
-                  : "120.00"}
+                  : "0.00"}
               </p>
             </div>
           </div>
