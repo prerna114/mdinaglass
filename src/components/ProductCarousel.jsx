@@ -1,39 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useCartStore } from "@/store";
 import { SuccessToast } from "./CustomToast";
+import { getNewArrivalProduct } from "@/api/productApi";
+import { ProductLists } from "@/store/product";
 
 const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
-  const products = [
-    {
-      id: 1,
-      name: "Bubble Small Table Lamp",
-      price: 65.0,
-      image: "/assets/lamp.png",
-    },
-    {
-      id: 2,
-      name: "Necklace & Bracelet",
-      price: 35.5,
-      image: "/assets/clone.png",
-    },
-    {
-      id: 3,
-      name: "Bauble with Angel",
-      price: 9.0,
-      image: "/assets/lamp.png",
-    },
-    {
-      id: 4,
-      name: "Mini Double Swirl Vase",
-      price: 25.0,
-      image: "/assets/clone.png",
-    },
-  ];
+  const { products, category, setHeading, setProducts } = ProductLists(
+    (state) => state
+  );
+  const getNewProduct = async () => {
+    const data = await getNewArrivalProduct();
+    if (data.status == 200) {
+      console.log("getNewProduct", data.data.data);
+      setProducts(data.data.data);
+    }
+  };
+
   const CustomPrevArrow = ({ onClick }) => (
     <div
       onClick={onClick}
@@ -125,6 +112,10 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
     }
     console.log("updated", updated);
   };
+
+  useEffect(() => {
+    getNewProduct();
+  }, []);
   console.log("cartt", cart);
   return (
     <div className="py-5" style={{ backgroundColor: "#f5f5f5", margin: "0px" }}>
@@ -144,7 +135,7 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
                 style={{ height: "100%", minHeight: "340px" }}
               >
                 <img
-                  src={product.image}
+                  src={product.images[0].url}
                   alt={product.name}
                   className="img-fluid mb-2"
                   style={{ height: "190px", objectFit: "contain" }}
@@ -167,7 +158,9 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
                 >
                   {product.name}
                 </h6>
-                <p className="text-muted mb-2">€{product.price.toFixed(2)}</p>
+                <p className="text-muted mb-2">
+                  €{Number(product.price).toFixed(2)}
+                </p>
 
                 <button
                   className="btn btn-outline-secondary w-100 mt-auto"

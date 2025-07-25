@@ -53,10 +53,7 @@ const ProductGrid = ({ products, categoryidList }) => {
               <div className="card-body text-center">
                 <InstantLink
                   href={{
-                    pathname: `/product-details/webshop/${
-                      categoryidList?.length > 0 ? categoryidList : ["1"]
-                    }`,
-                    query: { sku: product?.sku, id: product?.id },
+                    pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
                   }}
                   scroll={false}
                   // href={"#"}

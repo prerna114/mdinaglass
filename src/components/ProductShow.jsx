@@ -93,7 +93,9 @@ const ProductShow = ({ productDetails }) => {
                         <h6 className="card-title mb-3">{product.name}</h6>
                       </InstantLink>
 
-                      <p className="card-text fw-bold">Price {product.price}</p>
+                      <p className="card-text fw-bold">
+                        Price €{Number(product.price).toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 </div>
