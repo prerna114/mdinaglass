@@ -5,6 +5,7 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { ProductLists } from "@/store/product";
+import InstantLink from "./InstantClick";
 
 const Footer = () => {
   const { setPagination } = ProductLists((state) => state);
@@ -47,10 +48,12 @@ const Footer = () => {
                 <Link href={"/"}>Home</Link>
               </li>
               <li>
-                <Link href={"/about/about-mdina-glass"}>About Us</Link>
+                <InstantLink href={"/about/about-mdina-glass"}>
+                  About Us
+                </InstantLink>
               </li>
               <li>
-                <Link
+                <InstantLink
                   onClick={() => {
                     setPagination({
                       per_page: 15,
@@ -62,16 +65,20 @@ const Footer = () => {
                   href={createUrl("all", "all-product")}
                 >
                   All Products
-                </Link>
+                </InstantLink>
               </li>
               <li>
-                <Link href={"/cartpage"}>New Arrivals</Link>
+                <InstantLink href={"/newarrival/page=1"}>
+                  New Arrivals
+                </InstantLink>
               </li>
               <li>
-                <Link href={"/loginCheckoutPage"}>Limited Editions</Link>
+                <InstantLink href={"/loginCheckoutPage"}>
+                  Limited Editions
+                </InstantLink>
               </li>
               <li>
-                <Link href={"/gift"}>Gift Registry</Link>
+                <InstantLink href={"/gift"}>Gift Registry</InstantLink>
               </li>
             </ul>
           </div>
@@ -83,31 +90,33 @@ const Footer = () => {
               <li>Careers</li>
 
               <li>
-                <Link href={"/information/international-delivery"}>
+                <InstantLink href={"/information/international-delivery"}>
                   International Delivery
-                </Link>
+                </InstantLink>
               </li>
 
               <li>
-                <Link href={"/about/trade-partner"}>Trade Enquiries</Link>
+                <InstantLink href={"/about/trade-partner"}>
+                  Trade Enquiries
+                </InstantLink>
               </li>
               <li>
-                <Link href={"/information/terms-conditions"}>
+                <InstantLink href={"/information/terms-conditions"}>
                   Terms & Conditions
-                </Link>
+                </InstantLink>
               </li>
               <li>
-                <Link href={"/information/privacy-policy"}>
+                <InstantLink href={"/information/privacy-policy"}>
                   Privacy Policy & Data Protection
-                </Link>
+                </InstantLink>
               </li>
               <li>
                 {/* <a href={"/information/cookies-policy"}>Cookies Policy</a> */}
               </li>
               <li>
-                <Link href={"/information/return-policy"}>
+                <InstantLink href={"/information/return-policy"}>
                   Returns & Cancellations
-                </Link>
+                </InstantLink>
               </li>
             </ul>
           </div>
@@ -118,7 +127,9 @@ const Footer = () => {
             <ul className="list-unstyled small">
               <li>Store Locator & Contact</li>
               <li>
-                <Link href={"/contactus/contact-form"}>Contact Form</Link>
+                <InstantLink href={"/contactus/contact-form"}>
+                  Contact Form
+                </InstantLink>
               </li>
             </ul>
             <h6 className="footer-link mt-3 mb-3">Get Social</h6>

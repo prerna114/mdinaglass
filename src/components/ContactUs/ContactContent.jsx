@@ -10,6 +10,12 @@ const ContactContent = ({ content }) => {
     { id: 1, label: "Contact Details & Outlets", slug: "contact-details" },
     { id: 2, label: "Contact Form", slug: "contact-form" },
   ];
+  const cleanedHtml = cmsInfo?.html_content?.replaceAll(
+    "https://mdinaglasses.blackbullsolution.com",
+    ""
+  );
+
+  console.log("cleanedHtml", cleanedHtml);
   return (
     <div className="information px-5 mb-5">
       {/* <ContactAboveMenu /> */}
@@ -17,9 +23,7 @@ const ContactContent = ({ content }) => {
       {cmsInfo && Object.keys(cmsInfo).length > 0 ? (
         <div className="container">
           <h2>{cmsInfo?.page_title}</h2>
-          <p
-            dangerouslySetInnerHTML={{ __html: cmsInfo?.html_content }}
-          ></p>{" "}
+          <p dangerouslySetInnerHTML={{ __html: cleanedHtml }}></p>{" "}
         </div>
       ) : (
         <div className="container">

@@ -20,10 +20,11 @@ const ProductGrid = ({ products, categoryidList }) => {
                   }}
                 >
                   <Image
-                    //   src={"/assets/bg-image.png"}
+                    // src={"/assets/bg-image.png"}
                     src={
-                      product?.images[0]?.url ||
-                      product.images[0].medium_image_url
+                      product?.images?.length > 0
+                        ? product.images[0].url
+                        : "/assets/bg-image.png"
                     }
                     className="card-img-top"
                     alt={product.name || "product list image"}

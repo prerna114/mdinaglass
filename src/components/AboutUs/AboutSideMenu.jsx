@@ -26,7 +26,9 @@ const AboutSideMenu = () => {
   ];
 
   const getInformation = async () => {
+    setCmsInfo(null);
     setLoading(true);
+
     const data = await CmsInformation(params.slug);
     console.log("getInformation123", data);
     if (data.status == 200) {
