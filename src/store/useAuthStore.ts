@@ -36,7 +36,7 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: "auth-storage", // localStorage key
-      partialize: (state) => ({ isLogin: state.isLogin, menu: state.menu }), // only persist relevant parts
+      partialize: (state) => ({ isLogin: state.isLogin }), // only persist relevant parts
     }
   )
 );

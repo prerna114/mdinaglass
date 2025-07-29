@@ -85,6 +85,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
     }
   }, [categoryIds, item.id, setFilterOption]);
 
+  console.log("subCategories", subCategories);
   return (
     <li
       className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}`}
@@ -105,15 +106,21 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
 
       {isExpanded && subCategories.length > 0 && (
         <ul style={{ paddingLeft: "2px" }}>
-          {subCategories.map((child) => (
-            <React.Suspense key={child.id} fallback={<li>Loading...</li>}>
-              <SideMenuItem
-                item={child}
-                level={level + 1}
-                parentPath={fullPathToItem}
-              />
-            </React.Suspense>
-          ))}
+          {subCategories.map((child) => {
+            return (
+              <>
+                {child.status == 1 && (
+                  <React.Suspense key={child.id} fallback={<li>Loading...</li>}>
+                    <SideMenuItem
+                      item={child}
+                      level={level + 1}
+                      parentPath={fullPathToItem}
+                    />
+                  </React.Suspense>
+                )}
+              </>
+            );
+          })}
         </ul>
       )}
     </li>

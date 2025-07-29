@@ -101,7 +101,7 @@ export const getProductByID = async (id) => {
 //   }
 // };
 
-export const getProductCateogry = async (id, pagination) => {
+export const getProductCateogry = async (id, pagination, color) => {
   const filter =
     localStorage.getItem("filterdData") &&
     JSON.parse(localStorage.getItem("filterdData"));
@@ -117,6 +117,7 @@ export const getProductCateogry = async (id, pagination) => {
     sort_by: pagination.sort_by || "price",
     sort_dir: pagination.sort_dir || "asc",
     filters: {
+      ...(color !== undefined && { color }),
       // ...(filterData != undefined &&
       //   filterData?.color !== 0 && { color: filterData?.color }),
       // ...(filterData?.variations !== undefined &&
@@ -127,7 +128,6 @@ export const getProductCateogry = async (id, pagination) => {
       // // variations: 22,
       // per_page: 10,
       // page: 1,
-      color: "1",
     },
   };
   const response = await fetchGlobal("api/categories/products-with-filters", {

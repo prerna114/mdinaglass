@@ -9,12 +9,11 @@ const FilterProduct = ({ down }) => {
   const [data, setData] = useState(null);
   const initialPage = 1;
   const [paginationList, setPaginationList] = useState([]);
-
+  const [colorFilter, setColorFilter] = useState([]);
   const loading = useMenuStore((state) => state.loading);
   const setLoading = useMenuStore((state) => state.setLoading);
-  const [currentPage, setCurrentPage] = useState(initialPage);
+
   const {
-    setProducts,
     products,
     allProductwithFilter,
     paginationOption,
@@ -75,13 +74,7 @@ const FilterProduct = ({ down }) => {
     }
   }, [allProductwithFilter]); // depends on this, not just once on mount
 
-  console.log(
-    "paginationOption",
-    allProductwithFilter?.pagination,
-    paginationOption,
-    products.length,
-    paginationList
-  );
+  console.log("paginationOption", allProductwithFilter);
   const startItem =
     (allProductwithFilter?.pagination?.current_page - 1) *
       allProductwithFilter?.pagination?.per_page +
@@ -138,6 +131,23 @@ const FilterProduct = ({ down }) => {
                   </select>
                 </div>
               </div>
+              {/* <div className="col-md-6">
+                <div className="d-flex sorting-style align-items-center">
+                  <span>Colors</span>
+                  <select
+                    className="form-select w-auto"
+                    onChange={(e) => {
+                      // sortProductsByPriceLowToHigh(products);
+                      handleClick(e.target.value, "", "", "");
+                    }}
+                    defaultValue={paginationOption?.sort_by}
+                  >
+                    <option>Select</option>
+                    <option value={"price"}>Price</option>
+                    <option value={"name"}>Name</option>
+                  </select>
+                </div>
+              </div> */}
             </div>
           )}
         </div>
