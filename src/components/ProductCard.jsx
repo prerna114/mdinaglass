@@ -9,6 +9,7 @@ import { CustomToast, SuccessToast } from "./CustomToast";
 import { getAllProduct } from "@/api/productApi";
 import Link from "next/link";
 import { addToTheCart } from "@/api/CartApi";
+import InstantLink from "./InstantClick";
 
 const ProductCard = ({ title = "New Arrivals" }) => {
   const { addToCart, cart, clearCart } = useCartStore((state) => state);
@@ -150,7 +151,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     fetchData();
   }, []);
 
-  console.log("productData", productData);
+  console.log("productDataCard", productData);
   return (
     <div className=" py-5 bg-white bg-white-custom">
       <div className="container">
@@ -179,24 +180,29 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                     overflow: "hidden",
                   }}
                 >
-                  <img
-                    src={product.base_image?.medium_image_url}
-                    alt={product.name}
-                    className="img-fluid"
-                    style={{
-                      maxHeight: "100%",
-                      objectFit: "contain",
+                  <InstantLink
+                    href={{
+                      pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
                     }}
-                  />
+                  >
+                    <img
+                      src={product.base_image?.medium_image_url}
+                      alt={product.name}
+                      className="img-fluid"
+                      style={{
+                        maxHeight: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </InstantLink>
                 </div>
                 <div className="text-center w-100">
-                  <Link
+                  <InstantLink
                     style={{
                       textDecoration: "none",
                     }}
                     href={{
-                      pathname: "/product-details",
-                      query: { sku: product?.sku },
+                      pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
                     }}
                   >
                     <h6
@@ -208,7 +214,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                     >
                       {product.name}
                     </h6>
-                  </Link>
+                  </InstantLink>
                   <hr
                     className="my-2"
                     style={{ width: "40px", margin: "auto" }}

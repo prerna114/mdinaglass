@@ -8,6 +8,7 @@ import { useCartStore } from "@/store";
 import { SuccessToast } from "./CustomToast";
 import { getNewArrivalProduct } from "@/api/productApi";
 import { ProductLists } from "@/store/product";
+import InstantLink from "./InstantClick";
 
 const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   const { products, category, setHeading, setProducts } = ProductLists(
@@ -116,7 +117,7 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   useEffect(() => {
     getNewProduct();
   }, []);
-  console.log("cartt", cart);
+  console.log("productsCarousel", products);
   return (
     <div className="py-5" style={{ backgroundColor: "#f5f5f5", margin: "0px" }}>
       <div className="container">
@@ -131,15 +132,21 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
           {products.map((product) => (
             <div key={product.id} className="px-2">
               <div
-                className="bg-white text-center new-arrival-design  p-3 d-flex flex-column justify-content-between"
+                className="bg-white text-center new-arrival-design  p-3 d-flex flex-column justify-content-between align-items-center"
                 style={{ height: "100%", minHeight: "340px" }}
               >
-                <img
-                  src={product.images[0].url}
-                  alt={product.name}
-                  className="img-fluid mb-2"
-                  style={{ height: "190px", objectFit: "contain" }}
-                />
+                <InstantLink
+                  href={{
+                    pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
+                  }}
+                >
+                  <img
+                    src={product.images[0].url}
+                    alt={product.name}
+                    className="img-fluid mb-2"
+                    style={{ height: "190px", objectFit: "contain" }}
+                  />
+                </InstantLink>
 
                 {/* Always reserve space for Quick View */}
                 <div style={{ minHeight: "20px" }}>
@@ -151,13 +158,19 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
                     </p>
                   )}
                 </div>
-
-                <h6
-                  className="mb-1"
-                  style={{ fontFamily: "Quicksand, sans-serif" }}
+                <InstantLink
+                  href={{
+                    pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
+                  }}
                 >
-                  {product.name}
-                </h6>
+                  <h6
+                    className="mb-1"
+                    style={{ fontFamily: "Quicksand, sans-serif" }}
+                  >
+                    {product.name}
+                  </h6>
+                </InstantLink>
+
                 <p className="text-muted mb-2">
                   €{Number(product.price).toFixed(2)}
                 </p>

@@ -87,3 +87,11 @@ export const extractUniqueOptions = (variants = []) => {
 
   return uniqueOptions;
 };
+
+export const createImage = (sku) => {
+  return (
+    `https://mdinaglasses.blackbullsolution.com/storage/product-images/${sku}.jpg` ||
+    `https://mdinaglasses.blackbullsolution.com/storage/product-images/${sku}.png ` ||
+    `https://mdinaglasses.blackbullsolution.com/storage/product-images/${sku}.webp`
+  );
+};

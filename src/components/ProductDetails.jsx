@@ -9,7 +9,7 @@ import { addToTheCart } from "@/api/CartApi";
 import { useMenuStore } from "@/store/useCategoryStore";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { ProductLists } from "@/store/product";
-import { createUrl } from "@/constant";
+import { createImage, createUrl } from "@/constant";
 import dynamic from "next/dynamic";
 import InstantLink from "./InstantClick";
 // import AboveMenu from "./Products/AboveMenu";
@@ -102,10 +102,19 @@ export default function ProductDetails({ productDetails, productDetail }) {
     setLaoding(false);
   };
 
-  console.log("productDetails", productDetail);
+  console.log(
+    "productDetails123",
+    createImage(productDetails?.sku),
+    productDetails,
+    selectedImage
+  );
 
   useEffect(() => {
-    setSelectedImage(productDetails?.images?.[0]?.url);
+    const data =
+      productDetails?.images?.length > 1
+        ? productDetails?.images[0]?.url
+        : createImage(productDetails?.sku);
+    setSelectedImage(data);
   }, [productDetails?.images]);
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
@@ -129,7 +138,11 @@ export default function ProductDetails({ productDetails, productDetail }) {
           <div className="border text-center">
             {selectedImage && (
               <Image
-                src={productDetails?.images[0]?.url || selectedImage}
+                src={
+                  productDetails?.images?.length > 1
+                    ? productDetails?.images[0]?.url
+                    : createImage(productDetails?.sku)
+                }
                 alt="Product Image"
                 width={600}
                 height={400}

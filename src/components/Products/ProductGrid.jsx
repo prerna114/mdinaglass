@@ -4,6 +4,7 @@ import React from "react";
 // const { loading } = useMenuStore.getState();
 import Image from "next/image";
 import InstantLink from "../InstantClick";
+import { createImage } from "@/constant";
 
 const ProductGrid = ({ products, categoryidList }) => {
   console.log("Products in Grid", products);
@@ -24,7 +25,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                     src={
                       product?.images?.length > 0
                         ? product.images[0].url
-                        : "/assets/bg-image.png"
+                        : createImage(product.sku)
                     }
                     className="card-img-top"
                     alt={product.name || "product list image"}

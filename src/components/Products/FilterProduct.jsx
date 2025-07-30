@@ -25,6 +25,8 @@ const FilterProduct = ({ down }) => {
   const allParams = useMemo(() => params?.params || [], [params]);
 
   const priceIndex = allParams.findIndex((p) => p === "price");
+  const limit = parseInt(allParams[priceIndex + 3]);
+  console.log("Limti1234", limit);
 
   const handleClick = (sortName, newSortOrder, newLimit, newPage) => {
     const allParams = params?.params || [];
@@ -44,7 +46,7 @@ const FilterProduct = ({ down }) => {
     const limit = newLimit || parseInt(allParams[priceIndex + 2]);
     const page = newPage || parseInt(allParams[priceIndex + 3]);
     const sortBy = sortName || allParams[priceIndex];
-    console.log("All params", allParams, sortOrder, sortBy);
+    console.log("All params", allParams, sortOrder, sortBy, newLimit);
 
     const newUrl = createUrl(categoryIds, slug, sortOrder, limit, page, sortBy);
     router.push(newUrl, { scroll: false });
@@ -52,9 +54,9 @@ const FilterProduct = ({ down }) => {
       setPagination({
         per_page: newLimit,
       });
-    } else if (newPage) {
+    } else if (page) {
       setPagination({
-        page: newPage,
+        page: page,
       });
     } else if (sortName) {
       setPagination({
@@ -83,6 +85,23 @@ const FilterProduct = ({ down }) => {
     allProductwithFilter?.pagination?.total,
     allProductwithFilter?.pagination?.current_page *
       allProductwithFilter?.pagination?.per_page
+  );
+  // console.log(
+  //   "paginationOption",
+  //   paginationOption,
+  //   paginationList.slice(
+  //     paginationOption.page == 1
+  //       ? paginationOption.page - 1
+  //       : paginationOption.page - 2,
+  //     paginationOption.page + 3
+  //   )
+  // );
+
+  console.log(
+    "paginationOption",
+    paginationOption,
+    paginationList,
+    allProductwithFilter
   );
   return (
     <>
@@ -169,7 +188,7 @@ const FilterProduct = ({ down }) => {
       products?.length == 0 ? (
         <div></div>
       ) : (
-        <div className="col-md-12 col-lg-5">
+        <div className="col-md-12 col-lg-6">
           <nav aria-label="Product pagination">
             <ul className="pagination">
               {paginationOption?.page > 1 && (
@@ -194,29 +213,36 @@ const FilterProduct = ({ down }) => {
                 </li>
               )}
 
-              {paginationList?.map((item, index) => {
-                return (
-                  <li
-                    key={index}
-                    className={`page-item ${
-                      paginationOption?.page === item ? "active" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      onClick={(e) => {
-                        handleClick("", "", "", item);
-                        // setPagination({
-                        //   page: item,
-                        // });
-                        console.log("Item", item);
-                      }}
+              {paginationList
+                .slice(
+                  paginationOption.page == 1
+                    ? paginationOption.page - 1
+                    : paginationOption.page - 2,
+                  paginationOption.page + 3
+                )
+                ?.map((item, index) => {
+                  return (
+                    <li
+                      key={index}
+                      className={`page-item ${
+                        paginationOption?.page === item ? "active" : ""
+                      }`}
                     >
-                      {item}
-                    </button>
-                  </li>
-                );
-              })}
+                      <button
+                        className="page-link"
+                        onClick={(e) => {
+                          handleClick("", "", "", item);
+                          // setPagination({
+                          //   page: item,
+                          // });
+                          console.log("Item", item);
+                        }}
+                      >
+                        {item}
+                      </button>
+                    </li>
+                  );
+                })}
 
               {allProductwithFilter?.pagination?.last_page ===
               paginationOption?.page ? (

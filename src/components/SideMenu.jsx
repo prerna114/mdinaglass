@@ -24,10 +24,10 @@ const SideMenu = ({}) => {
 
     if (data?.status == 200) {
       setSubCategory(data?.data?.sub_categories);
-      localStorage.setItem(
-        "subCateogry",
-        JSON.stringify(data?.data?.sub_categories)
-      );
+      // localStorage.setItem(
+      //   "subCateogry",
+      //   JSON.stringify(data?.data?.sub_categories)
+      // );
       setSideMenu(data?.data?.sub_categories);
       setLoading(false);
     } else {
@@ -47,7 +47,7 @@ const SideMenu = ({}) => {
       }
     }, 10);
   }, []);
-  // console.log("CategoryById", subCategory);
+  console.log("CategoryById", sideMenu);
 
   return (
     <div className="category-sidebar">
@@ -66,7 +66,7 @@ const SideMenu = ({}) => {
                   // padding: "15px",
                 }}
               >
-                {subCategory?.map((item, index) => {
+                {sideMenu?.map((item, index) => {
                   const parentPath = []; // ✅ define root path
                   return (
                     <>

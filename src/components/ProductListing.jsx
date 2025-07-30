@@ -67,11 +67,23 @@ const ProductListing = ({ onDataLoaded }) => {
     setCategory,
     allProduct,
     setFilterOption,
+    setPagination,
   } = ProductLists((state) => state);
 
   const sku = useMemo(() => allParams[allParams.length - 1], [allParams]);
+
+  const paginationOption = () => {
+    // const params = useParams();
+
+    const sortOrder = allParams[priceIndex + 1];
+    const limit = parseInt(allParams[priceIndex + 2]);
+    const page = parseInt(allParams[priceIndex + 3]);
+    const sortBy = allParams[priceIndex];
+
+    console.log("paginationOption", sortBy, sortOrder, limit, page);
+  };
   const getProductByCategory = async (id) => {
-    console.log("getProductByCategory");
+    // console.log("getProductByCategory", paginationOption);
     // localStorage.setItem("filterdData", JSON.stringify(filter));
     const pagination = ProductLists.getState().paginationOption;
     setLoading(true);
@@ -121,14 +133,6 @@ const ProductListing = ({ onDataLoaded }) => {
       setLoading(false);
     } else {
       setLoading(false);
-      // console.log(
-      //   "IdELse nsde",
-      //   id,
-      //   filter,
-      //   Object.keys(filter).length,
-      //   products?.length,
-      //   category?.length
-      // );
     }
   };
 
@@ -189,6 +193,7 @@ const ProductListing = ({ onDataLoaded }) => {
       console.log("selectedCategory else");
       setProducts([]);
       setCategory([]);
+
       getProductByCategory(lastId);
     }
   };
@@ -219,11 +224,6 @@ const ProductListing = ({ onDataLoaded }) => {
   }, [pathname]);
 
   // const [category, , sortOrder, limit, page, slug] = params?.params || [];
-  const [paginationList, setPaginationList] = useState([1, 2, 3]);
-  const initialLimit = 15;
-  const [filterData, setFilterData] = useState({
-    limit: initialLimit,
-  });
 
   const loading = useMenuStore((state) => state.loading);
   const setLoading = useMenuStore((state) => state.setLoading);
@@ -232,13 +232,10 @@ const ProductListing = ({ onDataLoaded }) => {
   const [levels, setLevels] = useState([]);
 
   const initialPage = 1;
-  const [currentPage, setCurrentPage] = useState(initialPage);
   const [selectedFilter, setSelectedFilter] = useState({
     variations: 0,
     color: 0,
   });
-
-  console.log("Prodcts listing", products, category);
 
   const getLevels = () => {
     console.log("GetLEVELcall", sideMenu, cateogryArray);
@@ -286,13 +283,17 @@ const ProductListing = ({ onDataLoaded }) => {
     }, 0);
   }, [sideMenu, cateogryArray]);
 
-  console.log("isNavigating", isNavigating);
+  useEffect(() => {
+    paginationOption();
+  }, []);
+
+  console.log("isNavigating", products);
   return (
     <div className="productListing">
       {/* Filter Controls */}
       <AboveMenu />
       {/* Sort and Items Control */}
-      {category?.length == 0 && (
+      {products?.length > 0 && (
         <>
           <FilterProduct down={false} />
         </>
@@ -300,7 +301,9 @@ const ProductListing = ({ onDataLoaded }) => {
 
       {loading && <ListingSkeleton />}
 
-      {category?.length > 0 && !loading && <CategoryGrid category={category} />}
+      {category?.length > 0 && products?.length == 0 && !loading && (
+        <CategoryGrid category={category} />
+      )}
 
       {products?.length == 0 && category?.length == 0 && !loading && (
         <div className="no-data-found">
@@ -310,7 +313,7 @@ const ProductListing = ({ onDataLoaded }) => {
 
       {/* Product Grid */}
 
-      {!loading && products?.length > 0 && category?.length == 0 && (
+      {!loading && products?.length > 0 && (
         <ProductGrid
           products={products}
           categoryidList={categoryidList}
@@ -319,9 +322,9 @@ const ProductListing = ({ onDataLoaded }) => {
       )}
 
       {/* Sort and Items Control */}
-      {category?.length == 0 && (
+      {products?.length > 0 && (
         <>
-          <FilterProduct down={true} />
+          <FilterProduct down={false} />
         </>
       )}
     </div>

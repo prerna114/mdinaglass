@@ -12,7 +12,7 @@ const MegaMenu = () => {
   const { heading, setHeading, setPagination } = ProductLists((state) => state);
 
   const [showMenu, setShowMenu] = useState(true);
-  const { menu, setMenu } = useAuthStore((state) => state);
+  const { setMenu, menu } = useAuthStore((state) => state);
 
   useEffect(() => {
     if (showMenu) {
@@ -50,7 +50,7 @@ const MegaMenu = () => {
     if (data.status == 200) {
       setCategoriesData(data.data[0]?.children);
       console.log("GetMenuCategory", data.data);
-      localStorage.setItem("cart", JSON.stringify(data.data[0]?.children));
+      // localStorage.setItem("cart", JSON.stringify(data.data[0]?.children));
       setMenu(data.data[0]?.children);
       if (data.data[0]?.children) {
         setShowMenu(true);
@@ -61,14 +61,13 @@ const MegaMenu = () => {
   useEffect(() => {
     // if(localStorage.getItem('cart')){
 
-    const stored = localStorage.getItem("cart");
-    if (stored) {
+    if (menu?.length != 0) {
       try {
         const parsed = JSON.parse(stored);
         setShowMenu(true);
 
-        setCategoriesData(parsed);
-        setMenu(parsed);
+        setCategoriesData(menu);
+        setMenu(menu);
       } catch (e) {
         console.error("Failed to parse cart from localStorage", e);
       }
@@ -79,7 +78,11 @@ const MegaMenu = () => {
     // }
   }, []);
 
-  console.log("Catrry data", Array.isArray(categoriesData), menu);
+  const handleCick = () => {
+    console.log("HandleCkikc1234");
+  };
+
+  console.log("Catrry data", heading);
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
       <div
@@ -137,32 +140,30 @@ const MegaMenu = () => {
                     {category.name}
                   </InstantLink>
                 )}
-                <div className="dropdown-menu w-100 mt-0 p-4 border-0 shadow">
-                  <div className="container">
-                    <div className="row">
-                      <div className="col-lg-12 col-12 mb-3">
-                        <ul className="list-unstyled">
-                          {category.children
-                            // .slice() // make a shallow copy to avoid mutating original
-                            // .reverse()
-                            .map((child) => {
-                              return (
-                                <div key={child.id}>
-                                  {child.status == 1 && (
+                {category.children?.length > 0 && (
+                  <div className="dropdown-menu w-100 mt-0 p-4 border-0 shadow">
+                    <div className="container">
+                      <div className="row">
+                        <div className="col-lg-12 col-12 mb-3">
+                          <ul className="list-unstyled">
+                            {category.children
+                              // .slice() // make a shallow copy to avoid mutating original
+                              // .reverse()
+                              .map(
+                                (child) =>
+                                  child.status == 1 && (
                                     <li key={child.id}>
                                       <InstantLink
                                         href={createUrl(
                                           [
                                             category.id,
-
                                             child?.translations[0]?.category_id,
                                           ],
-
                                           child?.translations[0]?.slug
                                         )}
-                                        // href={"#"}
                                         className="dropdown-item"
                                         onClick={() => {
+                                          handleCick();
                                           console.log("Child name", category);
                                           console.log(
                                             "rohanrohanrohan",
@@ -182,20 +183,23 @@ const MegaMenu = () => {
                                             sort_dir: "asc",
                                           });
                                           setHeading(child.name);
+                                          console.log(
+                                            "CHildName123",
+                                            child.name
+                                          );
                                         }}
                                       >
                                         {child.name}
                                       </InstantLink>
                                     </li>
-                                  )}
-                                </div>
-                              );
-                            })}
-                        </ul>
+                                  )
+                              )}
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </li>
             ))}
 

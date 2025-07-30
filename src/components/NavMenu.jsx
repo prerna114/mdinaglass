@@ -16,33 +16,33 @@ const ResponsiveNav = () => {
   const { setMenu } = useAuthStore((state) => state);
   const { setPagination } = ProductLists((state) => state);
 
-  const getMenuCategories = async () => {
-    console.log("Get Catrogires is clling");
-    const myHeaders = new Headers();
-    const requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    };
+  // const getMenuCategories = async () => {
+  //   console.log("Get Catrogires is clling");
+  //   const myHeaders = new Headers();
+  //   const requestOptions = {
+  //     method: "GET",
+  //     headers: myHeaders,
+  //     redirect: "follow",
+  //   };
 
-    try {
-      const res = await fetch(
-        "https://mdinaglasses.blackbullsolution.com/api/menu-categories",
-        requestOptions
-      );
-      const data = await res.json(); // ✅ this is what you need
+  //   try {
+  //     const res = await fetch(
+  //       "https://mdinaglasses.blackbullsolution.com/api/menu-categories",
+  //       requestOptions
+  //     );
+  //     const data = await res.json(); // ✅ this is what you need
 
-      console.log("THe data", data[0]?.children);
-      setCategoriesData(data[0]?.children);
-      localStorage.setItem("cart", JSON.stringify(data[0]?.children));
-      setMenu(data[0]?.children);
-      if (data[0]?.children) {
-        setShowMenu(true);
-      }
-    } catch (error) {
-      console.log("eror", error);
-    }
-  };
+  //     console.log("THe data", data[0]?.children);
+  //     setCategoriesData(data[0]?.children);
+  //     localStorage.setItem("cart", JSON.stringify(data[0]?.children));
+  //     setMenu(data[0]?.children);
+  //     if (data[0]?.children) {
+  //       setShowMenu(true);
+  //     }
+  //   } catch (error) {
+  //     console.log("eror", error);
+  //   }
+  // };
   // const createUrl = (categoryID, slug) => {
   //   // console.log("dsada", slu g, categoryID);
   //   let sortOrder = "asc";
@@ -51,25 +51,25 @@ const ResponsiveNav = () => {
   //   return buildProductUrl(categoryID, sortOrder, limit, page, slug);
   // };
 
-  useEffect(() => {
-    // if(localStorage.getItem('cart')){
+  // useEffect(() => {
+  //   // if(localStorage.getItem('cart')){
 
-    const stored = localStorage.getItem("cart");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setShowMenu(true);
+  //   const stored = localStorage.getItem("cart");
+  //   if (stored) {
+  //     try {
+  //       const parsed = JSON.parse(stored);
+  //       setShowMenu(true);
 
-        setCategoriesData(parsed);
-        setMenu(parsed);
-      } catch (e) {
-        console.error("Failed to parse cart from localStorage", e);
-      }
-    } else {
-      getMenuCategories();
-    }
-    // }
-  }, []);
+  //       setCategoriesData(parsed);
+  //       setMenu(parsed);
+  //     } catch (e) {
+  //       console.error("Failed to parse cart from localStorage", e);
+  //     }
+  //   } else {
+  //     getMenuCategories();
+  //   }
+  //   // }
+  // }, []);
   console.log("categoriesData", categoriesData);
   return (
     <nav className="responsive-nav border-top">

@@ -77,11 +77,14 @@ const AboveMenu = () => {
             >
               <option value="">Select</option>
               {levelItems?.length > 0 &&
-                levelItems.map((cat, index) => (
-                  <option key={index} value={cat?.id}>
-                    {cat?.name}
-                  </option>
-                ))}
+                levelItems.map(
+                  (cat, index) =>
+                    cat.status == 1 && (
+                      <option key={index} value={cat?.id}>
+                        {cat?.name}
+                      </option>
+                    )
+                )}
             </select>
           ))}
       </>
