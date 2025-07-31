@@ -23,9 +23,9 @@ const CategoryGrid = ({ category }) => {
 
   return (
     <div className="row">
-      {category?.map((product) => (
-        <>
-          {product.status == 1 && (
+      {category?.map(
+        (product) =>
+          product.status == 1 && (
             <div key={product.id} className="col-lg-4 col-md-6 mb-4">
               <div className=" product-card">
                 <div className="position-relative">
@@ -66,9 +66,8 @@ const CategoryGrid = ({ category }) => {
                 </div>
               </div>
             </div>
-          )}
-        </>
-      ))}
+          )
+      )}
     </div>
   );
 };

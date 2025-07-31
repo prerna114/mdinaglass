@@ -110,14 +110,30 @@ const ProductCard = ({ title = "New Arrivals" }) => {
 
   const fetchData = async () => {
     const data = await getAllProduct();
-    console.log("Product car 123", data);
-    if (data.status == 200) {
-      setProductData([...data?.data?.data, ...data?.data?.data]);
+    if (data.status === 200) {
+      const products = [...data.data.data, ...data.data.data];
+
+      // Filter products with valid image URLs
+      const filteredProducts = await Promise.all(
+        products.map(
+          (product) =>
+            new Promise((resolve) => {
+              const img = new Image();
+              img.src = product.base_image?.medium_image_url;
+
+              img.onload = () => resolve(product); // keep product
+              img.onerror = () => resolve(null); // remove product
+            })
+        )
+      );
+
+      // Remove nulls (failed image loads)
+      setProductData(filteredProducts.filter(Boolean));
     } else {
       setProductData([]);
     }
-    console.log("THe data", data);
   };
+
   const addItemCart = async (product) => {
     setLoadingProductId(product.id);
     const tokenData = localStorage.getItem("token");
@@ -151,7 +167,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     fetchData();
   }, []);
 
-  console.log("productDataCard", productData);
+  console.log("productDataCard12444", productData);
   return (
     <div className=" py-5 bg-white bg-white-custom">
       <div className="container">
@@ -182,7 +198,9 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                 >
                   <InstantLink
                     href={{
-                      pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
+                      pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}/${
+                        product?.sku
+                      }`,
                     }}
                   >
                     <img
@@ -202,7 +220,9 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                       textDecoration: "none",
                     }}
                     href={{
-                      pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
+                      pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}/${
+                        product?.sku
+                      }`,
                     }}
                   >
                     <h6

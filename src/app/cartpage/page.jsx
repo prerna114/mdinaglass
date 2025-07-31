@@ -187,8 +187,10 @@ const page = () => {
                         <td>{item.name}</td>
                         <td>
                           €
-                          {isNaN(Number(item.price))
-                            ? parseFloat(item.min_price.replace(/[^0-9.]/g, ""))
+                          {isNaN(Number(item?.price))
+                            ? parseFloat(
+                                item?.min_price?.replace(/[^0-9.]/g, "")
+                              )
                             : Number(item.price).toFixed(2)}
                         </td>
                         <td>
@@ -196,7 +198,7 @@ const page = () => {
                           {subtotal(
                             item.min_price
                               ? parseFloat(
-                                  item.min_price.replace(/[^0-9.]/g, "")
+                                  item.min_price?.replace(/[^0-9.]/g, "")
                                 )
                               : item.price,
                             item.quantity ? item?.quantity : item.qty

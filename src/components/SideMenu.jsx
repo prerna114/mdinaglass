@@ -69,17 +69,15 @@ const SideMenu = ({}) => {
                 {sideMenu?.map((item, index) => {
                   const parentPath = []; // ✅ define root path
                   return (
-                    <>
-                      {item.status == 1 && (
-                        <SideMenuItem
-                          key={item.id}
-                          item={item}
-                          level={1}
-                          isFirst={index === 0}
-                          parentPath={[...parentPath]}
-                        />
-                      )}
-                    </>
+                    item.status == 1 && (
+                      <SideMenuItem
+                        key={item.id}
+                        item={item}
+                        level={1}
+                        isFirst={index === 0}
+                        parentPath={[...parentPath]}
+                      />
+                    )
                   );
                 })}
               </ul>

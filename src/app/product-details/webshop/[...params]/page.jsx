@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useCartStore } from "@/store";
 import { useParams, useSearchParams } from "next/navigation";
 import { getProductByID } from "@/api/productApi";
@@ -33,10 +33,17 @@ const page = () => {
 
   const params = useParams();
 
-  console.log("paramsdsdsds", params.params[1], productId);
+  console.log(
+    "paramsdsdsds",
+    params?.params[params.params.length - 1],
+    productId,
+    params.params.length
+  );
   const getProductDetails = async (id) => {
     // const data = await getProductByID(params?.productId);
     const data = await getProductByID(id);
+
+    console.log("setProductDetails", data.data);
     // if()
     if (data?.status == 200) {
       setProductDetails(data?.data?.product);
@@ -47,16 +54,22 @@ const page = () => {
   useEffect(() => {
     // getProductDetails();
   }, []);
+
   useEffect(() => {
-    const id = params.params[1];
-    if (id) {
+    const allParams = params?.params;
+    console.log("allParams", allParams);
+    if (Array.isArray(allParams) && allParams.length > 0) {
+      const id = allParams[params.params.length - 1];
       setProductId(id);
-      // Now fetch your product
+
       getProductDetails(id);
     }
-  }, [searchParams]);
+  }, [params]);
+  const allParams = useMemo(() => params?.params || [], [params]);
 
-  console.log("Product details 123", productDetails);
+  const sku1 = useMemo(() => allParams[allParams.length - 1], [allParams]);
+
+  console.log("ProductDetails098", params, allParams, sku1);
   return (
     <>
       {/* <Header /> */}

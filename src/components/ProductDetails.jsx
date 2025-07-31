@@ -23,20 +23,25 @@ const extractUniqueOptions = (variants = []) => {
   const optionIdCount = new Map();
   const uniqueOptions = new Map();
 
+  // First pass: count how many times each option_id appears
   variants.forEach((variant) => {
     Object.entries(variant.attributes || {}).forEach(([key, value]) => {
-      if (!/\d+/.test(key)) return;
+      if (!/^\d+$/.test(key)) return; // skip non-numeric keys
       const optionId = value.option_id;
       optionIdCount.set(optionId, (optionIdCount.get(optionId) || 0) + 1);
     });
   });
 
+  // Second pass: capture unique options + sku
   variants.forEach((variant) => {
     Object.entries(variant.attributes || {}).forEach(([key, value]) => {
-      if (!/\d+/.test(key)) return;
+      if (!/^\d+$/.test(key)) return;
       const { option_id, option_value } = value;
       if (optionIdCount.get(option_id) === 1 && !uniqueOptions.has(option_id)) {
-        uniqueOptions.set(option_id, option_value);
+        uniqueOptions.set(option_id, {
+          value: option_value,
+          sku: variant.sku,
+        });
       }
     });
   });
@@ -51,8 +56,9 @@ export default function ProductDetails({ productDetails, productDetail }) {
   // const setLoading = useMenuStore((state) => state.setLoading);
   const [loading, setLaoding] = useState(false);
   const router = useRouter();
-
+  const [chooseSku, setChooseSku] = useState();
   const [categoryidList, setCategoryidList] = useState([]);
+  const [imgSrc, setImgSrc] = useState();
 
   const [selectedImage, setSelectedImage] = useState("");
   const { addToCart, clearCart } = useCartStore((state) => state);
@@ -104,11 +110,17 @@ export default function ProductDetails({ productDetails, productDetail }) {
 
   console.log(
     "productDetails123",
-    createImage(productDetails?.sku),
+    // createImage(productDetails?.sku),
     productDetails,
-    selectedImage
+    chooseSku
   );
 
+  useEffect(() => {
+    if (productDetails?.sku) {
+      const data = createImage(productDetails?.sku);
+      setImgSrc(data);
+    }
+  }, [productDetails]);
   useEffect(() => {
     const data =
       productDetails?.images?.length > 1
@@ -116,6 +128,13 @@ export default function ProductDetails({ productDetails, productDetail }) {
         : createImage(productDetails?.sku);
     setSelectedImage(data);
   }, [productDetails?.images]);
+
+  console.log(
+    "createImage(productDetails?.sku)",
+    createImage(productDetails?.sku),
+    productDetails,
+    chooseSku
+  );
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       {/* <div className="filter-are">
@@ -138,11 +157,8 @@ export default function ProductDetails({ productDetails, productDetail }) {
           <div className="border text-center">
             {selectedImage && (
               <Image
-                src={
-                  productDetails?.images?.length > 1
-                    ? productDetails?.images[0]?.url
-                    : createImage(productDetails?.sku)
-                }
+                src={imgSrc}
+                onError={() => setImgSrc("/assets/nothere.png")}
                 alt="Product Image"
                 width={600}
                 height={400}
@@ -171,6 +187,39 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 />
               ))}
           </div>
+          <table className="table table-details mt-5">
+            <tbody>
+              <tr>
+                <th>Colour:</th>
+                <td>n/a</td>
+              </tr>
+              <tr>
+                <th>Width(cm):</th>
+                <td>{productDetails?.width ? productDetails.width : "n/a"}</td>
+              </tr>
+
+              <tr>
+                <th>Weight(cm):</th>
+                <td>
+                  {productDetails?.weight ? productDetails.weight : "n/a"}
+                </td>
+              </tr>
+
+              <tr>
+                <th>Height(cm):</th>
+                <td>
+                  {productDetails?.height ? productDetails.height : "n/a"}
+                </td>
+              </tr>
+
+              <tr>
+                <th>Length(cm):</th>
+                <td>
+                  {productDetails?.length ? productDetails.length : "n/a"}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         {/* Product Info */}
@@ -208,13 +257,23 @@ export default function ProductDetails({ productDetails, productDetail }) {
             </p>
 
             {uniqueOptions.size > 0 && (
-              <div className="mb-3">
-                <label className="form-label fw-semibold">Choose:</label>
-                <select className="form-select">
+              <div className="mb-4 d-flex choose-category align-items-center">
+                <label
+                  className="form-label fw-semibold"
+                  style={{
+                    color: "rgb(0, 94, 132)",
+                  }}
+                >
+                  Choose:
+                </label>
+                <select
+                  className="form-select"
+                  onChange={(e) => setChooseSku(parseInt(e.target.value))}
+                >
                   <option>Select Option</option>
                   {[...uniqueOptions.entries()].map(([optionId, label]) => (
                     <option key={optionId} value={optionId}>
-                      {label}
+                      {label.value}
                     </option>
                   ))}
                 </select>

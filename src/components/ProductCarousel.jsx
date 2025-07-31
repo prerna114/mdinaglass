@@ -137,7 +137,9 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
               >
                 <InstantLink
                   href={{
-                    pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
+                    pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}/${
+                      product?.sku
+                    }`,
                   }}
                 >
                   <img
@@ -160,7 +162,9 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
                 </div>
                 <InstantLink
                   href={{
-                    pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
+                    pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}/${
+                      product?.sku
+                    }`,
                   }}
                 >
                   <h6

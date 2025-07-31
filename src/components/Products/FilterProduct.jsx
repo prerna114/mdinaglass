@@ -106,10 +106,10 @@ const FilterProduct = ({ down }) => {
   return (
     <>
       <div className="row mb-3">
-        <div className="col-md-12 col-lg-7">
+        <div className="col-md-12 col-lg-12">
           {!down && (
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-md-3">
                 <div className="d-flex sorting-style align-items-center">
                   <span>Sort by</span>
                   <select
@@ -126,7 +126,7 @@ const FilterProduct = ({ down }) => {
                   </select>
                 </div>
               </div>
-              <div className="col-md-6">
+              <div className="col-md-3">
                 <div className="d-flex  sorting-item align-items-center justify-content-end">
                   <span>Items</span>
                   <label htmlFor="currency-select" className="visually-hidden">
@@ -150,23 +150,22 @@ const FilterProduct = ({ down }) => {
                   </select>
                 </div>
               </div>
-              {/* <div className="col-md-6">
+              <div className="col-md-3">
                 <div className="d-flex sorting-style align-items-center">
                   <span>Colors</span>
                   <select
                     className="form-select w-auto"
                     onChange={(e) => {
                       // sortProductsByPriceLowToHigh(products);
-                      handleClick(e.target.value, "", "", "");
+                      // handleClick(e.target.value, "", "", "");
                     }}
                     defaultValue={paginationOption?.sort_by}
                   >
-                    <option>Select</option>
-                    <option value={"price"}>Price</option>
-                    <option value={"name"}>Name</option>
+                    <option>All Colors</option>
+                    <option value={"name"}>Red</option>
                   </select>
                 </div>
-              </div> */}
+              </div>
             </div>
           )}
         </div>
