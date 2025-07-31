@@ -194,9 +194,9 @@ export const getCartListing = async () => {
   return data;
 };
 
-export const addToTheCart = async (product, qty) => {
+export const addToTheCart = async (product, qty, chooseSku) => {
   const raw = {
-    sku: product?.sku,
+    sku: chooseSku ? chooseSku : product?.sku,
     qty: qty,
   };
   const data = await fetchGlobal("api/blackbull/cart/add", {

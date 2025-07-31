@@ -19,7 +19,7 @@ const OrderReview = () => {
   const [method, setMethod] = useState(searchParams.get("method"));
 
   const router = useRouter();
-  const { cart } = useCartStore((state) => state);
+  const { cart, removeFromCart, clearCart } = useCartStore((state) => state);
   const subtotal = (price, qty) => {
     console.log("Price ", price, qty);
     return (price * qty).toFixed(2);
@@ -68,12 +68,23 @@ const OrderReview = () => {
   }
 
   const PaymentSuccess = async () => {
-    const response = await checkOut();
-    if (response.status == 200) {
-      SuccessToast(response.data.message, "top-right");
+    const tokenData = localStorage.getItem("token");
+    const parsed = tokenData ? JSON.parse(tokenData) : null;
+    const accessToken = parsed?.token;
+    if (accessToken) {
+      const response = await checkOut();
+      console.log("Response", response);
+
+      if (response.status == 200) {
+        SuccessToast(response.data.message, "top-right");
+        router.push("/");
+      }
+    } else {
+      SuccessToast("Order Placed Successfully", "top-right");
       router.push("/");
+
+      clearCart();
     }
-    console.log("Response pAymnt", response);
   };
   console.log("billingAddress", billingAddress);
   return (
@@ -334,8 +345,8 @@ const OrderReview = () => {
                         </Link>
                       </div>
 
-                      <Link
-                        href={`/orderReview?method=${method}`}
+                      <div
+                        // href={`/orderReview?method=${method}`}
                         onClick={() => {
                           PaymentSuccess();
                         }}
@@ -343,7 +354,7 @@ const OrderReview = () => {
                         <button className="btn btn-cart btn-info text-white back-button">
                           Proceed to Payment
                         </button>
-                      </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

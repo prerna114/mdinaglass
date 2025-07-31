@@ -1,23 +1,78 @@
 "use client";
 
+import { useMenuStore } from "@/store/useCategoryStore";
 import React from "react";
+import InstantLink from "./InstantClick";
 
 const categories = [
-  { name: "Lanterns", image: "image1.png" },
-  { name: "Vases", image: "vases.png" },
-  { name: "Lighting", image: "octopus.png" },
-  { name: "Decorative Bowls", image: "Bowls.png" },
-  { name: "Egg Holders", image: "egg.png" },
-  { name: "Book Ends", image: "Book.png" },
-  { name: "Oil & Vinegar", image: "oil.png" },
-  { name: "Pestle & Mortar", image: "pestle.png" },
-  { name: "Bubble Candle Holders", image: "Bubble.png" },
-  { name: "Sculptures", image: "Sculptures.png" },
-  { name: "Christmas", image: "christmas.png" },
-  { name: "Valentine's", image: "Valentine.png" },
+  {
+    name: "Lanterns",
+    image: "image1.png",
+    urlPath: "/product/webshop/bycategory/3/473/price/asc/15/1/lanterns.htm",
+  },
+  {
+    name: "Vases",
+    image: "vases.png",
+    urlPath: "/product/webshop/bycategory/3/4/price/asc/15/1/vases.htm",
+  },
+  {
+    name: "Lighting",
+    image: "octopus.png",
+    urlPath: "/product/webshop/bycategory/3/6/price/asc/15/1/lighting.htm",
+  },
+  {
+    name: "Decorative Bowls",
+    image: "Bowls.png",
+    urlPath:
+      "/product/webshop/bycategory/3/467/price/asc/15/1/decorative-bowls.htm",
+  },
+  {
+    name: "Egg Holders",
+    image: "egg.png",
+    urlPath: "/product/webshop/bycategory/3/648/price/asc/15/1/egg-holders.htm",
+  },
+  {
+    name: "Book Ends",
+    image: "Book.png",
+    urlPath: "/product/webshop/bycategory/3/653/price/asc/15/1/book-ends.htm",
+  },
+  {
+    name: "Oil & Vinegar",
+    image: "oil.png",
+    urlPath:
+      "/product/webshop/bycategory/3/464/price/asc/15/1/oil-vinegar-bottles.htm",
+  },
+  {
+    name: "Pestle & Mortar",
+    image: "pestle.png",
+    urlPath:
+      "/product/webshop/bycategory/3/605/price/asc/15/1/pestle-mortars.htm",
+  },
+  {
+    name: "Bubble Candle Holders",
+    image: "Bubble.png",
+    urlPath: "/product/webshop/bycategory/3/546/price/asc/15/1/sculptures.htm",
+  },
+  {
+    name: "Sculptures",
+    image: "Sculptures.png",
+    urlPath: "/product/webshop/bycategory/3/546/price/asc/15/1/sculptures.htm",
+  },
+  {
+    name: "Christmas",
+    image: "christmas.png",
+    urlPath: "/product/webshop/bycategory/22/price/asc/15/1/christmas-1.htm",
+  },
+  {
+    name: "Valentine's",
+    image: "Valentine.png",
+    urlPath: "/product/webshop/bycategory/216/price/asc/15/1/valentines.htm",
+  },
 ];
 
 const CategoryGrid = () => {
+  const sideMenu = useMenuStore((state) => state.sideMenu);
+  console.log("sideMenu CategoryGrid", sideMenu);
   return (
     <section className=" custom-categories bg-white container py-5">
       <h3 className=" mb-4" style={{ fontFamily: "dopamine, sans-serif" }}>
@@ -45,16 +100,18 @@ const CategoryGrid = () => {
                     borderBottom: "1px solid #ccc",
                   }}
                 />
-                <div
-                  className="font-custom-category position-absolute bottom-5 start-50 translate-middle text-white  text-center px-2"
-                  style={{
-                    textShadow: "0em 0.1em 0.1em #FFFFFFAD)",
+                <InstantLink href={cat.urlPath}>
+                  <div
+                    className="font-custom-category position-absolute bottom-5 start-50 translate-middle text-white  text-center px-2"
+                    style={{
+                      textShadow: "0em 0.1em 0.1em #FFFFFFAD)",
 
-                    width: "100%",
-                  }}
-                >
-                  {cat.name}
-                </div>
+                      width: "100%",
+                    }}
+                  >
+                    {cat.name}
+                  </div>
+                </InstantLink>
               </div>
             </div>
           </div>

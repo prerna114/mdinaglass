@@ -56,7 +56,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
   // const setLoading = useMenuStore((state) => state.setLoading);
   const [loading, setLaoding] = useState(false);
   const router = useRouter();
-  const [chooseSku, setChooseSku] = useState();
+  const [chooseSku, setChooseSku] = useState(null);
   const [categoryidList, setCategoryidList] = useState([]);
   const [imgSrc, setImgSrc] = useState();
 
@@ -79,12 +79,17 @@ export default function ProductDetails({ productDetails, productDetail }) {
     [productDetails?.variants]
   );
   const addItemCart = async () => {
+    if (uniqueOptions?.size > 0 && chooseSku == null) {
+      CustomToast("Please Choose Varient", "top-right");
+      return;
+    }
+    console.log("chooseSku", chooseSku, uniqueOptions?.length);
     setLaoding(true);
     const tokenData = localStorage.getItem("token");
     const parsed = tokenData ? JSON.parse(tokenData) : null;
     const accessToken = parsed?.token;
     if (accessToken) {
-      const data = await addToTheCart(productDetails, quantity);
+      const data = await addToTheCart(productDetails, quantity, chooseSku);
       if (data?.status === 200) {
         clearCart();
         addToCart(data.data?.cart.items);
@@ -98,9 +103,9 @@ export default function ProductDetails({ productDetails, productDetail }) {
       }
       setLaoding(false);
     } else {
-      console.log("quantity", quantity, typeof productDetails);
+      console.log("quantity", quantity, productDetails);
 
-      addToCart({ ...productDetails, quantity });
+      addToCart({ ...productDetails, quantity, chooseSku });
       SuccessToast("Item added Successfully", "top-right");
 
       setLaoding(false);
@@ -112,7 +117,8 @@ export default function ProductDetails({ productDetails, productDetail }) {
     "productDetails123",
     // createImage(productDetails?.sku),
     productDetails,
-    chooseSku
+    chooseSku,
+    cart
   );
 
   useEffect(() => {
@@ -133,7 +139,8 @@ export default function ProductDetails({ productDetails, productDetail }) {
     "createImage(productDetails?.sku)",
     createImage(productDetails?.sku),
     productDetails,
-    chooseSku
+    chooseSku,
+    uniqueOptions
   );
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
@@ -268,11 +275,14 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 </label>
                 <select
                   className="form-select"
-                  onChange={(e) => setChooseSku(parseInt(e.target.value))}
+                  onChange={
+                    (e) => setChooseSku(e.target.value)
+                    // console.log("Selected SKU:", e.target.value)
+                  }
                 >
                   <option>Select Option</option>
                   {[...uniqueOptions.entries()].map(([optionId, label]) => (
-                    <option key={optionId} value={optionId}>
+                    <option key={optionId} value={label.sku}>
                       {label.value}
                     </option>
                   ))}

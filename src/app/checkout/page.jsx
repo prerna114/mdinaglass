@@ -95,7 +95,7 @@ const checkout = () => {
 
     return true;
   };
-  console.log("Hndle text", !filed.fax);
+  console.log("Hndle text", !filed?.fax);
 
   useEffect(() => {
     const data = localStorage.getItem("billingaddress");
@@ -138,7 +138,7 @@ const checkout = () => {
                           handleText("firstName", e.target.value);
                         }}
                         placeholder="FIRST NAME*"
-                        value={filed.firstName}
+                        value={filed?.firstName}
                       ></input>
 
                       <div className="required-text">{error.firstName}</div>
@@ -152,7 +152,7 @@ const checkout = () => {
                           handleText("lastName", e.target.value);
                         }}
                         placeholder="LAST NAME*"
-                        value={filed.lastName}
+                        value={filed?.lastName}
                       ></input>
 
                       <div className="required-text">{error.lastName}</div>
@@ -166,7 +166,7 @@ const checkout = () => {
                         onChange={(e) => {
                           handleText("company", e.target.value);
                         }}
-                        value={filed.company}
+                        value={filed?.company}
                       ></input>
 
                       <div className="required-text">{error.company}</div>
@@ -180,7 +180,7 @@ const checkout = () => {
                         onChange={(e) => {
                           handleText("email", e.target.value);
                         }}
-                        value={filed.email}
+                        value={filed?.email}
                       ></input>
 
                       <div className="required-text">{error.email}</div>
@@ -194,7 +194,7 @@ const checkout = () => {
                         onChange={(e) => {
                           handleText("addressOne", e.target.value);
                         }}
-                        value={filed.addressOne}
+                        value={filed?.addressOne}
                       ></input>
 
                       <div className="required-text">{error.addressOne}</div>
@@ -208,7 +208,7 @@ const checkout = () => {
                         onChange={(e) => {
                           handleText("addressTwo", e.target.value);
                         }}
-                        value={filed.addressTwo}
+                        value={filed?.addressTwo}
                       ></input>
 
                       <div className="required-text">{error.addressTwo}</div>
@@ -222,7 +222,7 @@ const checkout = () => {
                         onChange={(e) => {
                           handleText("city", e.target.value);
                         }}
-                        value={filed.addressTwo}
+                        value={filed?.addressTwo}
                       ></input>
 
                       <div className="required-text">{error.city}</div>
@@ -236,7 +236,7 @@ const checkout = () => {
                         onChange={(e) => {
                           handleText("state", e.target.value);
                         }}
-                        value={filed.state}
+                        value={filed?.state}
                       ></input>
 
                       <div className="required-text">{error.state}</div>
@@ -250,7 +250,7 @@ const checkout = () => {
                         onChange={(e) => {
                           handleText("zipCode", e.target.value);
                         }}
-                        value={filed.zipCode}
+                        value={filed?.zipCode}
                       ></input>
 
                       <div className="required-text">{error.zipCode}</div>
@@ -266,7 +266,7 @@ const checkout = () => {
                         onChange={(e) => {
                           handleText("country", e.target.value);
                         }}
-                        value={filed.country}
+                        value={filed?.country}
                       >
                         <option value="">SELECT COUNTRY *</option>
                         <option value="Afghanistan">Afghanistan</option>
@@ -636,7 +636,7 @@ const checkout = () => {
                           handleText("telePhone", e.target.value);
                         }}
                         placeholder="TELEPHONE*"
-                        value={filed.telePhone}
+                        value={filed?.telePhone}
                       ></input>
 
                       <div className="required-text">{error.telePhone}</div>
@@ -650,7 +650,7 @@ const checkout = () => {
                           handleText("fax", e.target.value);
                         }}
                         placeholder="FAX*"
-                        value={filed.fax}
+                        value={filed?.fax}
                       ></input>
 
                       <div className="required-text">{error.fax}</div>
