@@ -23,7 +23,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
 
   const sortOrder = priceIndex !== -1 ? allParams[priceIndex + 1] : "asc";
   const limit = priceIndex !== -1 ? allParams[priceIndex + 2] : 15;
-  const page = priceIndex !== -1 ? allParams[priceIndex + 3] : 1;
+  const page = priceIndex !== -1 ? 1 : 1;
 
   const [selectedFilter, setSelectedFilter] = useState({
     variations: 0,
@@ -98,7 +98,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
     localStorage.setItem("currentUrl", currentUrl);
     console.log("currentUrl", currentUrl);
   };
-  console.log("subCategories", page);
+  console.log("subCategories", subCategories);
   return (
     <li
       className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}`}
@@ -123,6 +123,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
             onClick={(e) => {
               urlSave(fullPathToItem, item.slug, sortOrder, limit, page);
               // e.preventDefault(); // optional if handleClick does router.push
+              // handleClick(item);
               handleClick(item);
             }}
             className={`category-sidebar ${

@@ -259,7 +259,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
             <p className="sku-detail">
               Price:{" "}
               <span className="fs-4 text-dark">
-                {productDetails?.formatted_price}
+                € {Number(productDetails?.price).toFixed(2)}
               </span>
             </p>
 

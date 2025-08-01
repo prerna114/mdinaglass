@@ -63,6 +63,7 @@ const SideMenu = ({}) => {
                 className="list-unstyled category-sidebar  "
                 style={{
                   backgroundColor: "white",
+                  marginTop: "30px",
                   // padding: "15px",
                 }}
               >

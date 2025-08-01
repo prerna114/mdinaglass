@@ -3,6 +3,7 @@
 import { useMenuStore } from "@/store/useCategoryStore";
 import React from "react";
 import InstantLink from "./InstantClick";
+import { ProductLists } from "@/store/product";
 
 const categories = [
   {
@@ -72,6 +73,8 @@ const categories = [
 
 const CategoryGrid = () => {
   const sideMenu = useMenuStore((state) => state.sideMenu);
+  const { heading, setHeading, setPagination } = ProductLists((state) => state);
+
   console.log("sideMenu CategoryGrid", sideMenu);
   return (
     <section className=" custom-categories bg-white container py-5">
@@ -91,16 +94,29 @@ const CategoryGrid = () => {
                   borderBottom: "1px solid #dee2e6", // subtle inner border
                 }}
               >
-                <img
-                  src={`/assets/${cat.image}`}
-                  alt={cat.name}
-                  className="position-absolute top-0 start-0 w-100 h-100"
-                  style={{
-                    objectFit: "cover",
-                    borderBottom: "1px solid #ccc",
+                <InstantLink
+                  href={cat.urlPath}
+                  onClick={() => {
+                    setHeading(cat?.name);
+                    console.log("SetHeading", cat?.name);
                   }}
-                />
-                <InstantLink href={cat.urlPath}>
+                >
+                  <img
+                    src={`/assets/${cat.image}`}
+                    alt={cat.name}
+                    className="position-absolute top-0 start-0 w-100 h-100"
+                    style={{
+                      objectFit: "cover",
+                      borderBottom: "1px solid #ccc",
+                    }}
+                  />
+                </InstantLink>
+                <InstantLink
+                  href={cat.urlPath}
+                  onClick={() => {
+                    setHeading(cat?.name);
+                  }}
+                >
                   <div
                     className="font-custom-category position-absolute bottom-5 start-50 translate-middle text-white  text-center px-2"
                     style={{

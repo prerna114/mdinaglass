@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Domine:wght@400..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Rochester&display=swap");
 @media (min-width: 1800px) {
   .container,
   .container-lg,
@@ -2968,18 +2969,32 @@ ul.category-sidebar li .activeSIdeBar {
 ul.category-sidebar li .activeSIdeBar .fontFamily {
   color: #005e84 !important;
   font-family: "Raleway", sans-serif;
-  font-size: 18px !important;
 }
-ul.category-sidebar li .activeSIdeBar .Level-1 {
+ul.category-sidebar li .nonActiveBar .Level-1 {
   color: #005e84 !important;
-  font-family: "Raleway", sans-serif;
+  font-family: var(--font-domine) !important;
   font-size: 18px !important;
 }
 ul.category-sidebar li .nonActiveBar {
   color: #808080 !important;
   /* color: #76d2d3 !important; */
   font-family: "Raleway", sans-serif;
+  line-height: 1.7em;
 }
+ul.category-sidebar li .activeSIdeBar .Level-1 {
+  color: #005e84 !important;
+  font-family: "Domine", serif;
+  font-size: 18px !important;
+}
+p.category-sidebar.nonActiveBar.Level-1 {
+  color: #005e84 !important;
+  font-family: "Domine", serif;
+}
+p.category-sidebar.activeSIdeBar.Level-1 {
+  color: #005e84 !important;
+  font-family: "Domine", serif;
+}
+
 ul.category-sidebar li .level-3 {
   /* color: #808080 !important; */
   color: #76d2d3 !important;
