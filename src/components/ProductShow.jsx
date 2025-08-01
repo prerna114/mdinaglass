@@ -1,13 +1,14 @@
 "use client";
 
 import { getRangeProduct } from "@/api/productApi";
-import { createUrl } from "@/constant";
+import { createImage, createUrl } from "@/constant";
 import { ProductLists } from "@/store/product";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ListingSkeleton from "./Skeleton/ListingSkeleton";
 import InstantLink from "./InstantClick";
+import useCategoryIdString from "@/app/hooks/useCategoryIdString ";
 
 const ProductShow = ({ productDetails }) => {
   const params = useParams();
@@ -15,7 +16,7 @@ const ProductShow = ({ productDetails }) => {
   const [rangeProduct, setRangeProduct] = useState([]);
   const [prvURL, setPrvURL] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [categoryIds, setCategoryIds] = useState("");
   const getRange = async () => {
     const current = localStorage.getItem("currentUrl");
     setPrvURL(current);
@@ -31,11 +32,32 @@ const ProductShow = ({ productDetails }) => {
       setLoading(false);
     }
   };
+  const data = useCategoryIdString();
 
   useEffect(() => {
     getRange();
+    setCategoryIds(data);
   }, []);
-  console.log("productDetailsProductSHo", productDetails?.range);
+  const [imgSrcs, setImgSrcs] = useState([]);
+
+  useEffect(() => {
+    if (rangeProduct?.length > 0) {
+      setImgSrcs(
+        rangeProduct.map((item) => ({
+          url: createImage(item.sku),
+          id: item.id,
+        }))
+      );
+    }
+  }, [rangeProduct]);
+  const parts = categoryIds.split("/");
+
+  parts.pop(); // Remove last element
+
+  const result = parts.join("/");
+
+  console.log("categoryIds", productDetails, rangeProduct);
+  // console.log("productDetailsProductSHo", imgSrcs);
 
   return (
     <>
@@ -46,60 +68,64 @@ const ProductShow = ({ productDetails }) => {
         ) : (
           <>
             <div className="row">
-              {rangeProduct.map((product) => (
-                <div
-                  key={product.id}
-                  className="col-lg-4 col-md-6 col-sm-12 mb-4"
-                >
-                  <div className=" product-card products-show">
-                    <div className="position-relative">
-                      <InstantLink
-                        href={{
-                          pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
-                        }}
-                      >
-                        <img
-                          src={product.images[0].url}
-                          className="card-img-top"
-                          alt={product.name}
-                          style={{}}
-                        />
-                      </InstantLink>
-
-                      {product.hasOptions && (
-                        <div className="m-2">
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id={`options-${product.id}`}
+              {rangeProduct?.length > 0 &&
+                rangeProduct.map((product, index) => {
+                  return (
+                    <div
+                      key={product.id}
+                      className="col-lg-4 col-md-6 col-sm-12 mb-4"
+                    >
+                      <div className=" product-card products-show">
+                        <div className="position-relative">
+                          <InstantLink
+                            href={{
+                              pathname: `/product-details/webshop/${`${categoryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
+                            }}
+                          >
+                            <img
+                              src={imgSrcs[index]?.url}
+                              onError={() => setImgSrcs("/assets/nothere.png")}
+                              className="card-img-top"
+                              alt={product.name}
+                              style={{}}
                             />
-                            <label
-                              className="form-check-label small text-muted"
-                              htmlFor={`options-${product.id}`}
-                            >
-                              Click for more options
-                            </label>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="card-body text-center">
-                      <InstantLink
-                        href={{
-                          pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}`,
-                        }}
-                      >
-                        <h6 className="card-title mb-3">{product.name}</h6>
-                      </InstantLink>
+                          </InstantLink>
 
-                      <p className="card-text fw-bold">
-                        Price €{Number(product.price).toFixed(2)}
-                      </p>
+                          {product.hasOptions && (
+                            <div className="m-2">
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  id={`options-${product.id}`}
+                                />
+                                <label
+                                  className="form-check-label small text-muted"
+                                  htmlFor={`options-${product.id}`}
+                                >
+                                  Click for more options
+                                </label>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="card-body text-center">
+                          <InstantLink
+                            href={{
+                              pathname: `/product-details/webshop/${`${categoryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
+                            }}
+                          >
+                            <h6 className="card-title mb-3">{product.name}</h6>
+                          </InstantLink>
+
+                          <p className="card-text fw-bold">
+                            Price €{Number(product.price).toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  );
+                })}
             </div>
 
             <div className="col-md-12">

@@ -1,4 +1,5 @@
 "use client";
+import { useMenuStore } from "@/store/useCategoryStore";
 import CategoryGrid from "../components/CategoryGrid";
 import VideoSkeleton from "../components/Skeleton/VideoSkeleton";
 
@@ -28,6 +29,8 @@ const Testimonials = dynamic(() => import("../components/Testimonials"), {
 });
 
 export default function Page() {
+  const sideMenu = useMenuStore((state) => state.sideMenu);
+  console.log("SideMenu", sideMenu);
   return (
     <>
       <Video />

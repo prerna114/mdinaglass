@@ -143,7 +143,7 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
                   }}
                 >
                   <img
-                    src={product.images[0].url}
+                    src={product?.images[0]?.url}
                     alt={product.name}
                     className="img-fluid mb-2"
                     style={{ height: "190px", objectFit: "contain" }}
@@ -171,7 +171,8 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
                     className="mb-1"
                     style={{ fontFamily: "Quicksand, sans-serif" }}
                   >
-                    {product.name}
+                    {product?.name?.slice(0, 24)}
+                    {product?.name?.length > 23 && "..."}
                   </h6>
                 </InstantLink>
 

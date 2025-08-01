@@ -14,6 +14,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
 import { getCartListing, testCartAPi } from "@/api/CartApi";
 import InstantLink from "./InstantClick";
+import { getSearchProduct } from "@/api/productApi";
 
 const Header = () => {
   const [isBannerVisible, setIsBannerVisible] = useState(true);
@@ -301,6 +302,7 @@ const Header = () => {
                       Select currency
                     </label>
                     <select
+                      disabled
                       id="currency-select"
                       className="form-select me-2 searchContainer"
                       style={{
@@ -312,6 +314,7 @@ const Header = () => {
                         paddingLeft: "5px",
                         fontSize: "18px",
                         margin: "0 !important",
+                        background: "white",
                       }}
                     >
                       <option>EUR</option>
@@ -337,7 +340,7 @@ const Header = () => {
                       LOGOUT
                     </button>
                   ) : (
-                    <Link
+                    <InstantLink
                       href={"/loginCheckoutPage"}
                       onClick={() => {
                         console.log("dsadnjsandjasnj");
@@ -355,7 +358,7 @@ const Header = () => {
                       >
                         SIGN UP
                       </button>
-                    </Link>
+                    </InstantLink>
                   )}
                 </div>
               </div>

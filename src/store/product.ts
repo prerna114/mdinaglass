@@ -14,6 +14,7 @@ type Pagination = {
 };
 type ProdutList = {
   products: [];
+  searchProduct: [];
   category: [];
   allProduct: {};
   heading: string;
@@ -32,6 +33,8 @@ type ProdutList = {
   setHeading: (state: string) => void;
   setDescription: (state: string) => void;
   setProducts: (state: []) => void;
+  setSearchProduct: (state: []) => void;
+
   setCategory: (state: []) => void;
   setAllProduct: (state: []) => void;
   setAllProductwithFilter: (state: {}) => void;
@@ -53,6 +56,7 @@ export const ProductLists = create<ProdutList>()(
     (set, get) => ({
       products: [],
       category: [],
+      searchProduct: [],
       allProduct: {},
       heading: "Products",
       allProductwithFilter: {},
@@ -75,6 +79,9 @@ export const ProductLists = create<ProdutList>()(
       },
       setCategory: (item) => {
         set({ category: item });
+      },
+      setSearchProduct: (item) => {
+        set({ searchProduct: item });
       },
       setAllProduct: (item) => {
         set({ allProduct: item });

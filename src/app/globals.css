@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 @media (min-width: 1800px) {
   .container,
   .container-lg,
@@ -558,11 +559,21 @@ ul.list-unstyled.category-sidebar li.jewels:hover a {
 .category-sidebar {
   margin: 0 12px;
   padding-bottom: 3px;
-  font-family: var(--font-domine) !important;
+  /* font-family: var(--font-domine) !important; */
 }
 ul.category-sidebar li a {
-  font-family: var(--font-domine) !important;
+  font-family: "Raleway", sans-serif;
 }
+p.category-sidebar {
+  font-size: 13px;
+  text-transform: uppercase;
+  line-height: 1.6rem;
+  font-family: "Raleway", sans-serif;
+
+  color: #808080;
+  font-weight: 500;
+}
+
 .product-card {
   background: #fff;
   padding: 20px 25px;
@@ -2952,21 +2963,27 @@ input[type="checkbox"].custom-checkbox {
 
 ul.category-sidebar li .activeSIdeBar {
   color: #005e84 !important;
-  font-family: var(--font-domine);
+  font-family: "Raleway", sans-serif;
 }
 ul.category-sidebar li .activeSIdeBar .fontFamily {
   color: #005e84 !important;
-  font-family: var(--font-raleway) !important;
+  font-family: "Raleway", sans-serif;
+  font-size: 18px !important;
+}
+ul.category-sidebar li .activeSIdeBar .Level-1 {
+  color: #005e84 !important;
+  font-family: "Raleway", sans-serif;
+  font-size: 18px !important;
 }
 ul.category-sidebar li .nonActiveBar {
   color: #808080 !important;
   /* color: #76d2d3 !important; */
-  font-family: var(--font-domine);
+  font-family: "Raleway", sans-serif;
 }
 ul.category-sidebar li .level-3 {
   /* color: #808080 !important; */
   color: #76d2d3 !important;
-  font-family: var(--font-domine) !important;
+  font-family: "Raleway", sans-serif;
 }
 .billing-text {
   color: #005e84;

@@ -162,7 +162,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
         {/* Product Image */}
         <div className="col-md-12 col-lg-6 mt-2">
           <div className="border text-center">
-            {selectedImage && (
+            {selectedImage && imgSrc ? (
               <Image
                 src={imgSrc}
                 onError={() => setImgSrc("/assets/nothere.png")}
@@ -172,7 +172,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 priority
                 className="img-fluid"
               />
-            )}
+            ) : null}
           </div>
           <div className="d-flex justify-content-center gap-2 mt-3">
             {productDetails?.images?.length > 1 &&

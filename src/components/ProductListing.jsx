@@ -39,7 +39,7 @@ const AboveMenu = dynamic(() => import("./Products/AboveMenu"), {
   loading: () => <span className="visually-hidden">Loading...</span>,
 });
 
-const ProductListing = ({ onDataLoaded }) => {
+const ProductListing = ({ SearchData }) => {
   const [productList, setProductList] = useState([]);
   const [categoryidList, setCategoryidList] = useState([]);
   const [cateogryArray, setCateogryArray] = useState([]);

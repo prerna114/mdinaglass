@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { ProductLists } from "@/store/product";
 import { createUrl } from "@/constant";
 import { useMenuStore } from "@/store/useCategoryStore";
+import Link from "next/link";
 
 const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
   const router = useRouter();
@@ -61,7 +62,8 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
       sort_dir: "asc",
     });
     const newUrl = createUrl(newPath, item.slug, sortOrder, limit, page);
-    router.push(newUrl, { scroll: false });
+    // console.log("New Url")
+    // router.push(newUrl, { scroll: false });
   };
 
   useEffect(() => {
@@ -85,40 +87,75 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
     }
   }, [categoryIds, item.id, setFilterOption]);
 
-  console.log("subCategories", subCategories);
+  const urlSave = (fullPathToItem, slug, sortOrder, limit, page) => {
+    const currentUrl = createUrl(fullPathToItem, slug, sortOrder, limit, page);
+    // On first render or route change:
+    const prevUrl = localStorage.getItem("currentUrl");
+    if (prevUrl) {
+      localStorage.setItem("currentUrl", prevUrl); // Save old as previous
+    }
+    localStorage.setItem("currentUrl", currentUrl);
+    console.log("currentUrl", currentUrl);
+  };
+  console.log("subCategories", subCategories, level);
   return (
     <li
       className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}`}
-      style={{ padding: "5px 10px" }}
+      style={{ padding: "0px 10px" }}
     >
       <div
-        onClick={() => handleClick(item)}
-        className={`category-sidebar ${
-          isSelected ? "activeSIdeBar" : level >= 3 ? "level-3" : "nonActiveBar"
-        } ${level > 1 ? "fontFamily" : ""}`}
-        style={{
-          cursor: "pointer",
-          textTransform: "uppercase",
-        }}
+      // onClick={() => handleClick(item)}
+      // className={`category-sidebar ${
+      //   isSelected ? "activeSIdeBar" : level >= 3 ? "level-3" : "nonActiveBar"
+      // } ${level > 1 ? "fontFamily" : ""}`}
+      // style={{
+      //   cursor: "pointer",
+      //   textTransform: "uppercase",
+      // }}
       >
-        <p style={{ margin: 0 }}>{item.name}</p>
+        {/* <Link href={"/"}> */}
+        <Link
+          href={createUrl(fullPathToItem, item.slug, sortOrder, limit, page)}
+          style={{ margin: 0 }}
+        >
+          <p
+            onClick={(e) => {
+              urlSave(fullPathToItem, item.slug, sortOrder, limit, page);
+              // e.preventDefault(); // optional if handleClick does router.push
+              // handleClick(item);
+            }}
+            className={`category-sidebar ${
+              isSelected
+                ? "activeSIdeBar"
+                : level >= 3
+                ? "level-3"
+                : "nonActiveBar"
+            } ${level > 1 ? "fontFamily" : level == 1 ? "Level-1" : ""}`}
+            style={{
+              cursor: "pointer",
+              textTransform: "uppercase",
+              fontSize: level == 1 ? "18px" : "13px",
+            }}
+          >
+            {item.name}
+          </p>
+        </Link>
+        {/* </Link> */}
       </div>
 
       {isExpanded && subCategories.length > 0 && (
         <ul style={{ paddingLeft: "2px" }}>
           {subCategories.map((child) => {
             return (
-              <>
-                {child.status == 1 && (
-                  <React.Suspense key={child.id} fallback={<li>Loading...</li>}>
-                    <SideMenuItem
-                      item={child}
-                      level={level + 1}
-                      parentPath={fullPathToItem}
-                    />
-                  </React.Suspense>
-                )}
-              </>
+              child.status == 1 && (
+                <React.Suspense key={child.id} fallback={<li>Loading...</li>}>
+                  <SideMenuItem
+                    item={child}
+                    level={level + 1}
+                    parentPath={fullPathToItem}
+                  />
+                </React.Suspense>
+              )
             );
           })}
         </ul>

@@ -6,6 +6,10 @@ import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { ProductLists } from "@/store/product";
 import dynamic from "next/dynamic";
+import { getSearchProduct } from "@/api/productApi";
+import { useRouter } from "next/navigation";
+import { useMenuStore } from "@/store/useCategoryStore";
+
 const InstantLink = dynamic(() => import("./InstantClick"), { ssr: false });
 
 const ResponsiveNav = () => {
@@ -14,62 +18,12 @@ const ResponsiveNav = () => {
   const [categoriesData, setCategoriesData] = useState([]);
   const [showMenu, setShowMenu] = useState(true);
   const { setMenu } = useAuthStore((state) => state);
-  const { setPagination } = ProductLists((state) => state);
 
-  // const getMenuCategories = async () => {
-  //   console.log("Get Catrogires is clling");
-  //   const myHeaders = new Headers();
-  //   const requestOptions = {
-  //     method: "GET",
-  //     headers: myHeaders,
-  //     redirect: "follow",
-  //   };
+  const { setPagination, setHeading, setSearchProduct } = ProductLists(
+    (state) => state
+  );
+  const router = useRouter();
 
-  //   try {
-  //     const res = await fetch(
-  //       "https://mdinaglasses.blackbullsolution.com/api/menu-categories",
-  //       requestOptions
-  //     );
-  //     const data = await res.json(); // ✅ this is what you need
-
-  //     console.log("THe data", data[0]?.children);
-  //     setCategoriesData(data[0]?.children);
-  //     localStorage.setItem("cart", JSON.stringify(data[0]?.children));
-  //     setMenu(data[0]?.children);
-  //     if (data[0]?.children) {
-  //       setShowMenu(true);
-  //     }
-  //   } catch (error) {
-  //     console.log("eror", error);
-  //   }
-  // };
-  // const createUrl = (categoryID, slug) => {
-  //   // console.log("dsada", slu g, categoryID);
-  //   let sortOrder = "asc";
-  //   let limit = 15;
-  //   let page = 1;
-  //   return buildProductUrl(categoryID, sortOrder, limit, page, slug);
-  // };
-
-  // useEffect(() => {
-  //   // if(localStorage.getItem('cart')){
-
-  //   const stored = localStorage.getItem("cart");
-  //   if (stored) {
-  //     try {
-  //       const parsed = JSON.parse(stored);
-  //       setShowMenu(true);
-
-  //       setCategoriesData(parsed);
-  //       setMenu(parsed);
-  //     } catch (e) {
-  //       console.error("Failed to parse cart from localStorage", e);
-  //     }
-  //   } else {
-  //     getMenuCategories();
-  //   }
-  //   // }
-  // }, []);
   console.log("categoriesData", categoriesData);
   return (
     <nav className="responsive-nav border-top">
@@ -131,6 +85,21 @@ const ResponsiveNav = () => {
                   // className="form-control"
                   placeholder="Search"
                   className="inputSubContainer"
+                  onChange={(e) => {
+                    console.log("onChnage IN", e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      router.push(`/search/${e.target.value}/1`);
+                      e.preventDefault(); // Prevent form submission if inside a form
+                      console.log(
+                        "Enter pressed, call API here",
+                        e.target.value
+                      );
+
+                      setHeading("Search");
+                    }
+                  }}
                 />
               </div>
             </div>

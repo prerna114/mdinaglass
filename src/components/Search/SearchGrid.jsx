@@ -8,8 +8,8 @@ import InstantLink from "../InstantClick";
 import { createImage } from "@/constant";
 import { useParams } from "next/navigation";
 
-const ProductGrid = ({ products, categoryidList }) => {
-  console.log("Products in Grid");
+const SearchGrid = ({ products }) => {
+  console.log("Products in Grid", products);
   const params = useParams();
   const allParams = useMemo(() => params?.params || [], [params]);
   const priceIndex = allParams.findIndex((p) => p === "price");
@@ -47,20 +47,22 @@ const ProductGrid = ({ products, categoryidList }) => {
     }
   }, [products]);
 
+  const createLink = () => {
+    products[0]?.categories;
+  };
+
   const handleImgError = (index) => {
     setImgSrcs((prev) =>
       prev.map((img, i) => (i === index ? { ...img, fallback: true } : img))
     );
   };
   console.log("categoryIds", imgSrcs);
-  console.log("products", products);
+  console.log("productsGRID", products[0]?.categories);
 
   return (
     <div className="row">
       {products?.length > 0 &&
         products?.map((product, index) => {
-          const [imgSrc, setImgSrc] = useState(createImage(product.sku));
-
           return (
             <div key={product.id} className="col-lg-4 col-md-6 mb-4">
               <div className="product-card">
@@ -112,4 +114,4 @@ const ProductGrid = ({ products, categoryidList }) => {
   );
 };
 
-export default React.memo(ProductGrid);
+export default React.memo(SearchGrid);

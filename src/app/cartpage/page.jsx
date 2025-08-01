@@ -174,15 +174,23 @@ const page = () => {
                   <tbody>
                     {cart.map((item, index) => (
                       <tr key={index}>
-                        <td>
-                          {item?.images?.length > 0 &&
-                            item?.images[0]?.small_image_url && (
+                        <td
+                          style={{
+                            textAlign: "center",
+                          }}
+                        >
+                          {(item?.images?.length > 0 &&
+                            item?.images[0]?.small_image_url) ||
+                            (item?.images[0]?.url && (
                               <img
-                                src={item?.images[0]?.small_image_url}
+                                src={
+                                  item?.images[0]?.small_image_url ||
+                                  item?.images[0]?.url
+                                }
                                 alt={item.name}
                                 width="80"
                               />
-                            )}
+                            ))}
                         </td>
                         <td>{item.name}</td>
                         <td>

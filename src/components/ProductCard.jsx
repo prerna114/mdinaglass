@@ -227,12 +227,10 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                   >
                     <h6
                       className="mb-1"
-                      style={{
-                        fontFamily: "Quicksand, sans-serif",
-                        color: "black",
-                      }}
+                      style={{ fontFamily: "Quicksand, sans-serif" }}
                     >
-                      {product.name}
+                      {product?.name?.slice(0, 24)}
+                      {product?.name?.length > 23 && "..."}
                     </h6>
                   </InstantLink>
                   <hr

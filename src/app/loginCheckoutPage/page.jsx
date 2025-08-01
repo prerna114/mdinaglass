@@ -60,6 +60,8 @@ const loginCheckoutPage = () => {
       SuccessToast("Login Successfull", "top-right");
       localStorage.setItem("token", JSON.stringify(data?.data));
       login();
+      clearCart();
+
       setUserLogin(true);
       setLoadingScroll(false);
       setTimeout(() => {
