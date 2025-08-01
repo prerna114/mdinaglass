@@ -80,7 +80,12 @@ const ProductListing = ({ SearchData }) => {
     const page = parseInt(allParams[priceIndex + 3]);
     const sortBy = allParams[priceIndex];
 
-    console.log("paginationOption", sortBy, sortOrder, limit, page);
+    setPagination({
+      per_page: limit,
+      page: page,
+      sort_by: sortBy,
+      sort_dir: sortOrder,
+    });
   };
   const getProductByCategory = async (id) => {
     // console.log("getProductByCategory", paginationOption);

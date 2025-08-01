@@ -61,7 +61,8 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
       sort_by: "price",
       sort_dir: "asc",
     });
-    const newUrl = createUrl(newPath, item.slug, sortOrder, limit, page);
+    setHeading(item.slug);
+
     // console.log("New Url")
     // router.push(newUrl, { scroll: false });
   };
@@ -97,7 +98,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
     localStorage.setItem("currentUrl", currentUrl);
     console.log("currentUrl", currentUrl);
   };
-  console.log("subCategories", subCategories, level);
+  console.log("subCategories", page);
   return (
     <li
       className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}`}
@@ -122,7 +123,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
             onClick={(e) => {
               urlSave(fullPathToItem, item.slug, sortOrder, limit, page);
               // e.preventDefault(); // optional if handleClick does router.push
-              // handleClick(item);
+              handleClick(item);
             }}
             className={`category-sidebar ${
               isSelected
