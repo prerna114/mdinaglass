@@ -61,7 +61,7 @@ const AddToCart = () => {
   }, []);
 
   return (
-    <div className="container my-5">
+    <div className="container my-4">
       <div className="col-md-12">
         <div className="row">
           {/* Left Side */}

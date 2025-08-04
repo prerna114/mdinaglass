@@ -194,39 +194,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 />
               ))}
           </div>
-          <table className="table table-details mt-5">
-            <tbody>
-              <tr>
-                <th>Colour:</th>
-                <td>n/a</td>
-              </tr>
-              <tr>
-                <th>Width(cm):</th>
-                <td>{productDetails?.width ? productDetails.width : "n/a"}</td>
-              </tr>
-
-              <tr>
-                <th>Weight(cm):</th>
-                <td>
-                  {productDetails?.weight ? productDetails.weight : "n/a"}
-                </td>
-              </tr>
-
-              <tr>
-                <th>Height(cm):</th>
-                <td>
-                  {productDetails?.height ? productDetails.height : "n/a"}
-                </td>
-              </tr>
-
-              <tr>
-                <th>Length(cm):</th>
-                <td>
-                  {productDetails?.length ? productDetails.length : "n/a"}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+       
         </div>
 
         {/* Product Info */}
@@ -343,16 +311,61 @@ export default function ProductDetails({ productDetails, productDetail }) {
               </InstantLink>
             </div>
 
-            <div className="mt-4 small text-muted">
-              <p>
-                <strong>IMPORTANT - </strong> Due to the handmade nature of our
+         
+          </div>
+        </div>
+</div>
+ <div className="row">
+<div className="col-md-12 col-lg-6 ">
+
+   <table className="table table-details mt-3">
+            <tbody>
+              <tr>
+                <th>Colour:</th>
+                <td>n/a</td>
+              </tr>
+              <tr>
+                <th>Width(cm):</th>
+                <td>{productDetails?.width ? productDetails.width : "n/a"}</td>
+              </tr>
+
+              <tr>
+                <th>Weight(cm):</th>
+                <td>
+                  {productDetails?.weight ? productDetails.weight : "n/a"}
+                </td>
+              </tr>
+
+              <tr>
+                <th>Height(cm):</th>
+                <td>
+                  {productDetails?.height ? productDetails.height : "n/a"}
+                </td>
+              </tr>
+
+              <tr>
+                <th>Length(cm):</th>
+                <td>
+                  {productDetails?.length ? productDetails.length : "n/a"}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+</div>
+<div className="col-md-12 col-lg-6">
+   <div className=" small mt-2 text-muted">
+              <p className="impnotice">
+                IMPORTANT - Due to the handmade nature of our
                 products, each piece is unique. Sizes are approximate. For
                 matching sets, please visit our factory or contact support
                 before ordering.
               </p>
             </div>
-          </div>
-        </div>
+
+</div>
+
       </div>
     </div>
   );

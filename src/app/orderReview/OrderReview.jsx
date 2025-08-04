@@ -235,7 +235,7 @@ const OrderReview = () => {
 
       {cart?.length != 0 && (
         <div
-          className="cart-page-main"
+          className="cart-page-main mt-3"
           style={{
             background: "#f1f1f1",
           }}
@@ -243,7 +243,7 @@ const OrderReview = () => {
           <div className="container">
             <div className="login-signup">
               <div className="table-responsive-sm">
-                <table className="table cart-table table-bordered">
+                <table className="table cart-table table-order table-bordered">
                   <thead className="thead-dark">
                     <tr className="tr-bg">
                       <th>PRODUCT NAME</th>
@@ -319,15 +319,15 @@ const OrderReview = () => {
                 </table>
               </div>
 
-              <div className="container">
+              
                 <div
-                  className="login-signup"
+                  className=""
                   style={{
                     margin: "0 !important",
                     width: "100%",
                   }}
                 >
-                  <div className="col-md-12">
+                 
                     <div
                       className="d-flex pb-3 mt-3"
                       style={{ justifyContent: "space-between" }}
@@ -356,10 +356,10 @@ const OrderReview = () => {
                         </button>
                       </div>
                     </div>
-                  </div>
+                  
                 </div>
               </div>
-            </div>
+           
           </div>
         </div>
       )}

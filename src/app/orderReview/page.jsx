@@ -10,7 +10,7 @@ const page = () => {
   return (
     <>
       <Suspense fallback={<div>Loading...</div>}>
-        <OrderReview />;
+        <OrderReview />
       </Suspense>
     </>
   );

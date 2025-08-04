@@ -185,7 +185,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                 style={{
                   height: "100%",
                   boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
-                  backgroundColor: "rgb(245, 245, 245)",
+                  // backgroundColor: "rgb(245, 245, 245)",
                 }}
               >
                 <div

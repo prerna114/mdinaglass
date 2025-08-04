@@ -34,12 +34,12 @@ const page = () => {
       <div className="container">
         <div className="login-signup">
           <div className="row">
-            <div className="col-md-12">
+           
               <div className="login-sec  checkout-sec">
                 <h2>4. Select Payment Type</h2>
                 <p>Select your Payment Method by selecting option below:</p>
               </div>
-            </div>
+         
           </div>
         </div>
       </div>
@@ -127,7 +127,9 @@ const page = () => {
       </div>
 
       <div className="container">
-        <div className="login-signup">
+        <div className="login-signup" style={{
+          margin:"0px 70px;"
+        }}>
           <div className="col-md-12">
             <div
               className="d-flex pb-3 mt-3"

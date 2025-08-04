@@ -17,7 +17,7 @@ const AboutContent = dynamic(
 );
 const page = () => {
   return (
-    <div className="InfoContainer">
+    <div className="InfoContainer mb-5">
       <div
         style={{
           flexDirection: "row",

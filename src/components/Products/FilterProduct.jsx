@@ -109,7 +109,7 @@ const FilterProduct = ({ down }) => {
         <div className="col-md-12 col-lg-12">
           {!down && (
             <div className="row">
-              <div className="col-md-3">
+              <div className="col-md-4">
                 <div className="d-flex sorting-style align-items-center">
                   <span>Sort by</span>
                   <select
@@ -126,7 +126,7 @@ const FilterProduct = ({ down }) => {
                   </select>
                 </div>
               </div>
-              <div className="col-md-3">
+              <div className="col-md-4">
                 <div className="d-flex  sorting-item align-items-center justify-content-end">
                   <span>Items</span>
                   <label htmlFor="currency-select" className="visually-hidden">
@@ -150,7 +150,7 @@ const FilterProduct = ({ down }) => {
                   </select>
                 </div>
               </div>
-              <div className="col-md-3">
+              <div className="col-md-4">
                 <div className="d-flex sorting-style align-items-center">
                   <span>Colors</span>
                   <select

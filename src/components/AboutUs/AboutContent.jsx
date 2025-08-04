@@ -25,7 +25,7 @@ const AboutContent = ({ content }) => {
     },
   ];
   return (
-    <div className="information px-5">
+    <div className="information about-style px-5">
       <CmsAboveMenu link={links} route={"about"} />
       {loading ? (
         <ParagraphSkeleton />

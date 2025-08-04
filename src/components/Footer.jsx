@@ -21,7 +21,7 @@ const Footer = () => {
                 src="/assets/footer-logo.webp"
                 alt="Mdina Glass Logo"
                 className="mb-3 footer-logo"
-                style={{ width: "290px !important" }}
+                style={{ width: "60%!important" , height:"auto!important"}}
                 width={290}
                 height={116}
               />

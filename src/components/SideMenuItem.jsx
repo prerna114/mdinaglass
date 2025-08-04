@@ -105,7 +105,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
   return (
     <li
       className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}`}
-      style={{ padding: "0px 10px" }}
+      style={{ padding: "0px 15px" }}
     >
       <div
       // onClick={() => handleClick(item)}
