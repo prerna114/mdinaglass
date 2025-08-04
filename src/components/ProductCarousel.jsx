@@ -1,19 +1,24 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useCartStore } from "@/store";
-import { SuccessToast } from "./CustomToast";
+import { CustomToast, SuccessToast } from "./CustomToast";
 import { getNewArrivalProduct } from "@/api/productApi";
 import { ProductLists } from "@/store/product";
 import InstantLink from "./InstantClick";
+import { addToTheCart } from "@/api/CartApi";
 
 const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   const { products, category, setHeading, setProducts } = ProductLists(
     (state) => state
   );
+  const { clearCart } = useCartStore((state) => state);
+  const [productData, setProductData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingProductId, setLoadingProductId] = useState(null);
   const getNewProduct = async () => {
     const data = await getNewArrivalProduct();
     if (data.status == 200) {
@@ -117,6 +122,36 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   useEffect(() => {
     getNewProduct();
   }, []);
+
+  const addItemCart = async (product) => {
+    setLoadingProductId(product.id);
+    const tokenData = localStorage.getItem("token");
+    const parsed = tokenData ? JSON.parse(tokenData) : null;
+    const accessToken = parsed?.token;
+
+    setLoading(true);
+    if (accessToken) {
+      const data = await addToTheCart(product, 1);
+
+      if (data.status == 200) {
+        clearCart();
+        console.log("data", data);
+        addToCart(data.data.cart.items);
+        setLoading(false);
+
+        SuccessToast("Item added Successfuly", "top-right");
+      } else {
+        CustomToast("Something went Wrong", "top-right");
+        setLoading(false);
+      }
+    } else {
+      addToCart({ ...product, quantity: "1" });
+      SuccessToast("Item added Successfuly", "top-right");
+    }
+    console.log("Add", product);
+
+    setLoading(false);
+  };
   console.log("productsCarousel", products);
   return (
     <div className="py-5" style={{ backgroundColor: "#f5f5f5", margin: "0px" }}>
@@ -183,17 +218,26 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
                 <button
                   className="btn btn-outline-secondary w-100 mt-auto"
                   onClick={() => {
-                    handleAdd({
-                      id: 6,
-                      name: "Glass Bead Necklace & Bracelet Set",
-                      price: 29.0,
-                      qty: 1,
-                      image: "/assets/bracelet1.png",
-                      gift: false,
-                    });
+                    // handleAdd({
+                    //   id: 6,
+                    //   name: "Glass Bead Necklace & Bracelet Set",
+                    //   price: 29.0,
+                    //   qty: 1,
+                    //   image: "/assets/bracelet1.png",
+                    //   gift: false,
+                    // });
+
+                    addItemCart(product);
                   }}
                 >
-                  Add to Cart
+                  {loading && product.id === loadingProductId ? (
+                    <div
+                      className="spinner-border text-dark"
+                      role="status"
+                    ></div>
+                  ) : (
+                    <div>Add to Cart</div>
+                  )}
                 </button>
               </div>
             </div>

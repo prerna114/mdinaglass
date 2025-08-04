@@ -1,7 +1,7 @@
 "use client";
 
 import { checkOut } from "@/api/CartApi";
-import { SuccessToast } from "@/components/CustomToast";
+import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import { useCartStore } from "@/store";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
@@ -78,6 +78,8 @@ const OrderReview = () => {
       if (response.status == 200) {
         SuccessToast(response.data.message, "top-right");
         router.push("/");
+      } else {
+        CustomToast("Something went wrong", "top-right");
       }
     } else {
       SuccessToast("Order Placed Successfully", "top-right");
@@ -271,7 +273,7 @@ const OrderReview = () => {
                             <input
                               disabled
                               type="number"
-                              value={item.quantity}
+                              value={item.quantity ? item.quantity : item.qty}
                               min="1"
                               className="form-control bg-white"
                               style={{ width: "70px" }}

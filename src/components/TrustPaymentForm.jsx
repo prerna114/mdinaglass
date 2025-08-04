@@ -65,7 +65,7 @@ export default function TrustPaymentForm() {
       <div id="st-expiration-date"></div>
       <div id="st-security-code"></div>
       <div id="st-notification-frame"></div>
-      {/* <button type="submit">Pay securely</button> */}
+      <button type="submit">Pay securely</button>
     </form>
   );
 }

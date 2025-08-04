@@ -34,9 +34,8 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
   });
   const { subCategoryMap, setSubCategory } = useMenuStore();
 
-  const { setHeading, setFilterOption, setPagination } = ProductLists(
-    (state) => state
-  );
+  const { setHeading, setFilterOption, setPagination, setDescription } =
+    ProductLists((state) => state);
 
   const fullPathToItem = useMemo(
     () => [...parentPath, item.id],
@@ -52,6 +51,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
 
   const handleClick = (item) => {
     setHeading(item.name);
+    setDescription(item.description);
     console.log("levellevel", level, item);
     const indexInPath = categoryIds.indexOf(item.id);
     const newPath =

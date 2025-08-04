@@ -6,6 +6,7 @@ import ListingSkeleton from "@/components/Skeleton/ListingSkeleton";
 import SideMenuSkeleton from "@/components/Skeleton/SideMenuSkeleton";
 import { ProductLists } from "@/store/product";
 import { useMenuStore } from "@/store/useCategoryStore";
+import { useNavigationStore } from "@/store/useNavigationstore";
 
 import dynamic from "next/dynamic";
 import { useLinkStatus } from "next/link";
@@ -39,6 +40,8 @@ const Search = () => {
   const { setSearchProduct } = ProductLists((state) => state);
   const loading = useMenuStore((state) => state.loading);
   const setLoading = useMenuStore((state) => state.setLoading);
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
+
   useEffect(() => {
     const currentUrl = window.location.href;
 
@@ -52,6 +55,7 @@ const Search = () => {
 
   const searchItem = async () => {
     setLoading(true);
+    setNavigating(true);
     const data = await getSearchProduct(
       allParams[0],
       allParams[1],
@@ -60,8 +64,11 @@ const Search = () => {
     if (data.status == 200) {
       setSearchProduct(data.data);
       setLoading(false);
+      setNavigating(false);
     } else {
       setLoading(false);
+      setNavigating(false);
+
       CustomToast("Something went wrong", "top-right");
     }
     console.log("Data", data);

@@ -20,7 +20,7 @@ const SideMenu = ({}) => {
     if (hasRunOnce.current) return;
     hasRunOnce.current = true;
     const data = await getProductCateogrybyId(1);
-    // console.log("CategoryById", data?.data?.sub_categories);
+    console.log("CategoryById", data);
 
     if (data?.status == 200) {
       setSubCategory(data?.data?.sub_categories);

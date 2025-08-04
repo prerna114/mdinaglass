@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import { useAuthStore } from "@/store/useAuthStore";
-import { RemoveItemCart, updateQuantity } from "@/api/CartApi";
+import { getCartListing, RemoveItemCart } from "@/api/CartApi";
 import dynamic from "next/dynamic";
 // import TrustPaymentForm from "@/components/TrustPaymentForm";
 const TrustPaymentForm = dynamic(
@@ -24,7 +24,7 @@ const PaymentLink = dynamic(() => import("../../components/PaymentLink"), {
 });
 
 const page = () => {
-  const { cart, removeFromCart, updateQuantity } = useCartStore(
+  const { cart, removeFromCart, updateQuantity, addToCart } = useCartStore(
     (state) => state
   );
   const { isLogin } = useAuthStore((state) => state);
@@ -103,7 +103,27 @@ const page = () => {
     console.log("Sub totle", price, qty);
     return Number(price * qty).toFixed(2);
   };
+  const getCart = async () => {
+    // setLoading(true);
+    console.log("Cart listing caal");
+    const data = await getCartListing();
+    if (data?.status == 200) {
+      console.log("Cart data", data);
+      // addToCart(data.result.items);
+      // data.data.cart.items.forEach((item) => {
+      //   addToCart(item);
+      // });
+      // setLoading(false);
+    } else if (data?.status == 401) {
+      // logout;
+    }
+    // console.log("getCart", data);
+  };
 
+  useEffect(() => {
+    console.log("Cart page loaded");
+    // getCart();
+  }, []);
   console.log("Cart", cart);
   return (
     <div>
@@ -179,18 +199,17 @@ const page = () => {
                             textAlign: "center",
                           }}
                         >
-                          {(item?.images?.length > 0 &&
-                            item?.images[0]?.small_image_url) ||
-                            (item?.images[0]?.url && (
-                              <img
-                                src={
-                                  item?.images[0]?.small_image_url ||
-                                  item?.images[0]?.url
-                                }
-                                alt={item.name}
-                                width="80"
-                              />
-                            ))}
+                          {item?.image?.length > 0 && (
+                            <img
+                              src={
+                                item?.image
+                                  ? item?.image
+                                  : item?.images[0]?.small_image_url
+                              }
+                              alt={item.name}
+                              width="80"
+                            />
+                          )}
                         </td>
                         <td>{item.name}</td>
                         <td>

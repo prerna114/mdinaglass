@@ -62,10 +62,11 @@ const Header = () => {
 
     if (data?.status == 200) {
       clearCart();
-      console.log("getCart Header", data.data);
+      // console.log("getCart Header", data.data);
+      console.log("getCart Header", data.data.items);
 
       // addToCart(data.result.items);
-      data.data.cart.items.forEach((item) => {
+      data.data.items.forEach((item) => {
         addToCart(item);
       });
     }

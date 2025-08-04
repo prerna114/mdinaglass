@@ -1,8 +1,9 @@
 "use client";
-import { updateQuantity } from "@/api/CartApi";
+
 import { useCartStore } from "@/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { CustomToast, SuccessToast } from "./CustomToast";
+import { updateQuantityAPi } from "@/api/CartApi";
 
 const AddToCart = () => {
   const { cart, setInsurance, insurance } = useCartStore((state) => state);
@@ -45,7 +46,7 @@ const AddToCart = () => {
     setLoading(true);
     const id = cart[0].id;
     const qty = cart[0].quantity;
-    const response = await updateQuantity(id, qty);
+    const response = await updateQuantityAPi(cart);
     console.log("Update cart repsonse", response);
     if (response.status == 200) {
       SuccessToast(response.data?.message, "top-right");
