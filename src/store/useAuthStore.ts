@@ -9,6 +9,8 @@ type AuthStore = {
   logout: () => void;
   setLoginState: (state: boolean) => void;
   menu: [];
+  paymentMethods: string;
+  setPaymentMethods: (state: string) => void;
   cmsInfo: {};
   giftMessage: {};
   setMenu: (state: []) => void;
@@ -28,6 +30,8 @@ export const useAuthStore = create<AuthStore>()(
         useCartStore.getState().clearCart();
         set({ isLogin: false });
       },
+      paymentMethods: "",
+      setPaymentMethods: (state: string) => set({ paymentMethods: state }),
       giftMessage: "",
       setLoginState: (state: boolean) => set({ isLogin: state }),
       setMenu: (data) => set({ menu: data }),
@@ -36,7 +40,10 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: "auth-storage", // localStorage key
-      partialize: (state) => ({ isLogin: state.isLogin }), // only persist relevant parts
+      partialize: (state) => ({
+        isLogin: state.isLogin,
+        paymentMethods: state.paymentMethods,
+      }), // only persist relevant parts
     }
   )
 );

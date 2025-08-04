@@ -4,10 +4,13 @@ import { useNavigationStore } from "@/store/useNavigationstore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
 
+// Use Zustand's getState() outside React components
 const page = () => {
   const [method, setMethod] = useState("");
   const setNavigating = useNavigationStore((s) => s.setNavigating);
+  const { setPaymentMethods } = useAuthStore.getState(); //
 
   const router = useRouter();
   const handleButton = () => {
@@ -15,6 +18,7 @@ const page = () => {
       CustomToast("Please Select Payment Method");
     } else {
       setNavigating(true);
+
       router.push(`/orderReview?method=${method}`);
     }
   };
@@ -56,7 +60,7 @@ const page = () => {
                     value="visa"
                     checked={method === "visa"}
                     onChange={(e) => {
-                      setMethod(e.target.value);
+                      setPaymentMethods(e.target.value);
                       console.log("on click e", e.target.value);
                     }}
                   />
@@ -85,7 +89,7 @@ const page = () => {
                     checked={method === "paypal"}
                     value="paypal"
                     onChange={(e) => {
-                      setMethod(e.target.value);
+                      setPaymentMethods(e.target.value);
                       console.log("on click e", e.target.value);
                     }}
                   />
@@ -113,7 +117,7 @@ const page = () => {
                     value="cash"
                     checked={method === "cash"}
                     onChange={(e) => {
-                      setMethod(e.target.value);
+                      setPaymentMethods(e.target.value);
                       console.log("on click e", e.target.value);
                     }}
                   />
