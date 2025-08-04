@@ -90,7 +90,9 @@ const ResponsiveNav = () => {
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      router.push(`/search/${e.target.value}/1`);
+                      // router.push(`/search/${e.target.value}/1`);
+                      window.location.href = `/search/${e.target.value}/1/15`;
+
                       e.preventDefault(); // Prevent form submission if inside a form
                       console.log(
                         "Enter pressed, call API here",

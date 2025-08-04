@@ -14,7 +14,6 @@ import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
 import { getCartListing, testCartAPi } from "@/api/CartApi";
 import InstantLink from "./InstantClick";
-import { getSearchProduct } from "@/api/productApi";
 
 const Header = () => {
   const [isBannerVisible, setIsBannerVisible] = useState(true);

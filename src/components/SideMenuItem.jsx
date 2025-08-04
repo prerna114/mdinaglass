@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { ProductLists } from "@/store/product";
 import { createUrl } from "@/constant";
@@ -11,8 +11,11 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
   const router = useRouter();
   const params = useParams();
   const allParams = useMemo(() => params?.params || [], [params]);
+  const pathname = usePathname();
+  console.log("pathnameSideMenu", pathname.includes("search"));
 
-  const priceIndex = allParams.findIndex((p) => p === "price");
+  const priceIndex =
+    !pathname.includes("search") && allParams.findIndex((p) => p === "price");
   const categoryIds = useMemo(
     () =>
       priceIndex !== -1
@@ -61,7 +64,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
       sort_by: "price",
       sort_dir: "asc",
     });
-    setHeading(item.slug);
+    // setHeading(item.slug);
 
     // console.log("New Url")
     // router.push(newUrl, { scroll: false });

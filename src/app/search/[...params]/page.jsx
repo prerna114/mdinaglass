@@ -52,7 +52,11 @@ const Search = () => {
 
   const searchItem = async () => {
     setLoading(true);
-    const data = await getSearchProduct(allParams[0], allParams[1]);
+    const data = await getSearchProduct(
+      allParams[0],
+      allParams[1],
+      allParams[2]
+    );
     if (data.status == 200) {
       setSearchProduct(data.data);
       setLoading(false);

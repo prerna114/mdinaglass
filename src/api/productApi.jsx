@@ -173,16 +173,16 @@ export const getRangeProduct = async (range) => {
   );
   return response;
 };
-export const getSearchProduct = async (input, page) => {
+export const getSearchProduct = async (input, page, limit) => {
   const raw = {
     query: input,
-    per_page: 100,
+    per_page: limit,
     page: page ? page : 1,
   };
   const data = await fetchGlobal("api/products/search", {
     method: "POST",
     body: raw,
   });
-  console.log("Search Data Data", data);
+  console.log("Search Data Data", raw);
   return data;
 };
