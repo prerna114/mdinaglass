@@ -10,11 +10,11 @@ import { useAuthStore } from "@/store/useAuthStore";
 const page = () => {
   const [method, setMethod] = useState("");
   const setNavigating = useNavigationStore((s) => s.setNavigating);
-  const { setPaymentMethods } = useAuthStore.getState(); //
+  const { setPaymentMethods,paymentMethods } = useAuthStore.getState(); //
 
   const router = useRouter();
   const handleButton = () => {
-    if (method?.length == 0) {
+    if (paymentMethods?.length == 0) {
       CustomToast("Please Select Payment Method");
     } else {
       setNavigating(true);
@@ -58,7 +58,7 @@ const page = () => {
                     type="radio"
                     name="checkoutType"
                     value="visa"
-                    checked={method === "visa"}
+                    checked={paymentMethods === "visa"}
                     onChange={(e) => {
                       setPaymentMethods(e.target.value);
                       console.log("on click e", e.target.value);
@@ -86,7 +86,7 @@ const page = () => {
                   <input
                     type="radio"
                     name="checkoutType"
-                    checked={method === "paypal"}
+                    checked={paymentMethods === "paypal"}
                     value="paypal"
                     onChange={(e) => {
                       setPaymentMethods(e.target.value);
@@ -115,7 +115,7 @@ const page = () => {
                     type="radio"
                     name="checkoutType"
                     value="cash"
-                    checked={method === "cash"}
+                    checked={paymentMethods === "cash"}
                     onChange={(e) => {
                       setPaymentMethods(e.target.value);
                       console.log("on click e", e.target.value);
@@ -132,7 +132,7 @@ const page = () => {
 
       <div className="container">
         <div className="login-signup" style={{
-          margin:"0px 70px;"
+          margin:"0px 70px"
         }}>
           <div className="col-md-12">
             <div
