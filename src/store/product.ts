@@ -115,6 +115,7 @@ export const ProductLists = create<ProdutList>()(
         cart: state.products,
         heading: state.heading,
         paginationOption: state.paginationOption,
+        description: state.description,
       }), // only persist `cart`
     }
   )

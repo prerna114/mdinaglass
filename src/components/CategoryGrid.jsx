@@ -125,7 +125,8 @@ const CategoryGrid = () => {
                       width: "100%",
                     }}
                   >
-                    {cat.name}
+                    {cat.name.slice(0, 50)}
+                    {cat?.name?.length > 50 && "..."}
                   </div>
                 </InstantLink>
               </div>

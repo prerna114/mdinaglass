@@ -132,17 +132,22 @@ export const RemoveItemCart = async (id) => {
   }
 };
 
-export const updateQuantity = async (id, qty) => {
+export const updateQuantityAPi = async (data) => {
+  console.log("Update Data", data);
+  let items = data.map((item) => ({
+    item_id: item.id,
+    qty: item.quantity ? item.quantity : item.qty, // Ensure quantity is set to 1 if not provided
+  }));
+  console.log("Items", items);
   const raw = {
-    item_id: id,
-    qty: qty,
+    items: items,
   };
-  const data = await fetchGlobal("api/blackbull/cart/update", {
+  const response = await fetchGlobal("api/blackbull/cart/update", {
     method: "PUT",
     body: raw,
   });
-  console.log("Update Data", data);
-  return data;
+  console.log("Update Data", response);
+  return response;
 };
 // export const updateQuantity = async (id, qty) => {
 //   const tokenData = localStorage.getItem("token");
@@ -249,6 +254,5 @@ export const checkOut = async () => {
 
 export const getOrderList = async () => {
   const data = await fetchGlobal("api/blackbull/orders");
-
   return data;
 };

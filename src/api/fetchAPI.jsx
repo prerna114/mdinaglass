@@ -5,9 +5,14 @@ export const fetchGlobal = async (
   url,
   { method = "GET", body, headers = {}, cache = "no-cache", params = {} } = {}
 ) => {
-  const tokenData = localStorage.getItem("token");
-  const parsed = tokenData ? JSON.parse(tokenData) : null;
-  const accessToken = parsed?.token;
+  let accessToken;
+
+  // ✅ Prevent localStorage access during SSR or if `window` is undefined
+  if (typeof window !== "undefined") {
+    const tokenData = localStorage.getItem("token");
+    const parsed = tokenData ? JSON.parse(tokenData) : null;
+    accessToken = parsed?.token;
+  }
 
   const queryString = new URLSearchParams(params).toString();
   const fullUrl = `${API_BASE_URL}${url}${

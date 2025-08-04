@@ -10,7 +10,6 @@ const SearchFilter = ({ down }) => {
   const [paginationList, setPaginationList] = useState([]);
   const loading = useMenuStore((state) => state.loading);
   const setLoading = useMenuStore((state) => state.setLoading);
-
   const { paginationOption, setPagination, setSearchProduct, searchProduct } =
     ProductLists((state) => state);
   const router = useRouter();
@@ -42,6 +41,7 @@ const SearchFilter = ({ down }) => {
 
   const searchItem = async (page) => {
     setLoading(true);
+
     console.log("allParamsAPI", allParams, page, limit);
     router.push(`/search/${allParams[0]}/${page}/${limit}`);
 
@@ -126,7 +126,10 @@ const SearchFilter = ({ down }) => {
                         <button
                           className="page-link"
                           onClick={(e) => {
-                            window.location.href = `/search//${allParams[0]}/${item}/${limit}`;
+                            router.push(
+                              `/search/${allParams[0]}/${item}/${limit}`
+                            );
+                            // window.location.href = `/search//${allParams[0]}/${item}/${limit}`;
 
                             console.log("Item", item);
                           }}

@@ -3171,3 +3171,9 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
   width: 100% !important;
   padding-left: 10px;
 }
+.desc-full {
+  color: "rgb(102, 102, 102) !important";
+  font-family: "Raleway", sans-serif;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+}

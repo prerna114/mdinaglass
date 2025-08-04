@@ -91,7 +91,10 @@ const ProductGrid = ({ products, categoryidList }) => {
                     }}
                     scroll={false}
                   >
-                    <h6 className="card-title mb-3">{product.name}</h6>
+                    <h6 className="card-title mb-3">
+                      {product.name.slice(0, 50)}
+                      {product?.name?.length > 50 && "..."}
+                    </h6>
                   </InstantLink>
                   <p className="card-text text-info fw-bold">
                     Price €

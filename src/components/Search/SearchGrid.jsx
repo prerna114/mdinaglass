@@ -7,6 +7,7 @@ import Image from "next/image";
 import InstantLink from "../InstantClick";
 import { createImage } from "@/constant";
 import { useParams } from "next/navigation";
+import { join } from "path";
 
 const SearchGrid = ({ products }) => {
   console.log("Products in Grid", products);
@@ -26,14 +27,6 @@ const SearchGrid = ({ products }) => {
         : "1",
     [allParams, priceIndex]
   );
-
-  useState(() => {
-    if (categoryIds?.length > 0 && !categoryIds.some(Number.isNaN)) {
-      setCategoryIds(categoryIds.join("/"));
-    } else {
-      setCategoryIds([1]);
-    }
-  }, [categoryIds]);
 
   useEffect(() => {
     if (products?.length > 0) {
@@ -59,18 +52,40 @@ const SearchGrid = ({ products }) => {
   console.log("categoryIds", imgSrcs);
   console.log("productsGRID", products[0]?.categories);
 
+  const getCategoryPath = (product) => {
+    const path = [];
+
+    // Only process the first category
+    const category = product?.categories?.[0];
+    if (!category) return "";
+
+    let current = category.parent;
+
+    // Traverse and collect only the first two non-root parents
+    while (current && current.slug !== "root") {
+      path.unshift(current.id); // unshift to reverse the order
+      current = current.parent;
+    }
+    console.log("getCategoryPath", `/${path.join("/")}`);
+    // setCategoryIds(path.join("/"));
+    return `${path.join("/")}`;
+  };
+
   return (
     <div className="row">
       {products?.length > 0 &&
         products?.map((product, index) => {
+          const categoryPath = getCategoryPath(product);
+
           return (
             <div key={product.id} className="col-lg-4 col-md-6 mb-4">
               <div className="product-card">
                 <div className="position-relative">
                   <InstantLink
                     href={{
-                      pathname: `/product-details/webshop/${`${categryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
+                      pathname: `/product-details/webshop/${`${categoryPath}/${product?.id}/${product?.slug}/${product.sku}`}`,
                     }}
+                    onClick={() => getCategoryPath(product)}
                   >
                     <Image
                       src={
@@ -93,7 +108,10 @@ const SearchGrid = ({ products }) => {
                     }}
                     scroll={false}
                   >
-                    <h6 className="card-title mb-3">{product.name}</h6>
+                    <h6 className="card-title mb-3">
+                      {product.name.slice(0, 50)}
+                      {product?.name?.length > 50 && "..."}
+                    </h6>
                   </InstantLink>
                   <p className="card-text text-info fw-bold">
                     Price €

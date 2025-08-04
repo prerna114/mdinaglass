@@ -9,7 +9,9 @@ import InstantLink from "./InstantClick";
 
 const MegaMenu = () => {
   const [categoriesData, setCategoriesData] = useState([]);
-  const { heading, setHeading, setPagination } = ProductLists((state) => state);
+  const { heading, setHeading, setPagination, setDescription } = ProductLists(
+    (state) => state
+  );
 
   const [showMenu, setShowMenu] = useState(true);
   const { setMenu, menu } = useAuthStore((state) => state);
@@ -124,6 +126,8 @@ const MegaMenu = () => {
                     )}
                     onClick={() => {
                       setHeading(category.name);
+                      console.log("Descrtipinn name", category.name);
+                      setDescription(category.description);
                       setPagination({
                         per_page: 15,
                         page: 1,
@@ -183,6 +187,8 @@ const MegaMenu = () => {
                                             sort_dir: "asc",
                                           });
                                           setHeading(child.name);
+                                          setDescription(child.description);
+
                                           console.log(
                                             "CHildName123",
                                             child.name
