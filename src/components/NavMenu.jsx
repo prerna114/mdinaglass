@@ -19,9 +19,10 @@ const ResponsiveNav = () => {
   const [showMenu, setShowMenu] = useState(true);
   const { setMenu } = useAuthStore((state) => state);
 
-  const { setPagination, setHeading, setSearchProduct } = ProductLists(
+  const { setPagination, setSearchProduct, setDescription } = ProductLists(
     (state) => state
   );
+  const setHeading = ProductLists((state) => state.setHeading);
   const router = useRouter();
 
   console.log("categoriesData", categoriesData);
@@ -56,6 +57,10 @@ const ResponsiveNav = () => {
                       sort_by: "price",
                       sort_dir: "asc",
                     });
+                    if (label === "WishList") {
+                      setHeading("WishList");
+                      setDescription("");
+                    }
                   }}
                 >
                   {label}

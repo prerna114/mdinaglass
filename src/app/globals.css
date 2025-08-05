@@ -171,13 +171,14 @@ h4 {
   margin: 0px !important;
 }
 table.table.cart-table.table-order tr td:first-child {
-    padding-left: 20px;}
+  padding-left: 20px;
+}
 .footer-area ul.list-unstyled li {
   color: #666666;
   font-weight: 300;
   font-size: 16px;
   line-height: 26px;
-     font-family: Raleway, sans-serif!important;
+  font-family: Raleway, sans-serif !important;
 }
 
 .footer-area ul.list-unstyled li a {
@@ -186,7 +187,7 @@ table.table.cart-table.table-order tr td:first-child {
   font-size: 16px;
   line-height: 26px;
   /* font-family: var(--font-quicksand); */
-     font-family: Raleway, sans-serif;
+  font-family: Raleway, sans-serif;
 }
 .navrow {
   padding-top: 1.2rem;
@@ -346,6 +347,33 @@ ul.category-sidebar li a {
   margin-top: 20px;
   border-radius: 5px;
 }
+
+.about-recipe-banner h3 {
+  font-size: 30px !important;
+  font-weight: 600 !important;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.about-recipe-banner p {
+  font-size: 15px;
+  color: #4d4d4d;
+}
+
+.about-recipe-banner {
+  background: #f1f1f1;
+}
+
+.about-recipe-banner {
+  background: #f1f1f1;
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.about-recipe-banner button {
+  font-size: 15px;
+  padding: 10px;
+}
 @media (min-width: 1800px) {
   .container,
   .container-lg,
@@ -356,8 +384,8 @@ ul.category-sidebar li a {
     max-width: 1550px !important;
   }
   .InfoContainer {
-    max-width: 1050px !important;
     margin: 0 auto;
+    max-width: 1350px !important;
   }
 }
 input[type="checkbox"] {
@@ -624,33 +652,34 @@ ul.list-unstyled.category-sidebar li {
   font-weight: 500;
   font-family: var(--font-quicksand) !important;
 }
-.sorting-style span, .sorting-item span {
-    background: #fff;
-    border: 1px solid #c7c7c7;
-    width: 150px;
-    height: 50px;
-    color: #666666;
-    padding: 12px;
-    font-size: 13px;
-    font-family: Raleway, sans-serif;
+.sorting-style span,
+.sorting-item span {
+  background: #fff;
+  border: 1px solid #c7c7c7;
+  width: 150px;
+  height: 50px;
+  color: #666666;
+  padding: 12px;
+  font-size: 13px;
+  font-family: Raleway, sans-serif;
 }
 .product-card img {
   width: 250px;
 }
-.sorting-style select, .sorting-item select
- {
-    border: 1px solid #c7c7c7;
-    height: 50px;
-    font-size: 13px;
-    color: #666666;
-    border-radius: 0 !important;
-    width: 100% !important;
-    font-family: Raleway, sans-serif;
+.sorting-style select,
+.sorting-item select {
+  border: 1px solid #c7c7c7;
+  height: 50px;
+  font-size: 13px;
+  color: #666666;
+  border-radius: 0 !important;
+  width: 100% !important;
+  font-family: Raleway, sans-serif;
 }
 p.impnotice {
-    font-size: 14px;
-    color: #888;
-    font-family: var(--font-quicksand) !important;
+  font-size: 14px;
+  color: #888;
+  font-family: var(--font-quicksand) !important;
 }
 .header-product h5 {
   color: gray;
@@ -685,19 +714,19 @@ li.jewels ul li a {
   border: 1px solid #c7c7c7;
 }
 .table-details tr th {
-    color: #005e84;
-    border-right: 1px solid #c7c7c7;
-    width: 200px;
-    padding: 8px 15px;
-    font-weight: 500 !important;
-    font-size: 15px;
-    font-weight: 300;
-    font-family: var(--font-quicksand) !important;
+  color: #005e84;
+  border-right: 1px solid #c7c7c7;
+  width: 200px;
+  padding: 8px 15px;
+  font-weight: 500 !important;
+  font-size: 15px;
+  font-weight: 300;
+  font-family: var(--font-quicksand) !important;
 }
 .table-details tr td {
   color: #888888;
   padding: 8px 15px;
-    font-weight: 500 !important;
+  font-weight: 500 !important;
   font-size: 15px;
   font-family: var(--font-quicksand) !important;
 }
@@ -863,15 +892,15 @@ table.table.cart-table tr td {
   font-family: var(--font-quicksand) !important;
 }
 .information.about-style h2 {
-    color: #4d4d4d;
-    font-size: 32px !important;
+  color: #4d4d4d;
+  font-size: 32px !important;
 }
 
 .InfoContainer h1 {
-    color: #4d4d4d;
-    font-size: 32px !important;
-    padding-top: 20px;
-    font-weight: normal!important;
+  color: #4d4d4d;
+  font-size: 32px !important;
+  padding-top: 20px;
+  font-weight: normal !important;
 }
 p {
   font-size: 18px;
@@ -2042,7 +2071,6 @@ hr.display-option {
   .product-card h6 {
     font-size: 16px;
     margin-bottom: 0px !important;
-
   }
 
   .sorting-style span,
@@ -2127,17 +2155,18 @@ hr.display-option {
   table.table.cart-table thead tr th {
     font-size: 13px;
   }
-.imageTextVase {
+  .imageTextVase {
     font-size: 28px !important;
-}
+  }
 
-.imageText {
+  .imageText {
     font-size: 28px !important;
-}
+  }
 
-p.category-sidebar.nonActiveBar.Level-1, p.category-sidebar.activeSIdeBar.Level-1 {
+  p.category-sidebar.nonActiveBar.Level-1,
+  p.category-sidebar.activeSIdeBar.Level-1 {
     font-size: 16px !important;
-}
+  }
   table.table.cart-table tr td {
     padding-left: 25px;
     font-size: 15px;
@@ -2214,7 +2243,6 @@ p.category-sidebar.nonActiveBar.Level-1, p.category-sidebar.activeSIdeBar.Level-
   .product-card {
     padding: 20px 15px;
   }
- 
 
   .sorting-style span,
   .sorting-item span {
@@ -2275,11 +2303,11 @@ p.category-sidebar.nonActiveBar.Level-1, p.category-sidebar.activeSIdeBar.Level-
   }
 }
 @media screen and (min-width: 1200px) and (max-width: 1300px) {
- .mobi-logo img {
-        height: 65px !important;
-        width: 100%;
-    }
+  .mobi-logo img {
+    height: 65px !important;
+    width: 100%;
   }
+}
 @media screen and (min-width: 1301px) and (max-width: 1500px) {
   h2.product-show {
     font-size: 30px;
@@ -2342,10 +2370,10 @@ p.category-sidebar.nonActiveBar.Level-1, p.category-sidebar.activeSIdeBar.Level-
     padding-bottom: 0px !important;
   }
 
-      .mobi-logo img {
-        height: 65px !important;
-        width: 100%;
-    }
+  .mobi-logo img {
+    height: 65px !important;
+    width: 100%;
+  }
 
   .inputSubContainer {
     font-size: 15px;
@@ -3024,7 +3052,6 @@ ul.category-sidebar li .activeSIdeBar .Level-1 {
   font-size: 18px !important;
 }
 p.category-sidebar.nonActiveBar.Level-1 {
-  
   text-transform: capitalize !important;
   color: #005e84 !important;
   font-family: "Domine", serif;
@@ -3092,10 +3119,10 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
   padding-left: 0px;
 }
 .sidebar ul li {
-    font-family: var(--font-domine);
-    padding: 10px 0;
-    color: #666666;
-    font-size: 15px;
+  font-family: var(--font-domine);
+  padding: 10px 0;
+  color: #666666;
+  font-size: 15px;
 }
 .sidebar ul li a.activeTab {
   color: #76d2d3;

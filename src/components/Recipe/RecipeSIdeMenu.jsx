@@ -7,24 +7,17 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { CustomToast } from "../CustomToast";
 import { useMenuStore } from "@/store/useCategoryStore";
-import InstantLink from "../InstantClick";
 import RecipeIdea from "../RecipeIdea";
 
-const AboutSideMenu = () => {
+const RecipeSIdeMenu = () => {
   const [active, setActive] = useState();
   const params = useParams();
   const { setCmsInfo } = useAuthStore((state) => state);
   const setLoading = useMenuStore((state) => state.setLoading);
 
   const links = [
-    { id: 1, label: "What We Do", slug: "about-mdina-glass" },
-    { id: 2, label: "A Family Tradition", slug: "a-family-tradition" },
-    { id: 3, label: "Our History", slug: "our-history" },
-    {
-      id: 4,
-      label: "Watch the Glassmakers",
-      slug: "watch-the-glassmakers",
-    },
+    { id: 1, label: "Salads", slug: "Salads" },
+    { id: 2, label: "Soups", slug: "Soups" },
   ];
 
   const getInformation = async () => {
@@ -65,7 +58,7 @@ const AboutSideMenu = () => {
 
   return (
     <aside className="sidebar">
-      <h1>About Us</h1>
+      <h1>Recipes</h1>
       <ul>
         {links.map((link) => (
           <li key={link.slug}>
@@ -78,10 +71,9 @@ const AboutSideMenu = () => {
           </li>
         ))}
       </ul>
-
       <RecipeIdea />
     </aside>
   );
 };
 
-export default AboutSideMenu;
+export default RecipeSIdeMenu;

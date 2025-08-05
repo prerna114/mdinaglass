@@ -31,7 +31,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLogin: false });
       },
       paymentMethods: "",
-      setPaymentMethods: (state: string) => set({ paymentMethods: state }),
+      setPaymentMethods: (data) => set({ paymentMethods: data }),
       giftMessage: "",
       setLoginState: (state: boolean) => set({ isLogin: state }),
       setMenu: (data) => set({ menu: data }),

@@ -1,10 +1,10 @@
 "use client";
 
 import ProductHeading from "@/components/ProductHeading";
-import ProductListing from "@/components/ProductListing";
 
 import React from "react";
 import SideMenu from "@/components/SideMenu";
+import WishlistGrid from "@/components/WishlistGrid";
 
 const ShopPage = () => {
   return (
@@ -26,7 +26,7 @@ const ShopPage = () => {
               </div>
               {/* Product Listing */}
               <div className="col-lg-9 col-md-12">
-                <ProductListing />
+                <WishlistGrid />
               </div>
             </div>
           </div>

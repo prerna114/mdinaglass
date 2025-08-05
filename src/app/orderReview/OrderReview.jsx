@@ -13,10 +13,11 @@ const OrderReview = () => {
   const searchParams = useSearchParams();
   console.log("searchParams", searchParams.get("method"));
   const giftMessage = useAuthStore((state) => state.giftMessage);
+  const { setPaymentMethods, paymentMethods } = useAuthStore.getState(); //
 
   const [billingAddress, setBillingAddress] = useState({});
   const [shippingAddress, setShippingAddress] = useState({});
-  const [method, setMethod] = useState(searchParams.get("method"));
+  const [method, setMethod] = useState(paymentMethods);
 
   const router = useRouter();
   const { cart, removeFromCart, clearCart } = useCartStore((state) => state);
@@ -321,47 +322,43 @@ const OrderReview = () => {
                 </table>
               </div>
 
-              
+              <div
+                className=""
+                style={{
+                  margin: "0 !important",
+                  width: "100%",
+                }}
+              >
                 <div
-                  className=""
-                  style={{
-                    margin: "0 !important",
-                    width: "100%",
-                  }}
+                  className="d-flex pb-3 mt-3"
+                  style={{ justifyContent: "space-between" }}
                 >
-                 
-                    <div
-                      className="d-flex pb-3 mt-3"
-                      style={{ justifyContent: "space-between" }}
-                    >
-                      <div>
-                        <Link href={"/payment"}>
-                          <button className="btn btn-shop btn-primary back-button">
-                            Back
-                          </button>
-                        </Link>
-                        <Link href={"/cartpage"}>
-                          <button className="btn btn-shop btn-primary back-button ms-3">
-                            Edit
-                          </button>
-                        </Link>
-                      </div>
+                  <div>
+                    <Link href={"/payment"}>
+                      <button className="btn btn-shop btn-primary back-button">
+                        Back
+                      </button>
+                    </Link>
+                    <Link href={"/cartpage"}>
+                      <button className="btn btn-shop btn-primary back-button ms-3">
+                        Edit
+                      </button>
+                    </Link>
+                  </div>
 
-                      <div
-                        // href={`/orderReview?method=${method}`}
-                        onClick={() => {
-                          PaymentSuccess();
-                        }}
-                      >
-                        <button className="btn btn-cart btn-info text-white back-button">
-                          Proceed to Payment
-                        </button>
-                      </div>
-                    </div>
-                  
+                  <div
+                    // href={`/orderReview?method=${method}`}
+                    onClick={() => {
+                      PaymentSuccess();
+                    }}
+                  >
+                    <button className="btn btn-cart btn-info text-white back-button">
+                      Proceed to Payment
+                    </button>
+                  </div>
                 </div>
               </div>
-           
+            </div>
           </div>
         </div>
       )}
