@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { CustomToast } from "../CustomToast";
 import { useMenuStore } from "@/store/useCategoryStore";
 
+
 const AboutSideMenu = () => {
   const [active, setActive] = useState();
   const params = useParams();
@@ -77,7 +78,15 @@ const AboutSideMenu = () => {
         ))}
       </ul>
       
+     <div className="about-recipe-banner">
       
+      <img                     src="/assets/recipe.png" style={{width:"100%"}}/>
+      <h3>Recipe Ideas</h3>
+      <p>We produce glassware that is both practical and decorative. We love the idea of our products being part of your every day living experien...</p>
+<button class="btn-cart">Read More</button>
+      
+      
+      </div> 
 
 
     </aside>

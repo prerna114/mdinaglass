@@ -346,6 +346,33 @@ ul.category-sidebar li a {
   margin-top: 20px;
   border-radius: 5px;
 }
+
+.about-recipe-banner h3 {
+    font-size: 30px !important;
+    font-weight: 600 !important;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.about-recipe-banner p {
+    font-size: 15px;
+    color: #4d4d4d;
+}
+
+.about-recipe-banner {
+    background: #f1f1f1;
+}
+
+.about-recipe-banner {
+    background: #f1f1f1;
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+.about-recipe-banner button {
+    font-size: 15px;
+    padding: 10px;
+}
 @media (min-width: 1800px) {
   .container,
   .container-lg,
@@ -355,10 +382,10 @@ ul.category-sidebar li a {
   .container-xxl {
     max-width: 1550px !important;
   }
-  .InfoContainer {
-    max-width: 1050px !important;
-    margin: 0 auto;
-  }
+    .InfoContainer {
+        margin: 0 auto;
+        max-width: 1350px !important;
+    }
 }
 input[type="checkbox"] {
   width: auto;
