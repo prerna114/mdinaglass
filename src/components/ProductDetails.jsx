@@ -339,7 +339,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
               </tr>
 
               <tr>
-                <th>Weight(cm):</th>
+                <th>Weight(gram):</th>
                 <td>
                   {productDetails?.weight ? productDetails.weight : "n/a"}
                 </td>

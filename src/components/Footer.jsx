@@ -21,7 +21,7 @@ const Footer = () => {
                 src="/assets/footer-logo.webp"
                 alt="Mdina Glass Logo"
                 className="mb-3 footer-logo"
-                style={{ width: "60%!important" , height:"auto!important"}}
+                style={{ width: "60%!important", height: "auto!important" }}
                 width={290}
                 height={116}
               />
@@ -87,7 +87,9 @@ const Footer = () => {
           <div className="col-md-3 mb-4">
             <h6 className="footer-link">Information</h6>
             <ul className="list-unstyled small">
-              <li>Careers</li>
+              <li>
+                <InstantLink href={"/careers"}>Careers</InstantLink>
+              </li>
 
               <li>
                 <InstantLink href={"/information/international-delivery"}>
@@ -125,7 +127,11 @@ const Footer = () => {
           <div className="col-md-3 mb-4">
             <h6 className="footer-link">Contact</h6>
             <ul className="list-unstyled small">
-              <li>Store Locator & Contact</li>
+              <li>
+                <InstantLink href={"/contactus/contact-details"}>
+                  Store Locator & Contact
+                </InstantLink>
+              </li>
               <li>
                 <InstantLink href={"/contactus/contact-form"}>
                   Contact Form

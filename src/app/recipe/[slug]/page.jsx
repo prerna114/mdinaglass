@@ -16,9 +16,19 @@ const RecipeContent = dynamic(
     ),
   }
 );
+const images = [
+  {
+    src: "/assets/recipeslider.png",
+  },
+  {
+    src: "/assets/recipetwo.png",
+  },
+];
 const page = () => {
   return (
     <div className="InfoContainer mb-5">
+      <SimpleSlider images={images} />
+
       <div
         style={{
           flexDirection: "row",
@@ -26,7 +36,6 @@ const page = () => {
           marginTop: "20px",
         }}
       >
-        {/* <SimpleSlider /> */}
         <RecipeSIdeMenu />
         <RecipeContent />
       </div>

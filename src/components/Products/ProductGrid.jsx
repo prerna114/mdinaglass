@@ -70,7 +70,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                       pathname: `/product-details/webshop/${`${categryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
                     }}
                   >
-                    <Image
+                    <img
                       src={
                         imgSrcs[index]?.fallback
                           ? "/assets/nothere.png"
@@ -79,8 +79,8 @@ const ProductGrid = ({ products, categoryidList }) => {
                       onError={() => handleImgError(index)}
                       className="card-img-top"
                       alt={product.name || "product list image"}
-                      width={214}
-                      height={214}
+                      // width={auto}
+                      // height={auto}
                     />
                   </InstantLink>
                 </div>
