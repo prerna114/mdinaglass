@@ -16,12 +16,9 @@ const AboveMenu = () => {
 
   const {
     setProducts,
-    filterOption,
-    products,
-    category,
+
     setCategory,
-    allProduct,
-    setFilterOption,
+    setDescription,
     setHeading,
     setPagination,
   } = ProductLists((state) => state);
@@ -71,6 +68,7 @@ const AboveMenu = () => {
 
                 router.push(newUrl, { scroll: false, shallow: false });
                 setHeading(element?.name);
+                setDescription(element?.description);
 
                 // Optional: update URL here or use router.push(...)
               }}

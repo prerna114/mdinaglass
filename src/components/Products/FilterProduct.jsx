@@ -64,7 +64,7 @@ const FilterProduct = ({ down }) => {
       });
     }
 
-    console.log("New Url", newUrl);
+    console.log("Filter Product New Url", paginationOption, newUrl);
   };
 
   useEffect(() => {

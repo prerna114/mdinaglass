@@ -163,12 +163,17 @@ export const getNewArrivalProduct = async () => {
   return response;
 };
 
-export const getRangeProduct = async (range) => {
+export const getRangeProduct = async (sku, id) => {
+  console.log("getRangeProduct", sku, id);
+  const raw = {
+    category_id: id,
+    product_sku: sku,
+  };
   const response = await fetchGlobal(
-    `api/blackbull/products/otherRangeProducts?range=${range}`,
+    `api/blackbull/products/otherRangeProducts?range`,
     {
       method: "POST",
-      // body: data,
+      body: raw,
     }
   );
   return response;
@@ -201,5 +206,17 @@ export const addItemWIshlist = async (sku) => {
 
 export const getWishList = async (id) => {
   const data = await fetchGlobal(`api/blackbull/cart/getWishlist`);
+  return data;
+};
+
+export const removeItemWIshlist = async (id) => {
+  const raw = {
+    wishlist_item_id: id,
+  };
+  const data = await fetchGlobal("api/blackbull/cart/removeWishlistItem", {
+    method: "POST",
+    body: raw,
+  });
+  console.log("WIshlist Data Data", raw);
   return data;
 };

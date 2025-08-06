@@ -3,7 +3,7 @@ import React from "react";
 const MegaMenuSkeleton = () => {
   return (
     <div
-      class="d-flex gap-3 p-3 bg-primary text-white"
+      class="d-flex gap-3 p-3  text-white "
       style={{ backgroundColor: "#005e84 " }}
     >
       <span class="placeholder-glow">

@@ -5,23 +5,48 @@ import React, { useEffect, useMemo, useState } from "react";
 // const { loading } = useMenuStore.getState();
 import Image from "next/image";
 import InstantLink from "./InstantClick";
-import { getWishList } from "@/api/productApi";
-import { CustomToast } from "./CustomToast";
+import { getWishList, removeItemWIshlist } from "@/api/productApi";
+import { CustomToast, SuccessToast } from "./CustomToast";
+import ListingSkeleton from "./Skeleton/ListingSkeleton";
 
 const WishlistGrid = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getTheWistList = async () => {
+    setLoading(true);
     const response = await getWishList();
     if (response.status === 200) {
       setProducts(response.data.wishlist);
+      setLoading(false);
     } else {
       CustomToast("Somethin went wrong", "top-right");
+      setLoading(false);
     }
 
     console.log("Wishlist response", response);
   };
 
+  const deleteItemFromWishlist = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+    if (!confirmed) return;
+    const response = await removeItemWIshlist(id);
+    setLoading(true);
+
+    if (response.status === 200) {
+      SuccessToast("Item removed from wishlist", "top-right");
+      // getTheWistList();
+      let data = products.filter((item) => item.id !== id);
+      setProducts(data);
+      setLoading(false);
+    } else {
+      CustomToast("Something went wrong", "top-right");
+      setLoading(false);
+    }
+    setLoading(false);
+  };
   useEffect(() => {
     getTheWistList();
   }, []);
@@ -38,10 +63,11 @@ const WishlistGrid = () => {
                   <div
                     style={{
                       position: "absolute",
-                      top: "-37px",
-                      right: "-25px",
+                      top: "-7px",
+                      right: "-10px",
                       // backgroundColor: "#c6302c",
                     }}
+                    onClick={() => deleteItemFromWishlist(product.id)}
                   >
                     <Image
                       src={"/assets/dustbin.png"}
@@ -65,7 +91,11 @@ const WishlistGrid = () => {
                     href={"/"}
                   >
                     <Image
-                      src={"/assets/nothere.png"}
+                      // src={"/assets/nothere.png"}
+                      src={
+                        product?.product?.images[0]?.url ||
+                        "/assets/nothere.png"
+                      }
                       //   onError={() => handleImgError(index)}
                       className="card-img-top"
                       alt={product.name || "product list image"}
@@ -107,6 +137,13 @@ const WishlistGrid = () => {
             </div>
           );
         })}
+
+      {loading && <ListingSkeleton />}
+      {!loading && products?.length == 0 && (
+        <div className="no-data-found">
+          <h1>No data found </h1>
+        </div>
+      )}
     </div>
   );
 };

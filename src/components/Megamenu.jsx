@@ -104,7 +104,7 @@ const MegaMenu = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <MegaMenuSkeleton />
+        {/* <MegaMenuSkeleton /> */}
         {/*===================  Dynamic header ================= */}
         <div className="collapse navbar-collapse" id="megaMenu">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
