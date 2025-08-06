@@ -23,7 +23,7 @@ const SideMenu = dynamic(() => import("@/components/SideMenu"), {
 });
 
 const page = () => {
-  const { heading } = ProductLists((state) => state);
+  const { heading, description } = ProductLists((state) => state);
   const [productId, setProductId] = useState(null);
   const [productDetails, setProductDetails] = useState();
   const searchParams = useSearchParams();
@@ -82,10 +82,20 @@ const page = () => {
       >
         <div className="header-product bg-white">
           <h1>{heading}</h1>
-          <h5>
-            We offer a selection of affordable contemporary costume jewellery
-            with glass beads.
-          </h5>
+          {description ? (
+            <h5>
+              {" "}
+              {description
+                ?.replace(/<[^>]*>/g, "") // remove all HTML tags
+                .replace(/&nbsp;/g, " ") // replace &nbsp; with a space
+                .trim()}
+            </h5>
+          ) : (
+            <h5>
+              We offer a selection of affordable contemporary costume jewellery
+              with glass beads.
+            </h5>
+          )}
         </div>
         <div className="container">
           <div className="category-sidebar">

@@ -338,12 +338,12 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 <td>{productDetails?.width ? productDetails.width : "n/a"}</td>
               </tr>
 
-              <tr>
+              {/* <tr>
                 <th>Weight(gram):</th>
                 <td>
                   {productDetails?.weight ? productDetails.weight : "n/a"}
                 </td>
-              </tr>
+              </tr> */}
 
               <tr>
                 <th>Height(cm):</th>
