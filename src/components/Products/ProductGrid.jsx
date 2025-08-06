@@ -85,7 +85,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                       }
                       onError={() => handleImgError(index)}
                       className="card-img-top"
-                      alt={product.name || "product list image"}
+                      alt={product?.name || "product list image"}
                       // width={auto}
                       // height={auto}
                     />
@@ -103,7 +103,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                     }}
                   >
                     <h6 className="card-title mb-3">
-                      {product.name.slice(0, 50)}
+                      {product?.name?.slice(0, 50)}
                       {product?.name?.length > 50 && "..."}
                     </h6>
                   </InstantLink>
@@ -111,7 +111,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                     Price €
                     {product?.min_price
                       ? isNaN(Number(product?.min_price))
-                        ? product.min_price
+                        ? product?.min_price
                         : Number(product?.min_price).toFixed(2)
                       : Number(product?.price)
                       ? Number(product?.price).toFixed(2)
