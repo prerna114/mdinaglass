@@ -7,12 +7,11 @@ import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
 import { addToTheCart } from "@/api/CartApi";
 import { useMenuStore } from "@/store/useCategoryStore";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { ProductLists } from "@/store/product";
-import { createImage, createUrl } from "@/constant";
+import { useRouter } from "next/navigation";
+import { createImage } from "@/constant";
 import dynamic from "next/dynamic";
 import InstantLink from "./InstantClick";
-// import AboveMenu from "./Products/AboveMenu";
+import { addItemWIshlist } from "@/api/productApi";
 const AboveMenu = dynamic(() => import("./Products/AboveMenu"), {
   ssr: true,
   loading: () => <span className="visually-hidden">Loading...</span>,
@@ -51,13 +50,10 @@ const extractUniqueOptions = (variants = []) => {
 
 export default function ProductDetails({ productDetails, productDetail }) {
   const [quantity, setQuantity] = useState(1);
-  const [levels, setLevels] = useState([]);
   const sideMenu = useMenuStore((state) => state.sideMenu);
   // const setLoading = useMenuStore((state) => state.setLoading);
   const [loading, setLaoding] = useState(false);
-  const router = useRouter();
   const [chooseSku, setChooseSku] = useState(null);
-  const [categoryidList, setCategoryidList] = useState([]);
   const [imgSrc, setImgSrc] = useState();
 
   const [selectedImage, setSelectedImage] = useState("");
@@ -111,6 +107,16 @@ export default function ProductDetails({ productDetails, productDetail }) {
       setLaoding(false);
     }
     setLaoding(false);
+  };
+
+  const addWishList = async (sku) => {
+    const response = await addItemWIshlist(sku);
+    console.log("addItemWishlist", response);
+    if (response.status === 200) {
+      SuccessToast("Item added to Wishlist", "top-right");
+    } else {
+      CustomToast(response.error, "top-right");
+    }
   };
 
   console.log(
@@ -194,7 +200,6 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 />
               ))}
           </div>
-       
         </div>
 
         {/* Product Info */}
@@ -203,7 +208,14 @@ export default function ProductDetails({ productDetails, productDetail }) {
             <h2>{productDetails?.name}</h2>
             <p className="text-muted sku-detail">
               SKU: {productDetails?.sku || "n/a"}
-              <span className="wishlist float-right">
+              <span
+                className="wishlist float-right"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  console.log("addItemWishlist", productDetails?.sku);
+                  addWishList(productDetails?.sku);
+                }}
+              >
                 <Heart
                   size={24}
                   color="#c6302c"
@@ -310,15 +322,12 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 Add to Gift Registry
               </InstantLink>
             </div>
-
-         
           </div>
         </div>
-</div>
- <div className="row">
-<div className="col-md-12 col-lg-6 ">
-
-   <table className="table table-details mt-3">
+      </div>
+      <div className="row">
+        <div className="col-md-12 col-lg-6 ">
+          <table className="table table-details mt-3">
             <tbody>
               <tr>
                 <th>Colour:</th>
@@ -351,21 +360,16 @@ export default function ProductDetails({ productDetails, productDetail }) {
               </tr>
             </tbody>
           </table>
-
-
-</div>
-<div className="col-md-12 col-lg-6">
-   <div className=" small mt-2 text-muted">
-              <p className="impnotice">
-                IMPORTANT - Due to the handmade nature of our
-                products, each piece is unique. Sizes are approximate. For
-                matching sets, please visit our factory or contact support
-                before ordering.
-              </p>
-            </div>
-
-</div>
-
+        </div>
+        <div className="col-md-12 col-lg-6">
+          <div className=" small mt-2 text-muted">
+            <p className="impnotice">
+              IMPORTANT - Due to the handmade nature of our products, each piece
+              is unique. Sizes are approximate. For matching sets, please visit
+              our factory or contact support before ordering.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

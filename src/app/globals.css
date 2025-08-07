@@ -171,13 +171,14 @@ h4 {
   margin: 0px !important;
 }
 table.table.cart-table.table-order tr td:first-child {
-    padding-left: 20px;}
+  padding-left: 20px;
+}
 .footer-area ul.list-unstyled li {
   color: #666666;
   font-weight: 300;
   font-size: 16px;
   line-height: 26px;
-     font-family: Raleway, sans-serif!important;
+  font-family: Raleway, sans-serif !important;
 }
 
 .footer-area ul.list-unstyled li a {
@@ -186,7 +187,7 @@ table.table.cart-table.table-order tr td:first-child {
   font-size: 16px;
   line-height: 26px;
   /* font-family: var(--font-quicksand); */
-     font-family: Raleway, sans-serif;
+  font-family: Raleway, sans-serif;
 }
 .navrow {
   padding-top: 1.2rem;
@@ -348,31 +349,112 @@ ul.category-sidebar li a {
 }
 
 .about-recipe-banner h3 {
-    font-size: 30px !important;
-    font-weight: 600 !important;
-    margin-top: 10px;
     text-align: center;
+    margin-top: 10px;
+    font-size: 25px !important;
+    font-weight: 600 !important;
+    color: #4d4d4d !important;
 }
 
 .about-recipe-banner p {
-    font-size: 15px;
     color: #4d4d4d;
-}
-
-.about-recipe-banner {
-    background: #f1f1f1;
-}
-
-.about-recipe-banner {
-    background: #f1f1f1;
-    text-align: center;
-    padding-bottom: 15px;
-}
-
-.about-recipe-banner button {
+    padding: 0 16px;
     font-size: 15px;
-    padding: 10px;
+    font-family: Raleway, sans-serif;
 }
+aside.sidebarnew ul li {
+    list-style: none;
+    padding: 8px 0px;
+    font-size: 17px;
+    color: #666666;
+    font-weight: 500;
+     font-family: var(--font-domine) !important;
+}
+aside.sidebarnew ul {
+    padding-left: 0;
+}
+.about-recipe-banner {
+  background: #f1f1f1;
+}
+aside.sidebarnew ul li a {
+    color: #666;
+}
+.about-recipe-banner {
+    text-align: center;
+    background: #f1f1f1;
+    padding-bottom: 25px;
+}
+a.btn.btn-cart.career-btn {
+    width: 15%;
+}
+
+.job-post h5 {
+    font-size: 22px;
+    color: #005e84 !important;
+    font-family: 'Raleway', sans-serif;
+}
+
+.job-post p {
+    font-size: 18px;
+    color: #666666;
+    font-family: 'Raleway', sans-serif;
+}
+.job-post {
+    border-bottom: 3px solid #eee !important;
+    padding: 25px 0px !important;
+}
+.about-recipe-banner button {
+  font-size: 15px;
+  padding: 10px;
+}
+.career-btn:hover {
+  background: #76d2d3;
+}
+
+.job-porter p {
+    font-size: 18px;
+    color: #666666;
+    font-family: 'Raleway', sans-serif;
+}
+.select-job {
+    width: 100%;
+    border: 1px solid #c7c7c7;
+    height: 50px;
+}
+button.btn.btn-outline-secondary.dropdown-toggle {
+    height: 50px;
+    border-radius: 0;
+    border-color: #c7c7c7;
+    width: 200px;
+}
+.job-porter h2 {
+    color: #4d4d4d;
+    font-size: 32px;
+    font-weight:300;
+    font-family: 'Domine', sans-serif;
+    margin-bottom: 15px;
+}
+
+.inner-wrapper-blog h4 {
+    font-size: 20px;
+     font-family: var(--font-domine) !important;
+    color: #76d2d3;
+}
+
+
+.inner-wrapper-blog {
+    border-bottom: 1px solid #c7c7c7;
+    padding-bottom: 20px;
+    padding-top: 15px;
+    padding-left: 0;
+}
+
+
+
+
+
+
+
 @media (min-width: 1800px) {
   .container,
   .container-lg,
@@ -382,10 +464,10 @@ ul.category-sidebar li a {
   .container-xxl {
     max-width: 1550px !important;
   }
-    .InfoContainer {
-        margin: 0 auto;
-        max-width: 1350px !important;
-    }
+  .InfoContainer {
+    margin: 0 auto;
+    max-width: 1350px !important;
+  }
 }
 input[type="checkbox"] {
   width: auto;
@@ -651,33 +733,53 @@ ul.list-unstyled.category-sidebar li {
   font-weight: 500;
   font-family: var(--font-quicksand) !important;
 }
-.sorting-style span, .sorting-item span {
-    background: #fff;
-    border: 1px solid #c7c7c7;
-    width: 150px;
-    height: 50px;
-    color: #666666;
-    padding: 12px;
-    font-size: 13px;
-    font-family: Raleway, sans-serif;
+.sorting-style span,
+.sorting-item span {
+  background: #fff;
+  border: 1px solid #c7c7c7;
+  width: 150px;
+  height: 50px;
+  color: #666666;
+  padding: 12px;
+  font-size: 13px;
+  font-family: Raleway, sans-serif;
 }
 .product-card img {
-  width: 250px;
+    width: auto !important;
 }
-.sorting-style select, .sorting-item select
- {
-    border: 1px solid #c7c7c7;
-    height: 50px;
-    font-size: 13px;
+.sorting-style select,
+.sorting-item select {
+  border: 1px solid #c7c7c7;
+  height: 50px;
+  font-size: 13px;
+  color: #666666;
+  border-radius: 0 !important;
+  width: 100% !important;
+  font-family: Raleway, sans-serif;
+}
+.about-recipe-banner a.btn-cart {
+    font-size: 14px;
+}
+.product-content-wrapper {
+    background: #fff;
+    padding: 30px;
+}
+.product-content-wrapper p {
     color: #666666;
-    border-radius: 0 !important;
-    width: 100% !important;
-    font-family: Raleway, sans-serif;
+    line-height: 1.6rem;
+    font-size: 17px;
+    margin-bottom: 12px;
+}
+.product-content-wrapper h2 {
+    color: #005e84;
+    font-size: 25px;
+    font-family: var(--font-domine) !important;
+    font-weight: 500;
 }
 p.impnotice {
-    font-size: 14px;
-    color: #888;
-    font-family: var(--font-quicksand) !important;
+  font-size: 14px;
+  color: #888;
+  font-family: var(--font-quicksand) !important;
 }
 .header-product h5 {
   color: gray;
@@ -712,19 +814,19 @@ li.jewels ul li a {
   border: 1px solid #c7c7c7;
 }
 .table-details tr th {
-    color: #005e84;
-    border-right: 1px solid #c7c7c7;
-    width: 200px;
-    padding: 8px 15px;
-    font-weight: 500 !important;
-    font-size: 15px;
-    font-weight: 300;
-    font-family: var(--font-quicksand) !important;
+  color: #005e84;
+  border-right: 1px solid #c7c7c7;
+  width: 200px;
+  padding: 8px 15px;
+  font-weight: 500 !important;
+  font-size: 15px;
+  font-weight: 300;
+  font-family: var(--font-quicksand) !important;
 }
 .table-details tr td {
   color: #888888;
   padding: 8px 15px;
-    font-weight: 500 !important;
+  font-weight: 500 !important;
   font-size: 15px;
   font-family: var(--font-quicksand) !important;
 }
@@ -890,15 +992,15 @@ table.table.cart-table tr td {
   font-family: var(--font-quicksand) !important;
 }
 .information.about-style h2 {
-    color: #4d4d4d;
-    font-size: 32px !important;
+  color: #4d4d4d;
+  font-size: 32px !important;
 }
 
 .InfoContainer h1 {
-    color: #4d4d4d;
-    font-size: 32px !important;
-    padding-top: 20px;
-    font-weight: normal!important;
+  color: #4d4d4d;
+  font-size: 32px !important;
+  padding-top: 20px;
+  font-weight: normal !important;
 }
 p {
   font-size: 18px;
@@ -2069,7 +2171,6 @@ hr.display-option {
   .product-card h6 {
     font-size: 16px;
     margin-bottom: 0px !important;
-
   }
 
   .sorting-style span,
@@ -2154,17 +2255,18 @@ hr.display-option {
   table.table.cart-table thead tr th {
     font-size: 13px;
   }
-.imageTextVase {
+  .imageTextVase {
     font-size: 28px !important;
-}
+  }
 
-.imageText {
+  .imageText {
     font-size: 28px !important;
-}
+  }
 
-p.category-sidebar.nonActiveBar.Level-1, p.category-sidebar.activeSIdeBar.Level-1 {
+  p.category-sidebar.nonActiveBar.Level-1,
+  p.category-sidebar.activeSIdeBar.Level-1 {
     font-size: 16px !important;
-}
+  }
   table.table.cart-table tr td {
     padding-left: 25px;
     font-size: 15px;
@@ -2241,7 +2343,6 @@ p.category-sidebar.nonActiveBar.Level-1, p.category-sidebar.activeSIdeBar.Level-
   .product-card {
     padding: 20px 15px;
   }
- 
 
   .sorting-style span,
   .sorting-item span {
@@ -2302,11 +2403,11 @@ p.category-sidebar.nonActiveBar.Level-1, p.category-sidebar.activeSIdeBar.Level-
   }
 }
 @media screen and (min-width: 1200px) and (max-width: 1300px) {
- .mobi-logo img {
-        height: 65px !important;
-        width: 100%;
-    }
+  .mobi-logo img {
+    height: 65px !important;
+    width: 100%;
   }
+}
 @media screen and (min-width: 1301px) and (max-width: 1500px) {
   h2.product-show {
     font-size: 30px;
@@ -2369,10 +2470,10 @@ p.category-sidebar.nonActiveBar.Level-1, p.category-sidebar.activeSIdeBar.Level-
     padding-bottom: 0px !important;
   }
 
-      .mobi-logo img {
-        height: 65px !important;
-        width: 100%;
-    }
+  .mobi-logo img {
+    height: 65px !important;
+    width: 100%;
+  }
 
   .inputSubContainer {
     font-size: 15px;
@@ -3051,7 +3152,6 @@ ul.category-sidebar li .activeSIdeBar .Level-1 {
   font-size: 18px !important;
 }
 p.category-sidebar.nonActiveBar.Level-1 {
-  
   text-transform: capitalize !important;
   color: #005e84 !important;
   font-family: "Domine", serif;
@@ -3119,10 +3219,10 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
   padding-left: 0px;
 }
 .sidebar ul li {
-    font-family: var(--font-domine);
-    padding: 10px 0;
-    color: #666666;
-    font-size: 15px;
+  font-family: var(--font-domine);
+  padding: 10px 0;
+  color: #666666;
+  font-size: 15px;
 }
 .sidebar ul li a.activeTab {
   color: #76d2d3;
@@ -3153,11 +3253,14 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
 }
 .information p {
   font-family: var(--font-raleway);
-  font-size: 14px;
+  font-size: 17px;
   margin: 0 0 10px;
   color: #666666;
   /* margin: 0; */
   padding: 0;
+}
+aside.sidebarnew {
+    margin: 0px 20px;
 }
 .information h3 {
   font-family: var(--font-domine);

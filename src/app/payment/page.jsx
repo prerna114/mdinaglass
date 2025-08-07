@@ -10,7 +10,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 const page = () => {
   const [method, setMethod] = useState("");
   const setNavigating = useNavigationStore((s) => s.setNavigating);
-  const { setPaymentMethods,paymentMethods } = useAuthStore.getState(); //
+  const setPaymentMethods = useAuthStore((state) => state.setPaymentMethods);
+  const paymentMethods = useAuthStore((state) => state.paymentMethods);
 
   const router = useRouter();
   const handleButton = () => {
@@ -19,13 +20,14 @@ const page = () => {
     } else {
       setNavigating(true);
 
-      router.push(`/orderReview?method=${method}`);
+      router.push(`/orderReview`);
     }
   };
 
   useEffect(() => {
     setNavigating(false);
   }, []);
+  console.log("Payment Methods", paymentMethods);
   return (
     <div
       style={{
@@ -38,12 +40,10 @@ const page = () => {
       <div className="container">
         <div className="login-signup">
           <div className="row">
-           
-              <div className="login-sec  checkout-sec">
-                <h2>4. Select Payment Type</h2>
-                <p>Select your Payment Method by selecting option below:</p>
-              </div>
-         
+            <div className="login-sec  checkout-sec">
+              <h2>4. Select Payment Type</h2>
+              <p>Select your Payment Method by selecting option below:</p>
+            </div>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@ const page = () => {
                     type="radio"
                     name="checkoutType"
                     value="visa"
-                    checked={paymentMethods === "visa"}
+                    checked={paymentMethods == "visa"}
                     onChange={(e) => {
                       setPaymentMethods(e.target.value);
                       console.log("on click e", e.target.value);
@@ -86,7 +86,7 @@ const page = () => {
                   <input
                     type="radio"
                     name="checkoutType"
-                    checked={paymentMethods === "paypal"}
+                    checked={paymentMethods == "paypal"}
                     value="paypal"
                     onChange={(e) => {
                       setPaymentMethods(e.target.value);
@@ -115,7 +115,7 @@ const page = () => {
                     type="radio"
                     name="checkoutType"
                     value="cash"
-                    checked={paymentMethods === "cash"}
+                    checked={paymentMethods == "cash"}
                     onChange={(e) => {
                       setPaymentMethods(e.target.value);
                       console.log("on click e", e.target.value);
@@ -131,9 +131,12 @@ const page = () => {
       </div>
 
       <div className="container">
-        <div className="login-signup" style={{
-          margin:"0px 70px"
-        }}>
+        <div
+          className="login-signup"
+          style={{
+            margin: "0px 70px",
+          }}
+        >
           <div className="col-md-12">
             <div
               className="d-flex pb-3 mt-3"

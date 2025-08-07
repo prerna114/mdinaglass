@@ -186,3 +186,20 @@ export const getSearchProduct = async (input, page, limit) => {
   console.log("Search Data Data", raw);
   return data;
 };
+
+export const addItemWIshlist = async (sku) => {
+  const raw = {
+    sku: sku,
+  };
+  const data = await fetchGlobal("api/blackbull/cart/addToWishlist", {
+    method: "POST",
+    body: raw,
+  });
+  console.log("WIshlist Data Data", raw);
+  return data;
+};
+
+export const getWishList = async (id) => {
+  const data = await fetchGlobal(`api/blackbull/cart/getWishlist`);
+  return data;
+};
