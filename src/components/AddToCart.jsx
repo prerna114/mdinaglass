@@ -3,7 +3,11 @@
 import { useCartStore } from "@/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { CustomToast, SuccessToast } from "./CustomToast";
-import { getShippingRate, updateQuantityAPi } from "@/api/CartApi";
+import {
+  getShippingRate,
+  updateGuestCart,
+  updateQuantityAPi,
+} from "@/api/CartApi";
 import { CountryList } from "@/constant";
 import { useNavigationStore } from "@/store/useNavigationstore";
 
@@ -53,7 +57,7 @@ const AddToCart = () => {
     for (const item of cart) {
       // Handle various price sources
 
-      total = Number(total) + Number(item?.weight); // Assuming weight is a property of each item
+      total = Number(total) + Number(item?.product?.weight); // Assuming weight is a property of each item
     }
 
     console.log("Total gram", total);
@@ -62,37 +66,58 @@ const AddToCart = () => {
   }
 
   const updateCart = async () => {
+    const tokenData = localStorage.getItem("token");
+    const parsed = tokenData ? JSON.parse(tokenData) : null;
+    const accessToken = parsed?.token;
+    console.log("accessToken Updatecart", accessToken);
     setLoading(true);
-    const id = cart[0].id;
-    const qty = cart[0].quantity;
-    const response = await updateQuantityAPi(cart);
-    console.log("Update cart repsonse", response);
-    if (response.status == 200) {
-      SuccessToast(response.data?.message, "top-right");
-      setLoading(false);
+
+    if (accessToken && accessToken !== "undefined") {
+      const response = await updateQuantityAPi(cart);
+      console.log("Update cart repsonse", response);
+      if (response.status == 200) {
+        SuccessToast(response.data?.message, "top-right");
+        setLoading(false);
+      } else {
+        CustomToast("Something went wrong", "top-right");
+        setLoading(false);
+      }
     } else {
-      CustomToast("Something went wrong", "top-right");
-      setLoading(false);
+      guestCartUpdate();
     }
   };
 
+  const guestCartUpdate = async () => {
+    const tokenData = localStorage.getItem("guestToken");
+    console.log("guestCartUpdate", tokenData);
+    if (tokenData && tokenData !== "undefined") {
+      const response = await updateGuestCart(cart);
+      console.log("Update guest cart response", response);
+      SuccessToast(response.data?.message, "top-right");
+
+      setLoading(false);
+    }
+  };
   const shiipingRate = async (code) => {
-    setNavigating(true);
-    const data = await getShippingRate(cartWieght, code);
-    if (data?.status == 200) {
-      setShippingRate(data?.data);
-      setNavigating(false);
-    } else {
-      setNavigating(false);
+    if (Number(cartWieght) && Number(cartWieght) > 0) {
+      setNavigating(true);
+      const data = await getShippingRate(cartWieght, code);
+      if (data?.status == 200) {
+        setShippingRate(data?.data);
+        setNavigating(false);
+      } else {
+        setNavigating(false);
+      }
     }
     console.log("Shipping Rate", data);
   };
+
   useEffect(() => {
     setInsurance(15.0);
     getTotalWeight();
   }, []);
 
-  console.log("Cart Items", shippingRate?.Value[0]?.Price);
+  console.log("Cart Items", cart);
 
   return (
     <div className="container my-4">
@@ -206,12 +231,10 @@ const AddToCart = () => {
                     >
                       €
                       {isNaN(totalPrice)
-                        ? Number(
-                            getGrandTotal(cart) +
-                              insurance +
-                              (Number(shippingRate?.Value[0]?.Price) || 0)
-                          ).toFixed(2)
-                        : totalPrice + insurance}
+                        ? Number(getGrandTotal(cart)).toFixed(2)
+                        : totalPrice +
+                          insurance +
+                          (Number(shippingRate?.Value[0]?.Price) || 0)}
                       {/* €{totalPrice + insurance} */}
                     </td>
                   </tr>
@@ -226,12 +249,10 @@ const AddToCart = () => {
                     >
                       €
                       {isNaN(totalPrice)
-                        ? Number(
-                            getGrandTotal(cart) +
-                              insurance +
-                              (Number(shippingRate?.Value[0]?.Price) || 0)
-                          ).toFixed(2)
-                        : totalPrice + insurance}
+                        ? Number(getGrandTotal(cart)).toFixed(2)
+                        : totalPrice +
+                          insurance +
+                          (Number(shippingRate?.Value[0]?.Price) || 0)}
                     </td>
                   </tr>
                 </tbody>

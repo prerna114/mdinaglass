@@ -10,7 +10,6 @@ import { useMenuStore } from "@/store/useCategoryStore";
 import InstantLink from "../InstantClick";
 import RecipeIdea from "../RecipeIdea";
 
-
 const AboutSideMenu = () => {
   const [active, setActive] = useState();
   const params = useParams();
@@ -65,7 +64,7 @@ const AboutSideMenu = () => {
   }, [params?.slug]);
 
   return (
-    <aside className="sidebar">
+    <aside className="col-lg-3 col-md-3 col-sm-4 sidebar">
       <h1>About Us</h1>
       <ul>
         {links.map((link) => (

@@ -8,7 +8,7 @@ type CartItem = {
 type CartState = {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
-  removeFromCart: (id: string) => void;
+  removeFromCart: (id: string, sku: string) => void;
   updateQuantity: (id: string, quantity: number, qty?: number) => void;
   clearCart: () => void;
   insurance: {};
@@ -52,9 +52,14 @@ export const useCartStore = create<CartState>()(
         }
       },
 
-      removeFromCart: (id) => {
-        const updatedCart = get().cart.filter((item) => item.id !== id);
-        set({ cart: updatedCart }); // important for persist
+      removeFromCart: (id, sku) => {
+        if (id) {
+          const updatedCart = get().cart.filter((item) => item.id !== id);
+          set({ cart: updatedCart }); // important for persist
+        } else if (sku) {
+          const updatedCart = get().cart.filter((item) => item.sku !== sku);
+          set({ cart: updatedCart });
+        }
       },
 
       updateQuantity: (id, quantity, qty) =>

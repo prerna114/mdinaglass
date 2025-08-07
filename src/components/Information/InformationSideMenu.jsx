@@ -6,6 +6,7 @@ import { useMenuStore } from "@/store/useCategoryStore";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import RecipeIdea from "../RecipeIdea";
 
 const InformationSideMenu = () => {
   const [active, setActive] = useState();
@@ -48,7 +49,7 @@ const InformationSideMenu = () => {
   }, [params?.slug]);
 
   return (
-    <aside className="sidebar">
+    <aside className="col-lg-3 col-md-3 col-sm-4 sidebar">
       <h1>Information</h1>
       <ul>
         {links.map((link) => (
@@ -62,6 +63,7 @@ const InformationSideMenu = () => {
           </li>
         ))}
       </ul>
+      <RecipeIdea />
     </aside>
   );
 };

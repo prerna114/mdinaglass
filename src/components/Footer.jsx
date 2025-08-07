@@ -88,13 +88,17 @@ const Footer = () => {
             <h6 className="footer-link">Information</h6>
             <ul className="list-unstyled small">
               <li>
-                <InstantLink href={"/careers"}>Careers</InstantLink>
+                <InstantLink href={"/career"}>Careers</InstantLink>
               </li>
 
               <li>
                 <InstantLink href={"/information/international-delivery"}>
                   International Delivery
                 </InstantLink>
+              </li>
+
+              <li>
+                <InstantLink href={"/chandeliers"}>Chandeliers</InstantLink>
               </li>
 
               <li>

@@ -4,6 +4,7 @@ import React from "react";
 import CmsAboveMenu from "../CmsAboveMenu";
 import { useMenuStore } from "@/store/useCategoryStore";
 import ParagraphSkeleton from "../Skeleton/ParagraphSkeleton";
+import RecipeIdea from "../RecipeIdea";
 const AboutContent = ({ content }) => {
   const { cmsInfo } = useAuthStore((state) => state);
   const loading = useMenuStore((state) => state.loading);
@@ -37,7 +38,7 @@ const AboutContent = ({ content }) => {
         )
       )}
       <h2>{cmsInfo?.page_title}</h2>
-      <p dangerouslySetInnerHTML={{ __html: cleanedHtml }}></p>{" "}
+      <p dangerouslySetInnerHTML={{ __html: cleanedHtml }}></p>
     </div>
   );
 };

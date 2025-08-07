@@ -352,59 +352,59 @@ ul.category-sidebar li a {
 }
 
 .about-recipe-banner h3 {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 25px !important;
-    font-weight: 600 !important;
-    color: #4d4d4d !important;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 25px !important;
+  font-weight: 600 !important;
+  color: #4d4d4d !important;
 }
 
 .about-recipe-banner p {
-    color: #4d4d4d;
-    padding: 0 16px;
-    font-size: 15px;
-    font-family: Raleway, sans-serif;
+  color: #4d4d4d;
+  padding: 0 16px;
+  font-size: 15px;
+  font-family: Raleway, sans-serif;
 }
 aside.sidebarnew ul li {
-    list-style: none;
-    padding: 8px 0px;
-    font-size: 17px;
-    color: #666666;
-    font-weight: 500;
-     font-family: var(--font-domine) !important;
+  list-style: none;
+  padding: 8px 0px;
+  font-size: 17px;
+  color: #666666;
+  font-weight: 500;
+  font-family: var(--font-domine) !important;
 }
 aside.sidebarnew ul {
-    padding-left: 0;
+  padding-left: 0;
 }
 .about-recipe-banner {
   background: #f1f1f1;
 }
 aside.sidebarnew ul li a {
-    color: #666;
+  color: #666;
 }
 .about-recipe-banner {
-    text-align: center;
-    background: #f1f1f1;
-    padding-bottom: 25px;
+  text-align: center;
+  background: #f1f1f1;
+  padding-bottom: 25px;
 }
 a.btn.btn-cart.career-btn {
-    width: 15%;
+  width: 15%;
 }
 
 .job-post h5 {
-    font-size: 22px;
-    color: #005e84 !important;
-    font-family: 'Raleway', sans-serif;
+  font-size: 22px;
+  color: #005e84 !important;
+  font-family: "Raleway", sans-serif;
 }
 
 .job-post p {
-    font-size: 18px;
-    color: #666666;
-    font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+  color: #666666;
+  font-family: "Raleway", sans-serif;
 }
 .job-post {
-    border-bottom: 3px solid #eee !important;
-    padding: 25px 0px !important;
+  border-bottom: 3px solid #eee !important;
+  padding: 25px 0px !important;
 }
 .about-recipe-banner button {
   font-size: 15px;
@@ -415,48 +415,41 @@ a.btn.btn-cart.career-btn {
 }
 
 .job-porter p {
-    font-size: 18px;
-    color: #666666;
-    font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+  color: #666666;
+  font-family: "Raleway", sans-serif;
 }
 .select-job {
-    width: 100%;
-    border: 1px solid #c7c7c7;
-    height: 50px;
+  width: 100%;
+  border: 1px solid #c7c7c7;
+  height: 50px;
 }
 button.btn.btn-outline-secondary.dropdown-toggle {
-    height: 50px;
-    border-radius: 0;
-    border-color: #c7c7c7;
-    width: 200px;
+  height: 50px;
+  border-radius: 0;
+  border-color: #c7c7c7;
+  width: 200px;
 }
 .job-porter h2 {
-    color: #4d4d4d;
-    font-size: 32px;
-    font-weight:300;
-    font-family: 'Domine', sans-serif;
-    margin-bottom: 15px;
+  color: #4d4d4d;
+  font-size: 32px;
+  font-weight: 300;
+  font-family: "Domine", sans-serif;
+  margin-bottom: 15px;
 }
 
 .inner-wrapper-blog h4 {
-    font-size: 20px;
-     font-family: var(--font-domine) !important;
-    color: #76d2d3;
+  font-size: 20px;
+  font-family: var(--font-domine) !important;
+  color: #76d2d3;
 }
-
 
 .inner-wrapper-blog {
-    border-bottom: 1px solid #c7c7c7;
-    padding-bottom: 20px;
-    padding-top: 15px;
-    padding-left: 0;
+  border-bottom: 1px solid #c7c7c7;
+  padding-bottom: 20px;
+  padding-top: 15px;
+  padding-left: 0;
 }
-
-
-
-
-
-
 
 @media (min-width: 1800px) {
   .container,
@@ -763,23 +756,23 @@ ul.list-unstyled.category-sidebar li {
   font-family: Raleway, sans-serif;
 }
 .about-recipe-banner a.btn-cart {
-    font-size: 14px;
+  font-size: 14px;
 }
 .product-content-wrapper {
-    background: #fff;
-    padding: 30px;
+  background: #fff;
+  padding: 30px;
 }
 .product-content-wrapper p {
-    color: #666666;
-    line-height: 1.6rem;
-    font-size: 17px;
-    margin-bottom: 12px;
+  color: #666666;
+  line-height: 1.6rem;
+  font-size: 17px;
+  margin-bottom: 12px;
 }
 .product-content-wrapper h2 {
-    color: #005e84;
-    font-size: 25px;
-    font-family: var(--font-domine) !important;
-    font-weight: 500;
+  color: #005e84;
+  font-size: 25px;
+  font-family: var(--font-domine) !important;
+  font-weight: 500;
 }
 p.impnotice {
   font-size: 14px;
@@ -3229,7 +3222,7 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
 }
 .sidebar {
   padding-right: 15px;
-  width: 20%;
+  /* width: 20%; */
 }
 .sidebar ul {
   list-style: none;
@@ -3278,7 +3271,7 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
   padding: 0;
 }
 aside.sidebarnew {
-    margin: 0px 20px;
+  margin: 0px 20px;
 }
 .information h3 {
   font-family: var(--font-domine);

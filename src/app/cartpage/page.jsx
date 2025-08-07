@@ -9,7 +9,12 @@ import Link from "next/link";
 import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import { useAuthStore } from "@/store/useAuthStore";
-import { getCartListing, RemoveItemCart } from "@/api/CartApi";
+import {
+  getCartGuest,
+  getCartListing,
+  RemoveGuestCart,
+  RemoveItemCart,
+} from "@/api/CartApi";
 import dynamic from "next/dynamic";
 // import TrustPaymentForm from "@/components/TrustPaymentForm";
 const TrustPaymentForm = dynamic(
@@ -28,6 +33,7 @@ const page = () => {
     (state) => state
   );
   const { isLogin } = useAuthStore((state) => state);
+  const [guestToken, setGuestToken] = useState(null);
 
   console.log("isLogin", isLogin);
   const [cartItems, setCartItems] = useState([
@@ -63,24 +69,24 @@ const page = () => {
     );
   };
 
-  const removeTheItem = (id) => {
-    removeFromCart(id);
-    SuccessToast("Item Remove succusfully", "top-right");
-  };
-
-  const handleDelete = (id) => {
+  const handleDelete = (data) => {
+    console.log("Delete ID", data);
     const confirmed = window.confirm(
       "Are you sure you want to delete this item?"
     );
     const tokenData = localStorage.getItem("token");
     const parsed = tokenData ? JSON.parse(tokenData) : null;
     const accessToken = parsed?.token;
-    if (confirmed && accessToken) {
-      removeItem(id);
+    const guestToken = localStorage.getItem("guestToken");
+
+    if (confirmed && accessToken && !guestToken) {
+      removeItem(data?.id);
       // User clicked "Yes"
       console.log("Item deleted");
-    } else if (confirmed && !accessToken) {
-      removeTheItem(id);
+    } else if (confirmed && !accessToken && !guestToken) {
+      removeTheItem(data?.id);
+    } else if (confirmed && guestToken) {
+      removeGuestItem(data?.sku);
     } else {
       // User clicked "No"
       console.log("Action cancelled");
@@ -99,29 +105,29 @@ const page = () => {
     }
   };
 
+  const removeGuestItem = async (sku) => {
+    const response = await RemoveGuestCart(sku);
+    console.log("Remove Guest Item Response", response);
+    if (response.status === 200) {
+      SuccessToast("Item removed successfully", "top-right");
+      removeFromCart("", sku);
+    }
+  };
+  const removeTheItem = (id, sku) => {
+    removeFromCart(id, sku);
+    SuccessToast("Item Remove succusfully", "top-right");
+  };
   const subtotal = (price, qty) => {
     console.log("Sub totle", price, qty);
     return Number(price * qty).toFixed(2);
   };
-  const getCart = async () => {
-    // setLoading(true);
-    console.log("Cart listing caal");
-    const data = await getCartListing();
-    if (data?.status == 200) {
-      console.log("Cart data", data);
-      // addToCart(data.result.items);
-      // data.data.cart.items.forEach((item) => {
-      //   addToCart(item);
-      // });
-      // setLoading(false);
-    } else if (data?.status == 401) {
-      // logout;
-    }
-    // console.log("getCart", data);
-  };
 
   useEffect(() => {
     console.log("Cart page loaded");
+    const data = localStorage.getItem("guestToken");
+    if (data) {
+      setGuestToken(data);
+    }
     // getCart();
   }, []);
   console.log("Cart", cart);
@@ -168,7 +174,15 @@ const page = () => {
 
                   <div className="col-md-4">
                     <div className="text-right button-margin float-right mb-3 mt-5">
-                      <Link href={isLogin ? "/checkout" : "/loginCheckoutPage"}>
+                      <Link
+                        href={
+                          guestToken
+                            ? "/checkout"
+                            : isLogin
+                            ? "/checkout"
+                            : "/loginCheckoutPage"
+                        }
+                      >
                         <button className="btn btn-info text-white">
                           Proceed To Checkout
                         </button>
@@ -199,17 +213,15 @@ const page = () => {
                             textAlign: "center",
                           }}
                         >
-                          {item?.image?.length > 0 && (
-                            <img
-                              src={
-                                item?.image
-                                  ? item?.image
-                                  : item?.images[0]?.small_image_url
-                              }
-                              alt={item.name}
-                              width="80"
-                            />
-                          )}
+                          <img
+                            src={
+                              item?.product?.images?.length > 0
+                                ? item?.product?.images[0]?.url
+                                : item?.images[0]?.small_image_url
+                            }
+                            alt={item.name}
+                            width="80"
+                          />
                         </td>
                         <td>{item.name}</td>
                         <td>
@@ -257,7 +269,7 @@ const page = () => {
                           <span
                             className="text-info"
                             style={{ cursor: "pointer" }}
-                            onClick={() => handleDelete(item.id)}
+                            onClick={() => handleDelete(item)}
                           >
                             &times;
                           </span>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Heart } from "lucide-react";
 import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
-import { addToTheCart } from "@/api/CartApi";
+import { addCartGuest, addToTheCart, getCartGuest } from "@/api/CartApi";
 import { useMenuStore } from "@/store/useCategoryStore";
 import { useRouter } from "next/navigation";
 import { createImage } from "@/constant";
@@ -100,13 +100,38 @@ export default function ProductDetails({ productDetails, productDetail }) {
       setLaoding(false);
     } else {
       console.log("quantity", quantity, productDetails);
-
-      addToCart({ ...productDetails, quantity, chooseSku });
-      SuccessToast("Item added Successfully", "top-right");
+      const guestToken = localStorage.getItem("guestToken");
+      addGuestCart(guestToken);
 
       setLaoding(false);
     }
     setLaoding(false);
+  };
+
+  const addGuestCart = async (guestToken) => {
+    const data = await addCartGuest(productDetails, quantity, guestToken);
+    console.log("addCartGuest", data, guestToken);
+
+    if (data?.status === 200) {
+      SuccessToast("Item added to cart", "top-right");
+      localStorage.setItem("guestToken", data.data?.guest_token);
+      // addToCart(data.data?.cart.items);
+      await getGUesstCart();
+    }
+  };
+  const getGUesstCart = async () => {
+    const tokenData = localStorage.getItem("guestToken");
+    console.log("guestToken", tokenData);
+    if (tokenData) {
+      const response = await getCartGuest(tokenData);
+      console.log("getCartGuest", response?.data?.cart[0]?.items);
+      if (response.status == 200) {
+        clearCart();
+        response?.data?.cart[0]?.items?.forEach((item) => {
+          addToCart(item);
+        });
+      }
+    }
   };
 
   const addWishList = async (sku) => {

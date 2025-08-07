@@ -115,12 +115,18 @@ const FilterProduct = ({ down }) => {
                   <select
                     className="form-select w-auto"
                     onChange={(e) => {
-                      // sortProductsByPriceLowToHigh(products);
-                      handleClick(e.target.value, "", "", "");
+                      if (e.target.value != "Select") {
+                        handleClick(e.target.value, "", "", "");
+                      }
+                      // sortProductsByP
+                      // iriceLowToHigh(products);
+                      console.log("Select ", e.target.value);
                     }}
                     defaultValue={paginationOption?.sort_by}
                   >
-                    <option>Select</option>
+                    <option value={"Select"} disabled hidden>
+                      Select
+                    </option>
                     <option value={"price"}>Price</option>
                     <option value={"name"}>Name</option>
                   </select>

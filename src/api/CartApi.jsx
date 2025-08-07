@@ -256,14 +256,110 @@ export const getOrderList = async () => {
   const data = await fetchGlobal("api/blackbull/orders");
   return data;
 };
-export const addCartGuest = async (sku, qty, token) => {
+
+export const addCartGuest = async (product, qty, token) => {
   const raw = {
-    sku: "WAV-24-W4",
-    qty: 15,
-    guest_token: "e38e575174175d62be3fa92fe8ec8237",
+    sku: product?.sku,
+    qty: qty,
   };
 
   const data = await fetchGlobal("api/blackbull/cart/guestAdd", {
+    method: "POST",
+    body: raw,
+
+    headers: {
+      "guest-token": token ? token : "",
+    },
+  });
+  console.log("Update Data", data);
+  return data;
+};
+
+export const getCartGuest = async (token) => {
+  console.warn("getCartGuest token", token);
+
+  const data = await fetchGlobal("api/blackbull/cart/guestCart", {
+    method: "GET",
+    // body: raw,
+    headers: {
+      "guest-token": token ? token : "",
+    },
+  });
+  console.log("Update Data", data);
+  return data;
+};
+
+export const updateGuestCart = async (data) => {
+  console.log("Update Data updateGuestCart", data);
+  let items = data.map((item) => ({
+    sku: item.sku,
+    qty: item.quantity ? item.quantity : item.qty, // Ensure quantity is set to 1 if not provided
+  }));
+  console.log("Items", items);
+  const raw = {
+    items: items,
+  };
+  const response = await fetchGlobal("api/blackbull/cart/guestUpdate", {
+    method: "POST",
+    body: raw,
+    headers: {
+      "guest-token": localStorage.getItem("guestToken") || "",
+    },
+  });
+  console.log("Update Data", response);
+  return response;
+};
+
+export const RemoveGuestCart = async (sku) => {
+  console.log("Items", sku);
+  const raw = {
+    sku: sku,
+  };
+  const response = await fetchGlobal("api/blackbull/cart/guestRemove", {
+    method: "POST",
+    body: raw,
+    headers: {
+      "guest-token": localStorage.getItem("guestToken") || "",
+    },
+  });
+  console.log("Update Data", response);
+  return response;
+};
+
+export const guestcheckOut = async () => {
+  const billing = localStorage.getItem("billingaddress");
+  const billingParse = JSON.parse(billing);
+
+  const shipping = localStorage.getItem("shiipingaddreess");
+  const shippingParse = JSON.parse(shipping);
+
+  const raw = {
+    billing: {
+      first_name: billingParse.firstName,
+      last_name: billingParse.lastName,
+      email: billingParse.email,
+      address: billingParse.addressOne + billingParse.addressTwo,
+      city: billingParse.city,
+      state: billingParse.state,
+      country: billingParse.country,
+      postcode: billingParse.zipCode,
+      phone: billingParse.telePhone,
+    },
+    shipping: {
+      first_name: shippingParse.firstName,
+      last_name: shippingParse.lastName,
+      email: shippingParse.email,
+      address: shippingParse.addressOne + shippingParse.addressTwo,
+      city: shippingParse.city,
+      state: shippingParse.state,
+      country: shippingParse.country,
+      postcode: shippingParse.zipCode,
+      phone: shippingParse.telePhone,
+    },
+    shipping_method: "eSeller International",
+    payment_method: "cashondelivery",
+  };
+  const data = await fetchGlobal("/api/blackbull/guest-checkout", {
     method: "POST",
     body: raw,
   });

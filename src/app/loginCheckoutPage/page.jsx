@@ -56,6 +56,7 @@ const loginCheckoutPage = () => {
     const data = await Login(userName, password);
     console.log("data", data);
     if (data?.status == 200) {
+      localStorage.removeItem("guestToken");
       console.log("Login Success");
       SuccessToast("Login Successfull", "top-right");
       localStorage.setItem("token", JSON.stringify(data?.data));

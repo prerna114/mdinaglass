@@ -12,7 +12,7 @@ import { useCartStore } from "@/store";
 import { useAuthStore } from "@/store/useAuthStore";
 
 import Image from "next/image";
-import { getCartListing, testCartAPi } from "@/api/CartApi";
+import { getCartListing, testCartAPi, getCartGuest } from "@/api/CartApi";
 import InstantLink from "./InstantClick";
 
 const Header = () => {
@@ -55,20 +55,46 @@ const Header = () => {
   };
 
   const getCart = async () => {
-    // await testCartAPi();
-    const data = await getCartListing();
-    // const data = await testCartAPi();
-    console.log("getCart Header", data.data);
+    const tokenData = localStorage.getItem("token");
+    const parsed = tokenData ? JSON.parse(tokenData) : null;
+    const accessToken = parsed?.token;
+    console.log("accessToken", accessToken);
+    if (accessToken && accessToken !== "undefined") {
+      const data = await getCartListing();
+      console.log("getCart Header", data.data);
 
-    if (data?.status == 200) {
-      clearCart();
-      // console.log("getCart Header", data.data);
-      console.log("getCart Header", data.data.items);
+      if (data?.status == 200) {
+        clearCart();
+        // console.log("getCart Header", data.data);
+        console.log("getCart Header", data.data.items);
 
-      // addToCart(data.result.items);
-      data.data.items.forEach((item) => {
-        addToCart(item);
-      });
+        // addToCart(data.result.items);
+        data.data.items.forEach((item) => {
+          addToCart(item);
+        });
+      }
+    } else {
+      const tokenData = localStorage.getItem("guestToken");
+      console.log("guestToken", tokenData);
+
+      if (tokenData) {
+        getGUesstCart();
+      }
+    }
+  };
+
+  const getGUesstCart = async () => {
+    const tokenData = localStorage.getItem("guestToken");
+    console.log("guestToken", tokenData);
+    if (tokenData) {
+      const response = await getCartGuest(tokenData);
+      console.log("getCartGuest", response?.data?.cart[0]?.items);
+      if (response.status == 200) {
+        clearCart();
+        response?.data?.cart[0]?.items?.forEach((item) => {
+          addToCart(item);
+        });
+      }
     }
   };
 

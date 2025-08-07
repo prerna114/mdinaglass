@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { CustomToast } from "../CustomToast";
+import RecipeIdea from "../RecipeIdea";
 
 const ContactSideMenu = () => {
   const [active, setActive] = useState();
@@ -61,6 +62,7 @@ const ContactSideMenu = () => {
           </li>
         ))}
       </ul>
+      <RecipeIdea />
     </aside>
   );
 };
