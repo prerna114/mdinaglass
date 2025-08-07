@@ -8,11 +8,14 @@ import InstantLink from "./InstantClick";
 import { getWishList, removeItemWIshlist } from "@/api/productApi";
 import { CustomToast, SuccessToast } from "./CustomToast";
 import ListingSkeleton from "./Skeleton/ListingSkeleton";
+import { ProductLists } from "@/store/product";
 
 const WishlistGrid = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const { heading, setHeading, setDescription } = ProductLists(
+    (state) => state
+  );
   const getTheWistList = async () => {
     setLoading(true);
     const response = await getWishList();
@@ -51,7 +54,7 @@ const WishlistGrid = () => {
     getTheWistList();
   }, []);
 
-  console.log("Wishlist products", products);
+  console.log("Wishlist products", products[0]?.product);
   return (
     <div className="row">
       {products?.length > 0 &&
@@ -88,7 +91,15 @@ const WishlistGrid = () => {
                     // href={{
                     //   pathname: `/product-details/webshop/${`${categryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
                     // }}
-                    href={"/"}
+                    href={{
+                      pathname: `/product-details/webshop/${`${1}/${
+                        product?.id
+                      }/${product?.product?.slug}/${product?.product?.sku}`}`,
+                    }}
+                    onClick={() => {
+                      setHeading(product?.product?.range);
+                      setDescription(product?.product?.description);
+                    }}
                   >
                     <Image
                       // src={"/assets/nothere.png"}
@@ -109,8 +120,15 @@ const WishlistGrid = () => {
                     // href={{
                     //   pathname: `/product-details/webshop/${`${categryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
                     // }}
-                    href={"/"}
-                    scroll={false}
+                    href={{
+                      pathname: `/product-details/webshop/${`${1}/${
+                        product?.id
+                      }/${product?.product?.slug}/${product?.product?.sku}`}`,
+                    }}
+                    onClick={() => {
+                      setHeading(product?.product?.range);
+                      setDescription(product?.product?.description);
+                    }}
                   >
                     <h6 className="card-title mb-3">
                       {product?.product?.name.slice(0, 50)}

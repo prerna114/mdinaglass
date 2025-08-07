@@ -181,20 +181,12 @@ const ProductCard = ({ title = "New Arrivals" }) => {
           {productData.map((product, index) => (
             <div key={product.id} className="px-2">
               <div
-                className=" bestseller-account border rounded p-3 d-flex flex-column align-items-center new-arrival-design "
-                style={{
-                  height: "100%",
-                  boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
-                  // backgroundColor: "rgb(245, 245, 245)",
-                }}
+                className="bg-white text-center new-arrival-design  p-3 d-flex flex-column justify-content-between align-items-center"
+                style={{ height: "100%", minHeight: "340px" }}
               >
                 <div
-                  className="bg-white rounded mb-3 d-flex align-items-center justify-content-center"
-                  style={{
-                    width: "100%",
-                    height: "250px",
-                    overflow: "hidden",
-                  }}
+                  className="bg-white text-center new-arrival-design  p-3 d-flex flex-column justify-content-between align-items-center"
+                  style={{ height: "100%", minHeight: "340px" }}
                 >
                   <InstantLink
                     href={{
@@ -237,7 +229,9 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                     className="my-2"
                     style={{ width: "40px", margin: "auto" }}
                   />
-                  <p className="text-muted mb-3">{product.min_price}</p>
+                  <p className="text-muted mb-3">
+                    € {Number(product.prices?.final?.price).toFixed(2)}
+                  </p>
                   <div className="new-arrival-design">
                     <button
                       className="btn btn-outline-secondary  w-100"

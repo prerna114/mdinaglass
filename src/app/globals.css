@@ -9,6 +9,9 @@
   .container-xxl {
     max-width: 1720px !important;
   }
+  .information {
+    width: 80%;
+  }
   .container.mobile-header-bg {
     max-width: 1700px;
   }
@@ -1391,6 +1394,9 @@ span.wishlist {
   h1 {
     font-size: 22px !important;
   }
+  .information {
+    width: 100% !important;
+  }
   .header-of-cart h4 {
     font-size: 17px;
   }
@@ -1500,6 +1506,9 @@ a {
 @media screen and (min-width: 501px) and (max-width: 758px) {
   table.table.cart-table {
     display: block !important;
+  }
+  .information {
+    width: 100% !important;
   }
   .table > thead {
     vertical-align: unset;
@@ -2308,6 +2317,12 @@ hr.display-option {
   .mobi-logo img {
     height: 65px !important;
     width: 100%;
+  }
+}
+@media (max-width: 390px) {
+  /* Your styles here */
+  .information {
+    width: 100% !important;
   }
 }
 @media screen and (min-width: 1301px) and (max-width: 1500px) {
@@ -3254,4 +3269,34 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
 
 .slick-next {
   display: none !important;
+}
+
+/* ======= Slider Images Css ===========  */
+.slider-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.slick-slide img {
+  width: 100%;
+  object-fit: contain;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .slider-image {
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .slider-image {
+    height: 200px;
+  }
+}
+
+.slider-container {
+  width: 100%;
+  max-width: 1130px;
+  margin: 0 auto;
 }
