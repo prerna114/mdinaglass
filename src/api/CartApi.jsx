@@ -256,3 +256,46 @@ export const getOrderList = async () => {
   const data = await fetchGlobal("api/blackbull/orders");
   return data;
 };
+export const addCartGuest = async (sku, qty, token) => {
+  const raw = {
+    sku: "WAV-24-W4",
+    qty: 15,
+    guest_token: "e38e575174175d62be3fa92fe8ec8237",
+  };
+
+  const data = await fetchGlobal("api/blackbull/cart/guestAdd", {
+    method: "POST",
+    body: raw,
+  });
+  console.log("Update Data", data);
+  return data;
+};
+
+export const getShippingRate = async (
+  itemWeightInGrams,
+  destinationCountryIsoCode
+) => {
+  try {
+    const response = await fetch(
+      `/api/shippingRate?itemWeightInGrams=${itemWeightInGrams}&destinationCountryIsoCode=${destinationCountryIsoCode}`
+    );
+
+    const data = await response.json();
+
+    return {
+      ok: response.ok, // true if status is 2xx
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers, // You can access headers if needed
+      data,
+    };
+  } catch (error) {
+    console.error("Error fetching shipping rate:", error);
+    return {
+      ok: false,
+      status: 0,
+      error: error.message || "Unknown error",
+      data: null,
+    };
+  }
+};

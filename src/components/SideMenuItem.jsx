@@ -6,6 +6,7 @@ import { ProductLists } from "@/store/product";
 import { createUrl } from "@/constant";
 import { useMenuStore } from "@/store/useCategoryStore";
 import Link from "next/link";
+import InstantLink from "./InstantClick";
 
 const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
   const router = useRouter();
@@ -118,7 +119,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
       // }}
       >
         {/* <Link href={"/"}> */}
-        <Link
+        <InstantLink
           href={createUrl(fullPathToItem, item.slug, sortOrder, limit, page)}
           style={{ margin: 0 }}
         >
@@ -144,7 +145,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
           >
             {item.name}
           </p>
-        </Link>
+        </InstantLink>
         {/* </Link> */}
       </div>
 

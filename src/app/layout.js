@@ -12,13 +12,31 @@ import "./globals.css";
 import Header from "../components/Header";
 // import Footer from "../components/Footer";
 import { ToastContainer } from "react-toastify";
-import MegaMenu from "../components/Megamenu";
+// import MegaMenu from "../components/Megamenu";
 import dynamic from "next/dynamic";
 import GloblaLoader from "@/components/GloblaLoader";
+import MegaMenuSkeleton from "@/components/Skeleton/MegaMenuSkeleton";
 
 const Footer = dynamic(() => import("../components/Footer"), {
   ssr: true,
   loading: () => <div style={{ height: 200 }}>Loading...</div>,
+});
+
+const MegaMenu = dynamic(() => import("../components/Megamenu"), {
+  ssr: true,
+  loading: () => (
+    <div
+      style={{
+        height: 200,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "red",
+      }}
+    >
+      <MegaMenuSkeleton />
+    </div>
+  ),
 });
 const geistSans = Geist({
   variable: "--font-geist-sans",

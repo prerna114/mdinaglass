@@ -20,6 +20,10 @@ const InfoContent = ({ content }) => {
       slug: "return-policy",
     },
   ];
+  const cleanedHtml = cmsInfo?.html_content?.replaceAll(
+    "https://mdinaglasses.blackbullsolution.com",
+    ""
+  );
   return (
     <div className="information px-5">
       {/* <InfoAboveMenu /> */}
@@ -34,7 +38,7 @@ const InfoContent = ({ content }) => {
         )
       )}
       <h2>{cmsInfo?.page_title}</h2>
-      <p dangerouslySetInnerHTML={{ __html: cmsInfo?.html_content }}></p>
+      <p dangerouslySetInnerHTML={{ __html: cleanedHtml }}></p>
     </div>
   );
 };

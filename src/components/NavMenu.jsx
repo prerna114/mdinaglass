@@ -17,14 +17,28 @@ const ResponsiveNav = () => {
   const [showShop, setShowShop] = useState(false);
   const [categoriesData, setCategoriesData] = useState([]);
   const [showMenu, setShowMenu] = useState(true);
-  const { setMenu } = useAuthStore((state) => state);
+  const { menu } = useAuthStore((state) => state);
 
   const { setPagination, setSearchProduct, setDescription } = ProductLists(
     (state) => state
   );
   const setHeading = ProductLists((state) => state.setHeading);
   const router = useRouter();
-
+  // const getMenu = async () => {
+  //   const data = await getMenuCategories();
+  //   if (data.status == 200) {
+  //     setCategoriesData(data.data[0]?.children);
+  //     console.log("GetMenuCategoryNavMenu", data.data[0]?.children);
+  //     // localStorage.setItem("cart", JSON.stringify(data.data[0]?.children));
+  //     setMenu(data.data[0]?.children);
+  //     if (data.data[0]?.children) {
+  //       setShowMenu(true);
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   getMenu();
+  // }, []);
   console.log("categoriesData", categoriesData);
   return (
     <nav className="responsive-nav border-top">
@@ -34,7 +48,7 @@ const ResponsiveNav = () => {
           <div className="row">
             <div className="col-9 d-flex justify-content-end flex-wrap">
               {[
-                { label: "Home", href: "/" },
+                { label: "Home  ", href: "/" },
                 { label: "About Us", href: "/about/about-mdina-glass" },
                 {
                   label: "All Products",
@@ -158,7 +172,7 @@ const ResponsiveNav = () => {
                       {item}
                     </a>
                   ))} */}
-                  {categoriesData?.map((item) => (
+                  {menu?.map((item) => (
                     <Link
                       key={item.id}
                       href={createUrl(item.id, item?.slug)}
@@ -171,6 +185,8 @@ const ResponsiveNav = () => {
                           sort_by: "price",
                           sort_dir: "asc",
                         });
+                        setHeading(item.name);
+                        setDescription(item.description);
                       }}
                       className="navlink nav-link mx-3"
                     >
@@ -201,12 +217,12 @@ const ResponsiveNav = () => {
           >
             About Us
           </Link>
-          <a href="#" className="menu-item">
+          <Link href={"/contactus/contact-details"} className="menu-item">
             Contact Detail & Store Locator
-          </a>
-          <a href="#" className="menu-item">
-            Cookies Policy
-          </a>
+          </Link>
+          <Link href={"/information/terms-conditions"} className="menu-item">
+            Terms & Conditions
+          </Link>
           <Link
             className="menu-item"
             href={"/wishlist"}

@@ -21,7 +21,7 @@ const Footer = () => {
                 src="/assets/footer-logo.webp"
                 alt="Mdina Glass Logo"
                 className="mb-3 footer-logo"
-                style={{ width: "60%!important" , height:"auto!important"}}
+                style={{ width: "60%!important", height: "auto!important" }}
                 width={290}
                 height={116}
               />
@@ -87,7 +87,9 @@ const Footer = () => {
           <div className="col-md-3 mb-4">
             <h6 className="footer-link">Information</h6>
             <ul className="list-unstyled small">
-              <li>Careers</li>
+              <li>
+                <InstantLink href={"/careers"}>Careers</InstantLink>
+              </li>
 
               <li>
                 <InstantLink href={"/information/international-delivery"}>
@@ -114,6 +116,11 @@ const Footer = () => {
                 {/* <a href={"/information/cookies-policy"}>Cookies Policy</a> */}
               </li>
               <li>
+                <InstantLink href={"/information/CookiesPolicy"}>
+                  Cookies Policy
+                </InstantLink>
+              </li>
+              <li>
                 <InstantLink href={"/information/return-policy"}>
                   Returns & Cancellations
                 </InstantLink>
@@ -125,7 +132,11 @@ const Footer = () => {
           <div className="col-md-3 mb-4">
             <h6 className="footer-link">Contact</h6>
             <ul className="list-unstyled small">
-              <li>Store Locator & Contact</li>
+              <li>
+                <InstantLink href={"/contactus/contact-details"}>
+                  Store Locator & Contact
+                </InstantLink>
+              </li>
               <li>
                 <InstantLink href={"/contactus/contact-form"}>
                   Contact Form
@@ -134,30 +145,51 @@ const Footer = () => {
             </ul>
             <h6 className="footer-link mt-3 mb-3">Get Social</h6>
             <div className="d-flex gap-2 footer-social-icon  mb-2">
-              <Image
-                src="/assets/fb.png"
-                className="footer-images"
-                alt="Facebook"
-                width={38}
-                height={38}
-                loading="lazy"
-              />
-              <Image
-                src="/assets/insta.webp"
-                className="footer-images"
-                alt="Instagram"
-                width={38}
-                height={38}
-                loading="lazy"
-              />
-              <Image
-                src="/assets/twitter.webp"
-                className="footer-images"
-                alt="Twitter"
-                width={38}
-                height={38}
-                loading="lazy"
-              />
+              <a
+                href="https://www.facebook.com/mdinaglassmalta"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image
+                  src="/assets/fb.png"
+                  className="footer-images"
+                  alt="Facebook"
+                  width={38}
+                  height={38}
+                  loading="lazy"
+                />
+              </a>
+
+              <a
+                href="https://www.instagram.com/mdinaglass/#"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image
+                  src="/assets/insta.webp"
+                  className="footer-images"
+                  alt="Instagram"
+                  width={38}
+                  height={38}
+                  loading="lazy"
+                />
+              </a>
+
+              <a
+                href="https://x.com/MDINAGLASSMALTA"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image
+                  src="/assets/twitter.webp"
+                  className="footer-images"
+                  alt="Twitter"
+                  width={38}
+                  height={38}
+                  loading="lazy"
+                />
+              </a>
+
               <Image
                 src="/assets/linkedin.png"
                 className="footer-images"

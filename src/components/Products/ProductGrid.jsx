@@ -7,6 +7,7 @@ import Image from "next/image";
 import InstantLink from "../InstantClick";
 import { createImage } from "@/constant";
 import { useParams } from "next/navigation";
+import { ProductLists } from "@/store/product";
 
 const ProductGrid = ({ products, categoryidList }) => {
   console.log("Products in Grid");
@@ -16,7 +17,9 @@ const ProductGrid = ({ products, categoryidList }) => {
   const [categryIds, setCategoryIds] = useState();
   const [imgSrcs, setImgSrcs] = useState([]);
   const [errorImage, setErrorImage] = useState("/assets/nothere.png");
-
+  const { heading, setHeading, setDescription } = ProductLists(
+    (state) => state
+  );
   const categoryIds = useMemo(
     () =>
       priceIndex !== -1
@@ -69,8 +72,12 @@ const ProductGrid = ({ products, categoryidList }) => {
                     href={{
                       pathname: `/product-details/webshop/${`${categryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
                     }}
+                    onClick={() => {
+                      setHeading(product?.range);
+                      setDescription(product?.description);
+                    }}
                   >
-                    <Image
+                    <img
                       src={
                         imgSrcs[index]?.fallback
                           ? "/assets/nothere.png"
@@ -78,9 +85,9 @@ const ProductGrid = ({ products, categoryidList }) => {
                       }
                       onError={() => handleImgError(index)}
                       className="card-img-top"
-                      alt={product.name || "product list image"}
-                      width={214}
-                      height={214}
+                      alt={product?.name || "product list image"}
+                      // width={auto}
+                      // height={auto}
                     />
                   </InstantLink>
                 </div>
@@ -90,9 +97,13 @@ const ProductGrid = ({ products, categoryidList }) => {
                       pathname: `/product-details/webshop/${`${categryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
                     }}
                     scroll={false}
+                    onClick={() => {
+                      setHeading(product?.range);
+                      setDescription(product?.description);
+                    }}
                   >
                     <h6 className="card-title mb-3">
-                      {product.name.slice(0, 50)}
+                      {product?.name?.slice(0, 50)}
                       {product?.name?.length > 50 && "..."}
                     </h6>
                   </InstantLink>
@@ -100,7 +111,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                     Price €
                     {product?.min_price
                       ? isNaN(Number(product?.min_price))
-                        ? product.min_price
+                        ? product?.min_price
                         : Number(product?.min_price).toFixed(2)
                       : Number(product?.price)
                       ? Number(product?.price).toFixed(2)

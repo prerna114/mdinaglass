@@ -8,6 +8,7 @@ import InstantLink from "../InstantClick";
 import { createImage } from "@/constant";
 import { useParams } from "next/navigation";
 import { join } from "path";
+import { ProductLists } from "@/store/product";
 
 const SearchGrid = ({ products }) => {
   console.log("Products in Grid", products);
@@ -17,6 +18,9 @@ const SearchGrid = ({ products }) => {
   const [categryIds, setCategoryIds] = useState();
   const [imgSrcs, setImgSrcs] = useState([]);
   const [errorImage, setErrorImage] = useState("/assets/nothere.png");
+  const { heading, setHeading, setDescription } = ProductLists(
+    (state) => state
+  );
 
   const categoryIds = useMemo(
     () =>
@@ -85,7 +89,10 @@ const SearchGrid = ({ products }) => {
                     href={{
                       pathname: `/product-details/webshop/${`${categoryPath}/${product?.id}/${product?.slug}/${product.sku}`}`,
                     }}
-                    onClick={() => getCategoryPath(product)}
+                    onClick={() => {
+                      setHeading(product?.range);
+                      setDescription(product?.description);
+                    }}
                   >
                     <Image
                       src={

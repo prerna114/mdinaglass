@@ -9,6 +9,9 @@
   .container-xxl {
     max-width: 1720px !important;
   }
+  .information {
+    width: 80%;
+  }
   .container.mobile-header-bg {
     max-width: 1700px;
   }
@@ -689,6 +692,7 @@ p.category-sidebar {
   background: #fff;
   padding: 20px 25px;
   text-align: center;
+  min-height: 412px;
 }
 .pagination {
   --bs-pagination-padding-x: 18px !important;
@@ -745,7 +749,8 @@ ul.list-unstyled.category-sidebar li {
   font-family: Raleway, sans-serif;
 }
 .product-card img {
-    width: auto !important;
+  width: auto !important;
+  max-width: 250px !important;
 }
 .sorting-style select,
 .sorting-item select {
@@ -1489,6 +1494,9 @@ span.wishlist {
   h1 {
     font-size: 22px !important;
   }
+  .information {
+    width: 100% !important;
+  }
   .header-of-cart h4 {
     font-size: 17px;
   }
@@ -1598,6 +1606,9 @@ a {
 @media screen and (min-width: 501px) and (max-width: 758px) {
   table.table.cart-table {
     display: block !important;
+  }
+  .information {
+    width: 100% !important;
   }
   .table > thead {
     vertical-align: unset;
@@ -2163,7 +2174,7 @@ hr.display-option {
   }
 
   .product-card img {
-    width: 100%;
+    width: 100% !important;
   }
   .product-card {
     padding: 20px 15px;
@@ -2338,7 +2349,7 @@ hr.display-option {
   }
 
   .product-card img {
-    width: 100%;
+    width: 100% !important;
   }
   .product-card {
     padding: 20px 15px;
@@ -2406,6 +2417,12 @@ hr.display-option {
   .mobi-logo img {
     height: 65px !important;
     width: 100%;
+  }
+}
+@media (max-width: 390px) {
+  /* Your styles here */
+  .information {
+    width: 100% !important;
   }
 }
 @media screen and (min-width: 1301px) and (max-width: 1500px) {
@@ -3252,8 +3269,9 @@ ul.category-sidebar li.top-level-li > .category-sidebar {
   width: 80%;
 }
 .information p {
-  font-family: var(--font-raleway);
-  font-size: 17px;
+  font-family: var(--font-raleway), sans-serif;
+
+  font-size: 14px;
   margin: 0 0 10px;
   color: #666666;
   /* margin: 0; */
@@ -3306,4 +3324,82 @@ aside.sidebarnew {
   font-family: "Raleway", sans-serif;
   font-weight: 400 !important;
   font-size: 14px !important;
+}
+.slick-dots {
+  /* position: absolute; */
+  bottom: 27px !important;
+}
+.slick-dots li button {
+  /* width: 16px;
+  height: 16px; */
+  border-radius: 50%;
+  border: 2px solid white;
+  background: transparent;
+  padding: 0;
+  transition: all 0.3s ease;
+  opacity: 1;
+}
+
+/* Hide the default pseudo-element inside the button */
+.slick-dots li button:before {
+  display: none;
+}
+
+/* Active dot: filled white */
+.slick-dots li.slick-active button {
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  background-color: #fff;
+}
+.slick-dots li button {
+  display: inline-block;
+  width: 12px !important;
+  height: 12px !important;
+  /* margin: 1px; */
+  text-indent: -999px;
+  cursor: pointer;
+
+  background-color: rgba(0, 0, 0, 0);
+
+  border-radius: 50%;
+  border: 1px solid white !important;
+  background: transparent;
+  padding: 0;
+  transition: all 0.3s ease;
+  opacity: 1;
+}
+
+.slick-next {
+  display: none !important;
+}
+
+/* ======= Slider Images Css ===========  */
+.slider-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.slick-slide img {
+  width: 100%;
+  object-fit: contain;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .slider-image {
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .slider-image {
+    height: 200px;
+  }
+}
+
+.slider-container {
+  width: 100%;
+  max-width: 1130px;
+  margin: 0 auto;
 }

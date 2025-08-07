@@ -47,12 +47,20 @@ const ProductListing = ({ SearchData }) => {
   const pagination = ProductLists.getState().paginationOption;
   const isNavigating = useNavigationStore((s) => s.isNavigating);
 
+  console.log("pagination", pagination);
   const pathname = usePathname();
   const params = useParams();
   const allParams = useMemo(() => params?.params || [], [params]);
-  const sortBy = pagination.sort_by;
+  let categoryIds = [];
+  let index = 1;
+  while (!isNaN(Number(allParams[index]))) {
+    categoryIds.push(Number(allParams[index]));
+    index++;
+  }
+  const sortBy = allParams[index] || "price";
 
-  console.log("sortBysortBy", sortBy);
+  // Start after the first segment (which is always the main category)
+  console.log("sortBysortBy", sortBy, params, categoryIds, index);
   const priceIndex = useMemo(
     () => allParams.findIndex((p) => p === sortBy),
     [params]
@@ -79,6 +87,7 @@ const ProductListing = ({ SearchData }) => {
     const limit = parseInt(allParams[priceIndex + 2]);
     const page = parseInt(allParams[priceIndex + 3]);
     const sortBy = allParams[priceIndex];
+    console.log("SetPagination", sortBy, sortOrder, limit, page);
 
     setPagination({
       per_page: limit,
@@ -86,8 +95,11 @@ const ProductListing = ({ SearchData }) => {
       sort_by: sortBy,
       sort_dir: sortOrder,
     });
+
+    console.log();
   };
   const getProductByCategory = async (id) => {
+    console.log("Call getProductByCategory", id);
     // console.log("getProductByCategory", paginationOption);
     // localStorage.setItem("filterdData", JSON.stringify(filter));
     const pagination = ProductLists.getState().paginationOption;
@@ -163,11 +175,13 @@ const ProductListing = ({ SearchData }) => {
 
     const categoryIds =
       priceIndex !== -1 ? allParams.slice(0, priceIndex).map(Number) : [];
+
+    console.log("Price INdex", categoryIds, priceIndex, allParams);
     const lastId = categoryIds[categoryIds.length - 1];
     console.log("categoryIds", categoryIds, lastId);
     const subCateogry = localStorage.getItem("subCateogry");
     const parsedCateogry = subCateogry ? JSON.parse(subCateogry) : [];
-    console.log("Category Ids", categoryIds, lastId, parsedCateogry);
+    console.log("Category Ids ", categoryIds, lastId, parsedCateogry);
     setCateogryArray(categoryIds);
     if (lastId) {
       setTheLastI(lastId);
@@ -290,7 +304,7 @@ const ProductListing = ({ SearchData }) => {
 
   useEffect(() => {
     paginationOption();
-  }, []);
+  }, [params]);
 
   console.log("isNavigating", products);
   return (

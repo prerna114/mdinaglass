@@ -3,12 +3,17 @@
 import { useCartStore } from "@/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { CustomToast, SuccessToast } from "./CustomToast";
-import { updateQuantityAPi } from "@/api/CartApi";
+import { getShippingRate, updateQuantityAPi } from "@/api/CartApi";
+import { CountryList } from "@/constant";
+import { useNavigationStore } from "@/store/useNavigationstore";
 
 const AddToCart = () => {
   const { cart, setInsurance, insurance } = useCartStore((state) => state);
-
+  const [cartWieght, setCartWeight] = useState();
   const [loading, setLoading] = useState(false);
+  const [shippingRate, setShippingRate] = useState();
+  const [countryCode, setCountryCode] = useState("");
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
   let totalPrice = 0;
   (totalPrice = useMemo(() =>
     cart.reduce((sum, item) => sum + parseFloat(item.total), 0)
@@ -42,6 +47,20 @@ const AddToCart = () => {
     return total; // Return string like "58.00"
   }
 
+  function getTotalWeight() {
+    let total = 0;
+
+    for (const item of cart) {
+      // Handle various price sources
+
+      total = Number(total) + Number(item?.weight); // Assuming weight is a property of each item
+    }
+
+    console.log("Total gram", total);
+    setCartWeight(total);
+    // Return string like "58.00"
+  }
+
   const updateCart = async () => {
     setLoading(true);
     const id = cart[0].id;
@@ -57,9 +76,23 @@ const AddToCart = () => {
     }
   };
 
+  const shiipingRate = async (code) => {
+    setNavigating(true);
+    const data = await getShippingRate(cartWieght, code);
+    if (data?.status == 200) {
+      setShippingRate(data?.data);
+      setNavigating(false);
+    } else {
+      setNavigating(false);
+    }
+    console.log("Shipping Rate", data);
+  };
   useEffect(() => {
     setInsurance(15.0);
+    getTotalWeight();
   }, []);
+
+  console.log("Cart Items", shippingRate?.Value[0]?.Price);
 
   return (
     <div className="container my-4">
@@ -96,14 +129,27 @@ const AddToCart = () => {
               <h4 className="mb-3" style={{ color: "#195E88" }}>
                 Enter your delivery country to calculate shipping cost
               </h4>
-              <select className="form-select mb-3">
+              <select
+                className="form-select mb-3"
+                onChange={(e) => {
+                  console.log("Selected Country", e.target.value);
+
+                  setCountryCode(e.target.value);
+                }}
+                value={countryCode ?? ""} // 👈 Set selected value
+              >
                 <option>Select Country</option>
-                <option>France</option>
-                <option>Germany</option>
-                <option>India</option>
+                {CountryList.map((country, index) => (
+                  <option key={index} value={country.code}>
+                    {country.country}
+                  </option>
+                ))}
               </select>
               <div className="header-of-cart">
-                <button className="btn btn-cart btn-info text-white mb-3">
+                <button
+                  className="btn btn-cart btn-info text-white mb-3"
+                  onClick={() => shiipingRate(countryCode)}
+                >
                   Calculate Delivery Price
                 </button>
               </div>
@@ -142,7 +188,9 @@ const AddToCart = () => {
                   </tr>
                   <tr>
                     <td>Shipping From:</td>
-                    <td className="text-end">€0.00</td>
+                    <td className="text-end">
+                      €{shippingRate?.Value[0]?.Price || "0.00"}
+                    </td>
                   </tr>
                   <tr>
                     <td>Insurance:</td>
@@ -158,7 +206,11 @@ const AddToCart = () => {
                     >
                       €
                       {isNaN(totalPrice)
-                        ? Number(getGrandTotal(cart) + insurance).toFixed(2)
+                        ? Number(
+                            getGrandTotal(cart) +
+                              insurance +
+                              (Number(shippingRate?.Value[0]?.Price) || 0)
+                          ).toFixed(2)
                         : totalPrice + insurance}
                       {/* €{totalPrice + insurance} */}
                     </td>
@@ -174,7 +226,11 @@ const AddToCart = () => {
                     >
                       €
                       {isNaN(totalPrice)
-                        ? Number(getGrandTotal(cart) + insurance).toFixed(2)
+                        ? Number(
+                            getGrandTotal(cart) +
+                              insurance +
+                              (Number(shippingRate?.Value[0]?.Price) || 0)
+                          ).toFixed(2)
                         : totalPrice + insurance}
                     </td>
                   </tr>
