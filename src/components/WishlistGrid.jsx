@@ -23,7 +23,7 @@ const WishlistGrid = () => {
       setProducts(response.data.wishlist);
       setLoading(false);
     } else {
-      CustomToast("Somethin went wrong", "top-right");
+      // CustomToast("Somethin went wrong", "top-right");
       setLoading(false);
     }
 

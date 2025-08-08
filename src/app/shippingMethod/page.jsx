@@ -65,7 +65,7 @@ const page = () => {
                   }}
                 />{" "}
                 <label className="seller-Text">
-                  eSeller International - €39.02
+                  eSeller International - €21.51
                 </label>
                 <br></br>
                 <span className="shipping-info">
@@ -86,7 +86,7 @@ const page = () => {
 
       <div className="container">
         <div className="login-signup">
-          <h5 className="gift-text mt-2">
+          <h5 className="gift-text mt-4">
             Do you have any gift items in your order?
           </h5>
           <div className="Terms_condition">

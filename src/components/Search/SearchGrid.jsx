@@ -9,6 +9,7 @@ import { createImage } from "@/constant";
 import { useParams } from "next/navigation";
 import { join } from "path";
 import { ProductLists } from "@/store/product";
+import { useNavigationStore } from "@/store/useNavigationstore";
 
 const SearchGrid = ({ products }) => {
   console.log("Products in Grid", products);
@@ -21,16 +22,7 @@ const SearchGrid = ({ products }) => {
   const { heading, setHeading, setDescription } = ProductLists(
     (state) => state
   );
-
-  const categoryIds = useMemo(
-    () =>
-      priceIndex !== -1
-        ? allParams.slice(0, priceIndex).map(Number)
-        : allParams.map(Number)
-        ? allParams.map(Number)
-        : "1",
-    [allParams, priceIndex]
-  );
+  const isNavigating = useNavigationStore((s) => s.isNavigating);
 
   useEffect(() => {
     if (products?.length > 0) {
@@ -43,10 +35,6 @@ const SearchGrid = ({ products }) => {
       );
     }
   }, [products]);
-
-  const createLink = () => {
-    products[0]?.categories;
-  };
 
   const handleImgError = (index) => {
     setImgSrcs((prev) =>
@@ -74,6 +62,8 @@ const SearchGrid = ({ products }) => {
     // setCategoryIds(path.join("/"));
     return `${path.join("/")}`;
   };
+
+  console.log("Search grid", isNavigating);
 
   return (
     <div className="row">

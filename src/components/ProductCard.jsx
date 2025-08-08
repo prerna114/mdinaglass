@@ -8,7 +8,7 @@ import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
 import { getAllProduct } from "@/api/productApi";
 import Link from "next/link";
-import { addToTheCart } from "@/api/CartApi";
+import { addCartGuest, addToTheCart, getCartGuest } from "@/api/CartApi";
 import InstantLink from "./InstantClick";
 
 const ProductCard = ({ title = "New Arrivals" }) => {
@@ -156,12 +156,50 @@ const ProductCard = ({ title = "New Arrivals" }) => {
         setLoading(false);
       }
     } else {
-      addToCart({ ...product, quantity: "1" });
-      SuccessToast("Item added Successfuly", "top-right");
+      const guestToken = localStorage.getItem("guestToken");
+      addGuestCart(product, guestToken);
+      // addToCart({ ...product, quantity: "1" });
+      // SuccessToast("Item added Successfuly", "top-right");
     }
     console.log("Add", product);
 
     setLoading(false);
+  };
+
+  const addGuestCart = async (product, guestToken) => {
+    setLoading(true);
+
+    console.log("guestToken", product);
+    const data = await addCartGuest(product, "1", guestToken);
+    console.log("addCartGuest", data, guestToken);
+
+    if (data?.status === 200) {
+      SuccessToast("Item added to cart", "top-right");
+      localStorage.setItem("guestToken", data.data?.guest_token);
+      setLoading(false);
+
+      // addToCart(data.data?.cart.items);
+      await getGUesstCart();
+    } else {
+      setLoading(false);
+
+      CustomToast("Something went wrong", "top-right");
+    }
+  };
+
+  const getGUesstCart = async () => {
+    const tokenData = localStorage.getItem("guestToken");
+    console.log("guestToken", tokenData);
+    if (tokenData) {
+      const response = await getCartGuest(tokenData);
+      console.log("getCartGuest", response?.data?.cart[0]?.items);
+      if (response.status == 200) {
+        clearCart();
+        response?.data?.cart[0]?.items?.forEach((item) => {
+          addToCart(item);
+        });
+      }
+    }
   };
   useEffect(() => {
     fetchData();

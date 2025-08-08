@@ -395,3 +395,28 @@ export const getShippingRate = async (
     };
   }
 };
+
+export const getInsuranceRate = async (insuranceValue) => {
+  try {
+    console.log("insuranceValue", insuranceValue, typeof insuranceValue);
+    const response = await fetch(`/api/insuranceRate?value=${insuranceValue}`);
+
+    const data = await response.json();
+
+    return {
+      ok: response.ok, // true if status is 2xx
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers, // You can access headers if needed
+      data,
+    };
+  } catch (error) {
+    console.error("Error fetching shipping rate:", error);
+    return {
+      ok: false,
+      status: 0,
+      error: error.message || "Unknown error",
+      data: null,
+    };
+  }
+};

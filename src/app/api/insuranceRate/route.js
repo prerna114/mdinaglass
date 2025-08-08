@@ -1,16 +1,13 @@
 // app/api/shippingRate/route.js
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
-  const itemWeightInGrams = searchParams.get("itemWeightInGrams");
-  const destinationCountryIsoCode = searchParams.get(
-    "destinationCountryIsoCode"
-  );
-  const insuranceValue = searchParams.get("insuranceValue");
+
+  const insuranceValue = searchParams.get("value");
+  console.log("insuranceValue Inside", insuranceValue);
   const insuranceUrl = `https://esellerApi.maltapost.com/v1/Insurance?value=${insuranceValue}`;
-  const apiUrl = `https://esellerapi.maltapost.com/v1/rates?itemWeightInGrams=${itemWeightInGrams}&destinationCountryIsoCode=${destinationCountryIsoCode}`;
 
   try {
-    const response = await fetch(apiUrl, {
+    const response = await fetch(insuranceUrl, {
       method: "GET",
       headers: {
         API_KEY: "q0auLjBiH9HQRImzapr1",

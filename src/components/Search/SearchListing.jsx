@@ -80,7 +80,9 @@ const SearchListing = ({ SearchData }) => {
       <AboveMenu />
       {/* Sort and Items Control */}
 
-      <SearchFilter down={false} />
+      {!loading && searchProduct?.products?.length != 0 && (
+        <SearchFilter down={false} />
+      )}
 
       {loading && <ListingSkeleton />}
       {!loading && searchProduct?.products?.length > 0 && (
@@ -90,10 +92,17 @@ const SearchListing = ({ SearchData }) => {
           theloading={loading}
         />
       )}
+      {searchProduct?.products?.length == 0 && !loading && (
+        <div className="no-data-found">
+          <h1>No data found </h1>
+        </div>
+      )}
 
       {/* Sort and Items Control */}
 
-      <SearchFilter down={false} />
+      {!loading && searchProduct?.products?.length != 0 && (
+        <SearchFilter down={false} />
+      )}
     </div>
   );
 };

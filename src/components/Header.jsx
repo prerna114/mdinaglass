@@ -14,15 +14,17 @@ import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
 import { getCartListing, testCartAPi, getCartGuest } from "@/api/CartApi";
 import InstantLink from "./InstantClick";
+import { ProductLists } from "@/store/product";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [isBannerVisible, setIsBannerVisible] = useState(true);
 
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const videoRef = useRef(null);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const setHeading = ProductLists((state) => state.setHeading);
+  const router = useRouter();
+
   const [searchVisible, setSearchVisible] = useState(false);
   const { addToCart, cart, clearCart } = useCartStore((state) => state);
   const { login, isLogin, logout, setLoginState } = useAuthStore(
@@ -236,17 +238,40 @@ const Header = () => {
                       margin: "5px",
                     }}
                   />
-                  <ShoppingCart
-                    color="#888888"
-                    className="text-muted"
-                    style={{ width: "22px", height: "22px", margin: "5px" }}
-                  />
+                  <InstantLink href={"/cartpage"}>
+                    <ShoppingCart
+                      color="#888888"
+                      className="text-muted"
+                      style={{ width: "22px", height: "22px", margin: "5px" }}
+                    />
 
-                  <User
-                    color="#888888"
-                    className="text-muted "
-                    style={{ width: "22px", height: "22px", margin: "5px" }}
-                  />
+                    <span
+                      style={{
+                        color: "#fff",
+                        background: "#005e84",
+                        borderRadius: "100%",
+                        width: "16px",
+                        padding: "1px 5px",
+                        fontSize: "10px",
+                        position: "absolute",
+                        // top: "1%",
+                        transform: "translateX(-12px)",
+                        height: "17px",
+                      }}
+                    >
+                      {cart?.length}
+                    </span>
+                  </InstantLink>
+                  <InstantLink
+                    href={"/loginCheckoutPage"}
+                    aria-label="Go to login or checkout page"
+                  >
+                    <User
+                      color="#888888"
+                      className="text-muted "
+                      style={{ width: "22px", height: "22px", margin: "5px" }}
+                    />
+                  </InstantLink>
                 </div>
               </div>
 
@@ -343,7 +368,7 @@ const Header = () => {
                         background: "white",
                       }}
                     >
-                      <option>EUR</option>
+                      <option>EUR </option>
                       <option>USD</option>
                       <option>GBP</option>
                     </select>
@@ -393,6 +418,7 @@ const Header = () => {
                 <div className=" align-items-center hide-desk-cart  justify-content-center justify-content-md-end">
                   <select
                     className="form-select  searchContainer"
+                    disabled
                     style={{
                       width: "70px",
                       // height: "46px",
@@ -404,12 +430,26 @@ const Header = () => {
                       padding: "0 !important",
                     }}
                   >
-                    <option>EUR</option>
+                    <option>EUR </option>
                     <option>USD</option>
                     <option>GBP</option>
                   </select>
                   <div>
-                    <a href="#"> SIGN UP</a>
+                    {isLogin ? (
+                      <div
+                        onClick={() => {
+                          logoutUser();
+                        }}
+                      >
+                        <InstantLink href={"/loginCheckoutPage"}>
+                          LOGOUT
+                        </InstantLink>
+                      </div>
+                    ) : (
+                      <InstantLink href={"/loginCheckoutPage"}>
+                        SIGN UP
+                      </InstantLink>
+                    )}
                   </div>
                 </div>
               </div>
@@ -433,6 +473,28 @@ const Header = () => {
                   // className="form-control"
                   placeholder="Search"
                   className="inputSubContainer"
+                  onChange={(e) => {
+                    console.log("onChnage IN", e.target.value);
+                  }}
+                  style={{
+                    textTransform: "lowercase",
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      // router.push(`/search/${e.target.value}/1`);
+                      console.log("search", e.target.value);
+                      // window.location.href = `/search/${e.target.value}/1/15`;
+                      router.push(`/search/${e.target.value}/1/15`);
+
+                      e.preventDefault(); // Prevent form submission if inside a form
+                      console.log(
+                        "Enter pressed, call API here",
+                        e.target.value
+                      );
+
+                      setHeading("Search");
+                    }
+                  }}
                 />
               )}
             </div>

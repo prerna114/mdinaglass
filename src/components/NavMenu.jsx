@@ -107,10 +107,15 @@ const ResponsiveNav = () => {
                   onChange={(e) => {
                     console.log("onChnage IN", e.target.value);
                   }}
+                  style={{
+                    textTransform: "lowercase",
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       // router.push(`/search/${e.target.value}/1`);
-                      window.location.href = `/search/${e.target.value}/1/15`;
+                      console.log("search", e.target.value);
+                      // window.location.href = `/search/${e.target.value}/1/15`;
+                      router.push(`/search/${e.target.value}/1/15`);
 
                       e.preventDefault(); // Prevent form submission if inside a form
                       console.log(

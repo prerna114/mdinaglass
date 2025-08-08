@@ -12,6 +12,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import {
   getCartGuest,
   getCartListing,
+  getInsuranceRate,
   RemoveGuestCart,
   RemoveItemCart,
 } from "@/api/CartApi";
@@ -113,6 +114,7 @@ const page = () => {
       removeFromCart("", sku);
     }
   };
+
   const removeTheItem = (id, sku) => {
     removeFromCart(id, sku);
     SuccessToast("Item Remove succusfully", "top-right");
@@ -128,8 +130,10 @@ const page = () => {
     if (data) {
       setGuestToken(data);
     }
+
     // getCart();
   }, []);
+
   console.log("Cart", cart);
   return (
     <div>

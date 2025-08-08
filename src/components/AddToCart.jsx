@@ -4,6 +4,7 @@ import { useCartStore } from "@/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { CustomToast, SuccessToast } from "./CustomToast";
 import {
+  getInsuranceRate,
   getShippingRate,
   updateGuestCart,
   updateQuantityAPi,
@@ -111,10 +112,17 @@ const AddToCart = () => {
     }
     console.log("Shipping Rate", data);
   };
-
+  const insrunaceRate = async () => {
+    const response = await getInsuranceRate(getGrandTotal(cart).toFixed(2));
+    console.log("Insurance Rate Response", response);
+    if (response?.status == 200) {
+      setInsurance(response?.data?.Rate);
+    }
+  };
   useEffect(() => {
     setInsurance(15.0);
     getTotalWeight();
+    insrunaceRate();
   }, []);
 
   console.log("Cart Items", cart);
@@ -265,13 +273,13 @@ const AddToCart = () => {
                   defaultChecked
                   onChange={() => {
                     if (insurance == 0) {
-                      setInsurance(15.0);
+                      insrunaceRate(getGrandTotal(cart).toFixed(2));
                     } else {
                       setInsurance(0);
                     }
                   }}
                 />
-                <label className="form-check-label small">
+                <label className="insurance form-check-label small">
                   <strong>
                     Untick this box if you do not require insurance for your
                     order.

@@ -57,7 +57,8 @@ const Search = () => {
     setLoading(true);
     setNavigating(true);
     const data = await getSearchProduct(
-      allParams[0],
+      decodeURIComponent(allParams[0]),
+
       allParams[1],
       allParams[2]
     );

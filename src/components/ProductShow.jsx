@@ -64,103 +64,99 @@ const ProductShow = ({ productDetails }) => {
 
   return (
     <>
-      {rangeProduct?.length > 0 && (
-        <div className="container">
-          {/* <h2 className="product-show">Similar Products - {productDetails?.range}</h2> */}
-          <h2 className="product-show">Similar Products</h2>
+      <div className="container">
+        {/* <h2 className="product-show">Similar Products - {productDetails?.range}</h2> */}
+        <h2 className="product-show">Similar Products</h2>
+        {!loading && rangeProduct?.length === 0 && (
+          <div className="no-data-found">
+            <h1>No Similar product found </h1>
+          </div>
+        )}
+        {loading ? (
+          <ListingSkeleton />
+        ) : (
+          <>
+            <div className="row">
+              {rangeProduct?.length > 0 &&
+                rangeProduct.map((product, index) => {
+                  return (
+                    <div
+                      key={product.id}
+                      className="col-lg-4 col-md-6 col-sm-12 mb-4"
+                    >
+                      <div className=" product-card products-show">
+                        <div className="position-relative">
+                          <InstantLink
+                            href={{
+                              pathname: `/product-details/webshop/${`${categoryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
+                            }}
+                          >
+                            <img
+                              src={imgSrcs[index]?.url}
+                              onError={() => setImgSrcs("/assets/nothere.png")}
+                              className="card-img-top"
+                              alt={product.name}
+                              style={{}}
+                            />
+                          </InstantLink>
 
-          {loading ? (
-            <ListingSkeleton />
-          ) : (
-            <>
-              <div className="row">
-                {rangeProduct?.length > 0 &&
-                  rangeProduct.map((product, index) => {
-                    return (
-                      <div
-                        key={product.id}
-                        className="col-lg-4 col-md-6 col-sm-12 mb-4"
-                      >
-                        <div className=" product-card products-show">
-                          <div className="position-relative">
-                            <InstantLink
-                              href={{
-                                pathname: `/product-details/webshop/${`${categoryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
-                              }}
-                            >
-                              <img
-                                src={imgSrcs[index]?.url}
-                                onError={() =>
-                                  setImgSrcs("/assets/nothere.png")
-                                }
-                                className="card-img-top"
-                                alt={product.name}
-                                style={{}}
-                              />
-                            </InstantLink>
-
-                            {product.hasOptions && (
-                              <div className="m-2">
-                                <div className="form-check">
-                                  <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    id={`options-${product.id}`}
-                                  />
-                                  <label
-                                    className="form-check-label small text-muted"
-                                    htmlFor={`options-${product.id}`}
-                                  >
-                                    Click for more options
-                                  </label>
-                                </div>
+                          {product.hasOptions && (
+                            <div className="m-2">
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  id={`options-${product.id}`}
+                                />
+                                <label
+                                  className="form-check-label small text-muted"
+                                  htmlFor={`options-${product.id}`}
+                                >
+                                  Click for more options
+                                </label>
                               </div>
-                            )}
-                          </div>
-                          <div className="card-body text-center">
-                            <InstantLink
-                              href={{
-                                pathname: `/product-details/webshop/${`${categoryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
-                              }}
-                            >
-                              <h6 className="card-title mb-3">
-                                {product.name}
-                              </h6>
-                            </InstantLink>
+                            </div>
+                          )}
+                        </div>
+                        <div className="card-body text-center">
+                          <InstantLink
+                            href={{
+                              pathname: `/product-details/webshop/${`${categoryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
+                            }}
+                          >
+                            <h6 className="card-title mb-3">{product.name}</h6>
+                          </InstantLink>
 
-                            <p className="card-text fw-bold">
-                              Price €{Number(product.price).toFixed(2)}
-                            </p>
-                          </div>
+                          <p className="card-text fw-bold">
+                            Price €{Number(product.price).toFixed(2)}
+                          </p>
                         </div>
                       </div>
-                    );
-                  })}
-              </div>
+                    </div>
+                  );
+                })}
+            </div>
 
-              <div className="col-md-12">
-                <div className="view-more  text-right button-margin float-right mb-3">
-                  <Link
-                    href={prvURL}
-                    onClick={() => {
-                      setPagination({
-                        per_page: 15,
-                        page: 1,
-                        sort_by: "price",
-                        sort_dir: "asc",
-                      });
-                    }}
-                  >
-                    <button className="btn btn-info text-white">
-                      VIEW ALL
-                    </button>
-                  </Link>
-                </div>
+            <div className="col-md-12">
+              <div className="view-more  text-right button-margin float-right mb-3">
+                <Link
+                  href={prvURL}
+                  onClick={() => {
+                    setPagination({
+                      per_page: 15,
+                      page: 1,
+                      sort_by: "price",
+                      sort_dir: "asc",
+                    });
+                  }}
+                >
+                  <button className="btn btn-info text-white">VIEW ALL</button>
+                </Link>
               </div>
-            </>
-          )}
-        </div>
-      )}
+            </div>
+          </>
+        )}
+      </div>
     </>
   );
 };

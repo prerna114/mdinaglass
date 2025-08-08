@@ -3087,15 +3087,16 @@ input[type="checkbox"].custom-checkbox {
   width: 50%;
 }
 .shipping-info {
-  font-size: 15px;
+  font-size: 14px;
   /* color: #005e84; */
   font-weight: 500;
   display: inline-block;
-  width: 90%;
+  width: 100%;
   vertical-align: top;
+  color: #666666;
   margin-top: 2px;
   margin-bottom: 8px;
-  font-family: var(--font-quicksand);
+  font-family: "Raleway", sans-serif;
 }
 .shipping-Container {
   background: #fff;
@@ -3395,4 +3396,10 @@ aside.sidebarnew {
   width: 100%;
   max-width: 1130px;
   margin: 0 auto;
+}
+.insurance {
+  font-size: 14px !important;
+  color: #666666 !important;
+  /* font-family: "'Raleway', sans-serif;"; */
+  margin-bottom: 10px;
 }
