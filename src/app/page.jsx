@@ -4,7 +4,8 @@ import CategoryGrid from "../components/CategoryGrid";
 import VideoSkeleton from "../components/Skeleton/VideoSkeleton";
 
 import dynamic from "next/dynamic";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { sliderSetting } from "@/api/HomePageApi";
 const Video = dynamic(() => import("../components/Video"), {
   ssr: true,
   loading: () => <VideoSkeleton />,
@@ -30,7 +31,25 @@ const Testimonials = dynamic(() => import("../components/Testimonials"), {
 
 export default function Page() {
   const sideMenu = useMenuStore((state) => state.sideMenu);
-  console.log("SideMenu", sideMenu);
+  const [slideSetting, setSlideSetting] = useState({});
+  const sliderSSetting = async () => {
+    const data = await sliderSetting();
+    console.log("Slider Setting", data);
+    if (data?.status == 200) {
+      const filtered = data?.data?.data?.reduce((acc, item) => {
+        if (item.values === "true") {
+          acc[item.key] = true; // store as boolean true
+        }
+        return acc;
+      }, {});
+      setSlideSetting(filtered);
+    }
+  };
+  useEffect(() => {
+    sliderSSetting();
+  }, []);
+
+  console.log("sideMenuPage", slideSetting);
   return (
     <>
       <Video />
@@ -49,11 +68,18 @@ export default function Page() {
           <CategoryGrid />
         </div>
       </section>
-      <ProductCarousel title="New Arrivals" showBadge={true} />
-      <ProductCard title="Best Sellers" />
-      <ProductCarousel title="Featured Products" showBadge={false} />
+      {slideSetting?.new_arrivals && (
+        <ProductCarousel title="New Arrivals" showBadge={true} />
+      )}
 
-      <Testimonials />
+      {slideSetting?.best_sellers && <ProductCard title="Best Sellers" />}
+
+      {slideSetting?.featured_products && (
+        <ProductCarousel title="Featured Products" showBadge={false} />
+      )}
+
+      {slideSetting?.testi_monial && <Testimonials />}
+
       {/* <Footer /> */}
     </>
   );

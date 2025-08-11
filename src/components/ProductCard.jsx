@@ -10,6 +10,7 @@ import { getAllProduct } from "@/api/productApi";
 import Link from "next/link";
 import { addCartGuest, addToTheCart, getCartGuest } from "@/api/CartApi";
 import InstantLink from "./InstantClick";
+import { createImage } from "@/constant";
 
 const ProductCard = ({ title = "New Arrivals" }) => {
   const { addToCart, cart, clearCart } = useCartStore((state) => state);
@@ -205,7 +206,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     fetchData();
   }, []);
 
-  console.log("productDataCard12444", productData);
+  console.log("productDataCard12444", createImage(productData[0]?.sku));
   return (
     <div className=" py-5 bg-white bg-white-custom">
       <div className="container">
@@ -234,7 +235,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                     }}
                   >
                     <img
-                      src={product.base_image?.medium_image_url}
+                      src={createImage(product?.sku)}
                       alt={product.name}
                       className="img-fluid"
                       style={{
@@ -268,7 +269,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                     style={{ width: "40px", margin: "auto" }}
                   />
                   <p className="text-muted mb-3">
-                    € {Number(product.prices?.final?.price).toFixed(2)}
+                    € {Number(product.prices?.regular?.price).toFixed(2)}
                   </p>
                   <div className="new-arrival-design">
                     <button

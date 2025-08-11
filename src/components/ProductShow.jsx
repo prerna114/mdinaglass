@@ -5,7 +5,7 @@ import { createImage, createUrl } from "@/constant";
 import { ProductLists } from "@/store/product";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ListingSkeleton from "./Skeleton/ListingSkeleton";
 import InstantLink from "./InstantClick";
 import useCategoryIdString from "@/app/hooks/useCategoryIdString ";
@@ -59,7 +59,20 @@ const ProductShow = ({ productDetails }) => {
 
   const result = parts.join("/");
 
-  console.log("", productDetails, rangeProduct);
+  function ProductImage({ sku, alt }) {
+    const [src, setSrc] = React.useState(createImage(sku));
+
+    return (
+      <img
+        src={src}
+        onError={() => setSrc("/assets/nothere.png")}
+        className="card-img-top"
+        alt={alt}
+      />
+    );
+  }
+
+  console.log("productDetails", imgSrcs);
   // console.log("productDetailsProductSHo", imgSrcs);
 
   return (
@@ -91,12 +104,16 @@ const ProductShow = ({ productDetails }) => {
                               pathname: `/product-details/webshop/${`${categoryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
                             }}
                           >
-                            <img
-                              src={imgSrcs[index]?.url}
+                            {/* <img
+                              src={createImage(product?.sku)}
                               onError={() => setImgSrcs("/assets/nothere.png")}
                               className="card-img-top"
                               alt={product.name}
                               style={{}}
+                            /> */}
+                            <ProductImage
+                              sku={product?.sku}
+                              alt={product.name || "product list image"}
                             />
                           </InstantLink>
 

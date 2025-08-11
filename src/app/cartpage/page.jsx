@@ -388,7 +388,7 @@ const page = () => {
           </div>
         </div>
       )}
-      {/* <TrustPaymentForm /> */}
+      <TrustPaymentForm />
       {/* <PaymentLink /> */}
 
       {/* <Footer /> */}

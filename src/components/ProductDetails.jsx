@@ -139,8 +139,10 @@ export default function ProductDetails({ productDetails, productDetail }) {
     console.log("addItemWishlist", response);
     if (response.status === 200) {
       SuccessToast("Item added to Wishlist", "top-right");
+    } else if (response.status == 409) {
+      CustomToast("Product already in wishlist", "top-right");
     } else {
-      CustomToast(response.error, "top-right");
+      CustomToast("SomeThing went wrong", "top-right");
     }
   };
 

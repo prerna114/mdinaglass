@@ -14,14 +14,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       jti: uuidv4(), // unique token ID
       payload: {
         // currencyiso3a: "GBP",
-        currencyiso3a: "USD",
+        currencyiso3a: "EUR",
         returnurl: "https://yourdomain.com/payment-success", // ✅ Success redirect
         errorurl: "https://yourdomain.com/payment-failure",
         orderreference: "ORDER12345",
         sitereference: "xkholdings83683",
         accounttypedescription: "ECOM",
         requesttypedescriptions: ["THREEDQUERY", "AUTH"],
-        baseamount: "1",
+        baseamount: "100",
       },
     };
 
