@@ -10,6 +10,7 @@ import { getNewArrivalProduct } from "@/api/productApi";
 import { ProductLists } from "@/store/product";
 import InstantLink from "./InstantClick";
 import { addCartGuest, addToTheCart, getCartGuest } from "@/api/CartApi";
+import { createImage } from "@/constant";
 
 const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   const { products, category, setHeading, setProducts } = ProductLists(
@@ -22,8 +23,19 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   const getNewProduct = async () => {
     const data = await getNewArrivalProduct();
     if (data.status == 200) {
-      console.log("getNewProduct", data.data.data);
-      setProducts(data.data.data);
+      const productList = [
+        ...data?.data?.data,
+        ...data?.data?.data,
+        ...data?.data?.data,
+        ...data?.data?.data,
+      ];
+      console.log("getNewProduct", data?.data?.data);
+
+      if (data?.data?.data?.length < 4) {
+        setProducts(productList);
+      } else {
+        setProducts(data?.data?.data);
+      }
     }
   };
 
@@ -193,101 +205,104 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   };
   console.log("productsCarousel", products);
   return (
-    <div className="py-5" style={{ backgroundColor: "#f5f5f5", margin: "0px" }}>
+    <div className=" py-5 bg-white bg-white-custom">
       <div className="container">
         <h3
-          className="ms-3 mb-4"
-          style={{ fontFamily: "Quicksand, sans-serif", margin: 0 }}
+          className=" ms-3 mb-4"
+          style={{ fontFamily: "Quicksand, sans-serif" }}
         >
           {title}
         </h3>
-
         <Slider {...settings}>
-          {products.map((product) => (
+          {products.map((product, index) => (
             <div key={product.id} className="px-2">
               <div
                 className="bg-white text-center new-arrival-design  p-3 d-flex flex-column justify-content-between align-items-center"
                 style={{ height: "100%", minHeight: "340px" }}
               >
-                <InstantLink
-                  href={{
-                    pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}/${
-                      product?.sku
-                    }`,
-                  }}
+                <div
+                  className="bg-white text-center new-arrival-design  p-3 d-flex flex-column justify-content-between align-items-center"
+                  style={{ height: "100%", minHeight: "340px" }}
                 >
-                  <img
-                    src={product?.images[0]?.url}
-                    alt={product.name}
-                    className="img-fluid mb-2"
-                    style={{ height: "190px", objectFit: "contain" }}
-                  />
-                </InstantLink>
-
-                {/* Always reserve space for Quick View */}
-                <div style={{ minHeight: "20px" }}>
-                  {product.quickView ? (
-                    <p className="small text-muted mb-1">{product.quickView}</p>
-                  ) : (
-                    <p className="small mb-1" style={{ visibility: "hidden" }}>
-                      Placeholder
-                    </p>
-                  )}
-                </div>
-                <InstantLink
-                  href={{
-                    pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}/${
-                      product?.sku
-                    }`,
-                  }}
-                >
-                  <h6
-                    className="mb-1"
-                    style={{ fontFamily: "Quicksand, sans-serif" }}
+                  <InstantLink
+                    href={{
+                      pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}/${
+                        product?.sku
+                      }`,
+                    }}
                   >
-                    {product?.name?.slice(0, 24)}
-                    {product?.name?.length > 23 && "..."}
-                  </h6>
-                </InstantLink>
-
-                <p className="text-muted mb-2">
-                  €{Number(product.price).toFixed(2)}
-                </p>
-
-                <button
-                  className="btn btn-outline-secondary w-100 mt-auto"
-                  onClick={() => {
-                    // handleAdd({
-                    //   id: 6,
-                    //   name: "Glass Bead Necklace & Bracelet Set",
-                    //   price: 29.0,
-                    //   qty: 1,
-                    //   image: "/assets/bracelet1.png",
-                    //   gift: false,
-                    // });
-
-                    addItemCart(product);
-                  }}
-                >
-                  {loading && product.id === loadingProductId ? (
-                    <div
-                      className="spinner-border text-dark"
-                      role="status"
-                    ></div>
-                  ) : (
-                    <div>Add to Cart</div>
-                  )}
-                </button>
+                    <img
+                      src={createImage(product?.sku)}
+                      alt={product.name}
+                      className="img-fluid"
+                      style={{
+                        maxHeight: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </InstantLink>
+                </div>
+                <div className="text-center w-100">
+                  <InstantLink
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    href={{
+                      pathname: `/product-details/webshop/${`1/${product?.id}/${product?.slug}`}/${
+                        product?.sku
+                      }`,
+                    }}
+                  >
+                    <h6
+                      className="mb-1"
+                      style={{ fontFamily: "Quicksand, sans-serif" }}
+                    >
+                      {product?.name?.slice(0, 24)}
+                      {product?.name?.length > 23 && "..."}
+                    </h6>
+                  </InstantLink>
+                  <hr
+                    className="my-2"
+                    style={{ width: "40px", margin: "auto" }}
+                  />
+                  <p className="text-muted mb-3">
+                    € {Number(product.prices?.regular?.price).toFixed(2)}
+                  </p>
+                  <div className="new-arrival-design">
+                    <button
+                      className="btn btn-outline-secondary  w-100"
+                      onClick={() => {
+                        // handleAdd({
+                        //   id: 3,
+                        //   name: "Glass Bead Necklace & Bracelet Set",
+                        //   price: 29.0,
+                        //   qty: 1,
+                        //   image: "/assets/bracelet1.png",
+                        //   gift: false,
+                        // });
+                        addItemCart(product);
+                      }}
+                    >
+                      {loading && product.id === loadingProductId ? (
+                        <div
+                          className="spinner-border text-dark"
+                          role="status"
+                        ></div>
+                      ) : (
+                        <div>Add to Cart</div>
+                      )}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </Slider>
       </div>
 
-      {/* Carousel Arrow Styling */}
+      {/* Arrow Styling */}
       <style>
         {`
-
 
     .slick-prev, .slick-next {
       width: 30px;
@@ -309,12 +324,6 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
     .slick-next {
       right: 70px;
     }
-
-@media screen and (max-width: 758px) {
-.slick-prev, .slick-next {display:none;}
-
-}
-
   `}
       </style>
     </div>
