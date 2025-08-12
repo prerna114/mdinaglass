@@ -3403,3 +3403,17 @@ aside.sidebarnew {
   /* font-family: "'Raleway', sans-serif;"; */
   margin-bottom: 10px;
 }
+.plusblock {
+  padding: 0px 4px;
+  border: 1px solid;
+  margin-right: 5px;
+  border-color: #337ab7;
+  color: #337ab7;
+  cursor: pointer;
+  font-size: 14px !important;
+  font-family: Raleway, sans-serif !important;
+}
+.plusblock span {
+  font-size: 14px !important;
+  font-family: Raleway, sans-serif !important;
+}

@@ -91,6 +91,39 @@ const ProductGrid = ({ products, categoryidList }) => {
                     />
                   </InstantLink>
                 </div>
+                {product?.type == "configurable" && (
+                  <div className="m-2">
+                    <InstantLink
+                      href={{
+                        pathname: `/product-details/webshop/${`${categryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
+                      }}
+                      onClick={() => {
+                        setHeading(product?.range);
+                        setDescription(product?.description);
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "inline-block",
+                        }}
+                      >
+                        <span class="plusblock">+</span>
+                        <span
+                          style={{
+                            cursor: "pointer",
+                            fontSize: "14px",
+                            color: "#337ab7",
+                            fontFamily: "Raleway, sans-serif",
+                          }}
+                          // htmlFor={`options-${product.id}`}
+                        >
+                          Click for more options
+                        </span>
+                      </div>
+                    </InstantLink>
+                  </div>
+                )}
+
                 <div className="card-body text-center">
                   <InstantLink
                     href={{
