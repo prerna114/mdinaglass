@@ -131,8 +131,26 @@ const page = () => {
       setGuestToken(data);
     }
 
-    // getCart();
+    getCart();
   }, []);
+
+  const getCart = async () => {
+    setLoading(true);
+    console.log("Cart listing caal");
+    const data = await getCartListing();
+    if (data?.status == 200) {
+      clearCart();
+      console.log("getCart", data.data.items);
+      // addToCart(data.result.items);
+      data.data.items.forEach((item) => {
+        addToCart(item);
+      });
+      setLoading(false);
+    } else if (data?.status == 401) {
+      // logout;
+    }
+    // console.log("getCart", data);
+  };
 
   console.log("Cart", cart);
   return (
@@ -141,7 +159,7 @@ const page = () => {
       {/* <MegaMenu /> */}
       <CartHeading />
 
-      {cart?.length == 0 && (
+      {/* {cart?.length == 0 && (
         <div
           style={{
             marginBottom: "60px",
@@ -162,7 +180,7 @@ const page = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
       {cart?.length != 0 && (
         <div
           className="cart-page-main"

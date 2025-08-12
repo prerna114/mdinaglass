@@ -55,7 +55,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
   const [loading, setLaoding] = useState(false);
   const [chooseSku, setChooseSku] = useState(null);
   const [imgSrc, setImgSrc] = useState();
-
+  const [selectedData, setSelectedData] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
   const { addToCart, clearCart } = useCartStore((state) => state);
   const cart = useCartStore((state) => state.cart);
@@ -158,22 +158,49 @@ export default function ProductDetails({ productDetails, productDetail }) {
     if (productDetails?.sku) {
       const data = createImage(productDetails?.sku);
       setImgSrc(data);
+      console.log("");
+      setSelectedImage(productDetails?.sku);
+      console.log("INside Product details", productDetails?.sku);
     }
+    console.log("INside Product detail121s");
   }, [productDetails]);
+
   useEffect(() => {
-    const data =
-      productDetails?.images?.length > 1
-        ? productDetails?.images[0]?.url
-        : createImage(productDetails?.sku);
-    setSelectedImage(data);
-  }, [productDetails?.images]);
+    if (uniqueOptions.size > 0) {
+      const firstValue = uniqueOptions.values().next().value;
+      console.log("uniqueOptions", uniqueOptions, firstValue);
+      if (firstValue?.sku) {
+        setChooseSku(firstValue.sku);
+      }
+      // setChooseSku(uniqueOptions.values().next().value.sku);
+    } else {
+      setSelectedImage(productDetails?.sku);
+    }
+  }, [uniqueOptions]);
+
+  useEffect(() => {
+    if (chooseSku && chooseSku !== "Select Option") {
+      const selectedOption = productDetails?.variants.find(
+        (variant) => variant.sku === chooseSku
+      );
+      console.log("selectedOption", selectedOption, chooseSku);
+      if (selectedOption) {
+        setSelectedData(selectedOption);
+        setImgSrc(createImage(selectedOption.sku));
+        setSelectedImage(selectedOption.sku);
+      }
+    } else {
+      setSelectedImage(productDetails?.sku);
+    }
+  }, [chooseSku]);
 
   console.log(
     "createImage(productDetails?.sku)",
-    createImage(productDetails?.sku),
+    createImage("CAS-294-MPE"),
     productDetails,
     chooseSku,
-    uniqueOptions
+    uniqueOptions,
+    selectedImage
   );
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
@@ -195,9 +222,9 @@ export default function ProductDetails({ productDetails, productDetail }) {
         {/* Product Image */}
         <div className="col-md-12 col-lg-6 mt-2">
           <div className="border text-center">
-            {selectedImage && imgSrc ? (
+            {selectedImage ? (
               <Image
-                src={imgSrc}
+                src={createImage(selectedImage)}
                 onError={() => setImgSrc("/assets/nothere.png")}
                 alt="Product Image"
                 width={600}
@@ -208,21 +235,23 @@ export default function ProductDetails({ productDetails, productDetail }) {
             ) : null}
           </div>
           <div className="d-flex justify-content-center gap-2 mt-3">
-            {productDetails?.images?.length > 1 &&
-              productDetails?.images.map((src, index) => (
+            {productDetails?.variants?.length > 1 &&
+              productDetails?.variants.map((src, index) => (
                 <Image
                   key={index}
-                  src={src.url}
+                  src={createImage(src.sku)}
                   alt={`Thumbnail ${index + 1}`}
                   width={100}
                   height={100}
                   className="img-thumbnail"
-                  onClick={() => setSelectedImage(src.url)}
+                  onClick={() => {
+                    setSelectedImage(src.sku), setChooseSku(src.sku);
+                  }}
                   loading="lazy"
                   style={{
                     cursor: "pointer",
                     border:
-                      selectedImage === src.url ? "2px solid #007bff" : "none",
+                      selectedImage === src?.sku ? "2px solid #007bff" : "none",
                   }}
                 />
               ))}
@@ -234,7 +263,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
           <div className="products-detailing">
             <h2>{productDetails?.name}</h2>
             <p className="text-muted sku-detail">
-              SKU: {productDetails?.sku || "n/a"}
+              SKU: {selectedImage || "n/a"}
               <span
                 className="wishlist float-right"
                 style={{ cursor: "pointer" }}
@@ -266,7 +295,10 @@ export default function ProductDetails({ productDetails, productDetail }) {
             <p className="sku-detail">
               Price:{" "}
               <span className="fs-4 text-dark">
-                € {Number(productDetails?.price).toFixed(2)}
+                €{" "}
+                {selectedData?.price
+                  ? Number(selectedData?.price).toFixed(2)
+                  : Number(productDetails?.price).toFixed(2)}
               </span>
             </p>
 
@@ -286,6 +318,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
                     (e) => setChooseSku(e.target.value)
                     // console.log("Selected SKU:", e.target.value)
                   }
+                  value={chooseSku || ""}
                 >
                   <option>Select Option</option>
                   {[...uniqueOptions.entries()].map(([optionId, label]) => (
@@ -384,6 +417,10 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 <td>
                   {productDetails?.length ? productDetails.length : "n/a"}
                 </td>
+              </tr>
+              <tr>
+                <th>Size:</th>
+                <td>{productDetails?.size ? productDetails.size : "n/a"}</td>
               </tr>
             </tbody>
           </table>
