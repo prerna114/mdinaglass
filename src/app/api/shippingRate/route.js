@@ -13,7 +13,7 @@ export async function GET(req) {
     const response = await fetch(apiUrl, {
       method: "GET",
       headers: {
-        API_KEY: "q0auLjBiH9HQRImzapr1",
+        API_KEY: "iQRS8xARAX3T8ohsNi69",
       },
     });
 

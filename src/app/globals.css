@@ -3417,3 +3417,13 @@ aside.sidebarnew {
   font-size: 14px !important;
   font-family: Raleway, sans-serif !important;
 }
+
+.slick-track {
+  display: flex !important;
+  justify-content: flex-start !important;
+}
+form-check-input:checked[type="checkbox"] {
+  width: 25px !important;
+  height: 25px !important;
+  margin-right: 10px;
+}

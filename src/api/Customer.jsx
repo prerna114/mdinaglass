@@ -105,6 +105,13 @@ export const registerCustomer = async (userDetails) => {
     last_name: userDetails.lastName,
     password: userDetails.password,
     password_confirmation: userDetails.confirmPassword,
+    address1: userDetails?.addressOne,
+    address2: userDetails?.addressTwo,
+    city: userDetails?.city,
+    state: userDetails?.state,
+    country: userDetails?.country,
+    postcode: userDetails?.zipCode,
+    phone: userDetails?.telePhone,
   };
 
   const data = await fetchGlobal("api/customer/register", {

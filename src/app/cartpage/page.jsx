@@ -30,9 +30,8 @@ const PaymentLink = dynamic(() => import("../../components/PaymentLink"), {
 });
 
 const page = () => {
-  const { cart, removeFromCart, updateQuantity, addToCart } = useCartStore(
-    (state) => state
-  );
+  const { cart, removeFromCart, updateQuantity, addToCart, clearCart } =
+    useCartStore((state) => state);
   const { isLogin } = useAuthStore((state) => state);
   const [guestToken, setGuestToken] = useState(null);
 
@@ -135,7 +134,6 @@ const page = () => {
   }, []);
 
   const getCart = async () => {
-    setLoading(true);
     console.log("Cart listing caal");
     const data = await getCartListing();
     if (data?.status == 200) {
@@ -145,7 +143,6 @@ const page = () => {
       data.data.items.forEach((item) => {
         addToCart(item);
       });
-      setLoading(false);
     } else if (data?.status == 401) {
       // logout;
     }

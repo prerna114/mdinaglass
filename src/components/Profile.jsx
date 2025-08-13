@@ -22,12 +22,12 @@ export default function Make() {
   useEffect(() => {
     const data = localStorage.getItem("token");
     if (data) {
-      setUserDetails(data);
+      setUserDetails(JSON.parse(data));
       getTheOrderList();
     }
   }, []);
 
-  console.log("Get the Orderlsit", orderList);
+  console.log("Get the Orderlsit", userDetails);
 
   return (
     <div className="container mt-5">
@@ -77,12 +77,12 @@ export default function Make() {
                   <div className="ms-4">
                     <div>
                       <h5>Name</h5>
-                      <p>BlackBull</p>
+                      <p>{userDetails?.name}</p>
                     </div>
 
                     <div>
                       <h5>Email</h5>
-                      <p>BlackBull@gmail.com</p>
+                      <p>{userDetails?.email}</p>
                     </div>
 
                     <div>

@@ -19,6 +19,8 @@ const AddToCart = () => {
   const [shippingRate, setShippingRate] = useState();
   const [countryCode, setCountryCode] = useState("");
   const setNavigating = useNavigationStore((s) => s.setNavigating);
+  // const setNavigating = useNavigationStore((s) => s.setNavigating);
+
   let totalPrice = 0;
   (totalPrice = useMemo(() =>
     cart.reduce((sum, item) => sum + parseFloat(item.total), 0)
@@ -79,6 +81,7 @@ const AddToCart = () => {
       if (response.status == 200) {
         SuccessToast(response.data?.message, "top-right");
         setLoading(false);
+        insrunaceRate();
       } else {
         CustomToast("Something went wrong", "top-right");
         setLoading(false);
@@ -95,6 +98,7 @@ const AddToCart = () => {
       const response = await updateGuestCart(cart);
       console.log("Update guest cart response", response);
       SuccessToast(response.data?.message, "top-right");
+      insrunaceRate();
 
       setLoading(false);
     }
@@ -113,10 +117,16 @@ const AddToCart = () => {
     console.log("Shipping Rate", data);
   };
   const insrunaceRate = async () => {
+    setNavigating(true);
+
     const response = await getInsuranceRate(getGrandTotal(cart).toFixed(2));
     console.log("Insurance Rate Response", response);
     if (response?.status == 200) {
       setInsurance(response?.data?.Rate);
+      setNavigating(false);
+    } else {
+      setNavigating(false);
+      CustomToast("Something went wrong in insurance", "top-right");
     }
   };
   useEffect(() => {

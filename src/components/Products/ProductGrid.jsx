@@ -73,7 +73,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                       pathname: `/product-details/webshop/${`${categryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
                     }}
                     onClick={() => {
-                      setHeading(product?.range);
+                      // setHeading(product?.range);
                       setDescription(product?.description);
                     }}
                   >
@@ -98,7 +98,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                         pathname: `/product-details/webshop/${`${categryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
                       }}
                       onClick={() => {
-                        setHeading(product?.range);
+                        // setHeading(product?.range);
                         setDescription(product?.description);
                       }}
                     >
@@ -107,7 +107,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                           display: "inline-block",
                         }}
                       >
-                        <span class="plusblock">+</span>
+                        <span className="plusblock">+</span>
                         <span
                           style={{
                             cursor: "pointer",

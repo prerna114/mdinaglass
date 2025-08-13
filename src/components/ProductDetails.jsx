@@ -12,6 +12,7 @@ import { createImage } from "@/constant";
 import dynamic from "next/dynamic";
 import InstantLink from "./InstantClick";
 import { addItemWIshlist } from "@/api/productApi";
+import { Eater } from "next/font/google";
 const AboveMenu = dynamic(() => import("./Products/AboveMenu"), {
   ssr: true,
   loading: () => <span className="visually-hidden">Loading...</span>,
@@ -57,6 +58,8 @@ export default function ProductDetails({ productDetails, productDetail }) {
   const [imgSrc, setImgSrc] = useState();
   const [selectedData, setSelectedData] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
+  const [simpleImage, setSImpleImage] = useState("");
+
   const { addToCart, clearCart } = useCartStore((state) => state);
   const cart = useCartStore((state) => state.cart);
 
@@ -75,7 +78,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
     [productDetails?.variants]
   );
   const addItemCart = async () => {
-    if (uniqueOptions?.size > 0 && chooseSku == null) {
+    if (uniqueOptions?.size > 0 && selectedImage == null) {
       CustomToast("Please Choose Varient", "top-right");
       return;
     }
@@ -85,7 +88,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
     const parsed = tokenData ? JSON.parse(tokenData) : null;
     const accessToken = parsed?.token;
     if (accessToken) {
-      const data = await addToTheCart(productDetails, quantity, chooseSku);
+      const data = await addToTheCart(selectedImage, quantity);
       if (data?.status === 200) {
         clearCart();
         addToCart(data.data?.cart.items);
@@ -109,7 +112,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
   };
 
   const addGuestCart = async (guestToken) => {
-    const data = await addCartGuest(productDetails, quantity, guestToken);
+    const data = await addCartGuest(selectedImage, quantity, guestToken);
     console.log("addCartGuest", data, guestToken);
 
     if (data?.status === 200) {
@@ -160,6 +163,8 @@ export default function ProductDetails({ productDetails, productDetail }) {
       setImgSrc(data);
       console.log("");
       setSelectedImage(productDetails?.sku);
+      setSelectedData(productDetails);
+      setSImpleImage(productDetails?.images[0]?.url);
       console.log("INside Product details", productDetails?.sku);
     }
     console.log("INside Product detail121s");
@@ -174,34 +179,60 @@ export default function ProductDetails({ productDetails, productDetail }) {
       }
       // setChooseSku(uniqueOptions.values().next().value.sku);
     } else {
-      setSelectedImage(productDetails?.sku);
-    }
-  }, [uniqueOptions]);
-
-  useEffect(() => {
-    if (chooseSku && chooseSku !== "Select Option") {
-      const selectedOption = productDetails?.variants.find(
-        (variant) => variant.sku === chooseSku
-      );
-      console.log("selectedOption", selectedOption, chooseSku);
-      if (selectedOption) {
-        setSelectedData(selectedOption);
-        setImgSrc(createImage(selectedOption.sku));
-        setSelectedImage(selectedOption.sku);
-      }
-    } else {
-      setSelectedImage(productDetails?.sku);
+      // setSelectedImage(productDetails?.sku);
     }
   }, [chooseSku]);
 
-  console.log(
-    "createImage(productDetails?.sku)",
-    createImage("CAS-294-MPE"),
-    productDetails,
-    chooseSku,
-    uniqueOptions,
-    selectedImage
-  );
+  const SelectedData = (type, sku) => {
+    setSelectedImage(sku);
+    if (type == "varient") {
+      const selectedOption = productDetails?.variants.find(
+        (variant) => variant.sku === sku
+      );
+      // console.log("selectedOption", selectedOption);
+      if (selectedOption) {
+        console.log(" ifElse fffff");
+
+        setSelectedData(selectedOption);
+        // setImgSrc(createImage(selectedOption.sku));
+        // setSelectedImage(selectedOption.sku);
+      }
+    } else {
+      setSelectedData(productDetails);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (selectedImage) {
+  //     console.log("Sele");
+  //     const selectedOption = productDetails?.variants.find(
+  //       (variant) => variant.sku === selectedImage
+  //     );
+  //     // console.log("selectedOption", selectedOption);
+  //     if (selectedOption?.sku != selectedImage) {
+  //       console.log(" ifElse fffff");
+
+  //       setSelectedData(selectedOption);
+  //       // setImgSrc(createImage(selectedOption.sku));
+  //       // setSelectedImage(selectedOption.sku);
+  //     }
+  //   } else {
+  //     console.log("Else fffff");
+  //     // setSelectedImage(productDetails?.sku);
+  //     setSelectedData(productDetails);
+  //   }
+  // }, [selectedImage]);
+
+  // console.log(
+  //   "createImage(productDetails?.sku)",
+  //   createImage("CAS-294-MPE"),
+  //   productDetails,
+  //   chooseSku,
+  //   uniqueOptions,
+  //   selectedImage
+  // );
+
+  console.log("Selected Image,uniqueOptions", simpleImage);
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       {/* <div className="filter-are">
@@ -222,7 +253,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
         {/* Product Image */}
         <div className="col-md-12 col-lg-6 mt-2">
           <div className="border text-center">
-            {selectedImage ? (
+            {productDetails?.type == "configurable" && (
               <Image
                 src={createImage(selectedImage)}
                 onError={() => setImgSrc("/assets/nothere.png")}
@@ -232,30 +263,93 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 priority
                 className="img-fluid"
               />
-            ) : null}
+            )}
+            {productDetails?.type == "simple" && (
+              <Image
+                src={simpleImage}
+                onError={() => setImgSrc("/assets/nothere.png")}
+                alt="Product Image"
+                width={600}
+                height={400}
+                priority
+                className="img-fluid"
+              />
+            )}
           </div>
-          <div className="d-flex justify-content-center gap-2 mt-3">
-            {productDetails?.variants?.length > 1 &&
-              productDetails?.variants.map((src, index) => (
-                <Image
-                  key={index}
-                  src={createImage(src.sku)}
-                  alt={`Thumbnail ${index + 1}`}
-                  width={100}
-                  height={100}
-                  className="img-thumbnail"
-                  onClick={() => {
-                    setSelectedImage(src.sku), setChooseSku(src.sku);
-                  }}
-                  loading="lazy"
-                  style={{
-                    cursor: "pointer",
-                    border:
-                      selectedImage === src?.sku ? "2px solid #007bff" : "none",
-                  }}
-                />
-              ))}
-          </div>
+          {productDetails?.type == "simple" && (
+            <div className="d-flex justify-content-center gap-2 mt-3">
+              {productDetails?.images?.length > 0 &&
+                productDetails?.images.map((src, index) => (
+                  <Image
+                    key={index}
+                    src={src?.url}
+                    alt={`Thumbnail ${index + 1}`}
+                    width={100}
+                    height={100}
+                    className="img-thumbnail"
+                    onClick={() => {
+                      // setSelectedImage(src.sku), setChooseSku(src.sku);
+                      // SelectedData("varient", src.sku);
+                      setSImpleImage(src?.url);
+                    }}
+                    loading="lazy"
+                    style={{
+                      cursor: "pointer",
+                      border:
+                        simpleImage === src?.url ? "2px solid #007bff" : "none",
+                    }}
+                  />
+                ))}
+            </div>
+          )}
+
+          {productDetails?.type == "configurable" && (
+            <div className="d-flex justify-content-center gap-2 mt-3">
+              <Image
+                src={createImage(productDetails?.sku)}
+                alt={productDetails?.sku || "Product Image"}
+                width={100}
+                height={100}
+                className="img-thumbnail"
+                onClick={() => {
+                  // setSelectedImage(productDetails.sku);
+                  SelectedData("", productDetails?.sku);
+                  // setSelectedData([]);
+                }}
+                loading="lazy"
+                style={{
+                  cursor: "pointer",
+                  border:
+                    selectedImage === productDetails?.sku
+                      ? "2px solid #007bff"
+                      : "none",
+                }}
+              />
+              {productDetails?.variants?.length > 0 &&
+                productDetails?.variants.map((src, index) => (
+                  <Image
+                    key={index}
+                    src={createImage(src.sku)}
+                    alt={`Thumbnail ${index + 1}`}
+                    width={100}
+                    height={100}
+                    className="img-thumbnail"
+                    onClick={() => {
+                      // setSelectedImage(src.sku), setChooseSku(src.sku);
+                      SelectedData("varient", src.sku);
+                    }}
+                    loading="lazy"
+                    style={{
+                      cursor: "pointer",
+                      border:
+                        selectedImage === src?.sku
+                          ? "2px solid #007bff"
+                          : "none",
+                    }}
+                  />
+                ))}
+            </div>
+          )}
         </div>
 
         {/* Product Info */}
@@ -295,10 +389,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
             <p className="sku-detail">
               Price:{" "}
               <span className="fs-4 text-dark">
-                €{" "}
-                {selectedData?.price
-                  ? Number(selectedData?.price).toFixed(2)
-                  : Number(productDetails?.price).toFixed(2)}
+                € {Number(selectedData?.price).toFixed(2)}
               </span>
             </p>
 
@@ -314,11 +405,17 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 </label>
                 <select
                   className="form-select"
-                  onChange={
-                    (e) => setChooseSku(e.target.value)
-                    // console.log("Selected SKU:", e.target.value)
-                  }
-                  value={chooseSku || ""}
+                  onChange={(e) => {
+                    if (e.target.value != "Select Option") {
+                      SelectedData("", e.target.value);
+                    } else {
+                      SelectedData("", productDetails?.sku);
+                    }
+                    // setSelectedImage(e.target.value);
+
+                    console.log("Selected SKU:", e.target.value);
+                  }}
+                  value={selectedImage || ""}
                 >
                   <option>Select Option</option>
                   {[...uniqueOptions.entries()].map(([optionId, label]) => (

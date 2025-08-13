@@ -20,22 +20,11 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   const [productData, setProductData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingProductId, setLoadingProductId] = useState(null);
+
   const getNewProduct = async () => {
     const data = await getNewArrivalProduct();
     if (data.status == 200) {
-      const productList = [
-        ...data?.data?.data,
-        ...data?.data?.data,
-        ...data?.data?.data,
-        ...data?.data?.data,
-      ];
-      console.log("getNewProduct", data?.data?.data);
-
-      if (data?.data?.data?.length < 4) {
-        setProducts(productList);
-      } else {
-        setProducts(data?.data?.data);
-      }
+      setProducts(data?.data?.data);
     }
   };
 
@@ -110,12 +99,20 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    infinite: products?.length > 1,
+    centerMode: false,
+    slidesToShow: Math.min(products?.length || 1, 4),
     slidesToScroll: 1,
     arrows: true,
     responsive: [
-      { breakpoint: 1600, settings: { slidesToShow: 3 } },
-      { breakpoint: 992, settings: { slidesToShow: 2 } },
+      {
+        breakpoint: 1600,
+        settings: { slidesToShow: Math.min(products?.length || 1, 3) },
+      },
+      {
+        breakpoint: 992,
+        settings: { slidesToShow: Math.min(products?.length || 1, 2) },
+      },
       { breakpoint: 576, settings: { slidesToShow: 1 } },
     ],
     nextArrow: <CustomNextArrow />,
@@ -143,7 +140,7 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
 
     setLoading(true);
     if (accessToken) {
-      const data = await addToTheCart(product, 1);
+      const data = await addToTheCart(product?.sku, 1);
 
       if (data.status == 200) {
         clearCart();
@@ -157,6 +154,7 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
         setLoading(false);
       }
     } else {
+      setLoading(true);
       const guestToken = localStorage.getItem("guestToken");
       addGuestCart(product, guestToken);
 
@@ -164,15 +162,15 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
       // SuccessToast("Item added Successfuly", "top-right");
     }
     console.log("Add", product);
-
-    setLoading(false);
   };
 
   const addGuestCart = async (product, guestToken) => {
+    setLoadingProductId(product.id);
+
     setLoading(true);
 
     console.log("guestToken", product);
-    const data = await addCartGuest(product, "1", guestToken);
+    const data = await addCartGuest(product?.sku, "1", guestToken);
     console.log("addCartGuest", data, guestToken);
 
     if (data?.status === 200) {
@@ -203,7 +201,7 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
       }
     }
   };
-  console.log("productsCarousel", products);
+  console.log("productsCarousel", loading, loadingProductId);
   return (
     <div className=" py-5 bg-white bg-white-custom">
       <div className="container">
@@ -218,7 +216,11 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
             <div key={product.id} className="px-2">
               <div
                 className="bg-white text-center new-arrival-design  p-3 d-flex flex-column justify-content-between align-items-center"
-                style={{ height: "100%", minHeight: "340px" }}
+                style={{
+                  height: "100%",
+                  minHeight: "340px",
+                  width: products?.length == 1 ? "34%" : "",
+                }}
               >
                 <div
                   className="bg-white text-center new-arrival-design  p-3 d-flex flex-column justify-content-between align-items-center"
@@ -266,7 +268,7 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
                     style={{ width: "40px", margin: "auto" }}
                   />
                   <p className="text-muted mb-3">
-                    € {Number(product.prices?.regular?.price).toFixed(2)}
+                    € {Number(product.price).toFixed(2)}
                   </p>
                   <div className="new-arrival-design">
                     <button

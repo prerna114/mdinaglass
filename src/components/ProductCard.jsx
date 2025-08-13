@@ -89,12 +89,20 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    infinite: productData?.length > 1,
+    centerMode: false,
+    slidesToShow: Math.min(productData?.length || 1, 4),
     slidesToScroll: 1,
     arrows: true,
     responsive: [
-      { breakpoint: 1600, settings: { slidesToShow: 3 } },
-      { breakpoint: 992, settings: { slidesToShow: 2 } },
+      {
+        breakpoint: 1600,
+        settings: { slidesToShow: Math.min(productData?.length || 1, 3) },
+      },
+      {
+        breakpoint: 992,
+        settings: { slidesToShow: Math.min(productData?.length || 1, 2) },
+      },
       { breakpoint: 576, settings: { slidesToShow: 1 } },
     ],
     nextArrow: <CustomNextArrow />,
@@ -143,7 +151,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
 
     setLoading(true);
     if (accessToken) {
-      const data = await addToTheCart(product, 1);
+      const data = await addToTheCart(product?.sku, 1);
 
       if (data.status == 200) {
         clearCart();
@@ -164,14 +172,15 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     }
     console.log("Add", product);
 
-    setLoading(false);
+    // setLoading(false);
   };
 
   const addGuestCart = async (product, guestToken) => {
     setLoading(true);
+    setLoadingProductId(product.id);
 
     console.log("guestToken", product);
-    const data = await addCartGuest(product, "1", guestToken);
+    const data = await addCartGuest(product?.sku, "1", guestToken);
     console.log("addCartGuest", data, guestToken);
 
     if (data?.status === 200) {
@@ -221,7 +230,12 @@ const ProductCard = ({ title = "New Arrivals" }) => {
             <div key={product.id} className="px-2">
               <div
                 className="bg-white text-center new-arrival-design  p-3 d-flex flex-column justify-content-between align-items-center"
-                style={{ height: "100%", minHeight: "340px" }}
+                style={{
+                  height: "100%",
+                  minHeight: "340px",
+
+                  width: product?.length == 1 ? "34%" : "",
+                }}
               >
                 <div
                   className="bg-white text-center new-arrival-design  p-3 d-flex flex-column justify-content-between align-items-center"

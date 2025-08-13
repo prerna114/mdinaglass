@@ -12,9 +12,12 @@ import useCategoryIdString from "@/app/hooks/useCategoryIdString ";
 
 const ProductShow = ({ productDetails }) => {
   const params = useParams();
-  const { setPagination } = ProductLists((state) => state);
+  const { setPagination, setHeading, setDescription } = ProductLists(
+    (state) => state
+  );
   const [rangeProduct, setRangeProduct] = useState([]);
   const [prvURL, setPrvURL] = useState("/");
+
   const [loading, setLoading] = useState(false);
   const [categoryIds, setCategoryIds] = useState("");
   const getRange = async () => {
@@ -132,7 +135,7 @@ const ProductShow = ({ productDetails }) => {
                                     display: "inline-block",
                                   }}
                                 >
-                                  <span class="plusblock">+</span>
+                                  <span className="plusblock">+</span>
                                   <span
                                     style={{
                                       cursor: "pointer",

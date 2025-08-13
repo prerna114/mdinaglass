@@ -50,7 +50,6 @@ const SearchGrid = ({ products }) => {
     // Only process the first category
     const category = product?.categories?.[0];
     if (!category) return "";
-    console.log("categorycurrent", category?.parent);
 
     let current = category.parent;
 
