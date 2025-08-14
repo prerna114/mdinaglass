@@ -11,6 +11,7 @@ import {
 } from "@/api/CartApi";
 import { CountryList } from "@/constant";
 import { useNavigationStore } from "@/store/useNavigationstore";
+import { useShippingStore } from "@/store/shippingStore";
 
 const AddToCart = () => {
   const { cart, setInsurance, insurance } = useCartStore((state) => state);
@@ -20,6 +21,14 @@ const AddToCart = () => {
   const [countryCode, setCountryCode] = useState("");
   const setNavigating = useNavigationStore((s) => s.setNavigating);
   // const setNavigating = useNavigationStore((s) => s.setNavigating);
+  const {
+    setShippingStore,
+    shippingStore,
+    grandTotal,
+    setGrandTotal,
+    setInsuranceCost,
+    setshiipingCost,
+  } = useShippingStore((state) => state);
 
   let totalPrice = 0;
   (totalPrice = useMemo(() =>
@@ -108,13 +117,15 @@ const AddToCart = () => {
       setNavigating(true);
       const data = await getShippingRate(cartWieght, code);
       if (data?.status == 200) {
+        console.log("datadata", data?.data);
         setShippingRate(data?.data);
         setNavigating(false);
+        setShippingStore(data?.data);
       } else {
         setNavigating(false);
       }
     }
-    console.log("Shipping Rate", data);
+    // console.log("Shipping Rate", data);
   };
   const insrunaceRate = async () => {
     setNavigating(true);
@@ -135,7 +146,13 @@ const AddToCart = () => {
     insrunaceRate();
   }, []);
 
+  useEffect(() => {
+    setInsuranceCost(insurance);
+    setshiipingCost(shippingRate?.Value[0]?.Price);
+  }, [insurance, shippingRate]);
+
   console.log("Cart Items", cart);
+  console.log("shippingStore", shippingStore);
 
   return (
     <div className="container my-4">

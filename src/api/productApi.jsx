@@ -64,11 +64,17 @@ export const getProductCateogrybyId = async (id) => {
 };
 
 export const getNewArrivalProduct = async () => {
+  const raw = {
+    per_page: 10,
+    page: 1,
+    sort_by: "price",
+    sort_dir: "dsc",
+  };
   const response = await fetchGlobal(
     "api/blackbull/products/newArrivalProducts",
     {
       method: "POST",
-      // body: data,
+      body: raw,
     }
   );
   return response;

@@ -108,17 +108,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
       className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}`}
       style={{ padding: "0px 15px" }}
     >
-      <div
-      // onClick={() => handleClick(item)}
-      // className={`category-sidebar ${
-      //   isSelected ? "activeSIdeBar" : level >= 3 ? "level-3" : "nonActiveBar"
-      // } ${level > 1 ? "fontFamily" : ""}`}
-      // style={{
-      //   cursor: "pointer",
-      //   textTransform: "uppercase",
-      // }}
-      >
-        {/* <Link href={"/"}> */}
+      <div>
         <InstantLink
           href={createUrl(fullPathToItem, item.slug, sortOrder, limit, page)}
           style={{ margin: 0 }}

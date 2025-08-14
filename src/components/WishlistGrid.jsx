@@ -92,9 +92,11 @@ const WishlistGrid = () => {
                     //   pathname: `/product-details/webshop/${`${categryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
                     // }}
                     href={{
-                      pathname: `/product-details/webshop/${`${1}/${
-                        product?.id
-                      }/${product?.product?.slug}/${product?.product?.sku}`}`,
+                      pathname: `/product-details/webshop/${`${product?.product?.category_ids?.join(
+                        "/"
+                      )}/${product?.id}/${product?.product?.slug}/${
+                        product?.product?.sku
+                      }`}`,
                     }}
                     onClick={() => {
                       setHeading(product?.product?.range);

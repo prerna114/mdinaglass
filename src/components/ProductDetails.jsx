@@ -78,7 +78,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
     [productDetails?.variants]
   );
   const addItemCart = async () => {
-    if (uniqueOptions?.size > 0 && selectedImage == null) {
+    if (uniqueOptions?.size > 0 && chooseSku == null) {
       CustomToast("Please Choose Varient", "top-right");
       return;
     }
@@ -170,18 +170,18 @@ export default function ProductDetails({ productDetails, productDetail }) {
     console.log("INside Product detail121s");
   }, [productDetails]);
 
-  useEffect(() => {
-    if (uniqueOptions.size > 0) {
-      const firstValue = uniqueOptions.values().next().value;
-      console.log("uniqueOptions", uniqueOptions, firstValue);
-      if (firstValue?.sku) {
-        setChooseSku(firstValue.sku);
-      }
-      // setChooseSku(uniqueOptions.values().next().value.sku);
-    } else {
-      // setSelectedImage(productDetails?.sku);
-    }
-  }, [chooseSku]);
+  // useEffect(() => {
+  //   if (uniqueOptions.size > 0) {
+  //     const firstValue = uniqueOptions.values().next().value;
+  //     console.log("uniqueOptions", uniqueOptions, firstValue);
+  //     if (firstValue?.sku) {
+  //       setChooseSku(firstValue.sku);
+  //     }
+  //     // setChooseSku(uniqueOptions.values().next().value.sku);
+  //   } else {
+  //     // setSelectedImage(productDetails?.sku);
+  //   }
+  // }, []);
 
   const SelectedData = (type, sku) => {
     setSelectedImage(sku);
@@ -232,7 +232,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
   //   selectedImage
   // );
 
-  console.log("Selected Image,uniqueOptions", simpleImage);
+  console.log("Selected Image,uniqueOptions", selectedImage, chooseSku);
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       {/* <div className="filter-are">
@@ -264,7 +264,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 className="img-fluid"
               />
             )}
-            {productDetails?.type == "simple" && (
+            {productDetails?.type == "simple" && simpleImage && (
               <Image
                 src={simpleImage}
                 onError={() => setImgSrc("/assets/nothere.png")}
@@ -315,6 +315,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
                   // setSelectedImage(productDetails.sku);
                   SelectedData("", productDetails?.sku);
                   // setSelectedData([]);
+                  setChooseSku(null);
                 }}
                 loading="lazy"
                 style={{
@@ -337,6 +338,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
                     onClick={() => {
                       // setSelectedImage(src.sku), setChooseSku(src.sku);
                       SelectedData("varient", src.sku);
+                      setChooseSku(src?.sku);
                     }}
                     loading="lazy"
                     style={{
@@ -408,8 +410,10 @@ export default function ProductDetails({ productDetails, productDetail }) {
                   onChange={(e) => {
                     if (e.target.value != "Select Option") {
                       SelectedData("", e.target.value);
+                      setChooseSku(e.target.value);
                     } else {
                       SelectedData("", productDetails?.sku);
+                      setChooseSku(null);
                     }
                     // setSelectedImage(e.target.value);
 

@@ -1,4 +1,6 @@
 import { API_BASE_URL } from "@/constant";
+import { useAuthStore } from "@/store/useAuthStore"; // ✅ Import the store
+import { CustomToast, SuccessToast } from "@/components/CustomToast";
 
 // utils/fetchGlobal.js
 export const fetchGlobal = async (
@@ -37,6 +39,9 @@ export const fetchGlobal = async (
     const data = isJson ? await res.json() : await res.text();
 
     if (!res.ok) {
+      if (res.status === 500 && typeof window !== "undefined") {
+        CustomToast("Session expired Please login again", "top-right");
+      }
       return {
         success: false,
         status: res.status,

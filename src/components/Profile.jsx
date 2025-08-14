@@ -27,7 +27,7 @@ export default function Make() {
     }
   }, []);
 
-  console.log("Get the Orderlsit", userDetails);
+  console.log("Get the Orderlsit", orderList);
 
   return (
     <div className="container mt-5">
@@ -114,14 +114,15 @@ export default function Make() {
                         {orderList.map((item) =>
                           item.items.map((data) => (
                             <tr key={data.id}>
-                              <td>{item.orderId}</td>
+                              <td>{data.id}</td>
                               <td>
-                                {moment(data.created_at).format(
+                                {moment(item.created_at).format(
                                   "MMMM Do YYYY, h:mm A"
                                 )}
+                                {/* {item?.created_at} */}
                               </td>
-                              {/* <td>€{item.price.toFixed(2)}</td> */}
-                              <td>€{subtotal(item.price, item.qty)}</td>
+                              <td>€{Number(data.price).toFixed(2)}</td>
+                              {/* <td>€{subtotal(item.price, item.qty)}</td> */}
                               <td>{data.qty_ordered}</td>
                               <td>{item.status}</td>
                               <td>

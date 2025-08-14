@@ -1,5 +1,6 @@
 "use client";
 import { CustomToast } from "@/components/CustomToast";
+import { useShippingStore } from "@/store/shippingStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigationStore } from "@/store/useNavigationstore";
 import Link from "next/link";
@@ -8,18 +9,19 @@ import React, { useEffect, useState } from "react";
 
 const page = () => {
   const [giftOption, setGiftOption] = useState(false);
-  const [seller, setSeller] = useState(false);
+  const [seller, setSeller] = useState("");
 
   const router = useRouter();
   const setGiftMessage = useAuthStore((state) => state.setGiftMessage);
   const setNavigating = useNavigationStore((s) => s.setNavigating);
-
+  const { setShippingStore, shippingStore, setShippingMethod } =
+    useShippingStore((state) => state);
   const handleChange = (e) => {
     setGiftMessage(e);
   };
   const handleClick = () => {
     console.log("seller", seller);
-    if (seller) {
+    if (seller != null) {
       router.push("/payment");
       setNavigating(true);
     } else {
@@ -29,6 +31,7 @@ const page = () => {
   useEffect(() => {
     setNavigating(false);
   }, []);
+  console.log("Shipping Method", shippingStore);
   return (
     <div
       style={{
@@ -52,37 +55,45 @@ const page = () => {
         </div>
       </div>
 
-      <div className="container">
-        <div className="login-signup">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="shipping-Container">
-                <input
-                  type="radio"
-                  name="checkoutType"
-                  onChange={() => {
-                    setSeller(!seller);
-                  }}
-                />{" "}
-                <label className="seller-Text">
-                  eSeller International - €21.51
-                </label>
-                <br></br>
-                <span className="shipping-info">
-                  A reliable, cost effective service with tracking number.
-                  Delivery aim from dispatch is approx. 10 working days for
-                  European destinations and from 21 working days for the rest of
-                  the world.
-                </span>
-                <p className="delivery-condition">
-                  The above times are based on indications by MaltaPost and
-                  Mdina Glass is not responsible for actual delivery times.
-                </p>
+      {shippingStore?.Value?.length > 0 &&
+        shippingStore?.Value?.map((data, index) => {
+          return (
+            <div className="container" key={index}>
+              <div className="login-signup">
+                <div className="row">
+                  <div className="col-md-12">
+                    <div className="shipping-Container">
+                      <input
+                        type="radio"
+                        name="checkoutType"
+                        onChange={() => {
+                          setSeller(data?.ServiceDescription);
+                          setShippingMethod(data);
+                        }}
+                      />{" "}
+                      <label className="seller-Text">
+                        {data?.ServiceDescription} - €
+                        {Number(data?.Price).toFixed(2)}
+                      </label>
+                      <br></br>
+                      <span className="shipping-info">
+                        A reliable, cost effective service with tracking number.
+                        Delivery aim from dispatch is approx. 10 working days
+                        for European destinations and from 21 working days for
+                        the rest of the world.
+                      </span>
+                      <p className="delivery-condition">
+                        The above times are based on indications by MaltaPost
+                        and Mdina Glass is not responsible for actual delivery
+                        times.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+          );
+        })}
 
       <div className="container">
         <div className="login-signup">

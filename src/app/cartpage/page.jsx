@@ -149,35 +149,13 @@ const page = () => {
     // console.log("getCart", data);
   };
 
-  console.log("Cart", cart);
+  console.log("Cart page", cart);
   return (
     <div>
       {/* <Header /> */}
       {/* <MegaMenu /> */}
       <CartHeading />
 
-      {/* {cart?.length == 0 && (
-        <div
-          style={{
-            marginBottom: "60px",
-            color: "#666",
-          }}
-        >
-          <h1 className="text-center"> Shopping Cart is Empty.</h1>
-          <p className="text-center">
-            You have no items in your shopping cart.
-          </p>
-          <div>
-            <div className="text-center  header-of-cart">
-              <Link href="/">
-                <button className="btn btn-info text-white">
-                  Continue Shopping
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      )} */}
       {cart?.length != 0 && (
         <div
           className="cart-page-main"
@@ -232,17 +210,21 @@ const page = () => {
                             textAlign: "center",
                           }}
                         >
-                          <img
-                            src={
-                              item?.product?.images?.length > 0
-                                ? item?.product?.images[0]?.url
-                                : item?.images[0]?.small_image_url
-                            }
-                            alt={item.name}
-                            width="80"
-                          />
+                          {item?.product?.images?.length > 0 && (
+                            <img
+                              src={
+                                item?.product?.images?.length > 0
+                                  ? item?.product?.images[0]?.url
+                                  : item?.images[0]?.small_image_url
+                              }
+                              alt={item.name}
+                              width="80"
+                            />
+                          )}
                         </td>
-                        <td>{item.name}</td>
+                        <td>
+                          {item.name} {item?.variations}
+                        </td>
                         <td>
                           €
                           {isNaN(Number(item?.price))
@@ -403,7 +385,7 @@ const page = () => {
           </div>
         </div>
       )}
-      <TrustPaymentForm />
+      {/* <TrustPaymentForm /> */}
       {/* <PaymentLink /> */}
 
       {/* <Footer /> */}

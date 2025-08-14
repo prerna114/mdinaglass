@@ -103,7 +103,7 @@ const page = () => {
               <div className="row  min-vh-100">
                 {/* Category Sidebar */}
                 <div className="col-lg-3 col-md-12  p-0">
-                  <SideMenu />
+                  <SideMenu productDetails={productDetails} />
                   {/* <CategorySidebar cateogryId={params?.productId} /> */}
                 </div>
                 {/* Product Listing */}

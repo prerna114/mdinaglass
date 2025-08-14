@@ -73,11 +73,11 @@ const NewArrivalListing = ({ onDataLoaded }) => {
       {/* Filter Controls */}
       <AboveMenu />
       {/* Sort and Items Control */}
-      {category?.length == 0 && (
+      {/* {category?.length == 0 && (
         <>
           <FilterProduct down={false} />
         </>
-      )}
+      )} */}
 
       {loading && <ListingSkeleton />}
 
@@ -100,11 +100,11 @@ const NewArrivalListing = ({ onDataLoaded }) => {
       )}
 
       {/* Sort and Items Control */}
-      {category?.length == 0 && (
+      {/* {category?.length == 0 && (
         <>
           <FilterProduct down={true} />
         </>
-      )}
+      )} */}
     </div>
   );
 };

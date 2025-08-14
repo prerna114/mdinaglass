@@ -2,7 +2,9 @@
 
 import { checkOut } from "@/api/CartApi";
 import { CustomToast, SuccessToast } from "@/components/CustomToast";
+import TrustPaymentForm from "@/components/TrustPaymentForm";
 import { useCartStore } from "@/store";
+import { useShippingStore } from "@/store/shippingStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -14,7 +16,13 @@ const OrderReview = () => {
   console.log("searchParams", searchParams.get("method"));
   const giftMessage = useAuthStore((state) => state.giftMessage);
   const { setPaymentMethods, paymentMethods } = useAuthStore.getState(); //
-
+  const {
+    setShippingStore,
+    shippingStore,
+    insurance,
+    shiipingCost,
+    shippingMethod,
+  } = useShippingStore((state) => state);
   const [billingAddress, setBillingAddress] = useState({});
   const [shippingAddress, setShippingAddress] = useState({});
   const [method, setMethod] = useState(paymentMethods);
@@ -73,7 +81,12 @@ const OrderReview = () => {
     const parsed = tokenData ? JSON.parse(tokenData) : null;
     const accessToken = parsed?.token;
     if (accessToken) {
-      const response = await checkOut();
+      const response = await checkOut(
+        getGrandTotal(cart),
+        insurance,
+        shiipingCost,
+        shippingMethod
+      );
       console.log("Response", response);
 
       if (response.status == 200) {
@@ -89,7 +102,7 @@ const OrderReview = () => {
       clearCart();
     }
   };
-  console.log("billingAddress", billingAddress);
+  console.log("billingAddress", shippingStore, shippingMethod);
   return (
     <div
       style={{
@@ -202,7 +215,7 @@ const OrderReview = () => {
                     <h5 className="billing-text">Shipping Method:</h5>
                   </div>
                   <p className="mb-1 billing-text-name ">
-                    eSeller International
+                    {shippingMethod?.ServiceDescription}
                   </p>
                   <Link href="/shippingMethod" className="text-primary">
                     Edit
@@ -301,6 +314,43 @@ const OrderReview = () => {
                   </tbody>
                   <thead>
                     <tr key="2">
+                      <td></td>
+                      <td></td>
+
+                      {/* <td>
+                          <img src={item.image} alt={item.name} width="80" />
+                        </td> */}
+                      <td
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      >
+                        Insurance
+                      </td>
+
+                      <td>€{insurance}</td>
+                    </tr>
+
+                    <tr key="3">
+                      {/* <td>
+                          <img src={item.image} alt={item.name} width="80" />
+                        </td> */}
+                      <td></td>
+                      <td></td>
+                      <td
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      >
+                        Shipping & Handling
+                      </td>
+
+                      <td>€{shiipingCost}</td>
+                    </tr>
+
+                    <tr key="4">
+                      <td></td>
+                      <td></td>
                       {/* <td>
                           <img src={item.image} alt={item.name} width="80" />
                         </td> */}
@@ -311,11 +361,12 @@ const OrderReview = () => {
                       >
                         Grand Total
                       </td>
-                      <td></td>
-                      <td></td>
 
                       <td>
-                        €{isNaN(totalPrice) ? getGrandTotal(cart) : totalPrice}
+                        €
+                        {isNaN(totalPrice)
+                          ? getGrandTotal(cart) + insurance + shiipingCost
+                          : totalPrice + insurance + shiipingCost}
                       </td>
                     </tr>
                   </thead>
@@ -362,6 +413,7 @@ const OrderReview = () => {
           </div>
         </div>
       )}
+      <TrustPaymentForm />
     </div>
   );
 };
