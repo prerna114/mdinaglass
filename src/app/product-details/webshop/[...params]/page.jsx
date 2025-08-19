@@ -55,6 +55,10 @@ const page = () => {
     // getProductDetails();
   }, []);
 
+  const getCateogryIDs = async () => {
+    const data = await getCategoryPath();
+  };
+
   useEffect(() => {
     const allParams = params?.params;
     console.log("allParams", allParams);

@@ -357,3 +357,21 @@ export const CountryList = [
   { country: "ZAMBIA", code: "ZM" },
   { country: "ZIMBABWE", code: "ZW" },
 ];
+export const getCategoryPath = (product) => {
+  const path = [];
+
+  // Only process the first category
+  const category = product?.categories?.[0];
+  if (!category) return "";
+
+  let current = category.parent;
+
+  // Traverse and collect only the first two non-root parents
+  while (current && current.slug !== "root") {
+    path.unshift(current.id); // unshift to reverse the order
+    current = current.parent;
+  }
+  console.log("getCategoryPath", `/${path.join("/")}`);
+  // setCategoryIds(path.join("/"));
+  return `${path.join("/")}`;
+};

@@ -1,6 +1,6 @@
 "use client";
 
-import { checkOut } from "@/api/CartApi";
+import { checkOut, guestcheckOut } from "@/api/CartApi";
 import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import TrustPaymentForm from "@/components/TrustPaymentForm";
 import { useCartStore } from "@/store";
@@ -96,13 +96,32 @@ const OrderReview = () => {
         CustomToast("Something went wrong", "top-right");
       }
     } else {
-      SuccessToast("Order Placed Successfully", "top-right");
-      router.push("/");
+      const guestToken = localStorage.getItem("guestToken");
+      if (guestToken) {
+        guestCheckoutAPI(guestToken);
+      }
+      // SuccessToast("Order Placed Successfully", "top-right");
+      // router.push("/");
 
-      clearCart();
+      // clearCart();
     }
   };
-  console.log("billingAddress", shippingStore, shippingMethod);
+
+  const guestCheckoutAPI = async (guestToken) => {
+    const price = getGrandTotal(cart) + insurance + shippingMethod?.Price;
+    const data = await guestcheckOut(
+      guestToken,
+      price,
+      shippingMethod?.ServiceDescription
+    );
+    console.log("Guest checkut", data);
+    if (data?.status == 200) {
+      SuccessToast(data.data.message, "top-right");
+    } else {
+      CustomToast("Something Went Wrong", "top-right");
+    }
+  };
+  console.log("billingAddress", shippingStore, shippingMethod, shiipingCost);
   return (
     <div
       style={{
@@ -345,7 +364,7 @@ const OrderReview = () => {
                         Shipping & Handling
                       </td>
 
-                      <td>€{shiipingCost}</td>
+                      <td>€{shippingMethod?.Price}</td>
                     </tr>
 
                     <tr key="4">
@@ -365,8 +384,10 @@ const OrderReview = () => {
                       <td>
                         €
                         {isNaN(totalPrice)
-                          ? getGrandTotal(cart) + insurance + shiipingCost
-                          : totalPrice + insurance + shiipingCost}
+                          ? getGrandTotal(cart) +
+                            insurance +
+                            shippingMethod?.Price
+                          : totalPrice + insurance + shippingMethod?.Price}
                       </td>
                     </tr>
                   </thead>

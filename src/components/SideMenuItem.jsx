@@ -8,22 +8,29 @@ import { useMenuStore } from "@/store/useCategoryStore";
 import Link from "next/link";
 import InstantLink from "./InstantClick";
 
-const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
+const SideMenuItem = ({
+  item,
+  level = 1,
+  parentPath = [],
+  cateogoryParents,
+}) => {
   const router = useRouter();
   const params = useParams();
   const allParams = useMemo(() => params?.params || [], [params]);
   const pathname = usePathname();
-  console.log("pathnameSideMenu", pathname.includes("search"));
+  console.log("pathnameSideMenu", cateogoryParents);
 
   const priceIndex =
     !pathname.includes("search") && allParams.findIndex((p) => p === "price");
-  const categoryIds = useMemo(
-    () =>
-      priceIndex !== -1
-        ? allParams.slice(0, priceIndex).map(Number)
-        : allParams.map(Number),
-    [allParams, priceIndex]
-  );
+  const categoryIds = cateogoryParents
+    ? cateogoryParents
+    : useMemo(
+        () =>
+          priceIndex !== -1
+            ? allParams.slice(0, priceIndex).map(Number)
+            : allParams.map(Number),
+        [allParams, priceIndex]
+      );
 
   const sortOrder = priceIndex !== -1 ? allParams[priceIndex + 1] : "asc";
   const limit = priceIndex !== -1 ? allParams[priceIndex + 2] : 15;
@@ -55,10 +62,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
     setDescription(item.description);
     console.log("levellevel", level, item);
     const indexInPath = categoryIds.indexOf(item.id);
-    const newPath =
-      indexInPath > -1 && categoryIds.length > fullPathToItem.length
-        ? categoryIds.slice(0, indexInPath + 1)
-        : fullPathToItem;
+
     setPagination({
       per_page: 15,
       page: 1,
@@ -102,7 +106,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
     localStorage.setItem("currentUrl", currentUrl);
     console.log("currentUrl", currentUrl);
   };
-  console.log("subCategories", subCategories);
+  console.log("subCategoriesSIdeMenu", categoryIds, fullPathToItem);
   return (
     <li
       className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}`}
@@ -149,6 +153,7 @@ const SideMenuItem = ({ item, level = 1, parentPath = [] }) => {
                     item={child}
                     level={level + 1}
                     parentPath={fullPathToItem}
+                    cateogoryParents={cateogoryParents}
                   />
                 </React.Suspense>
               )

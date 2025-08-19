@@ -59,7 +59,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
   const [selectedData, setSelectedData] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
   const [simpleImage, setSImpleImage] = useState("");
-
+  const [wishLoader, setWishLoader] = useState(false);
   const { addToCart, clearCart } = useCartStore((state) => state);
   const cart = useCartStore((state) => state.cart);
 
@@ -138,14 +138,19 @@ export default function ProductDetails({ productDetails, productDetail }) {
   };
 
   const addWishList = async (sku) => {
+    setWishLoader(true);
+
     const response = await addItemWIshlist(sku);
     console.log("addItemWishlist", response);
     if (response.status === 200) {
       SuccessToast("Item added to Wishlist", "top-right");
+      setWishLoader(false);
     } else if (response.status == 409) {
       CustomToast("Product already in wishlist", "top-right");
+      setWishLoader(false);
     } else {
       CustomToast("SomeThing went wrong", "top-right");
+      setWishLoader(false);
     }
   };
 
@@ -154,7 +159,8 @@ export default function ProductDetails({ productDetails, productDetail }) {
     // createImage(productDetails?.sku),
     productDetails,
     chooseSku,
-    cart
+    cart,
+    wishLoader
   );
 
   useEffect(() => {
@@ -368,12 +374,21 @@ export default function ProductDetails({ productDetails, productDetail }) {
                   addWishList(productDetails?.sku);
                 }}
               >
-                <Heart
-                  size={24}
-                  color="#c6302c"
-                  fill="#c6302c"
-                  stroke="#c6302c"
-                />
+                {wishLoader ? (
+                  <div
+                    className="spinner-border spinner-border-sm text-danger"
+                    role="status"
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                ) : (
+                  <Heart
+                    size={24}
+                    color="#c6302c"
+                    fill="#c6302c"
+                    stroke="#c6302c"
+                  />
+                )}
               </span>
             </p>
             <p className="sku-detail mb-0">Description </p>

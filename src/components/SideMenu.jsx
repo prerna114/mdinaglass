@@ -6,13 +6,17 @@ import React, { useEffect, useRef, useState } from "react";
 import SideMenuItem from "./SideMenuItem";
 import { useMenuStore } from "@/store/useCategoryStore";
 import SideMenuSkeleton from "./Skeleton/SideMenuSkeleton";
+import { getCategoryPath } from "@/constant";
+import { useRouter } from "next/navigation";
 
-const SideMenu = ({}) => {
+const SideMenu = ({ productDetails }) => {
   // const [sideMenu, setSideMenu] = useState();
   const [subCategory, setSubCategory] = useState([]);
   const [loading, setLoading] = useState(true);
   const sideMenu = useMenuStore((state) => state.sideMenu);
   const setSideMenu = useMenuStore((state) => state.setSideMenu);
+  const [cateogoryParents, setCateogryParents] = useState();
+  const router = useRouter();
 
   const hasRunOnce = useRef(false);
 
@@ -47,8 +51,20 @@ const SideMenu = ({}) => {
       }
     }, 10);
   }, []);
-  console.log("CategoryById", sideMenu);
+  console.log("SideMenu productDetails", productDetails);
 
+  const getCateogryIDs = () => {
+    const data = getCategoryPath(productDetails);
+    console.log("SideMenupath123", data);
+    if (data) {
+      setCateogryParents(data);
+    }
+  };
+  useEffect(() => {
+    if (productDetails) {
+      getCateogryIDs();
+    }
+  }, [productDetails]);
   return (
     <div className="category-sidebar">
       <div className="hide_Mobi_sidebar">
@@ -69,17 +85,16 @@ const SideMenu = ({}) => {
               >
                 {sideMenu?.map((item, index) => {
                   const parentPath = []; // ✅ define root path
-                  return (
-                    item.status == 1 && (
-                      <SideMenuItem
-                        key={item.id}
-                        item={item}
-                        level={1}
-                        isFirst={index === 0}
-                        parentPath={[...parentPath]}
-                      />
-                    )
-                  );
+                  return item.status == 1 ? (
+                    <SideMenuItem
+                      key={item.id}
+                      item={item}
+                      level={1}
+                      isFirst={index === 0}
+                      parentPath={[...parentPath]}
+                      cateogoryParents={cateogoryParents}
+                    />
+                  ) : null;
                 })}
               </ul>
             </nav>

@@ -17,6 +17,9 @@ import {
   RemoveItemCart,
 } from "@/api/CartApi";
 import dynamic from "next/dynamic";
+import { useShippingStore } from "@/store/shippingStore";
+import InstantLink from "@/components/InstantClick";
+import { useRouter } from "next/navigation";
 // import TrustPaymentForm from "@/components/TrustPaymentForm";
 const TrustPaymentForm = dynamic(
   () => import("../../components/TrustPaymentForm"),
@@ -32,10 +35,12 @@ const PaymentLink = dynamic(() => import("../../components/PaymentLink"), {
 const page = () => {
   const { cart, removeFromCart, updateQuantity, addToCart, clearCart } =
     useCartStore((state) => state);
+  const router = useRouter();
+
   const { isLogin } = useAuthStore((state) => state);
   const [guestToken, setGuestToken] = useState(null);
-
-  console.log("isLogin", isLogin);
+  const { shippingStore } = useShippingStore((state) => state);
+  console.log("shippingStore", shippingStore);
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -149,6 +154,21 @@ const page = () => {
     // console.log("getCart", data);
   };
 
+  const processCheck = () => {
+    console.log("shippingStoreProcess", shippingStore);
+    if (Object.keys(shippingStore)?.length == 0) {
+      CustomToast("Please Select Country", "top-right");
+    } else {
+      if (guestToken) {
+        router.push("/checkout");
+      } else if (isLogin) {
+        // return "/checkout";
+        router.push("/checkout");
+      } else {
+        router.push("/loginCheckoutPage");
+      }
+    }
+  };
   console.log("Cart page", cart);
   return (
     <div>
@@ -171,19 +191,14 @@ const page = () => {
 
                   <div className="col-md-4">
                     <div className="text-right button-margin float-right mb-3 mt-5">
-                      <Link
-                        href={
-                          guestToken
-                            ? "/checkout"
-                            : isLogin
-                            ? "/checkout"
-                            : "/loginCheckoutPage"
-                        }
+                      <button
+                        className="btn btn-info text-white"
+                        onClick={() => {
+                          processCheck();
+                        }}
                       >
-                        <button className="btn btn-info text-white">
-                          Proceed To Checkout
-                        </button>
-                      </Link>
+                        Proceed To Checkout
+                      </button>
                     </div>
                   </div>
                 </div>

@@ -326,7 +326,7 @@ export const RemoveGuestCart = async (sku) => {
   return response;
 };
 
-export const guestcheckOut = async () => {
+export const guestcheckOut = async (guestToken, price, shippingMethod) => {
   const billing = localStorage.getItem("billingaddress");
   const billingParse = JSON.parse(billing);
 
@@ -356,10 +356,12 @@ export const guestcheckOut = async () => {
       postcode: shippingParse.zipCode,
       phone: shippingParse.telePhone,
     },
-    shipping_method: "eSeller International",
+    shipping_method: shippingMethod,
     payment_method: "cashondelivery",
+    shipping_price: JSON.stringify(price),
+    guest_token: guestToken,
   };
-  const data = await fetchGlobal("/api/blackbull/guest-checkout", {
+  const data = await fetchGlobal("api/blackbull/guest-checkout", {
     method: "POST",
     body: raw,
   });

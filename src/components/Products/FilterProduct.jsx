@@ -26,7 +26,7 @@ const FilterProduct = ({ down }) => {
 
   const priceIndex = allParams.findIndex((p) => p === "price");
   const limit = parseInt(allParams[priceIndex + 3]);
-  console.log("Limti1234", limit);
+  console.log("Limti1234", limit, allParams?.includes("all"));
 
   const handleClick = (sortName, newSortOrder, newLimit, newPage) => {
     const allParams = params?.params || [];

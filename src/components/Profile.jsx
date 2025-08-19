@@ -13,6 +13,7 @@ export default function Make() {
   const subtotal = (price, qty) => (price * qty).toFixed(2);
   const [userDetails, setUserDetails] = useState();
   const [orderList, setOrderList] = useState([]);
+  const [password, setPassword] = useState({});
   const getTheOrderList = async () => {
     const response = await getOrderList();
     if (response.status == 200) {
@@ -28,7 +29,12 @@ export default function Make() {
   }, []);
 
   console.log("Get the Orderlsit", orderList);
-
+  const handleChanges = (key, value) => {
+    setPassword((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
   return (
     <div className="container mt-5">
       <div className="row">
@@ -55,6 +61,15 @@ export default function Make() {
               style={{ cursor: "pointer" }}
             >
               Track Order
+            </li>
+            <li
+              className={`list-group-item ${
+                tab === "password" ? "active" : ""
+              }`}
+              onClick={() => setTab("password")}
+              style={{ cursor: "pointer" }}
+            >
+              Change Password
             </li>
           </ul>
         </div>
@@ -173,6 +188,59 @@ export default function Make() {
                       </tbody>
                     </table>
                   </div>
+                </div>
+              )}
+              {tab === "password" && (
+                <div
+                  className="login-sec  checkout-sec"
+                  style={{
+                    marginTop: 0,
+                    paddingTop: 0,
+                  }}
+                >
+                  <h4>Change Password</h4>
+                  <div className="col-md-12">
+                    <input
+                      type="password"
+                      required
+                      placeholder="CURRENT PASSWORD"
+                      // ref={fieldRef?.password}
+                      onChange={(e) => {
+                        setPassword("currentPasswod", e.target.value);
+                        // handleChanges("password", e.target.value);
+                      }}
+                    ></input>
+                    <input
+                      type="password"
+                      required
+                      placeholder="NEW PASSWORD*"
+                      // ref={fieldRef?.password}
+                      onChange={(e) => {
+                        setPassword("newPasswod", e.target.value);
+
+                        // handleChanges("password", e.target.value);
+                      }}
+                    ></input>
+                    {/* <div className="required-text">{error.password}</div> */}
+                  </div>
+
+                  <div className="col-md-12">
+                    <input
+                      type="password"
+                      required
+                      placeholder="CONFIRM NEW PASSWORD*"
+                      // ref={fieldRef?.confirmPassword}
+                      onChange={(e) => {
+                        setPassword("confirmNewPasswod", e.target.value);
+
+                        // handleChanges("confirmPassword", e.target.value);
+                      }}
+                    ></input>
+                    {/* <div className="required-text">{error.confirmPassword}</div> */}
+                  </div>
+                  <button className="btn btn-cart btn-info text-white">
+                    Submit
+                  </button>
                 </div>
               )}
             </div>

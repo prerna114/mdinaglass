@@ -113,6 +113,7 @@ const AddToCart = () => {
     }
   };
   const shiipingRate = async (code) => {
+    console.log("Cart Wiri", cartWieght);
     if (Number(cartWieght) && Number(cartWieght) > 0) {
       setNavigating(true);
       const data = await getShippingRate(cartWieght, code);
@@ -163,7 +164,7 @@ const AddToCart = () => {
             <div className="d-flex float-right mb-5 ">
               <a href="/">
                 <button className="btn btn-shop btn-primary me-3">
-                  Countinue Shopping
+                  Continue Shopping
                 </button>
               </a>
 
@@ -249,7 +250,10 @@ const AddToCart = () => {
                   <tr>
                     <td>Shipping From:</td>
                     <td className="text-end">
-                      €{shippingRate?.Value[0]?.Price || "0.00"}
+                      €
+                      {Object.keys(shippingStore)?.length > 0
+                        ? Number(shippingStore?.Value[0]?.Price)?.toFixed(2)
+                        : "0.00"}
                     </td>
                   </tr>
                   <tr>
@@ -269,7 +273,9 @@ const AddToCart = () => {
                         ? Number(getGrandTotal(cart)).toFixed(2)
                         : totalPrice +
                           insurance +
-                          (Number(shippingRate?.Value[0]?.Price) || 0)}
+                          (shippingStore?.Value?.length > 0
+                            ? Number(shippingStore.Value[0].Price)
+                            : 0)}
                       {/* €{totalPrice + insurance} */}
                     </td>
                   </tr>
@@ -287,7 +293,9 @@ const AddToCart = () => {
                         ? Number(getGrandTotal(cart)).toFixed(2)
                         : totalPrice +
                           insurance +
-                          (Number(shippingRate?.Value[0]?.Price) || 0)}
+                          (shippingStore?.Value?.length > 0
+                            ? Number(shippingStore.Value[0].Price)
+                            : 0)}
                     </td>
                   </tr>
                 </tbody>
