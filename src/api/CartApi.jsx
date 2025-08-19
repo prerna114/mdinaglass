@@ -422,3 +422,12 @@ export const getInsuranceRate = async (insuranceValue) => {
     };
   }
 };
+
+export const getSlider = async (token) => {
+  const data = await fetchGlobal("api/blackbull/get-slider-list", {
+    method: "GET",
+    // body: raw,
+  });
+  console.log("Update Data", data);
+  return data;
+};

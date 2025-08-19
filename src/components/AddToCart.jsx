@@ -142,13 +142,14 @@ const AddToCart = () => {
     }
   };
   useEffect(() => {
-    setInsurance(15.0);
+    // setInsurance(15.0);
     getTotalWeight();
     insrunaceRate();
   }, []);
 
   useEffect(() => {
     setInsuranceCost(insurance);
+
     setshiipingCost(shippingRate?.Value[0]?.Price);
   }, [insurance, shippingRate]);
 
@@ -252,7 +253,11 @@ const AddToCart = () => {
                     <td className="text-end">
                       €
                       {Object.keys(shippingStore)?.length > 0
-                        ? Number(shippingStore?.Value[0]?.Price)?.toFixed(2)
+                        ? shippingStore?.Price
+                          ? shippingStore?.Price
+                          : shippingStore?.Value?.[0]?.Price
+                          ? Number(shippingStore.Value[0].Price).toFixed(2)
+                          : "0.00"
                         : "0.00"}
                     </td>
                   </tr>

@@ -139,34 +139,41 @@ const page = () => {
   }, []);
 
   const getCart = async () => {
+    const guestToken = localStorage.getItem("token");
+
     console.log("Cart listing caal");
-    const data = await getCartListing();
-    if (data?.status == 200) {
-      clearCart();
-      console.log("getCart", data.data.items);
-      // addToCart(data.result.items);
-      data.data.items.forEach((item) => {
-        addToCart(item);
-      });
-    } else if (data?.status == 401) {
-      // logout;
+    if (guestToken) {
+      const data = await getCartListing();
+      if (data?.status == 200) {
+        clearCart();
+        console.log("getCart", data.data.items);
+        // addToCart(data.result.items);
+        data.data.items.forEach((item) => {
+          addToCart(item);
+        });
+      } else if (data?.status == 401) {
+        // logout;
+      }
     }
     // console.log("getCart", data);
   };
 
   const processCheck = () => {
-    console.log("shippingStoreProcess", shippingStore);
-    if (Object.keys(shippingStore)?.length == 0) {
-      CustomToast("Please Select Country", "top-right");
+    // console.log("shippingStoreProcess", shippingStore);
+    // if (Object.keys(shippingStore)?.length == 0) {
+    //   CustomToast("Please Select Country", "top-right");
+    // }
+    // else {
+
+    // }
+
+    if (guestToken) {
+      router.push("/checkout");
+    } else if (isLogin) {
+      // return "/checkout";
+      router.push("/checkout");
     } else {
-      if (guestToken) {
-        router.push("/checkout");
-      } else if (isLogin) {
-        // return "/checkout";
-        router.push("/checkout");
-      } else {
-        router.push("/loginCheckoutPage");
-      }
+      router.push("/loginCheckoutPage");
     }
   };
   console.log("Cart page", cart);

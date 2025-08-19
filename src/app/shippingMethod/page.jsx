@@ -9,13 +9,18 @@ import React, { useEffect, useState } from "react";
 
 const page = () => {
   const [giftOption, setGiftOption] = useState(false);
-  const [seller, setSeller] = useState("");
+  const [seller, setSeller] = useState(null);
 
   const router = useRouter();
   const setGiftMessage = useAuthStore((state) => state.setGiftMessage);
   const setNavigating = useNavigationStore((s) => s.setNavigating);
-  const { setShippingStore, shippingStore, setShippingMethod } =
-    useShippingStore((state) => state);
+  const {
+    setShippingStore,
+    shippingStore,
+    setShippingMethod,
+    shippingMethod,
+    setshiipingCost,
+  } = useShippingStore((state) => state);
   const handleChange = (e) => {
     setGiftMessage(e);
   };
@@ -31,7 +36,7 @@ const page = () => {
   useEffect(() => {
     setNavigating(false);
   }, []);
-  console.log("Shipping Method", shippingStore);
+  console.log("Shipping Method", shippingMethod);
   return (
     <div
       style={{
@@ -54,6 +59,48 @@ const page = () => {
           </div>
         </div>
       </div>
+      {shippingStore?.Value?.length == 0 && (
+        <div className="container">
+          <div className="login-signup">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="shipping-Container">
+                  <input
+                    type="radio"
+                    name="checkoutType"
+                    onChange={() => {
+                      setSeller("eSeller International");
+                      setShippingMethod({
+                        Price: "21.51",
+                        ServiceDescription: "eSeller International",
+                      });
+                      setshiipingCost("21.51");
+                      setShippingStore({
+                        Price: "21.51",
+                        ServiceDescription: "eSeller International",
+                      });
+                    }}
+                  />{" "}
+                  <label className="seller-Text">
+                    eSeller International - €21.51
+                  </label>
+                  <br></br>
+                  <span className="shipping-info">
+                    A reliable, cost effective service with tracking number.
+                    Delivery aim from dispatch is approx. 10 working days for
+                    European destinations and from 21 working days for the rest
+                    of the world.
+                  </span>
+                  <p className="delivery-condition">
+                    The above times are based on indications by MaltaPost and
+                    Mdina Glass is not responsible for actual delivery times.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {shippingStore?.Value?.length > 0 &&
         shippingStore?.Value?.map((data, index) => {

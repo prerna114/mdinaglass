@@ -19,16 +19,19 @@ const OrderReview = () => {
   const {
     setShippingStore,
     shippingStore,
-    insurance,
+
     shiipingCost,
     shippingMethod,
   } = useShippingStore((state) => state);
+
   const [billingAddress, setBillingAddress] = useState({});
   const [shippingAddress, setShippingAddress] = useState({});
   const [method, setMethod] = useState(paymentMethods);
 
   const router = useRouter();
-  const { cart, removeFromCart, clearCart } = useCartStore((state) => state);
+  const { cart, removeFromCart, clearCart, insurance } = useCartStore(
+    (state) => state
+  );
   const subtotal = (price, qty) => {
     console.log("Price ", price, qty);
     return (price * qty).toFixed(2);
@@ -92,6 +95,8 @@ const OrderReview = () => {
       if (response.status == 200) {
         SuccessToast(response.data.message, "top-right");
         router.push("/");
+        localStorage.clear("shipping-store");
+        clearCart();
       } else {
         CustomToast("Something went wrong", "top-right");
       }
@@ -111,17 +116,28 @@ const OrderReview = () => {
     const price = getGrandTotal(cart) + insurance + shippingMethod?.Price;
     const data = await guestcheckOut(
       guestToken,
-      price,
+      GrandTotal,
       shippingMethod?.ServiceDescription
     );
     console.log("Guest checkut", data);
     if (data?.status == 200) {
       SuccessToast(data.data.message, "top-right");
+      localStorage.clear("shipping-store");
+      router.push("/");
+      clearCart();
     } else {
       CustomToast("Something Went Wrong", "top-right");
     }
   };
-  console.log("billingAddress", shippingStore, shippingMethod, shiipingCost);
+  console.log("method", shiipingCost);
+
+  const GrandTotal =
+    Number(Number(getGrandTotal(cart)).toFixed(2)) +
+    Number(Number(insurance).toFixed(2)) +
+    Number(Number(shippingMethod?.Price).toFixed(2));
+
+  // console.log("total", total);
+  // console.log("billingAddress", shippingStore, shippingMethod, shiipingCost);
   return (
     <div
       style={{
@@ -336,9 +352,10 @@ const OrderReview = () => {
                       <td></td>
                       <td></td>
 
-                      {/* <td>
-                          <img src={item.image} alt={item.name} width="80" />
-                        </td> */}
+                      {/* <td> */}
+                      {/* <h1>mkmk</h1> */}
+                      {/* <img src={item.image} alt={item.name} width="80" /> */}
+                      {/* </td> */}
                       <td
                         style={{
                           marginLeft: 10,
@@ -351,11 +368,9 @@ const OrderReview = () => {
                     </tr>
 
                     <tr key="3">
-                      {/* <td>
-                          <img src={item.image} alt={item.name} width="80" />
-                        </td> */}
                       <td></td>
                       <td></td>
+
                       <td
                         style={{
                           marginLeft: 10,
@@ -364,7 +379,12 @@ const OrderReview = () => {
                         Shipping & Handling
                       </td>
 
-                      <td>€{shippingMethod?.Price}</td>
+                      <td>
+                        €
+                        {shippingMethod?.Price
+                          ? shippingMethod?.Price
+                          : shippingMethod}
+                      </td>
                     </tr>
 
                     <tr key="4">
@@ -381,14 +401,7 @@ const OrderReview = () => {
                         Grand Total
                       </td>
 
-                      <td>
-                        €
-                        {isNaN(totalPrice)
-                          ? getGrandTotal(cart) +
-                            insurance +
-                            shippingMethod?.Price
-                          : totalPrice + insurance + shippingMethod?.Price}
-                      </td>
+                      <td>€{GrandTotal}</td>
                     </tr>
                   </thead>
                 </table>
