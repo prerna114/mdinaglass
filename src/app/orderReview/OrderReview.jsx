@@ -16,6 +16,7 @@ const OrderReview = () => {
   console.log("searchParams", searchParams.get("method"));
   const giftMessage = useAuthStore((state) => state.giftMessage);
   const { setPaymentMethods, paymentMethods } = useAuthStore.getState(); //
+  const [loader, setLoader] = useState(false);
   const {
     setShippingStore,
     shippingStore,
@@ -80,6 +81,7 @@ const OrderReview = () => {
   }
 
   const PaymentSuccess = async () => {
+    setLoader(true);
     const tokenData = localStorage.getItem("token");
     const parsed = tokenData ? JSON.parse(tokenData) : null;
     const accessToken = parsed?.token;
@@ -94,13 +96,18 @@ const OrderReview = () => {
 
       if (response.status == 200) {
         SuccessToast(response.data.message, "top-right");
+        setLoader(false);
         router.push("/");
         localStorage.clear("shipping-store");
+
         clearCart();
       } else {
+        setLoader(false);
+
         CustomToast("Something went wrong", "top-right");
       }
     } else {
+      setLoader(true);
       const guestToken = localStorage.getItem("guestToken");
       if (guestToken) {
         guestCheckoutAPI(guestToken);
@@ -117,16 +124,20 @@ const OrderReview = () => {
     const data = await guestcheckOut(
       guestToken,
       GrandTotal,
-      shippingMethod?.ServiceDescription
+      shippingMethod?.ServiceDescription,
+      insurance
     );
     console.log("Guest checkut", data);
     if (data?.status == 200) {
       SuccessToast(data.data.message, "top-right");
+      setLoader(false);
+
       localStorage.clear("shipping-store");
       router.push("/");
       clearCart();
     } else {
       CustomToast("Something Went Wrong", "top-right");
+      setLoader(false);
     }
   };
   console.log("method", shiipingCost);
@@ -136,7 +147,7 @@ const OrderReview = () => {
     Number(Number(insurance).toFixed(2)) +
     Number(Number(shippingMethod?.Price).toFixed(2));
 
-  // console.log("total", total);
+  console.log("total", insurance);
   // console.log("billingAddress", shippingStore, shippingMethod, shiipingCost);
   return (
     <div
@@ -430,17 +441,24 @@ const OrderReview = () => {
                       </button>
                     </Link>
                   </div>
-
-                  <div
-                    // href={`/orderReview?method=${method}`}
-                    onClick={() => {
-                      PaymentSuccess();
-                    }}
-                  >
-                    <button className="btn btn-cart btn-info text-white back-button">
-                      Proceed to Payment
-                    </button>
-                  </div>
+                  <button className="btn btn-cart btn-info text-white back-button">
+                    {loader ? (
+                      <div
+                        className="spinner-border text-white"
+                        role="status"
+                      ></div>
+                    ) : (
+                      <div
+                        // href={`/orderReview?method=${method}`}
+                        onClick={() => {
+                          PaymentSuccess();
+                          // setLoader(true);
+                        }}
+                      >
+                        Proceed to Payment
+                      </div>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>

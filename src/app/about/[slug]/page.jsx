@@ -1,4 +1,5 @@
 "use client";
+import { getSlider } from "@/api/CartApi";
 // import AboutContent from "@/components/AboutUs/AboutContent";
 import AboutSideMenu from "@/components/AboutUs/AboutSideMenu";
 import ParagraphSkeleton from "@/components/Skeleton/ParagraphSkeleton";
@@ -21,6 +22,7 @@ const AboutContent = dynamic(
 const page = () => {
   const params = useParams();
   const [imagesToUse, setImagesToUse] = useState([]);
+  const [sliderImage, setSliderImage] = useState([]);
   const images = [
     { src: "/assets/abotone.png" },
     {
@@ -48,8 +50,19 @@ const page = () => {
     { src: "/assets/glassmakerfour.png" },
     { src: "/assets/glassmakerfive.png" },
   ];
+
+  const getSiderImage = async () => {
+    const data = await getSlider(params.slug);
+    if (data?.status == 200) {
+      setSliderImage(data?.data?.data[0]?.image_urls);
+    } else {
+      setSliderImage([]);
+    }
+    console.log("Data SLug", data?.data?.data);
+  };
   const familyTradtionImages = [{ src: "/assets/familytradition.jpg" }];
   useEffect(() => {
+    getSiderImage();
     if (params.slug === "a-family-tradition") {
       setImagesToUse(familyTradtionImages);
     } else if (params.slug === "our-history") {
@@ -60,11 +73,11 @@ const page = () => {
       setImagesToUse(images);
     }
   }, [params.slug]);
-  console.log("Params in about page", params, imagesToUse);
+  console.log("Params in about page", sliderImage);
 
   return (
     <div className="InfoContainer mb-5">
-      <SimpleSlider images={imagesToUse} />
+      <SimpleSlider images={sliderImage} />
       <div
         style={{
           flexDirection: "row",

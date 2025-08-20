@@ -80,6 +80,7 @@ export const useCartStore = create<CartState>()(
       name: "the-cart-storage", // key in localStorage
       partialize: (state) => ({
         cart: state.cart,
+        insurance: state.insurance,
       }),
       // skipHydration: true,
       // skipHydration: true, // optional: to avoid hydration mismatch in SSR apps

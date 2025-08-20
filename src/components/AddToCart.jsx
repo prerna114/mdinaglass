@@ -148,13 +148,13 @@ const AddToCart = () => {
   }, []);
 
   useEffect(() => {
-    setInsuranceCost(insurance);
+    // setInsuranceCost(insurance);
 
     setshiipingCost(shippingRate?.Value[0]?.Price);
   }, [insurance, shippingRate]);
 
   console.log("Cart Items", cart);
-  console.log("shippingStore", shippingStore);
+  console.log("shippingStore", insurance);
 
   return (
     <div className="container my-4">

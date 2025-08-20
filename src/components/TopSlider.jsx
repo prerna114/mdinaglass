@@ -18,18 +18,19 @@ function SimpleSlider({ images }) {
   return (
     <div className="slider-container">
       <Slider {...settings}>
-        {images.map((image, index) => (
-          <div key={index}>
-            <Image
-              src={image.src}
-              alt={`Slide ${index + 1}`}
-              className="mb-3 footer-logo"
-              style={{ width: "100%!important", height: "430px !important" }}
-              width={1130}
-              height={430}
-            />
-          </div>
-        ))}
+        {images?.length > 0 &&
+          images.map((image, index) => (
+            <div key={index}>
+              <Image
+                src={image?.src ? image?.src : image}
+                alt={`Slide ${index + 1}`}
+                className="mb-3 footer-logo"
+                style={{ width: "100%!important", height: "430px !important" }}
+                width={1130}
+                height={430}
+              />
+            </div>
+          ))}
       </Slider>
     </div>
   );

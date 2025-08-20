@@ -10,7 +10,7 @@ const RecipeIdea = () => {
         We produce glassware that is both practical and decorative. We love the
         idea of our products being part of your every day living experien...
       </p>
-      <InstantLink className="btn-cart" href="/recipe/slug">
+      <InstantLink className="btn-cart" href="/recipe/recipeList">
         Read More
       </InstantLink>
     </div>

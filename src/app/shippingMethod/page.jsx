@@ -36,7 +36,12 @@ const page = () => {
   useEffect(() => {
     setNavigating(false);
   }, []);
-  console.log("Shipping Method", shippingMethod);
+  console.log(
+    "Shipping Method",
+    shippingMethod,
+    Object.keys(shippingStore)?.length,
+    shippingStore
+  );
   return (
     <div
       style={{
@@ -59,7 +64,9 @@ const page = () => {
           </div>
         </div>
       </div>
-      {shippingStore?.Value?.length == 0 && (
+
+      {(Object.keys(shippingStore)?.length === 0 ||
+        shippingStore?.Value?.length === 0) && (
         <div className="container">
           <div className="login-signup">
             <div className="row">
@@ -75,10 +82,10 @@ const page = () => {
                         ServiceDescription: "eSeller International",
                       });
                       setshiipingCost("21.51");
-                      setShippingStore({
-                        Price: "21.51",
-                        ServiceDescription: "eSeller International",
-                      });
+                      // setShippingStore({
+                      //   Price: "21.51",
+                      //   ServiceDescription: "eSeller International",
+                      // });
                     }}
                   />{" "}
                   <label className="seller-Text">

@@ -167,9 +167,10 @@ const page = () => {
 
     // }
 
-    if (guestToken) {
-      router.push("/checkout");
-    } else if (isLogin) {
+    // if (guestToken) {
+    //   router.push("/checkout");
+    // }
+    if (isLogin) {
       // return "/checkout";
       router.push("/checkout");
     } else {

@@ -78,18 +78,22 @@ const loginCheckoutPage = () => {
   const getCart = async () => {
     setLoading(true);
     console.log("Cart listing caal");
-    const data = await getCartListing();
-    if (data?.status == 200) {
-      clearCart();
-      console.log("getCart", data.data.items);
-      // addToCart(data.result.items);
-      data.data.items.forEach((item) => {
-        addToCart(item);
-      });
-      setLoading(false);
-    } else if (data?.status == 401) {
-      // logout;
+    const token = localStorage.getItem("token");
+    if (token) {
+      const data = await getCartListing();
+      if (data?.status == 200) {
+        clearCart();
+        console.log("getCart", data.data.items);
+        // addToCart(data.result.items);
+        data.data.items.forEach((item) => {
+          addToCart(item);
+        });
+        setLoading(false);
+      } else if (data?.status == 401) {
+        // logout;
+      }
     }
+
     // console.log("getCart", data);
   };
 

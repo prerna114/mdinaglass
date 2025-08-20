@@ -326,7 +326,12 @@ export const RemoveGuestCart = async (sku) => {
   return response;
 };
 
-export const guestcheckOut = async (guestToken, price, shippingMethod) => {
+export const guestcheckOut = async (
+  guestToken,
+  price,
+  shippingMethod,
+  insurance
+) => {
   const billing = localStorage.getItem("billingaddress");
   const billingParse = JSON.parse(billing);
 
@@ -360,6 +365,7 @@ export const guestcheckOut = async (guestToken, price, shippingMethod) => {
     payment_method: "cashondelivery",
     shipping_price: JSON.stringify(price),
     guest_token: guestToken,
+    insurance_cost: insurance,
   };
   const data = await fetchGlobal("api/blackbull/guest-checkout", {
     method: "POST",
@@ -423,8 +429,8 @@ export const getInsuranceRate = async (insuranceValue) => {
   }
 };
 
-export const getSlider = async (token) => {
-  const data = await fetchGlobal("api/blackbull/get-slider-list", {
+export const getSlider = async (slug) => {
+  const data = await fetchGlobal(`api/blackbull/get-slider-list?slug=${slug}`, {
     method: "GET",
     // body: raw,
   });
