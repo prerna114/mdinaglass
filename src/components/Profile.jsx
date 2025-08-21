@@ -7,6 +7,7 @@ import { products } from "@/constant";
 import Link from "next/link";
 import { getOrderList } from "@/api/CartApi";
 import moment from "moment";
+import MyGiftRegistry from "./MyGiftRegistry";
 
 export default function Make() {
   const [tab, setTab] = useState("profile");
@@ -71,6 +72,15 @@ export default function Make() {
             >
               Change Password
             </li>
+            <li
+              className={`list-group-item ${
+                tab === "registry" ? "active" : ""
+              }`}
+              onClick={() => setTab("registry")}
+              style={{ cursor: "pointer" }}
+            >
+              My Gift Registry
+            </li>
           </ul>
         </div>
 
@@ -102,10 +112,7 @@ export default function Make() {
 
                     <div>
                       <h5>Address</h5>
-                      <p>
-                        Vjal L-Istadium Nazzjonali, Attard, Ta' Qali, Opposite
-                        Big Mat
-                      </p>
+                      <p>{userDetails?.street}</p>
                     </div>
                   </div>
                 </div>
@@ -238,6 +245,22 @@ export default function Make() {
                     ></input>
                     {/* <div className="required-text">{error.confirmPassword}</div> */}
                   </div>
+                  <button className="btn btn-cart btn-info text-white">
+                    Submit
+                  </button>
+                </div>
+              )}
+              {tab === "registry" && (
+                <div
+                  className=" checkout-sec"
+                  style={{
+                    marginTop: 0,
+                    paddingTop: 0,
+                  }}
+                >
+                  <h4>Welcome to Your Gift Registry, {userDetails?.name}!</h4>
+                  <MyGiftRegistry />
+
                   <button className="btn btn-cart btn-info text-white">
                     Submit
                   </button>

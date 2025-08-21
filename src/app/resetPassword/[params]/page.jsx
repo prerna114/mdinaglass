@@ -41,14 +41,16 @@ const page = () => {
                     marginBottom: "14px",
                   }}
                 >
-                  Forgot Password
+                  RESET PASSWORD
                 </h2>
 
                 <div className="col-md-12">
                   <input
+                    disabled
                     type="email"
                     placeholder="Enter your Email Address*"
                     onChange={(e) => setEmail(e.target.value)}
+                    value={"EmailAddress"}
                   ></input>
                   <div className="required-text">{error}</div>
                 </div>

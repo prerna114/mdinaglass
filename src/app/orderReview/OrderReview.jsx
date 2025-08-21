@@ -85,12 +85,19 @@ const OrderReview = () => {
     const tokenData = localStorage.getItem("token");
     const parsed = tokenData ? JSON.parse(tokenData) : null;
     const accessToken = parsed?.token;
+    console.log(
+      "DSs",
+      GrandTotal,
+      insurance,
+      shiipingCost,
+      shippingMethod?.ServiceDescription
+    );
     if (accessToken) {
       const response = await checkOut(
-        getGrandTotal(cart),
+        GrandTotal,
         insurance,
         shiipingCost,
-        shippingMethod
+        shippingMethod?.ServiceDescription
       );
       console.log("Response", response);
 

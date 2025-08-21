@@ -211,7 +211,12 @@ export const addToTheCart = async (sku, qty, chooseSku) => {
   return data;
 };
 
-export const checkOut = async () => {
+export const checkOut = async (
+  GrandTotal,
+  insurance,
+  shipingCost,
+  shippingMethod
+) => {
   const billing = localStorage.getItem("billingaddress");
   const billingParse = JSON.parse(billing);
 
@@ -241,8 +246,12 @@ export const checkOut = async () => {
       postcode: shippingParse.zipCode,
       phone: shippingParse.telePhone,
     },
-    shipping_method: "eSeller International",
-    payment_method: "cashondelivery",
+
+    shipping_method: shippingMethod,
+    payment_method: "trust_payment",
+    transaction_id: "test_transaction12345",
+    shipping_price: GrandTotal,
+    insurance_cost: insurance,
   };
   const data = await fetchGlobal("api/blackbull/checkout", {
     method: "POST",

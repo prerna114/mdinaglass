@@ -132,3 +132,33 @@ export const forgotPassword = async (email) => {
   });
   return data;
 };
+
+export const UpdateProfile = async (loginUserDetails, address) => {
+  const raw = {
+    email: loginUserDetails?.email,
+    first_name: loginUserDetails?.first_name
+      ? loginUserDetails?.first_name
+      : loginUserDetails?.name.split(" ")[0],
+    last_name: loginUserDetails?.last_name
+      ? loginUserDetails?.last_name
+      : loginUserDetails?.name.split(" ")[1],
+    password: loginUserDetails?.password || "",
+    password_confirmation: loginUserDetails?.password_confirmation || "123",
+    billing_address: {
+      address: address?.street,
+      city: address?.city,
+      state: address?.state,
+      postcode: address?.postcode,
+      country: address?.country,
+      is_default: 1,
+    },
+  };
+
+  console.log("Raw Data", raw);
+
+  // const data = await fetchGlobal("api/blackbull/customer/profile", {
+  //   method: "PUT",
+  //   body: raw,
+  // });
+  // return data;
+};
