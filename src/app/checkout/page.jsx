@@ -222,7 +222,7 @@ const checkout = () => {
                         onChange={(e) => {
                           handleText("city", e.target.value);
                         }}
-                        value={filed?.addressTwo ?? ""}
+                        value={filed?.city ?? ""}
                       ></input>
 
                       <div className="required-text">{error.city}</div>
@@ -244,7 +244,7 @@ const checkout = () => {
 
                     <div className="col-md-12">
                       <input
-                        type="text"
+                        type="number"
                         placeholder="ZIP CODE*"
                         ref={fieldRef?.zipCode}
                         onChange={(e) => {

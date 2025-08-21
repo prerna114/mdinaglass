@@ -24,6 +24,7 @@ const Register = () => {
   });
   const [error, setError] = useState({});
   const router = useRouter();
+  const [checkbox, setCheckbox] = useState(false);
 
   const handleChanges = (key, value) => {
     setUserDetails((prev) => ({
@@ -86,6 +87,8 @@ const Register = () => {
         block: "center",
       });
       return false;
+    } else if (!checkbox) {
+      CustomToast("Read and accept Terms and Conditions", "top-right");
     } else {
       registerTheUser();
       // localStorage.setItem("billingaddress", JSON.stringify(filed));
@@ -268,7 +271,7 @@ const Register = () => {
 
                 <div className="col-md-12">
                   <input
-                    type="text"
+                    type="number"
                     placeholder="ZIP CODE*"
                     onChange={(e) => {
                       console.log("E", e.target.value);
@@ -375,10 +378,16 @@ const Register = () => {
             type="checkbox"
             name="checkoutType"
             className="custom-checkbox"
+            onChange={(e) => {
+              setCheckbox(!checkbox);
+            }}
           />{" "}
           <label className="label_checkbox">
-            I accept the <Link href={"#"}>Terms and Conditions</Link> of
-            mdinaglass.com.mt
+            I accept the
+            <a href={"information/terms-conditions"} target="_blank">
+              Terms and Conditions
+            </a>
+            of mdinaglass.com.mt
           </label>
         </div>
         <div className="col-md-12">

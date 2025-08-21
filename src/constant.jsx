@@ -375,3 +375,4 @@ export const getCategoryPath = (product) => {
   // setCategoryIds(path.join("/"));
   return `${path.join("/")}`;
 };
+export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

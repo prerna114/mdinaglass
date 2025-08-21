@@ -6,7 +6,7 @@ import Image from "next/image";
 function SimpleSlider({ images }) {
   const settings = {
     dots: true,
-    infinite: images.length > 1,
+    infinite: images?.length > 1,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,

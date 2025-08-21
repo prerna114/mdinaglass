@@ -120,3 +120,15 @@ export const registerCustomer = async (userDetails) => {
   });
   return data;
 };
+
+export const forgotPassword = async (email) => {
+  const raw = {
+    email: email,
+  };
+
+  const data = await fetchGlobal("api/blackbull/customer/forgot-password", {
+    method: "POST",
+    body: raw,
+  });
+  return data;
+};

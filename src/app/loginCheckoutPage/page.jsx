@@ -138,7 +138,9 @@ const loginCheckoutPage = () => {
 
                     <div className="row">
                       <div className="col-md-6">
-                        <a href="#">Forgot your password?</a>
+                        <InstantLink href="forgotPassword">
+                          Forgot your password?
+                        </InstantLink>
                       </div>
                       <div className="col-md-6">
                         <div className="float-right">
