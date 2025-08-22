@@ -26,6 +26,8 @@ export const fetchGlobal = async (
       method,
       headers: {
         "Content-Type": "application/json",
+        // Accept: "application/json",
+
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
         ...headers,
         redirect: "follow",
@@ -46,6 +48,7 @@ export const fetchGlobal = async (
         success: false,
         status: res.status,
         error: data?.message || data || "Request failed",
+        errorData: data,
       };
     }
 

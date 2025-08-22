@@ -1,38 +1,68 @@
 "use client";
 import { UpdateProfile } from "@/api/Customer";
+import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import { CountryList } from "@/constant";
+import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
 function editUser() {
-  const [userDetails, setUserDetails] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    addressOne: "",
-    addressTwo: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    country: "",
-    telePhone: "",
-    password: "",
-    confirmPassword: "",
-  });
-
   const [error, setError] = useState({});
   const [loginUserDetails, setLoginUserDetails] = useState();
   const [address, setAddress] = useState({});
+  const [nameField, setNameField] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+  });
+  const { logout } = useAuthStore.getState(); //
 
-  const handleChanges = (key, value) => {
-    setUserDetails((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const validation = () => {
+    setLoading(true);
+    const newError = {};
+
+    console.log("Validation", nameField?.first_name);
+    if (!nameField?.first_name?.trim()) {
+      newError.firstName = "First Name is required";
+    } else if (!nameField?.last_name?.trim()) {
+      newError.lastName = "Last Name is required";
+    } else if (!nameField?.email?.trim()) {
+      newError.email = "Email is required";
+    } else if (
+      nameField?.password &&
+      nameField?.password_confirmation &&
+      nameField?.password != nameField?.password_confirmation
+    ) {
+      newError.password = "Password and confirm password should be same";
+    } else if (!address?.street?.trim()) {
+      newError.street = "Address is required";
+    } else if (!address?.city?.trim()) {
+      newError.city = "City is required";
+    } else if (!address?.state?.trim()) {
+      newError.state = "State is required";
+    } else if (!address?.postcode?.trim()) {
+      newError.postcode = "Postcode is required";
+    } else if (!address?.country?.trim()) {
+      newError.country = "Country is required";
+    }
+    setError(newError);
+    if (Object.keys(newError)?.length > 0) {
+      setLoading(false);
+
+      CustomToast("Please fill all required fiels", "top-right");
+    } else {
+      updateUserProfile();
+    }
   };
 
   const handleValue = (key, value) => {
-    setLoginUserDetails((prev) => ({
+    setNameField((prev) => ({
       ...prev,
       [key]: value,
     }));
@@ -61,8 +91,25 @@ function editUser() {
   };
 
   const updateUserProfile = async () => {
-    const data = await UpdateProfile(loginUserDetails, address);
+    const data = await UpdateProfile(nameField, address);
     console.log("data", data);
+    if (data?.status == 200) {
+      SuccessToast(`${data?.data?.message}`, "top-right");
+      setLoading(false);
+      logout();
+      router.push("/loginCheckoutPage");
+
+      SuccessToast(`Please login again`, "top-right");
+    } else if (data?.status == 422) {
+      setLoading(false);
+
+      CustomToast(`${data?.errorData?.errors?.password[0]}`, "top-right");
+    } else {
+      setLoading(false);
+
+      CustomToast("Something Went wrong", "top-right");
+    }
+    console.log("updateUserProfile", data);
   };
 
   useEffect(() => {
@@ -70,9 +117,16 @@ function editUser() {
     const parseData = JSON.parse(data);
     setLoginUserDetails(parseData);
     setAddress(parseData?.address);
+    setNameField((prev) => ({
+      ...prev,
+      first_name: parseData?.name.split(" ")[0],
+      last_name: parseData?.name.split(" ")[1],
+      email: parseData?.email,
+    }));
+    // setNameField(nameField?.first_name)
   }, []);
 
-  console.log("Login", loginUserDetails);
+  console.log("Login", nameField);
 
   return (
     <div className="container">
@@ -94,12 +148,9 @@ function editUser() {
                   onChange={(e) => {
                     handleValue("first_name", e.target.value);
                   }}
-                  value={
-                    loginUserDetails?.first_name
-                      ? loginUserDetails?.first_name
-                      : loginUserDetails?.name.split(" ")[0]
-                  }
+                  value={nameField?.first_name}
                 ></input>
+                <div className="required-text">{error.firstName}</div>
               </div>
 
               <div className="col-md-12">
@@ -109,29 +160,28 @@ function editUser() {
                   onChange={(e) => {
                     handleValue("last_name", e.target.value);
                   }}
-                  value={
-                    loginUserDetails?.last_name
-                      ? loginUserDetails?.last_name
-                      : loginUserDetails?.name.split(" ")[1]
-                  }
+                  value={nameField?.last_name}
                 ></input>
+                <div className="required-text">{error.lastName}</div>
               </div>
 
               <div className="col-md-12">
                 <input
                   type="text"
                   placeholder="EMAIL*"
-                  value={loginUserDetails?.email}
+                  value={nameField?.email}
                   onChange={(e) => {
                     handleValue("email", e.target.value);
                   }}
                 ></input>
+                <div className="required-text">{error.email}</div>
               </div>
 
               <div className="col-md-12">
                 <input
                   type="password"
-                  placeholder="PASSWORD*"
+                  placeholder="PASSWORD"
+                  autoComplete="new-password"
                   onChange={(e) => {
                     handleValue("password", e.target.value);
                   }}
@@ -141,11 +191,13 @@ function editUser() {
               <div className="col-md-12">
                 <input
                   type="password"
-                  placeholder="CONFRIM PASSWORD*"
+                  placeholder="CONFRIM PASSWORD"
+                  autoComplete="new-password"
                   onChange={(e) => {
                     handleValue("password_confirmation", e.target.value);
                   }}
                 ></input>
+                <div className="required-text">{error.password}</div>
               </div>
             </div>
             <div
@@ -169,7 +221,7 @@ function editUser() {
                   }}
                   ref={fieldRef?.addressOne}
                 ></input>
-                <div className="required-text">{error.addressOne}</div>
+                <div className="required-text">{error.street}</div>
               </div>
 
               {/* <div className="col-md-12">
@@ -217,14 +269,14 @@ function editUser() {
                 <input
                   type="number"
                   value={address?.postcode}
-                  placeholder="ZIP CODE*"
+                  placeholder="POST CODE*"
                   onChange={(e) => {
                     console.log("E", e.target.value);
                     handleAddress("postcode", e.target.value);
                   }}
                   ref={fieldRef?.zipCode}
                 ></input>
-                <div className="required-text">{error.zipCode}</div>
+                <div className="required-text">{error.postcode}</div>
               </div>
 
               <div className="col-md-12">
@@ -267,14 +319,20 @@ function editUser() {
 
         <div className="header-of-cart mt-2">
           {/* <Link href="/"> */}
+
           <button
             onClick={() => {
-              updateUserProfile();
+              validation();
             }}
             className="btn btn-info text-white"
           >
-            Submit
+            {loading ? (
+              <div className="spinner-border text-light" role="status"></div>
+            ) : (
+              "Submit"
+            )}
           </button>
+
           {/* </Link> */}
         </div>
       </div>

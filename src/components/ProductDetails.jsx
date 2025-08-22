@@ -7,12 +7,11 @@ import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
 import { addCartGuest, addToTheCart, getCartGuest } from "@/api/CartApi";
 import { useMenuStore } from "@/store/useCategoryStore";
-import { useRouter } from "next/navigation";
 import { createImage } from "@/constant";
 import dynamic from "next/dynamic";
 import InstantLink from "./InstantClick";
 import { addItemWIshlist } from "@/api/productApi";
-import { Eater } from "next/font/google";
+import { useAuthStore } from "@/store/useAuthStore";
 const AboveMenu = dynamic(() => import("./Products/AboveMenu"), {
   ssr: true,
   loading: () => <span className="visually-hidden">Loading...</span>,
@@ -62,6 +61,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
   const [wishLoader, setWishLoader] = useState(false);
   const { addToCart, clearCart } = useCartStore((state) => state);
   const cart = useCartStore((state) => state.cart);
+  const { isLogin } = useAuthStore((state) => state);
 
   const imageList = useMemo(
     () => [
@@ -366,30 +366,32 @@ export default function ProductDetails({ productDetails, productDetail }) {
             <h2>{productDetails?.name}</h2>
             <p className="text-muted sku-detail">
               SKU: {selectedImage || "n/a"}
-              <span
-                className="wishlist float-right"
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  console.log("addItemWishlist", productDetails?.sku);
-                  addWishList(productDetails?.sku);
-                }}
-              >
-                {wishLoader ? (
-                  <div
-                    className="spinner-border spinner-border-sm text-danger"
-                    role="status"
-                  >
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
-                ) : (
-                  <Heart
-                    size={24}
-                    color="#c6302c"
-                    fill="#c6302c"
-                    stroke="#c6302c"
-                  />
-                )}
-              </span>
+              {isLogin && (
+                <span
+                  className="wishlist float-right"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    console.log("addItemWishlist", productDetails?.sku);
+                    addWishList(productDetails?.sku);
+                  }}
+                >
+                  {wishLoader ? (
+                    <div
+                      className="spinner-border spinner-border-sm text-danger"
+                      role="status"
+                    >
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  ) : (
+                    <Heart
+                      size={24}
+                      color="#c6302c"
+                      fill="#c6302c"
+                      stroke="#c6302c"
+                    />
+                  )}
+                </span>
+              )}
             </p>
             <p className="sku-detail mb-0">Description </p>
             <p

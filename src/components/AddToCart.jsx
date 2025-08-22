@@ -20,6 +20,7 @@ const AddToCart = () => {
   const [shippingRate, setShippingRate] = useState();
   const [countryCode, setCountryCode] = useState("");
   const setNavigating = useNavigationStore((s) => s.setNavigating);
+  const [userDetails, setUserDetails] = useState();
   // const setNavigating = useNavigationStore((s) => s.setNavigating);
   const {
     setShippingStore,
@@ -145,7 +146,17 @@ const AddToCart = () => {
     // setInsurance(15.0);
     getTotalWeight();
     insrunaceRate();
-  }, []);
+    const data = localStorage.getItem("token");
+    const parseData = JSON.parse(data);
+    if (parseData) {
+      setUserDetails(parseData);
+      if (parseData?.address?.country) {
+        setCountryCode(parseData?.address?.country);
+        console.log("parseData?.address?.country", parseData?.address?.country);
+        shiipingRate(parseData?.address?.country);
+      }
+    }
+  }, [cartWieght]);
 
   useEffect(() => {
     // setInsuranceCost(insurance);
@@ -155,6 +166,8 @@ const AddToCart = () => {
 
   console.log("Cart Items", cart);
   console.log("shippingStore", insurance);
+  console.log("userDetails", userDetails);
+  console.log("totalPrice", totalPrice);
 
   return (
     <div className="container my-4">
@@ -198,7 +211,7 @@ const AddToCart = () => {
 
                   setCountryCode(e.target.value);
                 }}
-                value={countryCode ?? ""} // 👈 Set selected value
+                value={countryCode ?? ""}
               >
                 <option>Select Country</option>
                 {CountryList.map((country, index) => (
@@ -276,11 +289,13 @@ const AddToCart = () => {
                       €
                       {isNaN(totalPrice)
                         ? Number(getGrandTotal(cart)).toFixed(2)
-                        : totalPrice +
-                          insurance +
-                          (shippingStore?.Value?.length > 0
-                            ? Number(shippingStore.Value[0].Price)
-                            : 0)}
+                        : Number(
+                            totalPrice +
+                              insurance +
+                              (shippingStore?.Value?.length > 0
+                                ? Number(shippingStore.Value[0].Price)
+                                : 0)
+                          ).toFixed(2)}
                       {/* €{totalPrice + insurance} */}
                     </td>
                   </tr>
@@ -296,11 +311,13 @@ const AddToCart = () => {
                       €
                       {isNaN(totalPrice)
                         ? Number(getGrandTotal(cart)).toFixed(2)
-                        : totalPrice +
-                          insurance +
-                          (shippingStore?.Value?.length > 0
-                            ? Number(shippingStore.Value[0].Price)
-                            : 0)}
+                        : Number(
+                            totalPrice +
+                              insurance +
+                              (shippingStore?.Value?.length > 0
+                                ? Number(shippingStore.Value[0].Price)
+                                : 0)
+                          ).toFixed(2)}
                     </td>
                   </tr>
                 </tbody>

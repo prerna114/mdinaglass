@@ -29,6 +29,7 @@ type ProdutList = {
     page: number;
     sort_by: string;
     sort_dir: string;
+    size: string;
   };
   setHeading: (state: string) => void;
   setDescription: (state: string) => void;
@@ -48,6 +49,7 @@ type ProdutList = {
     page: number;
     sort_by: string;
     sort_dir: string;
+    size: string;
   }) => void;
 };
 
@@ -66,6 +68,7 @@ export const ProductLists = create<ProdutList>()(
         page: 1,
         sort_by: "price",
         sort_dir: "asc",
+        size: "",
       },
       description: "",
       setDescription: (item) => {
@@ -105,6 +108,7 @@ export const ProductLists = create<ProdutList>()(
             page: item.page ?? current.page,
             sort_by: item.sort_by ?? current.sort_by,
             sort_dir: item.sort_dir ?? current.sort_dir,
+            size: item.size ?? current.size,
           },
         });
       },

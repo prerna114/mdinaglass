@@ -28,7 +28,6 @@ const Shipping = () => {
     zipCode: "",
     country: "",
     telePhone: "",
-    fax: "",
   });
   const [error, setError] = useState({});
 
@@ -50,7 +49,6 @@ const Shipping = () => {
     zipCode: useRef(null),
     country: useRef(null),
     telePhone: useRef(null),
-    fax: useRef(null),
   };
   const validation = () => {
     const newError = {};
@@ -76,9 +74,6 @@ const Shipping = () => {
       newError.country = "Country is required*";
     } else if (!filed?.telePhone?.trim()) {
       newError.telePhone = "TelePhone is required*";
-    } else if (!filed?.fax?.trim()) {
-      newError.fax = "Fax is required*";
-      console.log("FLax is not avialel");
     }
     setError(newError);
     console.log("Object.keys(newError)[0]", Object.keys(newError)[0], newError);
@@ -718,21 +713,6 @@ const Shipping = () => {
                       <div className="required-text">{error.telePhone}</div>
                     </div>
 
-                    <div className="col-md-12">
-                      <input
-                        type="text"
-                        ref={fieldRef?.fax}
-                        onChange={(e) => {
-                          handleText("fax", e.target.value);
-                        }}
-                        placeholder="FAX*"
-                        value={
-                          filed && filed.fax !== undefined ? filed.fax : ""
-                        }
-                      ></input>
-
-                      <div className="required-text">{error.fax}</div>
-                    </div>
                     <div className="col-md-12">
                       <a>Fields Marked with (*) are Required.</a>
                     </div>

@@ -182,7 +182,7 @@ const page = () => {
               className="d-flex pb-3 mt-3"
               style={{ justifyContent: "space-between" }}
             >
-              <Link href={"#"}>
+              <Link href={"/shipping?checkbox=false"}>
                 <button className="btn btn-shop btn-primary back-button">
                   Back
                 </button>

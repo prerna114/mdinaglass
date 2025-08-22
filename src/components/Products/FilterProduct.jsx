@@ -23,11 +23,13 @@ const FilterProduct = ({ down }) => {
   const router = useRouter();
   const params = useParams();
   const allParams = useMemo(() => params?.params || [], [params]);
+  const sku = useMemo(() => allParams[allParams.length - 1], [allParams]);
 
   const priceIndex = allParams.findIndex((p) => p === "price");
   const limit = parseInt(allParams[priceIndex + 3]);
   console.log("Limti1234", limit, allParams?.includes("all"));
 
+  console.log("THE SKU", sku);
   const handleClick = (sortName, newSortOrder, newLimit, newPage) => {
     const allParams = params?.params || [];
     const sortByName = paginationOption.sort_by;
@@ -38,7 +40,10 @@ const FilterProduct = ({ down }) => {
     if (priceIndex === -1 || allParams.length < priceIndex + 5) return;
 
     // Extract from URL
-    const categoryIds = allParams.slice(0, priceIndex).map(Number);
+    const categoryIds =
+      sku == "all-product.htm"
+        ? "all"
+        : allParams.slice(0, priceIndex).map(Number);
     const slug = allParams[priceIndex + 4] || "all-product.htm";
 
     // Apply new values or fallback to existing
@@ -46,7 +51,14 @@ const FilterProduct = ({ down }) => {
     const limit = newLimit || parseInt(allParams[priceIndex + 2]);
     const page = newPage || parseInt(allParams[priceIndex + 3]);
     const sortBy = sortName || allParams[priceIndex];
-    console.log("All params", allParams, sortOrder, sortBy, newLimit);
+
+    console.log(
+      "All params INside filter",
+      allParams,
+      sortOrder,
+      sortBy,
+      newLimit
+    );
 
     const newUrl = createUrl(categoryIds, slug, sortOrder, limit, page, sortBy);
     router.push(newUrl, { scroll: false });
@@ -60,7 +72,11 @@ const FilterProduct = ({ down }) => {
       });
     } else if (sortName) {
       setPagination({
-        sort_by: sortName,
+        sort_by: sku == "all-product.htm" ? sortBy : sortName,
+      });
+    } else if (sortName) {
+      setPagination({
+        sort_by: sku == "all-product.htm" ? sortBy : sortName,
       });
     }
 
@@ -86,16 +102,6 @@ const FilterProduct = ({ down }) => {
     allProductwithFilter?.pagination?.current_page *
       allProductwithFilter?.pagination?.per_page
   );
-  // console.log(
-  //   "paginationOption",
-  //   paginationOption,
-  //   paginationList.slice(
-  //     paginationOption.page == 1
-  //       ? paginationOption.page - 1
-  //       : paginationOption.page - 2,
-  //     paginationOption.page + 3
-  //   )
-  // );
 
   console.log(
     "paginationOption",
@@ -134,6 +140,35 @@ const FilterProduct = ({ down }) => {
               </div>
               <div className="col-md-4">
                 <div className="d-flex  sorting-item align-items-center justify-content-end">
+                  <span>Size</span>
+                  <label htmlFor="currency-select" className="visually-hidden">
+                    Size
+                  </label>
+                  <select
+                    id="currency-select"
+                    className="form-select w-auto me-3"
+                    onChange={(e) => {
+                      setPagination({
+                        size: e.target.value,
+                      });
+                      // handleClick("", "", e.target.value, "");
+                      // setPagination({
+                      //   per_page: e.target.value,
+                      // });
+                      console.log("lmit", e.target.value);
+                    }}
+                    defaultValue={paginationOption?.per_page}
+                  >
+                    <option value={0}>Select</option>
+                    <option value={6}>Small</option>
+                    <option value={7}>Medium</option>
+                    <option value={8}>Large</option>
+                    <option value={9}>Mini</option>
+                  </select>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="d-flex  sorting-item align-items-center justify-content-end">
                   <span>Items</span>
                   <label htmlFor="currency-select" className="visually-hidden">
                     Select Items
@@ -153,22 +188,6 @@ const FilterProduct = ({ down }) => {
                     <option value={15}>15 Items</option>
                     <option value={30}>30 Items</option>
                     <option value={60}>60 Items</option>
-                  </select>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="d-flex sorting-style align-items-center">
-                  <span>Colors</span>
-                  <select
-                    className="form-select w-auto"
-                    onChange={(e) => {
-                      // sortProductsByPriceLowToHigh(products);
-                      // handleClick(e.target.value, "", "", "");
-                    }}
-                    defaultValue={paginationOption?.sort_by}
-                  >
-                    <option>All Colors</option>
-                    <option value={"name"}>Red</option>
                   </select>
                 </div>
               </div>

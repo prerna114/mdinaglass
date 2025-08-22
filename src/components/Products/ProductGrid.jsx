@@ -74,14 +74,14 @@ const ProductGrid = ({ products, categoryidList }) => {
                     }}
                     onClick={() => {
                       // setHeading(product?.range);
-                      setDescription(product?.description);
+                      // setDescription(product?.description);
                     }}
                   >
                     <img
                       src={
                         imgSrcs[index]?.fallback
-                          ? "/assets/nothere.png"
-                          : imgSrcs[index]?.url || "/assets/nothere.png"
+                          ? "/assets/dummyimage.jpg"
+                          : imgSrcs[index]?.url || "/assets/dummyimage.jpg"
                       }
                       onError={() => handleImgError(index)}
                       className="card-img-top"
@@ -99,7 +99,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                       }}
                       onClick={() => {
                         // setHeading(product?.range);
-                        setDescription(product?.description);
+                        // setDescription(product?.description);
                       }}
                     >
                       <div
@@ -131,8 +131,8 @@ const ProductGrid = ({ products, categoryidList }) => {
                     }}
                     scroll={false}
                     onClick={() => {
-                      setHeading(product?.range);
-                      setDescription(product?.description);
+                      // setHeading(product?.range);
+                      // setDescription(product?.description);
                     }}
                   >
                     <h6 className="card-title mb-3">

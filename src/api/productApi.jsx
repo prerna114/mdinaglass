@@ -2,15 +2,20 @@ import { API_BASE_URL } from "@/constant"; // Ensure this contains the base URL
 import { appAxios } from "./intercepter";
 import { fetchGlobal } from "./fetchAPI";
 
-export const getAllProduct = async (category, filterData, currentPage) => {
-  const data = await fetchGlobal("api/products", {
-    method: "GET",
-    params: {
-      ...(filterData?.limit && { limit: filterData.limit }),
-      ...(currentPage != undefined && { page: currentPage }),
-      ...(category != undefined && { category_id: category }),
-    },
-  });
+export const getAllProduct = async (pagination) => {
+  console.log("getAllProduct", pagination);
+  const raw = {
+    per_page: pagination?.per_page || 15,
+    page: pagination?.page || 1,
+    sort_by: pagination?.sort_by || "price",
+    sort_dir: pagination?.sort_dir || "asc",
+  };
+  const data = await fetchGlobal(
+    `api/blackbull/products?per_page=${raw?.per_page}&page=${raw?.page}&sort_by=${raw?.sort_by}&sort_dir=${raw?.sort_dir}`,
+    {
+      method: "GET",
+    }
+  );
 
   return data;
 };

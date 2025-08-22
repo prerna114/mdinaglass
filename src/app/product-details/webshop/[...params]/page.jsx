@@ -87,13 +87,13 @@ const page = () => {
         <div className="header-product bg-white">
           <h1>{heading}</h1>
           {description ? (
-            <h5>
+            <p>
               {" "}
               {description
                 ?.replace(/<[^>]*>/g, "") // remove all HTML tags
                 .replace(/&nbsp;/g, " ") // replace &nbsp; with a space
                 .trim()}
-            </h5>
+            </p>
           ) : (
             <h5>
               We offer a selection of affordable contemporary costume jewellery

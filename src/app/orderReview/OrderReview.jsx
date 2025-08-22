@@ -94,9 +94,8 @@ const OrderReview = () => {
     );
     if (accessToken) {
       const response = await checkOut(
-        GrandTotal,
         insurance,
-        shiipingCost,
+        shippingMethod?.Price,
         shippingMethod?.ServiceDescription
       );
       console.log("Response", response);
@@ -130,7 +129,7 @@ const OrderReview = () => {
     const price = getGrandTotal(cart) + insurance + shippingMethod?.Price;
     const data = await guestcheckOut(
       guestToken,
-      GrandTotal,
+      shippingMethod?.Price,
       shippingMethod?.ServiceDescription,
       insurance
     );
@@ -419,7 +418,7 @@ const OrderReview = () => {
                         Grand Total
                       </td>
 
-                      <td>€{GrandTotal}</td>
+                      <td>€{Number(GrandTotal)?.toFixed(2)}</td>
                     </tr>
                   </thead>
                 </table>

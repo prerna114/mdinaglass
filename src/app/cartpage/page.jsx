@@ -39,6 +39,7 @@ const page = () => {
 
   const { isLogin } = useAuthStore((state) => state);
   const [guestToken, setGuestToken] = useState(null);
+  const [userDetails, setUserDetails] = useState("");
   const { shippingStore } = useShippingStore((state) => state);
   console.log("shippingStore", shippingStore);
   const [cartItems, setCartItems] = useState([
@@ -131,6 +132,7 @@ const page = () => {
   useEffect(() => {
     console.log("Cart page loaded");
     const data = localStorage.getItem("guestToken");
+
     if (data) {
       setGuestToken(data);
     }
@@ -143,6 +145,8 @@ const page = () => {
 
     console.log("Cart listing caal");
     if (guestToken) {
+      const parseData = JSON.parse(guestToken);
+      setUserDetails(parseData);
       const data = await getCartListing();
       if (data?.status == 200) {
         clearCart();
@@ -159,18 +163,10 @@ const page = () => {
   };
 
   const processCheck = () => {
-    // console.log("shippingStoreProcess", shippingStore);
-    // if (Object.keys(shippingStore)?.length == 0) {
-    //   CustomToast("Please Select Country", "top-right");
-    // }
-    // else {
-
-    // }
-
-    // if (guestToken) {
-    //   router.push("/checkout");
-    // }
-    if (isLogin) {
+    console.log("guestTokenguestToken", guestToken);
+    if (guestToken) {
+      router.push("/checkout");
+    } else if (isLogin) {
       // return "/checkout";
       router.push("/checkout");
     } else {

@@ -126,8 +126,8 @@ const ProductShow = ({ productDetails }) => {
                                   pathname: `/product-details/webshop/${`${categoryIds}/${product?.id}/${product?.slug}/${product.sku}`}`,
                                 }}
                                 onClick={() => {
-                                  setHeading(product?.range);
-                                  setDescription(product?.description);
+                                  // setHeading(product?.range);
+                                  // setDescription(product?.description);
                                 }}
                               >
                                 <div

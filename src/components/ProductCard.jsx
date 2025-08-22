@@ -119,25 +119,24 @@ const ProductCard = ({ title = "New Arrivals" }) => {
 
   const fetchData = async () => {
     const data = await getAllProduct();
+    console.log("getAllProduct", data?.data?.data);
     if (data.status === 200) {
-      const products = [...data.data.data, ...data.data.data];
-
       // Filter products with valid image URLs
-      const filteredProducts = await Promise.all(
-        products.map(
-          (product) =>
-            new Promise((resolve) => {
-              const img = new Image();
-              img.src = product.base_image?.medium_image_url;
+      // const filteredProducts = await Promise.all(
+      //   products.map(
+      //     (product) =>
+      //       new Promise((resolve) => {
+      //         const img = new Image();
+      //         img.src = product.base_image?.medium_image_url;
 
-              img.onload = () => resolve(product); // keep product
-              img.onerror = () => resolve(null); // remove product
-            })
-        )
-      );
+      //         img.onload = () => resolve(product); // keep product
+      //         img.onerror = () => resolve(null); // remove product
+      //       })
+      //   )
+      // );
 
       // Remove nulls (failed image loads)
-      setProductData(filteredProducts.filter(Boolean));
+      setProductData(data?.data?.data);
     } else {
       setProductData([]);
     }
@@ -283,7 +282,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
                     style={{ width: "40px", margin: "auto" }}
                   />
                   <p className="text-muted mb-3">
-                    € {Number(product.prices?.regular?.price).toFixed(2)}
+                    € {Number(product?.price).toFixed(2)}
                   </p>
                   <div className="new-arrival-design">
                     <button

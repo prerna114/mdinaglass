@@ -105,7 +105,7 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className="container">
+      {/* <div className="container">
         <div className="login-signup">
           <div className="row">
             <div className="shipping-Container">
@@ -128,7 +128,7 @@ const page = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="container">
         <div

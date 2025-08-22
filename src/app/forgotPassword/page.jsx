@@ -23,43 +23,54 @@ const page = () => {
     const data = await forgotPassword(email);
     if (data?.status == 200) {
       SuccessToast("Reset Link send successfully");
-    } else if (data?.status == 404) {
-      CustomToast("Email address not found");
+    } else if (data?.status == 404 || data?.status == 422) {
+      CustomToast(`${data?.error}`, "top-right");
+    } else {
+      CustomToast("Something went wrong", "top-right");
     }
     console.log("EMail", data);
   };
   return (
-    <div className="container">
-      <div>
-        <div className="login-signup">
-          <div className="row">
-            <div className="col-md-6">
-              <div className="login-sec">
-                <h2
-                  style={{
-                    fontSize: "30px",
-                    marginBottom: "14px",
-                  }}
-                >
-                  Forgot Password
-                </h2>
+    <div
+      style={{
+        background: "#f1f1f1",
+      }}
+    >
+      <div className="header-product bg-white">
+        <h1>Forgot Password</h1>
+      </div>
+      <div className="container">
+        <div>
+          <div className="login-signup">
+            <div className="row">
+              <div className="col-md-6">
+                <div className="login-sec">
+                  <h2
+                    style={{
+                      fontSize: "30px",
+                      marginBottom: "14px",
+                    }}
+                  >
+                    Forgot Password
+                  </h2>
 
-                <div className="col-md-12">
-                  <input
-                    type="email"
-                    placeholder="Enter your Email Address*"
-                    onChange={(e) => setEmail(e.target.value)}
-                  ></input>
-                  <div className="required-text">{error}</div>
+                  <div className="col-md-12">
+                    <input
+                      type="email"
+                      placeholder="Enter your Email Address*"
+                      onChange={(e) => setEmail(e.target.value)}
+                    ></input>
+                    <div className="required-text">{error}</div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      validation();
+                    }}
+                    className="btn btn-cart btn-info text-white"
+                  >
+                    Submit
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    validation();
-                  }}
-                  className="btn btn-cart btn-info text-white"
-                >
-                  Submit
-                </button>
               </div>
             </div>
           </div>

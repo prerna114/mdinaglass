@@ -133,17 +133,30 @@ export const forgotPassword = async (email) => {
   return data;
 };
 
+export const resetUserPassword = async (userDetails, token) => {
+  const raw = {
+    email: userDetails?.email,
+    token: token,
+    password: userDetails?.password,
+    password_confirmation: userDetails?.confirmPassword,
+  };
+  console.log("RAW Data", raw);
+  const data = await fetchGlobal("api/blackbull/customer/reset-password", {
+    method: "POST",
+    body: raw,
+  });
+  return data;
+};
+
 export const UpdateProfile = async (loginUserDetails, address) => {
   const raw = {
     email: loginUserDetails?.email,
-    first_name: loginUserDetails?.first_name
-      ? loginUserDetails?.first_name
-      : loginUserDetails?.name.split(" ")[0],
-    last_name: loginUserDetails?.last_name
-      ? loginUserDetails?.last_name
-      : loginUserDetails?.name.split(" ")[1],
+    first_name: loginUserDetails?.first_name,
+
+    last_name: loginUserDetails?.last_name,
+
     password: loginUserDetails?.password || "",
-    password_confirmation: loginUserDetails?.password_confirmation || "123",
+    password_confirmation: loginUserDetails?.password_confirmation || "",
     billing_address: {
       address: address?.street,
       city: address?.city,
@@ -156,9 +169,13 @@ export const UpdateProfile = async (loginUserDetails, address) => {
 
   console.log("Raw Data", raw);
 
-  // const data = await fetchGlobal("api/blackbull/customer/profile", {
-  //   method: "PUT",
-  //   body: raw,
-  // });
-  // return data;
+  const data = await fetchGlobal("api/blackbull/customer/profile", {
+    method: "PUT",
+    body: raw,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
+  return data;
 };

@@ -1,10 +1,32 @@
 "use client";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const GiftVoucher = () => {
   const { isLogin } = useAuthStore((state) => state);
+  const [guestToken, setGuestToken] = useState(null);
+
+  const router = useRouter();
+  const processCheck = () => {
+    console.log("guestTokenguestToken", guestToken);
+    if (guestToken) {
+      router.push("/checkout");
+    } else if (isLogin) {
+      // return "/checkout";
+      router.push("/checkout");
+    } else {
+      router.push("/loginCheckoutPage");
+    }
+  };
+
+  useEffect(() => {
+    const data = localStorage.getItem("guestToken");
+    if (data) {
+      setGuestToken(data);
+    }
+  }, []);
 
   return (
     <div className="container">
@@ -39,11 +61,14 @@ const GiftVoucher = () => {
 
             <div className="col-md-4">
               <div className="text-right button-margin float-right mb-3">
-                <Link href={isLogin ? "/checkout" : "/loginCheckoutPage"}>
-                  <button className="btn btn-info text-white">
-                    Proceed To Checkout
-                  </button>
-                </Link>
+                <button
+                  className="btn btn-info text-white"
+                  onClick={() => {
+                    processCheck();
+                  }}
+                >
+                  Proceed To Checkout
+                </button>
               </div>
             </div>
           </div>

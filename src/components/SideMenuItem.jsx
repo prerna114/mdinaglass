@@ -36,10 +36,6 @@ const SideMenuItem = ({
   const limit = priceIndex !== -1 ? allParams[priceIndex + 2] : 15;
   const page = priceIndex !== -1 ? 1 : 1;
 
-  const [selectedFilter, setSelectedFilter] = useState({
-    variations: 0,
-    color: 0,
-  });
   const { subCategoryMap, setSubCategory } = useMenuStore();
 
   const { setHeading, setFilterOption, setPagination, setDescription } =
@@ -87,10 +83,7 @@ const SideMenuItem = ({
       const data = localStorage.getItem("filterdData");
       if (data) {
         const parsedData = JSON.parse(data);
-        setSelectedFilter({
-          color: parsedData?.color || 0,
-          variations: parsedData?.variations || 0,
-        });
+
         setFilterOption(parsedData);
       }
     }

@@ -155,13 +155,17 @@ const ProductListing = ({ SearchData }) => {
 
   // console.log("Filter Option", filterOption);
   const fetchData = async () => {
-    const data = await getAllProduct();
+    setLoading(true);
+
+    const pagination = ProductLists.getState().paginationOption;
+    const data = await getAllProduct(pagination);
     console.log("Product car", data?.data?.data);
     if (data.status == 200) {
       setProducts(data?.data?.data);
       setLoading(false);
+      setAllProductwithFilter(data?.data);
     } else {
-      // setProductData([]);
+      setProducts([]);
     }
     setLoading(false);
 

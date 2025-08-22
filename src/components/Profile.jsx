@@ -8,6 +8,7 @@ import Link from "next/link";
 import { getOrderList } from "@/api/CartApi";
 import moment from "moment";
 import MyGiftRegistry from "./MyGiftRegistry";
+import InstantLink from "./InstantClick";
 
 export default function Make() {
   const [tab, setTab] = useState("profile");
@@ -63,7 +64,7 @@ export default function Make() {
             >
               Track Order
             </li>
-            <li
+            {/* <li
               className={`list-group-item ${
                 tab === "password" ? "active" : ""
               }`}
@@ -71,7 +72,7 @@ export default function Make() {
               style={{ cursor: "pointer" }}
             >
               Change Password
-            </li>
+            </li> */}
             <li
               className={`list-group-item ${
                 tab === "registry" ? "active" : ""
@@ -94,9 +95,9 @@ export default function Make() {
                     <div className="col-auto">
                       <h4 className="mb-0">👤 User Profile</h4>
                     </div>
-                    <Link href={"/editUser"} className="col-auto">
+                    <InstantLink href={"/editUser"} className="col-auto">
                       <SquarePen size={27} />
-                    </Link>
+                    </InstantLink>
                   </div>
 
                   <div className="ms-4">
@@ -112,7 +113,11 @@ export default function Make() {
 
                     <div>
                       <h5>Address</h5>
-                      <p>{userDetails?.street}</p>
+                      <p>
+                        {userDetails?.address?.street}{" "}
+                        {userDetails?.address?.city}{" "}
+                        {userDetails?.address?.state}{" "}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -197,7 +202,7 @@ export default function Make() {
                   </div>
                 </div>
               )}
-              {tab === "password" && (
+              {/* {tab === "password" && (
                 <div
                   className="login-sec  checkout-sec"
                   style={{
@@ -211,24 +216,19 @@ export default function Make() {
                       type="password"
                       required
                       placeholder="CURRENT PASSWORD"
-                      // ref={fieldRef?.password}
                       onChange={(e) => {
                         setPassword("currentPasswod", e.target.value);
-                        // handleChanges("password", e.target.value);
                       }}
                     ></input>
                     <input
                       type="password"
                       required
                       placeholder="NEW PASSWORD*"
-                      // ref={fieldRef?.password}
                       onChange={(e) => {
                         setPassword("newPasswod", e.target.value);
 
-                        // handleChanges("password", e.target.value);
                       }}
                     ></input>
-                    {/* <div className="required-text">{error.password}</div> */}
                   </div>
 
                   <div className="col-md-12">
@@ -236,20 +236,17 @@ export default function Make() {
                       type="password"
                       required
                       placeholder="CONFIRM NEW PASSWORD*"
-                      // ref={fieldRef?.confirmPassword}
                       onChange={(e) => {
                         setPassword("confirmNewPasswod", e.target.value);
 
-                        // handleChanges("confirmPassword", e.target.value);
                       }}
                     ></input>
-                    {/* <div className="required-text">{error.confirmPassword}</div> */}
                   </div>
                   <button className="btn btn-cart btn-info text-white">
                     Submit
                   </button>
                 </div>
-              )}
+              )} */}
               {tab === "registry" && (
                 <div
                   className=" checkout-sec"

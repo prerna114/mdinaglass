@@ -3457,3 +3457,31 @@ form-check-input:checked[type="checkbox"] {
   font-size: 15px;
   cursor: pointer;
 }
+.gift-registry-body h1 {
+  display: inline-block;
+  font-family: Domine, sans-serif !important;
+  color: rgb(102, 102, 102);
+  font-size: 17px;
+}
+
+.gift-registry-body span {
+  display: inline-block;
+  font-family: Domine, sans-serif !important;
+  color: rgb(118, 210, 211);
+  /* margin-left: 10px; */
+  font-size: 17px;
+}
+
+.gift-registry-body a {
+  display: inline-block;
+  font-family: Domine, sans-serif !important;
+  color: rgb(118, 210, 211);
+  /* margin-left: 10px; */
+  font-size: 17px;
+}
+
+.gift-registry-body a:hover {
+  color: #005e84 !important;
+  cursor: pointer;
+  /* margin-left: 10px; */
+}
