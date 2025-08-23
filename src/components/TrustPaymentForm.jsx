@@ -57,7 +57,7 @@ export default function TrustPaymentForm() {
 
   return (
     <form
-      id="st-form"
+      id="st-form" class="trust-payment-form"
       // method="POST"
       // action="https://your-backend.com/handle-payment"
     >
@@ -65,7 +65,7 @@ export default function TrustPaymentForm() {
       <div id="st-expiration-date"></div>
       <div id="st-security-code"></div>
       <div id="st-notification-frame"></div>
-      <button type="submit">Pay securely</button>
+      <button type="submit" class="trust-payment-gateway">Pay securely</button>
     </form>
   );
 }
