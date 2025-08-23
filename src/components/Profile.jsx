@@ -260,12 +260,10 @@ export default function Make() {
                     paddingTop: 0,
                   }}
                 >
-                  <h4>Welcome to Your Gift Registry, {userDetails?.name}!</h4>
+                  <h4 className="gift-registry-h4">Welcome to Your Gift Registry, {userDetails?.name}!</h4>
                   <MyGiftRegistry />
 
-                  <button className="btn btn-cart btn-info text-white">
-                    Submit
-                  </button>
+                 
                 </div>
               )}
             </div>

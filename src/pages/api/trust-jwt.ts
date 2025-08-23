@@ -21,7 +21,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         sitereference: "xkholdings83683",
         accounttypedescription: "ECOM",
         requesttypedescriptions: ["THREEDQUERY", "AUTH"],
-        baseamount: "100",
+        baseamount: "1",
       },
     };
 

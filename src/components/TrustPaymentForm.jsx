@@ -51,7 +51,7 @@ export default function TrustPaymentForm() {
     // 🔹 Success
     st.on("paymentCompleted", (data) => {
       console.log("✅ Payment completed:", data);
-      alert("Payment Success!");
+      // alert("Payment Success!");
       // You can also redirect:
       window.location.href = "/payment-success";
     });
@@ -59,9 +59,9 @@ export default function TrustPaymentForm() {
     // 🔹 Failure
     st.on("paymentFailed", (error) => {
       console.error("❌ Payment failed:", error);
-      alert("Payment Failed: " + error.errorcode);
+      alert("Payment Failed: " + error);
       // Redirect or show UI
-      window.location.href = "/payment-failure";
+      // window.location.href = "/payment-failure";
     });
 
     // 🔹 Cancelled
@@ -71,18 +71,19 @@ export default function TrustPaymentForm() {
   }, [sdkReady, token]);
 
   return (
-    <div className="payment-gateway-custom">
-      <form
-        id="st-form"
-        // method="POST"
-        // action="https://your-backend.com/handle-payment"
-      >
-        <div id="st-card-number"></div>
-        <div id="st-expiration-date"></div>
-        <div id="st-security-code"></div>
-        <div id="st-notification-frame"></div>
-        <button type="submit">Pay securely</button>
-      </form>
-    </div>
+    <form
+      id="st-form"
+      className="trust-payment-form"
+      // method="POST"
+      // action="https://your-backend.com/handle-payment"
+    >
+      <div id="st-card-number"></div>
+      <div id="st-expiration-date"></div>
+      <div id="st-security-code"></div>
+      <div id="st-notification-frame"></div>
+      <button type="submit" className="trust-payment-gateway">
+        Pay securely
+      </button>
+    </form>
   );
 }

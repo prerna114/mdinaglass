@@ -102,6 +102,11 @@ input[type="checkbox"] {
     padding: 0px 70px !important;
   }
 }
+
+.text-primary {
+  --bs-text-opacity: 1;
+  color: rgb(0 94 132) !important;
+}
 @media (min-width: 992px) {
   .navbar-expand-lg {
     flex-wrap: nowrap;
@@ -793,6 +798,32 @@ p.impnotice {
 .product-card h6 {
   min-height: 55px;
 }
+/*credit card form design*/
+
+form#st-form {
+  max-width: 100%;
+  background: #fff;
+  margin: 30px 14% 0px;
+  padding: 40px;
+  border-radius: 8px;
+}
+iframe[id^="st-"] {
+  width: 100%;
+}
+
+form#st-card-number label {
+  font-size: 16px;
+  color: #1b5f88;
+}
+
+button.trust-payment-gateway {
+  background: #185c87;
+  color: #fff;
+  padding: 6px 20px;
+  font-size: 20px;
+  border: 0;
+  border-radius: 2px;
+}
 
 li.jewels ul li a {
   color: #495057 !important;
@@ -1016,6 +1047,177 @@ p {
 span svg {
   font-size: 28px;
 }
+
+h4.gift-registry-h4 {
+  color: #4d4d4d;
+  font-family: "Domine", serif;
+  font-size: 25px;
+  margin-bottom: 15px;
+}
+
+.gift-registry-body h2 {
+  color: #005e84;
+  font-family: "Domine", serif;
+  font-size: 21px;
+  margin-bottom: 15px;
+}
+
+button.btn.btn-info.btn-giftt {
+  color: #fff;
+  background: #76d2d3;
+  border: 0;
+  border-radius: 1px;
+  padding: 15px 15px;
+  font-size: 16px;
+}
+.gift-registry-body textarea {
+  width: 100%;
+  resize: none;
+  height: 120px;
+  border: 1px solid #c7c7c7;
+  border-radius: 3px;
+  padding: 15px;
+}
+button.btn.btn-info.btn-giftt img {
+  width: 20px !important;
+  height: 20px !important;
+}
+button.btn.btn-info.btn-gift-custom.btn-giftt {
+  padding: 8px 10px;
+}
+label.priority-name {
+  color: #005e84;
+  margin: 10px 0px;
+  font-size: 18px;
+  font-family: "Raleway", sans-serif;
+}
+
+select.gift-input {
+  color: #005e84;
+  font-weight: 500;
+  width: 95%;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 3px;
+  border: 1px solid #c7c7c7;
+}
+.upper-cart-details ul li {
+  display: inline;
+  color: #76d2d3;
+  font-family: "Domine", sans-serif;
+  font-size: 19px;
+}
+.upper-cart-details ul {
+  padding-left: 0;
+}
+.upper-cart-details ul li span {
+  color: #666666;
+  margin-left: 5px;
+  font-family: "Raleway", sans-serif;
+}
+
+@media (width >= 1800px) {
+  .checkout-sec textarea {
+    width: 65% !important;
+  }
+}
+.custom-file-upload {
+  border: 1px solid #ccc;
+  align-items: center;
+  width: 65%;
+  height: 60px;
+  margin-top: 10px;
+
+  padding: 0;
+  display: flex;
+}
+
+.btn-upload {
+  color: #fff;
+  background-color: #72d1d3;
+  border-radius: 0;
+  height: 60px;
+  width: 190px;
+  padding: 15px 0;
+
+  font-family: "Domine", serif;
+  font-weight: bold;
+}
+.btn-upload:hover {
+  background-color: #5bc5c7;
+}
+
+.file-name {
+  margin-left: 15px;
+  color: #006699;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}
+
+input[type="file"] {
+  display: none;
+}
+.login-sec input[type="radio"] {
+  border-radius: 100%;
+  width: 16px !important;
+  margin-bottom: 0px !important;
+  height: 15px !important;
+}
+.checkbook-input p {
+  color: #005e84 !important;
+}
+
+p.ship-p input[type="checkbox"] {
+  width: 18px !important;
+  margin-right: 10px;
+  margin-top: 10px;
+  height: 20px !important;
+}
+.gift-img-custom img {
+  margin-bottom: 15px;
+}
+.upper-cart-details h3 {
+  color: #005e84 !important;
+  font-family: "Domine", serif;
+  font-size: 21px !important;
+  margin-bottom: 15px;
+}
+button.removebtn {
+  color: #fff;
+  font-size: 13px;
+  background-color: #005e84;
+  padding: 17px 10px;
+  width: 123px;
+  text-align: center;
+  display: inline-block;
+  border: 0px;
+  margin-bottom: 20px;
+  float: right;
+}
+
+.d-flex.displayflex-end {
+  display: flex;
+  align-items: flex-end;
+}
+.gift-tell label {
+  color: #005e84;
+  font-size: 16px;
+  font-family: "Raleway", sans-serif;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+a.back-link-a {
+  color: #76d2d3;
+  margin-top: 13px;
+  font-family: Domine, serif;
+  font-size: 19px !important;
+  display: inline-block;
+  font-weight: 300;
+}
+
 .discount-section button {
   color: #fff;
   background: #195e88;
@@ -1164,6 +1366,69 @@ span.wishlist {
   font-size: 17px;
 }
 @media screen and (max-width: 768px) {
+  .gift-registry h2 {
+    width: 100%;
+    font-size: 15px !important;
+  }
+
+  h4.gift-registry-h4 {
+    font-size: 17px !important;
+    line-height: 1.6rem;
+  }
+
+  .gift-registry-body h2 {
+    font-size: 20px !important;
+  }
+
+  .gift-registry-body h1 {
+    font-size: 18px !important;
+  }
+  .login-sec input {
+    height: 50px;
+    font-size: 13px;
+  }
+  .gift-registry-body a {
+    width: 100%;
+    font-size: 12px !important;
+  }
+
+  .gift-registry-body textarea {
+    width: 100% !important;
+  }
+  .gift-registry-body p {
+    font-size: 13px;
+    /* margin-bottom: 8px; */
+  }
+
+  .custom-file-upload {
+    border: 1px solid #ccc;
+    align-items: center;
+    width: 100%;
+  }
+
+  .btn-upload {
+    width: 120px;
+  }
+
+  a.back-link-a {
+    font-size: 13px !important;
+  }
+
+  button.btn.btn-info.btn-giftt {
+    padding: 12px 15px;
+    font-size: 13px;
+  }
+  .upper-cart-details h3 {
+    font-size: 17px !important;
+  }
+
+  .upper-cart-details ul li {
+    font-size: 15px;
+    display: block;
+  }
+  .upper-cart-details .d-flex.justify-content-between.align-items-center {
+    display: block !important;
+  }
   .InfoContainer {
     max-width: 700px !important;
     margin: 0 auto;
@@ -1291,7 +1556,9 @@ span.wishlist {
     font-size: 14px !important;
     line-height: 1.2rem;
   }
-
+  form#st-form {
+    margin: 30px 4% 0;
+  }
   .imageText {
     font-size: 20px !important;
   }
@@ -1337,6 +1604,10 @@ span.wishlist {
   .banner span {
     font-size: 13px;
     line-height: 1.2rem !important;
+  }
+  .tabb-of-gift.d-flex {
+    display: flex;
+    flex-direction: column;
   }
 
   .hide-desk {
@@ -2053,9 +2324,9 @@ hr.display-option {
   }
 
   table.table.cart-table tr td {
-    padding-left: 25px;
-    font-size: 15px;
     padding-top: 10px;
+    padding-left: 25px;
+    font-size: 15px !important;
   }
 
   button.btn.btn-shop {
@@ -2218,6 +2489,14 @@ hr.display-option {
   margin-top: 20px;
 }
 @media screen and (min-width: 999px) and (max-width: 1201px) {
+  button.btn.btn-info.btn-gift-custom.btn-giftt {
+    padding: 8px 6px;
+    width: 125px;
+  }
+
+  button.btn.btn-info.btn-giftt {
+    font-size: 12px;
+  }
   ul.category-sidebar li a {
     font-size: 14px;
     font-weight: 500;
@@ -2225,6 +2504,14 @@ hr.display-option {
   }
 }
 @media screen and (min-width: 1201px) and (max-width: 1400px) {
+  button.btn.btn-info.btn-gift-custom.btn-giftt {
+    padding: 8px 6px;
+    width: 125px;
+  }
+
+  button.btn.btn-info.btn-giftt {
+    font-size: 12px;
+  }
   .checkout-sec input {
     color: #666;
     width: 80% !important;
@@ -2274,9 +2561,9 @@ hr.display-option {
     font-size: 16px !important;
   }
   table.table.cart-table tr td {
-    padding-left: 25px;
-    font-size: 15px;
     padding-top: 10px;
+    padding-left: 25px;
+    font-size: 15px !important;
   }
 
   button.btn.btn-shop {
@@ -2310,6 +2597,14 @@ hr.display-option {
 }
 
 @media screen and (min-width: 1201px) and (max-width: 1600px) {
+  button.btn.btn-info.btn-gift-custom.btn-giftt {
+    padding: 8px 6px;
+    width: 125px;
+  }
+
+  button.btn.btn-info.btn-giftt {
+    font-size: 12px;
+  }
   .mobile-cart {
     display: none !important;
   }
@@ -2413,6 +2708,13 @@ hr.display-option {
     height: 65px !important;
     width: 100%;
   }
+  form#st-form {
+    background: #fff;
+    border-radius: 8px;
+    max-width: 100%;
+    margin: 30px 4% 0;
+    padding: 40px;
+  }
 }
 @media (max-width: 390px) {
   /* Your styles here */
@@ -2421,6 +2723,13 @@ hr.display-option {
   }
 }
 @media screen and (min-width: 1301px) and (max-width: 1500px) {
+  form#st-form {
+    background: #fff;
+    border-radius: 8px;
+    max-width: 100%;
+    margin: 30px 4% 0;
+    padding: 40px;
+  }
   h2.product-show {
     font-size: 30px;
   }
@@ -2631,6 +2940,14 @@ li.nav-item:hover {
   }
 }
 @media screen and (min-width: 1601px) and (max-width: 1700px) {
+  button.btn.btn-info.btn-gift-custom.btn-giftt {
+    padding: 8px 6px;
+    width: 125px;
+  }
+
+  button.btn.btn-info.btn-giftt {
+    font-size: 12px;
+  }
   .nav-link {
     margin-right: 3px !important;
     font-size: 17px !important;

@@ -33,23 +33,21 @@ const MyGiftRegistry = () => {
     <div className="container">
       <div>
         <div className="col-md-12">
-          <div>
-            <div className="d-flex">
-              {tabData?.map((data, index) => (
-                <div
-                  key={index}
-                  onClick={() => setActiveTab(data?.id)}
-                  className={`gift-registry d-flex ${
-                    activeTab === data?.id ? "activeTab" : ""
-                  }`}
-                >
-                  <h2>{data?.title}</h2>
-                </div>
-              ))}
-            </div>
+          <div className="tabb-of-gift d-flex">
+            {tabData?.map((data, index) => (
+              <div
+                key={index}
+                onClick={() => setActiveTab(data?.id)}
+                className={`gift-registry d-flex ${
+                  activeTab === data?.id ? "activeTab" : ""
+                }`}
+              >
+                <h2>{data?.title}</h2>
+              </div>
+            ))}
           </div>
           {activeTab == "1" && (
-            <div>
+            <div className="gift-registry-body">
               <h2>Your Gift Registry</h2>
               <div
                 className="cart-page-main mt-3"
@@ -130,8 +128,18 @@ const MyGiftRegistry = () => {
                             </td>
 
                             {/* ADD TO CART BUTTON */}
-                            <td className="text-center">
-                              <button className="btn btn-info text-white">
+                            <td
+                              className="text-center"
+                              style={{ paddingLeft: "5px" }}
+                            >
+                              <button className="btn btn-info btn-giftt btn-gift-custom text-white">
+                                <Image
+                                  src="/assets/bag_white.webp"
+                                  alt="Cart Icon"
+                                  width={15}
+                                  height={15}
+                                  className="me-1"
+                                />{" "}
                                 Add to Cart
                               </button>
                             </td>
@@ -147,22 +155,23 @@ const MyGiftRegistry = () => {
                                 rows={7}
                               ></textarea>
 
-                              <div className="d-flex justify-content-between">
+                              <div className="d-flex displayflex-end">
                                 {/* Priority */}
-                                <div className="d-flex align-items-center mb-2">
-                                  <label className="me-2 fw-bold">
+                                <div className="d-block w-100 align-items-center mb-2">
+                                  <label className="me-2 priority-name">
                                     Priority:
                                   </label>
+                                  <br />
                                   <select
-                                    className="form-control"
-                                    style={{ maxWidth: "250px" }}
+                                    className="form-control gift-input"
+                                    style={{ maxWidth: "100%" }}
                                   >
                                     <option>Would be nice to have</option>
                                     <option>Important</option>
                                     <option>Must have</option>
                                   </select>
                                 </div>
-                                <button className="btn btn-danger">
+                                <button className="btn removebtn btn-danger">
                                   Remove
                                 </button>
                               </div>
@@ -189,7 +198,7 @@ const MyGiftRegistry = () => {
                     marginTop: 0,
                   }}
                 >
-                  <h2>Registry Information</h2>
+                  <h2 className="mt-3">Registry Information</h2>
                 </div>
                 <div className="gift-registry-body">
                   <div>
@@ -211,7 +220,7 @@ const MyGiftRegistry = () => {
                       marginTop: 0,
                     }}
                   >
-                    <h2>Registrant</h2>
+                    <h2 className="mt-3">Registrant</h2>
                     <p>
                       Fill in the fields below with your billing information:
                     </p>
@@ -321,47 +330,6 @@ const MyGiftRegistry = () => {
                         //     : ""
                         // }
                       ></input>
-                    </div>
-
-                    <div className="col-md-12">
-                      <a>Fields Marked with (*) are Required.</a>
-                    </div>
-
-                    <div className="bottom-checkout">
-                      <div className="row">
-                        <div className="Terms_condition">
-                          <input
-                            // onChange={() => {
-                            //   setCheckbox(!checkbox);
-                            // }}
-                            // checked={checkbox}
-                            type="checkbox"
-                            name="checkoutType"
-                            className="custom-checkbox"
-                          />{" "}
-                          <label className="label_checkbox">
-                            &nbsp;Use Billing Address
-                          </label>
-                        </div>
-
-                        <div className="col-md-6">
-                          <div className="float-right">
-                            {/* <Link
-                              // href={"/shipping"}
-                              href={"#"}
-                              onClick={() => validation()}
-                            > */}
-
-                            <button
-                              // onClick={() => validation()}
-                              className="btn-cart"
-                            >
-                              Continue
-                            </button>
-                            {/* </Link> */}
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
 
@@ -372,7 +340,7 @@ const MyGiftRegistry = () => {
                       marginTop: 0,
                     }}
                   >
-                    <h2>Co-Registrant</h2>
+                    <h2 className="mt-3">Co-Registrant</h2>
                     <p>
                       Fill in the fields below with your billing information:
                     </p>
@@ -483,49 +451,366 @@ const MyGiftRegistry = () => {
                         // }
                       ></input>
                     </div>
+                  </div>
 
-                    <div className="col-md-12">
-                      <a>Fields Marked with (*) are Required.</a>
-                    </div>
-
+                  <div
+                    className="login-sec  checkout-sec"
+                    style={{
+                      padding: 0,
+                      marginTop: 0,
+                    }}
+                  >
+                    <h2 className="mt-3">Event</h2>
+                    <p>
+                      Fill in the fields below with your billing information:
+                    </p>
                     <div className="bottom-checkout">
                       <div className="row">
-                        <div className="Terms_condition">
+                        {/* <div className="Terms_condition">
+                                  <input
+                                    onChange={() => {
+                                      setCheckbox(!checkbox);
+                                    }}
+                                    checked={checkbox}
+                                    value={checkbox}
+                                    type="checkbox"
+                                    name="checkoutType"
+                                    className="custom-checkbox"
+                                  />{" "}
+                                  <label className="label_checkbox">
+                                    &nbsp;Use Billing Address
+                                  </label>
+                                </div> */}
+                      </div>
+                    </div>
+                    <div className="col-md-12">
+                      <input
+                        type="text"
+                        required
+                        // ref={fieldRef?.firstName}
+                        // onChange={(e) => {
+                        //   handleText("firstName", e.target.value);
+                        // }}
+                        // value={
+                        //   filed && filed.firstName !== undefined
+                        //     ? filed.firstName
+                        //     : ""
+                        // }
+                        placeholder="FIRST NAME*"
+                      ></input>
+
+                      {/* <div className="required-text">
+                                {error.firstName}
+                              </div> */}
+                    </div>
+
+                    <div className="col-md-12">
+                      <input
+                        type="text"
+                        placeholder="CITY*"
+                        // ref={fieldRef?.city}
+                        // onChange={(e) => {
+                        //   handleText("city", e.target.value);
+                        // }}
+                        // value={
+                        //   filed && filed.city !== undefined
+                        //     ? filed.city
+                        //     : ""
+                        // }
+                      ></input>
+
+                      <div className="required-text">{error.city}</div>
+                    </div>
+
+                    <div className="col-md-12">
+                      <textarea
+                        type="text"
+                        rows={7}
+                        // ref={fieldRef?.state}
+                        placeholder="STATE/PROVINCE*"
+                        style={{ width: "auto" }}
+                        // onChange={(e) => {
+                        //   handleText("state", e.target.value);
+                        // }}
+                        // value={
+                        //   filed && filed.state !== undefined
+                        //     ? filed.state
+                        //     : ""
+                        // }
+                      ></textarea>
+
+                      {/* <div className="required-text">{error.state}</div> */}
+
+                      <h2 className="mt-3">Shipping Address</h2>
+                      <p>
+                        To choose a shipping address for your gifts, please add
+                        an address to your address book first.
+                      </p>
+                      <p className="ship-p mb-0">
+                        <span>
                           <input
-                            // onChange={() => {
-                            //   setCheckbox(!checkbox);
-                            // }}
-                            // checked={checkbox}
+                            className="inlineInput"
                             type="checkbox"
-                            name="checkoutType"
-                            className="custom-checkbox"
-                          />{" "}
-                          <label className="label_checkbox">
-                            &nbsp;Use Billing Address
-                          </label>
-                        </div>
+                            id="shipping"
+                            name="shipping-en"
+                            data-gtm-form-interact-field-id="1"
+                          />
+                        </span>
+                        I want to specify a shipping address for the gifts (it
+                        will be added to your address book)
+                      </p>
 
-                        <div className="col-md-6">
-                          <div className="float-right">
-                            {/* <Link
-                              // href={"/shipping"}
-                              href={"#"}
-                              onClick={() => validation()}
-                            > */}
+                      <div className="custom-file-upload">
+                        <label className="btn btn-upload mb-0" for="fileInput">
+                          Choose File...
+                        </label>
+                        <input type="file" id="fileInput" />
+                        <span className="file-name" id="fileName">
+                          img1.webp
+                        </span>
+                      </div>
 
-                            <button
-                              // onClick={() => validation()}
-                              className="btn-cart"
-                            >
-                              Continue
-                            </button>
-                            {/* </Link> */}
-                          </div>
-                        </div>
+                      <h2 className="mt-3 mb-1">Change Photo</h2>
+                      <p className="mb-0">
+                        Personalise your registry with a profile image. Max.
+                        file size 500kb. Formats: .jpg, .png (and any others).
+                      </p>
+
+                      <img
+                        src="/assets/Bubble.png"
+                        alt="Gift Image mb-2"
+                        width="150"
+                        className="mb-2"
+                      />
+                      <h2 className="mt-2">Registry Status</h2>
+                      <div className="checkbook-input">
+                        <p className="mb-0">
+                          <span>
+                            <input type="radio" className="radio-check" />
+                          </span>{" "}
+                          Public Registry (available to everyone through
+                          registry search, and direct access using direct link)
+                        </p>
+                        <p>
+                          {" "}
+                          <span>
+                            <input type="radio" className="radio-check" />
+                          </span>{" "}
+                          Public Registry (available to everyone through
+                          registry search, and direct access using direct link)
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab == "3" && (
+            <div>
+              <div className="col-md-12">
+                <div
+                  className="login-sec checkout-sec"
+                  style={{
+                    padding: 0,
+                    marginTop: 0,
+                  }}
+                >
+                  <h2 className="mt-3">Tell others about your Registry</h2>
+                </div>
+                <div className="gift-tell">
+                  <label>
+                    Enter e-mail addresses of those who you want to tell about
+                    your Gift Registry (separated by commas):
+                  </label>
+                  <textarea
+                    placeholder="Add e-mail addresses"
+                    className="form-control mb-3"
+                    rows={7}
+                  ></textarea>
+
+                  <label>Message they will receive:</label>
+                  <textarea
+                    placeholder="Add Message"
+                    className="form-control mb-3"
+                    rows={7}
+                  ></textarea>
+
+                  <div className="d-flex justify-content-between">
+                    <a href="#" className="back-link-a">
+                      {" "}
+                      Back to Gift Registry
+                    </a>
+
+                    <button className="btn btn-giftt btn-cart float-right btn-info text-white">
+                      Send E-mail
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab == "4" && (
+            <div>
+              <div className="col-md-12">
+                <div
+                  className="login-sec checkout-sec"
+                  style={{
+                    padding: 0,
+                    marginTop: 0,
+                  }}
+                >
+                  <h2 className="mt-3">Guest's View of your Registry</h2>
+                </div>
+
+                <hr></hr>
+
+                <div className="upper-cart-details">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h3>Welcome to Registry title Gift Registry!</h3>
+
+                      <ul>
+                        <li>
+                          Event Date: <span>23/08/2025 </span>
+                        </li>
+                        <li>
+                          Event Location: <span>New Delhi </span>
+                        </li>
+                      </ul>
+
+                      <div className="d-flex displayflex-end">
+                        {/* Priority */}
+                        <div className="d-flex align-items-center mb-2">
+                          <label className="me-2 priority-name">
+                            Priority:
+                          </label>
+                          <br />
+                          <select
+                            className="form-control "
+                            style={{ maxWidth: "250px" }}
+                          >
+                            <option>Would be nice to have</option>
+                            <option>Important</option>
+                            <option>Must have</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="gift-img-custom">
+                      <img
+                        src="/assets/Bubble.png"
+                        alt="Gift Image mb-2"
+                        width="150"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="table-responsive-sm">
+                  <table className="table cart-table table-bordered">
+                    <thead className="thead-dark">
+                      <tr className="tr-bg">
+                        <th>ITEM</th>
+                        <th>PRODUCT NAME</th>
+                        <th>PRICE</th>
+                        <th
+                          style={{
+                            width: "12%",
+                          }}
+                        >
+                          DESIRED
+                        </th>
+                        <th
+                          style={{
+                            width: "12%",
+                          }}
+                        >
+                          RECEIVED
+                        </th>
+                        <th
+                          style={{
+                            width: "15%",
+                          }}
+                        ></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cart.map((item, index) => (
+                        <>
+                          {/* First Row */}
+                          <tr key={index}>
+                            {/* ITEM IMAGE */}
+                            <td style={{ textAlign: "center" }}>
+                              <img
+                                src={item.image || "/assets/fb.png"}
+                                alt={item.name}
+                                width="80"
+                              />
+                            </td>
+
+                            {/* PRODUCT NAME */}
+                            <td>
+                              {item.name || "Small Round Hanging Light Blue"}
+                            </td>
+
+                            {/* PRICE */}
+                            <td>€ 130</td>
+
+                            {/* DESIRED */}
+                            <td>
+                              <input
+                                type="number"
+                                value={item.desired || 1}
+                                min="1"
+                                className="form-control bg-white"
+                                style={{ width: "70px" }}
+                              />
+                            </td>
+
+                            {/* RECEIVED */}
+                            <td>
+                              <input
+                                type="number"
+                                value={item.received || 0}
+                                min="0"
+                                className="form-control bg-white"
+                                style={{ width: "70px" }}
+                              />
+                            </td>
+
+                            {/* ADD TO CART BUTTON */}
+                            <td
+                              className="text-center"
+                              style={{ paddingLeft: "5px" }}
+                            >
+                              <button className="btn btn-info btn-gift-custom btn-giftt text-white">
+                                <Image
+                                  src="/assets/bag_white.webp"
+                                  alt="Cart Icon"
+                                  width={15}
+                                  height={15}
+                                  className="me-1"
+                                />{" "}
+                                Add to Cart
+                              </button>
+                            </td>
+                          </tr>
+                        </>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="d-flex justify-content-between">
+                <a href="#" className="back-link-a">
+                  {" "}
+                  Back to Gift Registry
+                </a>
               </div>
             </div>
           )}
