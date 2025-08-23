@@ -20,6 +20,8 @@ const AddToCart = () => {
   const [shippingRate, setShippingRate] = useState();
   const [countryCode, setCountryCode] = useState("");
   const setNavigating = useNavigationStore((s) => s.setNavigating);
+  const isNavigating = useNavigationStore((s) => s.isNavigating);
+
   const [userDetails, setUserDetails] = useState();
   // const setNavigating = useNavigationStore((s) => s.setNavigating);
   const {
@@ -120,9 +122,10 @@ const AddToCart = () => {
       const data = await getShippingRate(cartWieght, code);
       if (data?.status == 200) {
         console.log("datadata", data?.data);
+        // if(data?.data)
         setShippingRate(data?.data);
-        setNavigating(false);
         setShippingStore(data?.data);
+        setNavigating(false);
       } else {
         setNavigating(false);
       }
@@ -164,10 +167,11 @@ const AddToCart = () => {
     setshiipingCost(shippingRate?.Value[0]?.Price);
   }, [insurance, shippingRate]);
 
-  console.log("Cart Items", cart);
+  console.log("Cart Items", cart, shippingRate);
   console.log("shippingStore", insurance);
   console.log("userDetails", userDetails);
   console.log("totalPrice", totalPrice);
+  console.log("isNavigating", isNavigating);
 
   return (
     <div className="container my-4">
@@ -262,7 +266,7 @@ const AddToCart = () => {
                     <td className="text-end">€0.00</td>
                   </tr>
                   <tr>
-                    <td>Shipping From:</td>
+                    <td>Shipping Cost:</td>
                     <td className="text-end">
                       €
                       {Object.keys(shippingStore)?.length > 0

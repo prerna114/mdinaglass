@@ -801,6 +801,7 @@ li.jewels ul li a {
   text-align: center;
   padding: 55px;
 }
+
 .active > .page-link,
 .page-link.active {
   z-index: 3;
@@ -3484,4 +3485,9 @@ form-check-input:checked[type="checkbox"] {
   color: #005e84 !important;
   cursor: pointer;
   /* margin-left: 10px; */
+}
+.header-product p {
+  font-family: "Domine", sans-serif;
+  color: #666666 !important;
+  font-size: 14px;
 }

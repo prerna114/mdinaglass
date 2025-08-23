@@ -87,7 +87,7 @@ const page = () => {
         <div className="header-product bg-white">
           <h1>{heading}</h1>
           {description ? (
-            <p>
+            <p className="text-muted">
               {" "}
               {description
                 ?.replace(/<[^>]*>/g, "") // remove all HTML tags

@@ -18,19 +18,18 @@ const SideMenuItem = ({
   const params = useParams();
   const allParams = useMemo(() => params?.params || [], [params]);
   const pathname = usePathname();
-  console.log("pathnameSideMenu", cateogoryParents);
+  // console.log("pathnameSideMenu", cateogoryParents);
 
   const priceIndex =
     !pathname.includes("search") && allParams.findIndex((p) => p === "price");
-  const categoryIds = cateogoryParents
-    ? cateogoryParents
-    : useMemo(
-        () =>
-          priceIndex !== -1
-            ? allParams.slice(0, priceIndex).map(Number)
-            : allParams.map(Number),
-        [allParams, priceIndex]
-      );
+  const computedCategoryIds = useMemo(() => {
+    if (cateogoryParents) return cateogoryParents;
+    return priceIndex !== -1
+      ? allParams.slice(0, priceIndex).map(Number)
+      : allParams.map(Number);
+  }, [cateogoryParents, allParams, priceIndex]);
+
+  const categoryIds = computedCategoryIds;
 
   const sortOrder = priceIndex !== -1 ? allParams[priceIndex + 1] : "asc";
   const limit = priceIndex !== -1 ? allParams[priceIndex + 2] : 15;
@@ -56,7 +55,7 @@ const SideMenuItem = ({
   const handleClick = (item) => {
     setHeading(item.name);
     setDescription(item.description);
-    console.log("levellevel", level, item);
+    // console.log("levellevel", level, item);
     const indexInPath = categoryIds.indexOf(item.id);
 
     setPagination({
@@ -97,9 +96,9 @@ const SideMenuItem = ({
       localStorage.setItem("currentUrl", prevUrl); // Save old as previous
     }
     localStorage.setItem("currentUrl", currentUrl);
-    console.log("currentUrl", currentUrl);
+    // console.log("currentUrl", currentUrl);
   };
-  console.log("subCategoriesSIdeMenu", categoryIds, fullPathToItem);
+  // console.log("subCategoriesSIdeMenu", categoryIds, fullPathToItem);
   return (
     <li
       className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}`}
