@@ -4,9 +4,10 @@ export function buildProductUrl(
   limit,
   page,
   slug,
-  sortBy
+  sortBy,
+  size
 ) {
   return `/product/webshop/bycategory/${categoryId}/${
     sortBy ? sortBy : "price"
-  }/${sortOrder}/${limit}/${page}/${slug}.htm`;
+  }/${sortOrder}/${limit}/${page}${size ? `/size/${size}` : ""}/${slug}.htm`;
 }

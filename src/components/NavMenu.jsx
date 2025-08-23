@@ -55,7 +55,7 @@ const ResponsiveNav = () => {
                   href: createUrl("all", "all-product"),
                 },
                 { label: "New Arrivals", href: "/newarrival/page=1" },
-                { label: "Limited Editions", href: "/loginCheckoutPage" },
+                // { label: "Limited Editions", href: "/loginCheckoutPage" },
                 { label: "WishList", href: "/wishlist" },
 
                 { label: "Gift Registry", href: "/giftRegistry" },

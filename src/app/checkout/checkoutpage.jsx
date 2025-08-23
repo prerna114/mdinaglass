@@ -7,17 +7,16 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import React, { useEffect, useRef, useState } from "react";
 
-const Shipping = () => {
+const checkoutpage = () => {
   const [shipping, setShipping] = useState(false);
+  const [checbox, setCheckbox] = useState(false);
   const router = useRouter();
-  const params = useSearchParams();
-  const checkboxProps = params.get("checkbox");
-  const [checkbox, setCheckbox] = useState(false);
-  const setNavigating = useNavigationStore((s) => s.setNavigating);
+  const [tokenAddress, setTokenAddress] = useState({});
   const searchParams = useSearchParams();
   const queryKey = Array.from(searchParams.keys())[0];
-  // console.log("EMai", email, params);
 
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
+  const isNavigating = useNavigationStore((s) => s.isNavigating);
   const [filed, setFiled] = useState({
     firstName: "",
     lastName: "",
@@ -31,6 +30,9 @@ const Shipping = () => {
     country: "",
     telePhone: "",
   });
+
+  console.log("params", queryKey);
+
   const [error, setError] = useState({});
 
   const handleText = (name, value) => {
@@ -89,43 +91,49 @@ const Shipping = () => {
       });
       return false;
     } else {
-      localStorage.setItem("shiipingaddreess", JSON.stringify(filed));
+      localStorage.setItem("billingaddress", JSON.stringify(filed));
       if (queryKey == "orderReview") {
         router.push(`/orderReview`);
         setNavigating(true);
       } else {
-        router.push("/shippingMethod");
+        router.push(`/shipping/?checkbox=${checbox}`);
         setNavigating(true);
       }
     }
 
     return true;
   };
-  useEffect(() => {
-    setNavigating(false);
-    if (checkboxProps == true) {
-      const data = localStorage.getItem("billingaddress");
-      console.log("Billing addr", JSON.parse(data));
-      if (data) {
-        setFiled(JSON.parse(data));
-      }
-    }
-    if (checkbox) {
-      const data = localStorage.getItem("billingaddress");
-      console.log("Billing addr", JSON.parse(data));
-      if (data) {
-        setFiled(JSON.parse(data));
-      }
-    } else {
-      const data = localStorage.getItem("shiipingaddreess");
-      console.log("Billing addr", JSON.parse(data));
-      if (data) {
-        setFiled(JSON.parse(data));
-      }
-    }
-  }, [checkbox]);
-  console.log("Hndle text", checkbox);
 
+  useEffect(() => {
+    const data = localStorage.getItem("billingaddress");
+    const token = localStorage.getItem("token");
+    const parseData = JSON.parse(token);
+
+    if (parseData && Object.keys(parseData)?.length > 0) {
+      const streetParts = parseData?.address?.street
+        .split(",")
+        .map((s) => s.trim());
+      setTokenAddress(parseData);
+      setFiled((prev) => ({
+        ...prev,
+
+        email: parseData?.email || "",
+        addressOne: streetParts[0] || "",
+        addressTwo: streetParts[0] || "",
+        city: parseData?.address?.city || "",
+        state: parseData?.address?.state || "",
+        zipCode: parseData?.address?.postcode || "",
+        country: parseData?.address?.country || "",
+        telePhone: parseData?.address?.phone || " ",
+      }));
+    } else {
+      const parseBilling = JSON.parse(data);
+      setFiled(parseBilling);
+    }
+    console.log("tokentoken", parseData);
+  }, []);
+
+  console.log("Filled", filed);
   return (
     <>
       {/* <Header /> */}
@@ -146,29 +154,11 @@ const Shipping = () => {
               <div className="row">
                 <div className="col-md-12">
                   <div className="login-sec  checkout-sec">
-                    <h2>3. Shipping Information</h2>
+                    <h2>2. Billing Information</h2>
                     <p>
                       Fill in the fields below with your billing information:
                     </p>
-                    <div className="bottom-checkout">
-                      <div className="row">
-                        <div className="Terms_condition">
-                          <input
-                            onChange={() => {
-                              setCheckbox(!checkbox);
-                            }}
-                            checked={checkbox}
-                            value={checkbox}
-                            type="checkbox"
-                            name="checkoutType"
-                            className="custom-checkbox"
-                          />{" "}
-                          <label className="label_checkbox">
-                            &nbsp;Use Billing Address
-                          </label>
-                        </div>
-                      </div>
-                    </div>
+
                     <div className="col-md-12">
                       <input
                         type="text"
@@ -177,12 +167,8 @@ const Shipping = () => {
                         onChange={(e) => {
                           handleText("firstName", e.target.value);
                         }}
-                        value={
-                          filed && filed.firstName !== undefined
-                            ? filed.firstName
-                            : ""
-                        }
                         placeholder="FIRST NAME*"
+                        value={filed?.firstName ?? ""}
                       ></input>
 
                       <div className="required-text">{error.firstName}</div>
@@ -196,11 +182,7 @@ const Shipping = () => {
                           handleText("lastName", e.target.value);
                         }}
                         placeholder="LAST NAME*"
-                        value={
-                          filed && filed.lastName !== undefined
-                            ? filed.lastName
-                            : ""
-                        }
+                        value={filed?.lastName ?? ""}
                       ></input>
 
                       <div className="required-text">{error.lastName}</div>
@@ -214,11 +196,7 @@ const Shipping = () => {
                         onChange={(e) => {
                           handleText("company", e.target.value);
                         }}
-                        value={
-                          filed && filed.company !== undefined
-                            ? filed.company
-                            : ""
-                        }
+                        value={filed?.company ?? ""}
                       ></input>
 
                       <div className="required-text">{error.company}</div>
@@ -232,9 +210,7 @@ const Shipping = () => {
                         onChange={(e) => {
                           handleText("email", e.target.value);
                         }}
-                        value={
-                          filed && filed.email !== undefined ? filed.email : ""
-                        }
+                        value={filed?.email ?? ""}
                       ></input>
 
                       <div className="required-text">{error.email}</div>
@@ -248,11 +224,7 @@ const Shipping = () => {
                         onChange={(e) => {
                           handleText("addressOne", e.target.value);
                         }}
-                        value={
-                          filed && filed.addressOne !== undefined
-                            ? filed.addressOne
-                            : ""
-                        }
+                        value={filed?.addressOne ?? ""}
                       ></input>
 
                       <div className="required-text">{error.addressOne}</div>
@@ -266,11 +238,7 @@ const Shipping = () => {
                         onChange={(e) => {
                           handleText("addressTwo", e.target.value);
                         }}
-                        value={
-                          filed && filed.addressTwo !== undefined
-                            ? filed.addressTwo
-                            : ""
-                        }
+                        value={filed?.addressTwo ?? ""}
                       ></input>
 
                       <div className="required-text">{error.addressTwo}</div>
@@ -284,9 +252,7 @@ const Shipping = () => {
                         onChange={(e) => {
                           handleText("city", e.target.value);
                         }}
-                        value={
-                          filed && filed.city !== undefined ? filed.city : ""
-                        }
+                        value={filed?.city ?? ""}
                       ></input>
 
                       <div className="required-text">{error.city}</div>
@@ -300,9 +266,7 @@ const Shipping = () => {
                         onChange={(e) => {
                           handleText("state", e.target.value);
                         }}
-                        value={
-                          filed && filed.state !== undefined ? filed.state : ""
-                        }
+                        value={filed?.state ?? ""}
                       ></input>
 
                       <div className="required-text">{error.state}</div>
@@ -310,22 +274,17 @@ const Shipping = () => {
 
                     <div className="col-md-12">
                       <input
-                        type="text"
+                        type="number"
                         placeholder="ZIP CODE*"
                         ref={fieldRef?.zipCode}
                         onChange={(e) => {
                           handleText("zipCode", e.target.value);
                         }}
-                        value={
-                          filed && filed.zipCode !== undefined
-                            ? filed.zipCode
-                            : ""
-                        }
+                        value={filed?.zipCode ?? ""}
                       ></input>
 
                       <div className="required-text">{error.zipCode}</div>
                     </div>
-
                     <div className="col-md-12">
                       <select
                         required=""
@@ -334,7 +293,7 @@ const Shipping = () => {
                         id="country"
                         ref={fieldRef?.country}
                         onChange={(e) => {
-                          handleText("country", e.target.value);
+                          handleAddress("country", e.target.value);
                         }}
                         value={filed?.country ?? ""}
                       >
@@ -356,11 +315,7 @@ const Shipping = () => {
                           handleText("telePhone", e.target.value);
                         }}
                         placeholder="TELEPHONE*"
-                        value={
-                          filed && filed.telePhone !== undefined
-                            ? filed.telePhone
-                            : ""
-                        }
+                        value={filed?.telePhone ?? ""}
                       ></input>
 
                       <div className="required-text">{error.telePhone}</div>
@@ -374,16 +329,15 @@ const Shipping = () => {
                       <div className="row">
                         <div className="Terms_condition">
                           <input
-                            onChange={() => {
-                              setCheckbox(!checkbox);
+                            onChange={(e) => {
+                              setCheckbox(!checbox);
                             }}
-                            checked={checkbox}
                             type="checkbox"
                             name="checkoutType"
                             className="custom-checkbox"
                           />{" "}
                           <label className="label_checkbox">
-                            &nbsp;Use Billing Address
+                            &nbsp;Ship to this Address
                           </label>
                         </div>
 
@@ -394,7 +348,6 @@ const Shipping = () => {
                               href={"#"}
                               onClick={() => validation()}
                             > */}
-
                             <button
                               onClick={() => validation()}
                               className="btn-cart"
@@ -421,4 +374,4 @@ const Shipping = () => {
   );
 };
 
-export default Shipping;
+export default checkoutpage;

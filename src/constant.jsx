@@ -40,12 +40,14 @@ export const createUrl = (
   thesortORder,
   theLimit,
   thePage,
-  sortBy
+  sortBy,
+  thesize
 ) => {
   // console.log("dsadadsadadsada", categoryID);
   let sortOrder = thesortORder ? thesortORder : "asc";
   let limit = theLimit ? theLimit : 15;
   let page = thePage ? thePage : 1;
+  let size = thesize ? thesize : "";
   // console.log(
   //   "the params in create url",
   //   categoryID,
@@ -60,7 +62,15 @@ export const createUrl = (
     : String(categoryID);
   // console.log("rohanrohanrohan123", categoryID);
   const cleanSlug = slug ? slug.replace(/\.htm+$/i, "") : "all-product";
-  return buildProductUrl(idPath, sortOrder, limit, page, cleanSlug, sortBy);
+  return buildProductUrl(
+    idPath,
+    sortOrder,
+    limit,
+    page,
+    cleanSlug,
+    sortBy,
+    size
+  );
 };
 // Move this outside the component
 export const extractUniqueOptions = (variants = []) => {

@@ -1,0 +1,175 @@
+"use client";
+import { CustomToast } from "@/components/CustomToast";
+import { useNavigationStore } from "@/store/useNavigationstore";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
+
+// Use Zustand's getState() outside React components
+const PaymentPage = () => {
+  const [method, setMethod] = useState("");
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
+  const setPaymentMethods = useAuthStore((state) => state.setPaymentMethods);
+  const paymentMethods = useAuthStore((state) => state.paymentMethods);
+  const searchParams = useSearchParams();
+  const queryKey = Array.from(searchParams.keys())[0];
+  const router = useRouter();
+  const handleButton = () => {
+    if (paymentMethods?.length == 0) {
+      CustomToast("Please Select Payment Method");
+    } else {
+      if (queryKey == "orderReview") {
+        router.push(`/orderReview`);
+        setNavigating(true);
+      } else {
+        setNavigating(true);
+
+        router.push(`/orderReview`);
+      }
+    }
+  };
+
+  useEffect(() => {
+    setNavigating(false);
+  }, []);
+  console.log("Payment Methods", paymentMethods);
+  return (
+    <div
+      style={{
+        background: "#f1f1f1",
+      }}
+    >
+      <div className="header-product bg-white">
+        <h1>Checkout: Select Payment Method</h1>
+      </div>
+      <div className="container">
+        <div className="login-signup">
+          <div className="row">
+            <div className="login-sec  checkout-sec">
+              <h2>4. Select Payment Type</h2>
+              <p>Select your Payment Method by selecting option below:</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container">
+        <div className="login-signup">
+          <div className="row">
+            <div className="shipping-Container">
+              <div className="col-md-6 mb-4">
+                <div className="d-flex align-items-center gap-2">
+                  <input
+                    type="radio"
+                    name="checkoutType"
+                    value="visa"
+                    checked={paymentMethods == "visa"}
+                    onChange={(e) => {
+                      setPaymentMethods(e.target.value);
+                      console.log("on click e", e.target.value);
+                    }}
+                  />
+                  <label className="seller-Text mb-0">Pay by</label>
+                  <img
+                    src="/assets/visa.png"
+                    alt="Visa"
+                    style={{ height: 30, width: "auto" }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container">
+        <div className="login-signup">
+          <div className="row">
+            <div className="shipping-Container">
+              <div className="col-md-6 mb-4">
+                <div className="d-flex align-items-center gap-2">
+                  <input
+                    type="radio"
+                    name="checkoutType"
+                    checked={paymentMethods == "paypal"}
+                    value="paypal"
+                    onChange={(e) => {
+                      setPaymentMethods(e.target.value);
+                      console.log("on click e", e.target.value);
+                    }}
+                  />
+                  <label className="seller-Text mb-0">Pay by</label>
+                  <img
+                    src="/assets/paypal.png"
+                    alt="Visa"
+                    style={{ height: 30, width: "auto" }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* <div className="container">
+        <div className="login-signup">
+          <div className="row">
+            <div className="shipping-Container">
+              <div className="col-md-6 mb-4">
+                <div className="d-flex align-items-center gap-2">
+                  <input
+                    type="radio"
+                    name="checkoutType"
+                    value="cash"
+                    checked={paymentMethods == "cash"}
+                    onChange={(e) => {
+                      setPaymentMethods(e.target.value);
+                      console.log("on click e", e.target.value);
+                    }}
+                  />
+                  <label className="seller-Text mb-0">Pay by</label>
+                  <label className="cash-Text mb-0">Cash on Delivery</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> */}
+
+      <div className="container">
+        <div
+          className="login-signup"
+          style={{
+            margin: "0px 70px",
+          }}
+        >
+          <div className="col-md-12">
+            <div
+              className="d-flex pb-3 mt-3"
+              style={{ justifyContent: "space-between" }}
+            >
+              <Link href={"/shippingMethod"}>
+                <button className="btn btn-shop btn-primary back-button">
+                  Back
+                </button>
+              </Link>
+
+              {/* <Link href={`/orderReview?method=${method}`}> */}
+              <button
+                onClick={() => {
+                  handleButton();
+                }}
+                className="btn btn-cart btn-info text-white back-button"
+              >
+                Continue
+              </button>
+              {/* </Link> */}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PaymentPage;

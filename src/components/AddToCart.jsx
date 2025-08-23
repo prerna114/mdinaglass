@@ -12,6 +12,7 @@ import {
 import { CountryList } from "@/constant";
 import { useNavigationStore } from "@/store/useNavigationstore";
 import { useShippingStore } from "@/store/shippingStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const AddToCart = () => {
   const { cart, setInsurance, insurance } = useCartStore((state) => state);
@@ -21,6 +22,7 @@ const AddToCart = () => {
   const [countryCode, setCountryCode] = useState("");
   const setNavigating = useNavigationStore((s) => s.setNavigating);
   const isNavigating = useNavigationStore((s) => s.isNavigating);
+  const [apiCall, setAPICall] = useState("0");
 
   const [userDetails, setUserDetails] = useState();
   // const setNavigating = useNavigationStore((s) => s.setNavigating);
@@ -32,6 +34,8 @@ const AddToCart = () => {
     setInsuranceCost,
     setshiipingCost,
   } = useShippingStore((state) => state);
+  const { setPaymentMethods, paymentMethods } = useAuthStore.getState(); //
+  const [method, setMethod] = useState(paymentMethods);
 
   let totalPrice = 0;
   (totalPrice = useMemo(() =>
@@ -122,8 +126,13 @@ const AddToCart = () => {
       const data = await getShippingRate(cartWieght, code);
       if (data?.status == 200) {
         console.log("datadata", data?.data);
-        // if(data?.data)
-        setShippingRate(data?.data);
+        if (data?.data?.Message == "An error has occurred.") {
+          setAPICall((prev) => prev + 1);
+          if (apiCall < 2) {
+            shiipingRate(countryCode);
+          }
+        }
+        if (data?.data) setShippingRate(data?.data);
         setShippingStore(data?.data);
         setNavigating(false);
       } else {
@@ -163,8 +172,9 @@ const AddToCart = () => {
 
   useEffect(() => {
     // setInsuranceCost(insurance);
-
-    setshiipingCost(shippingRate?.Value[0]?.Price);
+    if (shiipingRate?.Value?.length >= 0) {
+      setshiipingCost(shippingRate?.Value[0]?.Price);
+    }
   }, [insurance, shippingRate]);
 
   console.log("Cart Items", cart, shippingRate);
@@ -214,6 +224,7 @@ const AddToCart = () => {
                   console.log("Selected Country", e.target.value);
 
                   setCountryCode(e.target.value);
+                  shiipingRate(e.target.value);
                 }}
                 value={countryCode ?? ""}
               >
@@ -224,14 +235,14 @@ const AddToCart = () => {
                   </option>
                 ))}
               </select>
-              <div className="header-of-cart">
+              {/* <div className="header-of-cart">
                 <button
                   className="btn btn-cart btn-info text-white mb-3"
                   onClick={() => shiipingRate(countryCode)}
                 >
                   Calculate Delivery Price
                 </button>
-              </div>
+              </div> */}
 
               <p className="small text-muted">
                 Our shipping weight is made up of the item(s) you would like to
@@ -266,7 +277,7 @@ const AddToCart = () => {
                     <td className="text-end">€0.00</td>
                   </tr>
                   <tr>
-                    <td>Shipping Cost:</td>
+                    <td>Shipping Price:</td>
                     <td className="text-end">
                       €
                       {Object.keys(shippingStore)?.length > 0

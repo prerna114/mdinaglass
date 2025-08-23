@@ -86,14 +86,25 @@ const ProductListing = ({ SearchData }) => {
     const sortOrder = allParams[priceIndex + 1];
     const limit = parseInt(allParams[priceIndex + 2]);
     const page = parseInt(allParams[priceIndex + 3]);
+    const size = parseInt(allParams[priceIndex + 5]);
+
     const sortBy = allParams[priceIndex];
-    console.log("SetPagination", sortBy, sortOrder, limit, page);
+    console.log(
+      "SetPagination",
+      sortBy,
+      sortOrder,
+      limit,
+      page,
+      size,
+      allParams
+    );
 
     setPagination({
       per_page: limit,
       page: page,
       sort_by: sortBy,
       sort_dir: sortOrder,
+      size: size ? size : "",
     });
 
     console.log();

@@ -96,7 +96,8 @@ const OrderReview = () => {
       const response = await checkOut(
         insurance,
         shippingMethod?.Price,
-        shippingMethod?.ServiceDescription
+        shippingMethod?.ServiceDescription,
+        method
       );
       console.log("Response", response);
 
@@ -131,7 +132,8 @@ const OrderReview = () => {
       guestToken,
       shippingMethod?.Price,
       shippingMethod?.ServiceDescription,
-      insurance
+      insurance,
+      method
     );
     console.log("Guest checkut", data);
     if (data?.status == 200) {
@@ -200,7 +202,7 @@ const OrderReview = () => {
               <div className="col-12 col-md-4">
                 <div className="p-3 mb-3 h-100">
                   <div className="d-flex justify-content-between">
-                    <h5 className="billing-text">Shipping Information</h5>
+                    <h5 className="billing-text">Billing Information</h5>
                   </div>
                   <p className="mb-1 billing-text-name ">
                     {billingAddress?.firstName}
@@ -221,7 +223,7 @@ const OrderReview = () => {
                   <p className="mb-0 billing-text-name ">
                     Tel: {billingAddress?.telePhone}
                   </p>
-                  <Link href="/checkout" className="text-primary">
+                  <Link href="/checkout?orderReview" className="text-primary">
                     Edit
                   </Link>
                 </div>
@@ -252,10 +254,7 @@ const OrderReview = () => {
                   <p className="mb-0 billing-text-name ">
                     Tel: {shippingAddress?.telePhone}
                   </p>
-                  <Link
-                    href="/shipping?checkbox=false"
-                    className="text-primary"
-                  >
+                  <Link href="/shipping?orderReview" className="text-primary">
                     Edit
                   </Link>
                 </div>
@@ -269,7 +268,10 @@ const OrderReview = () => {
                   <p className="mb-1 billing-text-name ">
                     {shippingMethod?.ServiceDescription}
                   </p>
-                  <Link href="/shippingMethod" className="text-primary">
+                  <Link
+                    href="/shippingMethod?orderReview"
+                    className="text-primary"
+                  >
                     Edit
                   </Link>
                   <div>
@@ -281,7 +283,10 @@ const OrderReview = () => {
                     Checkout) */}
                       {method}
                     </p>
-                    <Link href={"/payment"} className="text-primary">
+                    <Link
+                      href={"/payment?orderReview"}
+                      className="text-primary"
+                    >
                       Edit
                     </Link>
                   </div>

@@ -43,7 +43,8 @@ export const getProductCateogry = async (id, pagination, color) => {
     sort_by: pagination.sort_by || "price",
     sort_dir: pagination.sort_dir || "asc",
     filters: {
-      ...(color !== undefined && { color }),
+      ...(pagination?.size !== undefined &&
+        pagination?.size && { size: pagination.size }),
       // ...(filterData != undefined &&
       //   filterData?.color !== 0 && { color: filterData?.color }),
       // ...(filterData?.variations !== undefined &&

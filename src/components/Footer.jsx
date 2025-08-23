@@ -72,11 +72,11 @@ const Footer = () => {
                   New Arrivals
                 </InstantLink>
               </li>
-              <li>
+              {/* <li>
                 <InstantLink href={"/loginCheckoutPage"}>
                   Limited Editions
                 </InstantLink>
-              </li>
+              </li> */}
               <li>
                 <InstantLink href={"/gift"}>Gift Registry</InstantLink>
               </li>

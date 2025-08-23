@@ -5,7 +5,7 @@ import { SquarePen } from "lucide-react";
 
 import { products } from "@/constant";
 import Link from "next/link";
-import { getOrderList } from "@/api/CartApi";
+import { generateInvoice, getOrderList } from "@/api/CartApi";
 import moment from "moment";
 import MyGiftRegistry from "./MyGiftRegistry";
 import InstantLink from "./InstantClick";
@@ -36,6 +36,11 @@ export default function Make() {
       ...prev,
       [key]: value,
     }));
+  };
+
+  const generateTheInvoice = async (id) => {
+    const data = await generateInvoice(id);
+    console.log("Data", data);
   };
   return (
     <div className="container mt-5">

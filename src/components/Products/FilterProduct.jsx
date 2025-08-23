@@ -30,7 +30,7 @@ const FilterProduct = ({ down }) => {
   console.log("Limti1234", limit, allParams?.includes("all"));
 
   console.log("THE SKU", sku);
-  const handleClick = (sortName, newSortOrder, newLimit, newPage) => {
+  const handleClick = (sortName, newSortOrder, newLimit, newPage, size) => {
     const allParams = params?.params || [];
     const sortByName = paginationOption.sort_by;
 
@@ -44,7 +44,9 @@ const FilterProduct = ({ down }) => {
       sku == "all-product.htm"
         ? "all"
         : allParams.slice(0, priceIndex).map(Number);
-    const slug = allParams[priceIndex + 4] || "all-product.htm";
+    // const slug = allParams[priceIndex + 5] || "all-product.htm";
+
+    const slug = allParams[allParams.length - 1];
 
     // Apply new values or fallback to existing
     const sortOrder = newSortOrder || allParams[priceIndex + 1];
@@ -57,11 +59,15 @@ const FilterProduct = ({ down }) => {
       allParams,
       sortOrder,
       sortBy,
-      newLimit
+      newLimit,
+      slug
     );
 
-    const newUrl = createUrl(categoryIds, slug, sortOrder, limit, page, sortBy);
+    const newUrl = size
+      ? createUrl(categoryIds, slug, sortOrder, limit, page, sortBy, size)
+      : createUrl(categoryIds, slug, sortOrder, limit, page, sortBy);
     router.push(newUrl, { scroll: false });
+    console.log("newUrl", newUrl);
     if (newLimit) {
       setPagination({
         per_page: newLimit,
@@ -74,9 +80,9 @@ const FilterProduct = ({ down }) => {
       setPagination({
         sort_by: sku == "all-product.htm" ? sortBy : sortName,
       });
-    } else if (sortName) {
+    } else if (size) {
       setPagination({
-        sort_by: sku == "all-product.htm" ? sortBy : sortName,
+        size: e.target.value,
       });
     }
 
@@ -122,7 +128,7 @@ const FilterProduct = ({ down }) => {
                     className="form-select w-auto"
                     onChange={(e) => {
                       if (e.target.value != "Select") {
-                        handleClick(e.target.value, "", "", "");
+                        handleClick(e.target.value, "", "", "", "");
                       }
                       // sortProductsByP
                       // iriceLowToHigh(products);
@@ -138,35 +144,38 @@ const FilterProduct = ({ down }) => {
                   </select>
                 </div>
               </div>
-              <div className="col-md-4">
-                <div className="d-flex  sorting-item align-items-center justify-content-end">
-                  <span>Size</span>
-                  <label htmlFor="currency-select" className="visually-hidden">
-                    Size
-                  </label>
-                  <select
-                    id="currency-select"
-                    className="form-select w-auto me-3"
-                    onChange={(e) => {
-                      setPagination({
-                        size: e.target.value,
-                      });
-                      // handleClick("", "", e.target.value, "");
-                      // setPagination({
-                      //   per_page: e.target.value,
-                      // });
-                      console.log("lmit", e.target.value);
-                    }}
-                    defaultValue={paginationOption?.per_page}
-                  >
-                    <option value={0}>Select</option>
-                    <option value={6}>Small</option>
-                    <option value={7}>Medium</option>
-                    <option value={8}>Large</option>
-                    <option value={9}>Mini</option>
-                  </select>
+              {sku == "all-product.htm" ? null : (
+                <div className="col-md-4">
+                  <div className="d-flex  sorting-item align-items-center justify-content-end">
+                    <span>Size</span>
+                    <label
+                      htmlFor="currency-select"
+                      className="visually-hidden"
+                    >
+                      Size
+                    </label>
+                    <select
+                      id="currency-select"
+                      className="form-select w-auto me-3"
+                      onChange={(e) => {
+                        handleClick("", "", "", "", e.target.value);
+                        // setPagination({
+                        //   per_page: e.target.value,
+                        // });
+                        console.log("lmit", e.target.value);
+                      }}
+                      defaultValue={paginationOption?.size}
+                    >
+                      <option value={""}>Select</option>
+                      <option value={6}>Small</option>
+                      <option value={7}>Medium</option>
+                      <option value={8}>Large</option>
+                      <option value={9}>Mini</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
+              )}
+
               <div className="col-md-4">
                 <div className="d-flex  sorting-item align-items-center justify-content-end">
                   <span>Items</span>
@@ -177,7 +186,7 @@ const FilterProduct = ({ down }) => {
                     id="currency-select"
                     className="form-select w-auto me-3"
                     onChange={(e) => {
-                      handleClick("", "", e.target.value, "");
+                      handleClick("", "", e.target.value, "", "");
                       // setPagination({
                       //   per_page: e.target.value,
                       // });
@@ -225,7 +234,7 @@ const FilterProduct = ({ down }) => {
                     className="page-link"
                     onClick={() => {
                       if (paginationOption?.page > 1) {
-                        handleClick("", "", "", paginationOption?.page - 1);
+                        handleClick("", "", "", paginationOption?.page - 1, "");
                         // setPagination({
                         //   page: paginationOption?.page - 1,
                         // });
@@ -255,7 +264,7 @@ const FilterProduct = ({ down }) => {
                       <button
                         className="page-link"
                         onClick={(e) => {
-                          handleClick("", "", "", item);
+                          handleClick("", "", "", item, "");
                           // setPagination({
                           //   page: item,
                           // });
@@ -281,7 +290,7 @@ const FilterProduct = ({ down }) => {
                         : ""
                     }`}
                     onClick={() => {
-                      handleClick("", "", "", paginationOption?.page + 1);
+                      handleClick("", "", "", paginationOption?.page + 1, "");
                       // setPagination({
                       //   page: paginationOption?.page + 1,
                       // });

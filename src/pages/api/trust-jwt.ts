@@ -15,8 +15,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       payload: {
         // currencyiso3a: "GBP",
         currencyiso3a: "EUR",
-        returnurl: "https://yourdomain.com/payment-success", // ✅ Success redirect
-        errorurl: "https://yourdomain.com/payment-failure",
+        returnurl: "http://localhost:3000/", // ✅ Success redirect
+        errorurl: "http://localhost:3000/",
         orderreference: "ORDER12345",
         sitereference: "xkholdings83683",
         accounttypedescription: "ECOM",
