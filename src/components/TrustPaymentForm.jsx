@@ -53,7 +53,7 @@ export default function TrustPaymentForm() {
       console.log("✅ Payment completed:", data);
       // alert("Payment Success!");
       // You can also redirect:
-      window.location.href = "/payment-success";
+      // window.location.href = "/payment-success";
     });
 
     // 🔹 Failure

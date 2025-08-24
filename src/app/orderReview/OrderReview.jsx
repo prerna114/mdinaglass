@@ -17,6 +17,56 @@ const OrderReview = () => {
   const giftMessage = useAuthStore((state) => state.giftMessage);
   const { setPaymentMethods, paymentMethods } = useAuthStore.getState(); //
   const [loader, setLoader] = useState(false);
+  const [parsedParams, setParsedParams] = useState(null);
+
+  useEffect(() => {
+    if (!searchParams) return;
+
+    // Convert query params → object
+    const data = {};
+    searchParams.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    // ✅ Only continue if Trust Payments returned something
+    if (!("errorcode" in data || "requestreference" in data || "jwt" in data)) {
+      return; // exit early, normal page load
+    }
+
+    // If JWT is present, decode it
+    if (data.jwt) {
+      try {
+        const base64Url = data.jwt.split(".")[1]; // JWT payload part
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = JSON.parse(
+          decodeURIComponent(
+            atob(base64)
+              .split("")
+              .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+              .join("")
+          )
+        );
+        data.jwtDecoded = jsonPayload;
+      } catch (e) {
+        console.error("JWT decode error:", e);
+      }
+    }
+
+    setParsedParams(data);
+
+    // ✅ Only fire alerts if Trust Payments response present
+    if (data?.errorcode == "0") {
+      alert(data?.errormessage || "Payment Success");
+    } else if (data?.errorcode == "30000") {
+      alert("Please Enter valid details");
+    } else if (data?.errorcode == "70000") {
+      alert("Payment was declined by your bank.");
+    } else if (data?.errorcode) {
+      alert("Payment Failed: " + data?.errormessage);
+    }
+  }, [searchParams]);
+
+  console.log("parsedParams", parsedParams);
   const {
     setShippingStore,
     shippingStore,
