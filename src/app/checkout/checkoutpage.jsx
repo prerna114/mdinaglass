@@ -293,7 +293,7 @@ const checkoutpage = () => {
                         id="country"
                         ref={fieldRef?.country}
                         onChange={(e) => {
-                          handleAddress("country", e.target.value);
+                          handleText("country", e.target.value);
                         }}
                         value={filed?.country ?? ""}
                       >

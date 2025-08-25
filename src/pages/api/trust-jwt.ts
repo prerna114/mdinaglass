@@ -7,7 +7,13 @@ const JWT_SECRET =
   "56-ed450fa5fd8ab541bbe65933c3bc68453798e707fe43d12d94ebc8e42305dee9";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
   try {
+    const { amount } = req.body;
+
+    console.log("orderId ", amount);
     const payload = {
       iss: "jwt76319@niu.com.mt", // Must match Trust Payments Webservices JWT user
       iat: Math.floor(Date.now() / 1000),
@@ -17,11 +23,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         currencyiso3a: "EUR",
         returnurl: "http://localhost:3000/", // ✅ Success redirect
         errorurl: "http://localhost:3000/",
-        orderreference: "ORDER12345",
+        orderreference: `ORDER-${uuidv4()}`,
         sitereference: "xkholdings83683",
         accounttypedescription: "ECOM",
         requesttypedescriptions: ["THREEDQUERY", "AUTH"],
-        baseamount: "1",
+        baseamount: amount,
       },
     };
 

@@ -1,10 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CustomToast } from "./CustomToast";
+import ModalPayment from "./ModalPayment";
+import { useNavigationStore } from "@/store/useNavigationstore";
 
 export default function TrustPaymentForm() {
   const [token, setToken] = useState(null);
   const [sdkReady, setSdkReady] = useState(false);
+  const [show, setShow] = useState(false);
+  const setShowModal = useNavigationStore((s) => s.setShowModal);
 
   // 1. Load SDK
   useEffect(() => {
@@ -19,7 +24,15 @@ export default function TrustPaymentForm() {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const res = await fetch("/api/trust-jwt");
+        const res = await fetch("/api/trust-jwt", {
+          method: "POST", // 👈 must be POST
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            // amount: Math.round(amount * 100), // convert to minor units (€10.50 → 1050)
+            // orderId, // pass your order reference
+            amount: "1",
+          }),
+        });
         const { token } = await res.json();
 
         setToken(token);
@@ -51,39 +64,46 @@ export default function TrustPaymentForm() {
     // 🔹 Success
     st.on("paymentCompleted", (data) => {
       console.log("✅ Payment completed:", data);
+      setShowModal(true);
       // alert("Payment Success!");
       // You can also redirect:
-      window.location.href = "/payment-success";
+      // window.location.href = "/payment-success";
     });
 
     // 🔹 Failure
     st.on("paymentFailed", (error) => {
       console.error("❌ Payment failed:", error);
-      alert("Payment Failed: " + error);
+      setShowModal(false);
+
+      // alert("Payment Failed: " + error);
+      CustomToast("Payment Failed ", "top-center");
       // Redirect or show UI
       // window.location.href = "/payment-failure";
     });
 
     // 🔹 Cancelled
     st.on("paymentCanceled", () => {
-      console.warn("⚠️ Payment cancelled by user");
+      CustomToast("Payment cancelled by user", "top-center");
+      setShowModal(false);
     });
   }, [sdkReady, token]);
 
   return (
-    <form
-      id="st-form"
-      className="trust-payment-form"
-      // method="POST"
-      // action="https://your-backend.com/handle-payment"
-    >
-      <div id="st-card-number"></div>
-      <div id="st-expiration-date"></div>
-      <div id="st-security-code"></div>
-      <div id="st-notification-frame"></div>
-      <button type="submit" className="trust-payment-gateway">
-        Pay securely
-      </button>
-    </form>
+    <div>
+      <form
+        id="st-form"
+        className="trust-payment-form"
+        // method="POST"
+        // action="https://your-backend.com/handle-payment"
+      >
+        <div id="st-card-number"></div>
+        <div id="st-expiration-date"></div>
+        <div id="st-security-code"></div>
+        <div id="st-notification-frame"></div>
+        <button type="submit" className="trust-payment-gateway">
+          Pay securely
+        </button>
+      </form>
+    </div>
   );
 }

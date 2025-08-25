@@ -179,3 +179,19 @@ export const UpdateProfile = async (loginUserDetails, address) => {
   });
   return data;
 };
+
+// -----------------  Add Gift registry api
+export const giftRegitry = async (userDetails, token) => {
+  const raw = {
+    title: "Wedding Registry",
+    description: "Our wedding gift registry",
+    event_date: "2025-06-15",
+    event_type: "Wedding",
+  };
+  console.log("RAW Data", raw);
+  const data = await fetchGlobal("api/blackbull/gift-registry/create", {
+    method: "POST",
+    body: raw,
+  });
+  return data;
+};

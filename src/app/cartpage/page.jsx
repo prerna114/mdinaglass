@@ -244,22 +244,11 @@ const page = () => {
                         <td>
                           {item.name} {item?.variations}
                         </td>
-                        <td>
-                          €
-                          {isNaN(Number(item?.price))
-                            ? parseFloat(
-                                item?.min_price?.replace(/[^0-9.]/g, "")
-                              )
-                            : Number(item.price).toFixed(2)}
-                        </td>
+                        <td>€{item?.price && Number(item.price).toFixed(2)}</td>
                         <td>
                           €
                           {subtotal(
-                            item.min_price
-                              ? parseFloat(
-                                  item.min_price?.replace(/[^0-9.]/g, "")
-                                )
-                              : item.price,
+                            item.price,
                             item.quantity ? item?.quantity : item.qty
                           )}
                         </td>

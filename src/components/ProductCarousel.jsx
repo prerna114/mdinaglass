@@ -115,6 +115,8 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
       },
       { breakpoint: 576, settings: { slidesToShow: 1 } },
     ],
+    // fade: true,
+
     nextArrow: <CustomNextArrow />,
     prevArrow: <CustomPrevArrow />,
   };

@@ -131,7 +131,8 @@ export const checkOut = async (
   insurance,
   shippingPrice,
   shippingMethod,
-  method
+  method,
+  transactionId
 ) => {
   const billing = localStorage.getItem("billingaddress");
   const billingParse = JSON.parse(billing);
@@ -165,7 +166,7 @@ export const checkOut = async (
 
     shipping_method: shippingMethod,
     payment_method: "trust_payment",
-    transaction_id: "test_transaction12345",
+    transaction_id: transactionId,
     shipping_price: shippingPrice,
     insurance_cost: insurance,
   };
@@ -268,7 +269,8 @@ export const guestcheckOut = async (
   price,
   shippingMethod,
   insurance,
-  method
+  method,
+  transactionId
 ) => {
   const billing = localStorage.getItem("billingaddress");
   const billingParse = JSON.parse(billing);
@@ -301,7 +303,7 @@ export const guestcheckOut = async (
     },
     shipping_method: shippingMethod,
     payment_method: "trust_payment",
-    transaction_id: "test_transaction12345",
+    transaction_id: transactionId,
     shipping_price: Number(price),
     guest_token: guestToken,
     insurance_cost: insurance,

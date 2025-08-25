@@ -7,8 +7,12 @@ import { products } from "@/constant";
 import Link from "next/link";
 import { generateInvoice, getOrderList } from "@/api/CartApi";
 import moment from "moment";
-import MyGiftRegistry from "./MyGiftRegistry";
+import MyGiftRegistry from "./giftregistry/MyGiftRegistry";
+import CreateGiftRegister from "./giftregistry/CreateGiftRegistry";
+
 import InstantLink from "./InstantClick";
+import { useNavigationStore } from "@/store/useNavigationstore";
+import { CustomToast } from "./CustomToast";
 
 export default function Make() {
   const [tab, setTab] = useState("profile");
@@ -16,6 +20,9 @@ export default function Make() {
   const [userDetails, setUserDetails] = useState();
   const [orderList, setOrderList] = useState([]);
   const [password, setPassword] = useState({});
+  const [registryExit, setRegistryExit] = useState(false);
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
+
   const getTheOrderList = async () => {
     const response = await getOrderList();
     if (response.status == 200) {
@@ -39,8 +46,32 @@ export default function Make() {
   };
 
   const generateTheInvoice = async (id) => {
-    const data = await generateInvoice(id);
-    console.log("Data", data);
+    setNavigating(true);
+    try {
+      const res = await generateInvoice(id);
+      const pdfUrl = res?.data?.data?.download_url;
+
+      if (pdfUrl) {
+        // Create a hidden <a> element
+        const link = document.createElement("a");
+        link.href = pdfUrl;
+        link.setAttribute(
+          "download",
+          res?.data?.data?.filename || "invoice.pdf"
+        );
+        setNavigating(false);
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } else {
+        CustomToast("Invoice is not present or not generated");
+        console.error("No PDF URL found");
+        setNavigating(false);
+      }
+    } catch (err) {
+      console.error("Error generating invoice:", err);
+    }
   };
   return (
     <div className="container mt-5">
@@ -157,11 +188,16 @@ export default function Make() {
                               {/* <td>€{subtotal(item.price, item.qty)}</td> */}
                               <td>{data.qty_ordered}</td>
                               <td>{item.status}</td>
-                              <td>
-                                <Link href={"/loginCheckoutPage"}>
+                              {item?.invoices?.[0]?.id && (
+                                <td
+                                  className="invoiceButton"
+                                  onClick={() => {
+                                    generateTheInvoice(item?.invoices?.[0]?.id);
+                                  }}
+                                >
                                   <p>View Details</p>
-                                </Link>
-                              </td>
+                                </td>
+                              )}
                             </tr>
                           ))
                         )}
@@ -260,10 +296,30 @@ export default function Make() {
                     paddingTop: 0,
                   }}
                 >
-                  <h4 className="gift-registry-h4">Welcome to Your Gift Registry, {userDetails?.name}!</h4>
-                  <MyGiftRegistry />
-
-                 
+                  <button
+                    onClick={() => {
+                      setRegistryExit(!registryExit);
+                    }}
+                    className="login-sec"
+                    style={{
+                      padding: 0,
+                      margin: 0,
+                    }}
+                  >
+                    <h2>Regitry exit</h2>
+                  </button>
+                  {registryExit ? (
+                    <div>
+                      <h4 className="gift-registry-h4">
+                        Welcome to Your Gift Registry, {userDetails?.name}!
+                      </h4>
+                      <MyGiftRegistry />
+                    </div>
+                  ) : (
+                    <div>
+                      <CreateGiftRegister />
+                    </div>
+                  )}
                 </div>
               )}
             </div>

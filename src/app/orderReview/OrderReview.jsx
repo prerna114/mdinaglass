@@ -3,9 +3,12 @@
 import { checkOut, guestcheckOut } from "@/api/CartApi";
 import { CustomToast, SuccessToast } from "@/components/CustomToast";
 import TrustPaymentForm from "@/components/TrustPaymentForm";
+import ModalPayment from "@/components/ModalPayment";
+
 import { useCartStore } from "@/store";
 import { useShippingStore } from "@/store/shippingStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useNavigationStore } from "@/store/useNavigationstore";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
@@ -17,6 +20,73 @@ const OrderReview = () => {
   const giftMessage = useAuthStore((state) => state.giftMessage);
   const { setPaymentMethods, paymentMethods } = useAuthStore.getState(); //
   const [loader, setLoader] = useState(false);
+  const [parsedParams, setParsedParams] = useState(null);
+  const [modalMessage, setModalMessage] = useState(null);
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
+  const setShowModal = useNavigationStore((s) => s.setShowModal);
+
+  const [modalTrue, setModalTrue] = useState(false);
+
+  useEffect(() => {
+    if (!searchParams) return;
+    setModalTrue(true);
+
+    // Convert query params → object
+    const data = {};
+    searchParams.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    // ✅ Only continue if Trust Payments returned something
+    if (!("errorcode" in data || "requestreference" in data || "jwt" in data)) {
+      setModalTrue(false);
+
+      return; // exit early, normal page load
+    }
+
+    // If JWT is present, decode it
+    if (data.jwt) {
+      setShowModal(true);
+      try {
+        const base64Url = data.jwt.split(".")[1]; // JWT payload part
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = JSON.parse(
+          decodeURIComponent(
+            atob(base64)
+              .split("")
+              .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+              .join("")
+          )
+        );
+        data.jwtDecoded = jsonPayload;
+      } catch (e) {
+        console.error("JWT decode error:", e);
+      }
+    }
+
+    setParsedParams(data);
+    localStorage.setItem("trust-payment", JSON.stringify(data));
+
+    // ✅ Only fire alerts if Trust Payments response present
+    if (data?.errorcode == "0") {
+      // alert(data?.errormessage || "Payment Success");
+      SuccessToast("Payment Success", "top-center");
+      PaymentSuccess();
+    } else if (data?.errorcode == "30000") {
+      setShowModal(false);
+      CustomToast("Please Enter valid details", "top-center");
+    } else if (data?.errorcode == "70000") {
+      setShowModal(false);
+
+      CustomToast("Payment was declined by your bank.", "top-center");
+    } else if (data?.errorcode) {
+      setShowModal(false);
+
+      CustomToast(`Payment Failed ${data?.errormessage}`, "top-center");
+    }
+  }, [searchParams]);
+
+  console.log("parsedParams", parsedParams);
   const {
     setShippingStore,
     shippingStore,
@@ -81,6 +151,8 @@ const OrderReview = () => {
   }
 
   const PaymentSuccess = async () => {
+    setModalMessage("Please wait while we are confirming your order");
+    setNavigating(true);
     setLoader(true);
     const tokenData = localStorage.getItem("token");
     const parsed = tokenData ? JSON.parse(tokenData) : null;
@@ -93,22 +165,30 @@ const OrderReview = () => {
       shippingMethod?.ServiceDescription
     );
     if (accessToken) {
+      const parseData = localStorage.getItem("trust-payment");
+      const transactionId = JSON.parse(parseData);
       const response = await checkOut(
         insurance,
         shippingMethod?.Price,
         shippingMethod?.ServiceDescription,
-        method
+        method,
+        transactionId?.transactionreference
       );
       console.log("Response", response);
 
       if (response.status == 200) {
         SuccessToast(response.data.message, "top-right");
         setLoader(false);
-        router.push("/");
+        router.replace("/");
+        window.location.replace("/");
         localStorage.clear("shipping-store");
-
+        setNavigating(false);
+        setShowModal(false);
         clearCart();
       } else {
+        setNavigating(false);
+        setShowModal(false);
+
         setLoader(false);
 
         CustomToast("Something went wrong", "top-right");
@@ -127,24 +207,36 @@ const OrderReview = () => {
   };
 
   const guestCheckoutAPI = async (guestToken) => {
+    setNavigating(true);
+    console.log("parsedParams transaction", parsedParams?.transactionreference);
     const price = getGrandTotal(cart) + insurance + shippingMethod?.Price;
+    const parseData = localStorage.getItem("trust-payment");
+    const transactionId = JSON.parse(parseData);
     const data = await guestcheckOut(
       guestToken,
       shippingMethod?.Price,
       shippingMethod?.ServiceDescription,
       insurance,
-      method
+      method,
+      transactionId?.transactionreference
     );
     console.log("Guest checkut", data);
     if (data?.status == 200) {
       SuccessToast(data.data.message, "top-right");
       setLoader(false);
+      setShowModal(false);
 
       localStorage.clear("shipping-store");
-      router.push("/");
+      router.replace("/");
+      // window.location.replace("/");
+
       clearCart();
+      setNavigating(false);
     } else {
       CustomToast("Something Went Wrong", "top-right");
+      setNavigating(false);
+      setShowModal(false);
+
       setLoader(false);
     }
   };
@@ -155,14 +247,16 @@ const OrderReview = () => {
     Number(Number(insurance).toFixed(2)) +
     Number(Number(shippingMethod?.Price).toFixed(2));
 
-  console.log("total", insurance);
-  // console.log("billingAddress", shippingStore, shippingMethod, shiipingCost);
+  // console.log("total", insurance);
+  // console.log("billingAddress", shippingMethod);
   return (
     <div
       style={{
         background: "#f1f1f1",
       }}
     >
+      <ModalPayment message={modalMessage} />
+
       <div className="header-product bg-white">
         <h1>Checkout: Order Review</h1>
       </div>
@@ -326,7 +420,7 @@ const OrderReview = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {cart.map((item) => {
+                    {cart?.map((item) => {
                       console.log("The item", item);
                       return (
                         <tr key={item.id}>
@@ -336,9 +430,10 @@ const OrderReview = () => {
                           <td>{item.name}</td>
                           <td>
                             €
-                            {item.price
-                              ? Number(item?.price)?.toFixed(2)
-                              : item.min_price.replace(/[^0-9.]/g, "")}
+                            {
+                              item.price && Number(item?.price)?.toFixed(2)
+                              // : item.min_price.replace(/[^0-9.]/g, "")
+                            }
                           </td>
                           <td>
                             <input
@@ -359,9 +454,7 @@ const OrderReview = () => {
                           <td>
                             €
                             {subtotal(
-                              item.price
-                                ? item.price
-                                : item.min_price.replace(/[^0-9.]/g, ""),
+                              item.price,
                               item.quantity ? item.quantity : item.qty
                             )}
                           </td>
@@ -403,8 +496,8 @@ const OrderReview = () => {
 
                       <td>
                         €
-                        {shippingMethod?.Price
-                          ? shippingMethod?.Price
+                        {shippingMethod && typeof shippingMethod === "object"
+                          ? shippingMethod.Price ?? "" // show Price if exists, else empty
                           : shippingMethod}
                       </td>
                     </tr>
@@ -452,7 +545,9 @@ const OrderReview = () => {
                       </button>
                     </Link>
                   </div>
-                  <button className="btn btn-cart btn-info text-white back-button">
+
+                  {/* ======== Proceed to Checkout Payment Button ========= */}
+                  {/* <button className="btn btn-cart btn-info text-white back-button">
                     {loader ? (
                       <div
                         className="spinner-border text-white"
@@ -463,13 +558,23 @@ const OrderReview = () => {
                         // href={`/orderReview?method=${method}`}
                         onClick={() => {
                           PaymentSuccess();
+                          // router.replace("/");
+                          // window.history.pushState(
+                          //   null,
+                          //   "",
+                          //   window.location.href
+                          // );
+
+                          // // Then redirect
+                          // window.location.assign("/");
+
                           // setLoader(true);
                         }}
                       >
                         Proceed to Payment
                       </div>
                     )}
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -477,6 +582,20 @@ const OrderReview = () => {
         </div>
       )}
       <TrustPaymentForm />
+      {/* <button className="btn btn-cart btn-info text-white back-button">
+        {loader ? (
+          <div className="spinner-border text-white" role="status"></div>
+        ) : (
+          <div
+            onClick={() => {
+              // PaymentSuccess();
+              router.replace("/");
+            }}
+          >
+            Proceed to Payment
+          </div>
+        )}
+      </button> */}
     </div>
   );
 };

@@ -147,12 +147,12 @@ const FilterProduct = ({ down }) => {
               {sku == "all-product.htm" ? null : (
                 <div className="col-md-4">
                   <div className="d-flex  sorting-item align-items-center justify-content-end">
-                    <span>Size</span>
+                    <span>Filter by</span>
                     <label
                       htmlFor="currency-select"
                       className="visually-hidden"
                     >
-                      Size
+                      Filter by
                     </label>
                     <select
                       id="currency-select"
@@ -166,7 +166,7 @@ const FilterProduct = ({ down }) => {
                       }}
                       defaultValue={paginationOption?.size}
                     >
-                      <option value={""}>Select</option>
+                      <option value={""}>Size</option>
                       <option value={6}>Small</option>
                       <option value={7}>Medium</option>
                       <option value={8}>Large</option>

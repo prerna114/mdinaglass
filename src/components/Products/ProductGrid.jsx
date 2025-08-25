@@ -142,11 +142,7 @@ const ProductGrid = ({ products, categoryidList }) => {
                   </InstantLink>
                   <p className="card-text text-info fw-bold">
                     Price €
-                    {product?.min_price
-                      ? isNaN(Number(product?.min_price))
-                        ? product?.min_price
-                        : Number(product?.min_price).toFixed(2)
-                      : Number(product?.price)
+                    {Number(product?.price)
                       ? Number(product?.price).toFixed(2)
                       : "0"}
                   </p>

@@ -91,7 +91,7 @@ const CategoryGrid = () => {
     getCategory();
   }, []);
 
-  console.log("sideMenu CategoryGrid", sideMenu);
+  console.log("sideMenu CategoryGrid", categoryList);
   return (
     <section className=" custom-categories bg-white container py-5">
       <h3 className=" mb-4" style={{ fontFamily: "dopamine, sans-serif" }}>
