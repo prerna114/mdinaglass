@@ -6,14 +6,16 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
-import { getAllProduct } from "@/api/productApi";
+import { getAllProduct, getBestSeller } from "@/api/productApi";
 import Link from "next/link";
 import { addCartGuest, addToTheCart, getCartGuest } from "@/api/CartApi";
 import InstantLink from "./InstantClick";
 import { createImage } from "@/constant";
 
 const ProductCard = ({ title = "New Arrivals" }) => {
-  const { addToCart, cart, clearCart } = useCartStore((state) => state);
+  const { addToCart, cart, clearCart, setCartTotal, setAllCart } = useCartStore(
+    (state) => state
+  );
   const [productData, setProductData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingProductId, setLoadingProductId] = useState(null);
@@ -118,8 +120,8 @@ const ProductCard = ({ title = "New Arrivals" }) => {
   };
 
   const fetchData = async () => {
-    const data = await getAllProduct();
-    console.log("getAllProduct", data?.data?.data);
+    const data = await getBestSeller();
+    console.log("getBestSeller", data?.data?.data);
     if (data.status === 200) {
       // Filter products with valid image URLs
       // const filteredProducts = await Promise.all(
@@ -203,6 +205,9 @@ const ProductCard = ({ title = "New Arrivals" }) => {
       const response = await getCartGuest(tokenData);
       console.log("getCartGuest", response?.data?.cart[0]?.items);
       if (response.status == 200) {
+        setCartTotal(response?.data?.cart[0]?.grand_total);
+        setAllCart(response?.data);
+
         clearCart();
         response?.data?.cart[0]?.items?.forEach((item) => {
           addToCart(item);
@@ -214,7 +219,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     fetchData();
   }, []);
 
-  console.log("productDataCard12444", createImage(productData[0]?.sku));
+  console.log("productDataCard12444", productData);
   return (
     <div className=" py-5 bg-white bg-white-custom">
       <div className="container">

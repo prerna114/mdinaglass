@@ -33,13 +33,23 @@ const PaymentLink = dynamic(() => import("../../components/PaymentLink"), {
 });
 
 const page = () => {
-  const { cart, removeFromCart, updateQuantity, addToCart, clearCart } =
-    useCartStore((state) => state);
+  const {
+    cart,
+    removeFromCart,
+    setCartTotal,
+    setAllCart,
+    updateQuantity,
+    addToCart,
+    clearCart,
+  } = useCartStore((state) => state);
   const router = useRouter();
 
   const { isLogin } = useAuthStore((state) => state);
+
   const [guestToken, setGuestToken] = useState(null);
   const [userDetails, setUserDetails] = useState("");
+  const [localCart, setLocalCart] = useState([]);
+
   const { shippingStore } = useShippingStore((state) => state);
   console.log("shippingStore", shippingStore);
   const [cartItems, setCartItems] = useState([
@@ -129,6 +139,15 @@ const page = () => {
     return Number(price * qty).toFixed(2);
   };
 
+  const updateLocalCart = (id, quantity) => {
+    const data = localCart?.map((item) =>
+      item.id === id
+        ? { ...item, quantity: quantity !== undefined ? quantity : qty }
+        : item
+    );
+    setLocalCart(data);
+  };
+
   useEffect(() => {
     console.log("Cart page loaded");
     const data = localStorage.getItem("guestToken");
@@ -140,6 +159,12 @@ const page = () => {
     getCart();
   }, []);
 
+  useEffect(() => {
+    if (cart?.length > 0) {
+      setLocalCart(cart);
+    }
+  }, [cart]);
+
   const getCart = async () => {
     const guestToken = localStorage.getItem("token");
 
@@ -149,8 +174,11 @@ const page = () => {
       setUserDetails(parseData);
       const data = await getCartListing();
       if (data?.status == 200) {
+        setAllCart;
         clearCart();
-        console.log("getCart", data.data.items);
+        console.log("getCart", data);
+        setCartTotal(data?.data?.cart?.grand_total);
+        setAllCart(data?.data);
         // addToCart(data.result.items);
         data.data.items.forEach((item) => {
           addToCart(item);
@@ -174,6 +202,7 @@ const page = () => {
     }
   };
   console.log("Cart page", cart);
+  console.log("Local Cart", localCart);
   return (
     <div>
       {/* <Header /> */}
@@ -222,7 +251,7 @@ const page = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {cart.map((item, index) => (
+                    {localCart.map((item, index) => (
                       <tr key={index}>
                         <td
                           style={{
@@ -260,10 +289,11 @@ const page = () => {
                             className="form-control"
                             style={{ width: "70px" }}
                             onChange={(e) =>
-                              updateTheQuantity(
-                                item.id,
-                                parseInt(e.target.value)
-                              )
+                              // updateTheQuantity(
+                              //   item.id,
+                              //   parseInt(e.target.value)
+                              // )
+                              updateLocalCart(item.id, parseInt(e.target.value))
                             }
                           />
                         </td>
@@ -304,48 +334,88 @@ const page = () => {
               </table>
 
               <div className="table-row-3">
-                <div className="row">
-                  <div className="col-item">
-                    <div>
-                      <img src="/assets/bracelet1.png" className="w-100" />
+                {localCart?.map((item, index) => (
+                  <div className="row">
+                    <div className="col-item">
+                      <div>
+                        {item?.product?.images?.length > 0 && (
+                          <img
+                            src={
+                              item?.product?.images?.length > 0
+                                ? item?.product?.images[0]?.url
+                                : item?.images[0]?.small_image_url
+                            }
+                            alt={item.name}
+                            width="80"
+                          />
+                        )}
+                      </div>
+                    </div>
+
+                    <div className=" col-name">
+                      <h6>
+                        {" "}
+                        {item.name} {item?.variations}
+                      </h6>
+                    </div>
+                    <div className=" col-price">
+                      <h6>€{item?.price && Number(item.price).toFixed(2)}</h6>
+                    </div>
+
+                    <div className=" col-subtotal">
+                      <h6>
+                        {" "}
+                        €
+                        {subtotal(
+                          item.price,
+                          item.quantity ? item?.quantity : item.qty
+                        )}
+                      </h6>
+                    </div>
+
+                    <div className="col-input mt-3">
+                      <h6>Qty </h6>
+                      <span>
+                        <input
+                          type="number"
+                          value={item.quantity ? item.quantity : item.qty}
+                          min="1"
+                          className="form-control"
+                          style={{ width: "70px" }}
+                          onChange={(e) =>
+                            // updateTheQuantity(
+                            //   item.id,
+                            //   parseInt(e.target.value)
+                            // )
+                            updateLocalCart(item.id, parseInt(e.target.value))
+                          }
+                        />
+                      </span>
+                    </div>
+
+                    <div className="col-gift ">
+                      <h6>
+                        Gift{" "}
+                        <span>
+                          <input
+                            type="checkbox"
+                            checked={item.gift}
+                            onChange={() => toggleGift(item.id)}
+                          />
+                        </span>
+                      </h6>
+                    </div>
+                    <div
+                      className="col-remove mt-3"
+                      onClick={() => handleDelete(item)}
+                    >
+                      <h6>x Remove</h6>
                     </div>
                   </div>
-
-                  <div className=" col-name">
-                    <h6>Dog (standing) - Brown</h6>
-                  </div>
-                  <div className=" col-price">
-                    <h6>€17.00</h6>
-                  </div>
-
-                  <div className=" col-subtotal">
-                    <h6>€17.00</h6>
-                  </div>
-
-                  <div className="col-input mt-3">
-                    <h6>
-                      Qty{" "}
-                      <span>
-                        <input type="number"></input>
-                      </span>
-                    </h6>
-                  </div>
-
-                  <div className="col-gift mt-3">
-                    <h6>
-                      Gift{" "}
-                      <span>
-                        <input type="checkbox"></input>
-                      </span>
-                    </h6>
-                  </div>
-                  <div className="col-remove mt-3">
-                    <h6>x Remove</h6>
-                  </div>
-                </div>
+                ))}
               </div>
               <hr className="display-option" />
-              <div className="table-row-3">
+              {/* <div className="table-row-3">
                 <div className="row">
                   <div className="col-item">
                     <div>
@@ -385,7 +455,7 @@ const page = () => {
                     <h6>x Remove</h6>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <AddToCart />
               <GiftVoucher />

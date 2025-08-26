@@ -1,12 +1,15 @@
 "use client";
+import { giftRegitry } from "@/api/Customer";
 import { useCartStore } from "@/store";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import moment from "moment";
 
 import "react-datepicker/dist/react-datepicker.css";
-const CreateGiftRegistry = () => {
+import { CustomToast, SuccessToast } from "../CustomToast";
+const CreateGiftRegistry = ({ create }) => {
   const tabData = [
     {
       title: "Your Gift Registry",
@@ -33,8 +36,38 @@ const CreateGiftRegistry = () => {
   const [activeTab, setActiveTab] = useState("1");
   const [startDate, setStartDate] = useState(new Date());
   const [openCalendar, setOpenCalendar] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [createGiftText, setCreateGiftText] = useState();
 
-  console.log("openCalendar", openCalendar);
+  const createGiftRegistry = async () => {
+    setLoader(true);
+    const data = await giftRegitry();
+    if (data?.status == 200) {
+      setLoader(false);
+      SuccessToast("Gift Registry create successfully", "top-right");
+    } else if (data?.status == 409) {
+      setLoader(false);
+
+      CustomToast(data?.error, "top-right");
+    } else {
+      // if (data?.errorData?.message) {
+      //   // CustomToast(data?.errorData?.message, "top-right");
+      // } else {
+      //   CustomToast("Something went wrong", "top-right");
+      // }
+
+      CustomToast("Something went wrong", "top-right");
+    }
+    console.log("Data", data);
+  };
+
+  const handleText = (key, value) => {
+    setCreateGiftText((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+  console.log("openCalendar", startDate);
   return (
     <div className="container">
       <div>
@@ -48,7 +81,9 @@ const CreateGiftRegistry = () => {
                   marginTop: 0,
                 }}
               >
-                <h2 className="mt-3">Create Gift Registry</h2>
+                {!create ? null : (
+                  <h2 className="mt-3">Create Gift Registry</h2>
+                )}
               </div>
               <div className="gift-registry-body">
                 <div
@@ -65,9 +100,10 @@ const CreateGiftRegistry = () => {
                         type="text"
                         required
                         // ref={fieldRef?.firstName}
-                        // onChange={(e) => {
-                        //   handleText("firstName", e.target.value);
-                        // }}
+                        onChange={(e) => {
+                          handleText("title", e.target.value);
+                        }}
+                        value={createGiftText?.title}
                         // value={
                         //   filed && filed.firstName !== undefined
                         //     ? filed.firstName
@@ -320,9 +356,12 @@ const CreateGiftRegistry = () => {
                       // open={openCalendar}
                       selected={startDate}
                       onChange={(date) => {
-                        setStartDate(date), setOpenCalendar(!openCalendar);
+                        const formatted = moment(date).format("YYYY-MM-DD");
+                        setStartDate(formatted),
+                          handleText(formatted, "top-right");
+                        setOpenCalendar(!openCalendar);
                       }}
-                      showIcon
+                      // showIcon
                     />
 
                     {/* <div className="required-text">
@@ -333,7 +372,7 @@ const CreateGiftRegistry = () => {
                   <div className="col-md-12">
                     <input
                       type="text"
-                      placeholder="CITY*"
+                      placeholder="EVENT LOCATION*"
                       // ref={fieldRef?.city}
                       // onChange={(e) => {
                       //   handleText("city", e.target.value);
@@ -353,11 +392,11 @@ const CreateGiftRegistry = () => {
                       type="text"
                       rows={7}
                       // ref={fieldRef?.state}
-                      placeholder="STATE/PROVINCE*"
-                      style={{ width: "auto" }}
-                      // onChange={(e) => {
-                      //   handleText("state", e.target.value);
-                      // }}
+                      placeholder="MESSAGE FOR REGISTRY GUESTS*"
+                      style={{ width: "80%" }}
+                      onChange={(e) => {
+                        handleText("description", e.target.value);
+                      }}
                       // value={
                       //   filed && filed.state !== undefined
                       //     ? filed.state
@@ -434,6 +473,32 @@ const CreateGiftRegistry = () => {
 
           {/* <div className="required-text">{error.password}</div> */}
         </div>
+
+        <button className="btn btn-cart btn-info text-white back-button">
+          <div
+            // href={`/orderReview?method=${method}`}
+            onClick={() => {
+              createGiftRegistry();
+            }}
+          >
+            Create Registry
+          </div>
+        </button>
+
+        <button className="btn btn-cart btn-info text-white back-button">
+          {loader ? (
+            <div className="spinner-border text-white" role="status"></div>
+          ) : (
+            <div
+              // href={`/orderReview?method=${method}`}
+              onClick={() => {
+                createGiftRegistry();
+              }}
+            >
+              Create Registry
+            </div>
+          )}
+        </button>
       </div>
     </div>
   );

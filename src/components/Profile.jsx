@@ -297,16 +297,17 @@ export default function Make() {
                   }}
                 >
                   <button
+                    className="btn btn-cart btn-info text-white back-button"
                     onClick={() => {
                       setRegistryExit(!registryExit);
                     }}
-                    className="login-sec"
+                    // className="login-sec"
                     style={{
                       padding: 0,
                       margin: 0,
                     }}
                   >
-                    <h2>Regitry exit</h2>
+                    <div>Registry exit</div>
                   </button>
                   {registryExit ? (
                     <div>

@@ -32,7 +32,9 @@ const Header = () => {
   const router = useRouter();
 
   const [searchVisible, setSearchVisible] = useState(false);
-  const { addToCart, cart, clearCart } = useCartStore((state) => state);
+  const { addToCart, cart, clearCart, setCartTotal, setAllCart } = useCartStore(
+    (state) => state
+  );
   const { login, isLogin, logout, setLoginState } = useAuthStore(
     (state) => state
   );
@@ -69,12 +71,14 @@ const Header = () => {
     console.log("accessToken", accessToken);
     if (accessToken && accessToken !== "undefined") {
       const data = await getCartListing();
-      console.log("getCart Header", data.data);
+      console.log("getCart Header123", data.data?.cart);
 
       if (data?.status == 200) {
         clearCart();
+        setAllCart(data?.data);
         // console.log("getCart Header", data.data);
-        console.log("getCart Header", data.data.items);
+        console.log("getCart Header ", data.data.items);
+        setCartTotal(data?.data?.cart?.grand_total);
 
         // addToCart(data.result.items);
         data.data.items.forEach((item) => {
@@ -96,8 +100,12 @@ const Header = () => {
     console.log("guestToken", tokenData);
     if (tokenData) {
       const response = await getCartGuest(tokenData);
-      console.log("getCartGuest", response?.data?.cart[0]?.items);
+      // console.log("getCartGuest", );
       if (response.status == 200) {
+        setAllCart(response?.data);
+
+        setCartTotal(response?.data?.cart[0]?.grand_total);
+
         clearCart();
         response?.data?.cart[0]?.items?.forEach((item) => {
           addToCart(item);

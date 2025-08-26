@@ -100,9 +100,8 @@ const OrderReview = () => {
   const [method, setMethod] = useState(paymentMethods);
 
   const router = useRouter();
-  const { cart, removeFromCart, clearCart, insurance } = useCartStore(
-    (state) => state
-  );
+  const { cart, removeFromCart, clearCart, insurance, cartTotal, allCart } =
+    useCartStore((state) => state);
   const subtotal = (price, qty) => {
     console.log("Price ", price, qty);
     return (price * qty).toFixed(2);
@@ -180,7 +179,7 @@ const OrderReview = () => {
         SuccessToast(response.data.message, "top-right");
         setLoader(false);
         router.replace("/");
-        window.location.replace("/");
+        // window.location.replace("/");
         localStorage.clear("shipping-store");
         setNavigating(false);
         setShowModal(false);
@@ -227,7 +226,7 @@ const OrderReview = () => {
       setShowModal(false);
 
       localStorage.clear("shipping-store");
-      router.replace("/");
+      // router.replace("/");
       // window.location.replace("/");
 
       clearCart();
@@ -240,10 +239,15 @@ const OrderReview = () => {
       setLoader(false);
     }
   };
-  console.log("method", shiipingCost);
+  console.log("method", cartTotal, typeof cartTotal);
+
+  // const GrandTotal =
+  //   Number(Number(getGrandTotal(cart)).toFixed(2)) +
+  //   Number(Number(insurance).toFixed(2)) +
+  //   Number(Number(shippingMethod?.Price).toFixed(2));
 
   const GrandTotal =
-    Number(Number(getGrandTotal(cart)).toFixed(2)) +
+    Number(Number(cartTotal).toFixed(2)) +
     Number(Number(insurance).toFixed(2)) +
     Number(Number(shippingMethod?.Price).toFixed(2));
 
@@ -416,7 +420,7 @@ const OrderReview = () => {
                       <th>PRODUCT NAME</th>
                       <th>PRICE</th>
                       <th>QTY</th>
-                      <th>SUBTOTAL</th>
+                      <th>TOTAL</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -457,6 +461,7 @@ const OrderReview = () => {
                               item.price,
                               item.quantity ? item.quantity : item.qty
                             )}
+                            {/* {Number(cartTotal).toFixed(2)} */}
                           </td>
                         </tr>
                       );
@@ -476,13 +481,54 @@ const OrderReview = () => {
                           marginLeft: 10,
                         }}
                       >
+                        Sub total
+                      </td>
+
+                      <td>€{Number(cartTotal)?.toFixed(2)}</td>
+                    </tr>
+                    <tr key="3">
+                      <td></td>
+                      <td></td>
+
+                      {/* <td> */}
+                      {/* <h1>mkmk</h1> */}
+                      {/* <img src={item.image} alt={item.name} width="80" /> */}
+                      {/* </td> */}
+                      <td
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      >
+                        Discount
+                      </td>
+
+                      <td>
+                        €
+                        {allCart?.cart[0]
+                          ? Number(allCart?.cart[0].discount_amount).toFixed(2)
+                          : Number(allCart?.cart?.discount_amount).toFixed(2)}
+                      </td>
+                    </tr>
+                    <tr key="4">
+                      <td></td>
+                      <td></td>
+
+                      {/* <td> */}
+                      {/* <h1>mkmk</h1> */}
+                      {/* <img src={item.image} alt={item.name} width="80" /> */}
+                      {/* </td> */}
+                      <td
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      >
                         Insurance
                       </td>
 
                       <td>€{insurance}</td>
                     </tr>
 
-                    <tr key="3">
+                    <tr key="5">
                       <td></td>
                       <td></td>
 
@@ -502,7 +548,7 @@ const OrderReview = () => {
                       </td>
                     </tr>
 
-                    <tr key="4">
+                    <tr key="6">
                       <td></td>
                       <td></td>
                       {/* <td>
@@ -516,7 +562,8 @@ const OrderReview = () => {
                         Grand Total
                       </td>
 
-                      <td>€{Number(GrandTotal)?.toFixed(2)}</td>
+                      <td>€{Number(GrandTotal).toFixed(2)}</td>
+                      {/* <td>€{GrandTotal}</td> */}
                     </tr>
                   </thead>
                 </table>
@@ -547,7 +594,7 @@ const OrderReview = () => {
                   </div>
 
                   {/* ======== Proceed to Checkout Payment Button ========= */}
-                  {/* <button className="btn btn-cart btn-info text-white back-button">
+                  <button className="btn btn-cart btn-info text-white back-button">
                     {loader ? (
                       <div
                         className="spinner-border text-white"
@@ -574,7 +621,7 @@ const OrderReview = () => {
                         Proceed to Payment
                       </div>
                     )}
-                  </button> */}
+                  </button>
                 </div>
               </div>
             </div>

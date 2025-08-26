@@ -4,6 +4,8 @@ import { useCartStore } from "@/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { CustomToast, SuccessToast } from "./CustomToast";
 import {
+  getCartGuest,
+  getCartListing,
   getInsuranceRate,
   getShippingRate,
   updateGuestCart,
@@ -13,9 +15,20 @@ import { CountryList } from "@/constant";
 import { useNavigationStore } from "@/store/useNavigationstore";
 import { useShippingStore } from "@/store/shippingStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { removeCoupon, verfiyCoupon } from "@/api/productApi";
 
 const AddToCart = () => {
-  const { cart, setInsurance, insurance } = useCartStore((state) => state);
+  const {
+    cart,
+    addToCart,
+    setInsurance,
+    clearCart,
+    insurance,
+    cartTotal,
+    setCartTotal,
+    setAllCart,
+    allCart,
+  } = useCartStore((state) => state);
   const [cartWieght, setCartWeight] = useState();
   const [loading, setLoading] = useState(false);
   const [shippingRate, setShippingRate] = useState();
@@ -154,6 +167,74 @@ const AddToCart = () => {
       CustomToast("Something went wrong in insurance", "top-right");
     }
   };
+
+  const removeTheCoupon = async (code) => {
+    const guest_token = localStorage.getItem("guestToken");
+
+    const data = await removeCoupon(code);
+    console.log("applyTheCoupon", data);
+    if (data?.status == 200) {
+      SuccessToast(data?.data?.message, "top-right");
+      getCart();
+    }
+    console.log("Verify coupoun", data);
+  };
+
+  const getCart = async () => {
+    setNavigating(true);
+    const tokenData = localStorage.getItem("token");
+    const parsed = tokenData ? JSON.parse(tokenData) : null;
+    const accessToken = parsed?.token;
+    console.log("accessToken", accessToken);
+    if (accessToken && accessToken !== "undefined") {
+      const data = await getCartListing();
+      console.log("getCart Header123", data.data?.cart);
+
+      if (data?.status == 200) {
+        clearCart();
+        // console.log("getCart Header", data.data);
+        console.log("getCart Header ", data.data.items);
+        setCartTotal(data?.data?.cart?.grand_total);
+        setAllCart(data?.data);
+
+        // addToCart(data.result.items);
+        data.data.items.forEach((item) => {
+          addToCart(item);
+        });
+        setNavigating(false);
+      } else {
+        setNavigating(false);
+      }
+    } else {
+      const tokenData = localStorage.getItem("guestToken");
+      console.log("guestToken", tokenData);
+
+      if (tokenData) {
+        getGUesstCart();
+      }
+    }
+  };
+
+  const getGUesstCart = async () => {
+    const tokenData = localStorage.getItem("guestToken");
+    console.log("guestToken", tokenData);
+    if (tokenData) {
+      const response = await getCartGuest(tokenData);
+      // console.log("getCartGuest", );
+      if (response.status == 200) {
+        setCartTotal(response?.data?.cart[0]?.grand_total);
+        setAllCart(response?.data);
+
+        clearCart();
+        response?.data?.cart[0]?.items?.forEach((item) => {
+          addToCart(item);
+        });
+        setNavigating(false);
+      } else {
+        setNavigating(false);
+      }
+    }
+  };
   useEffect(() => {
     // setInsurance(15.0);
     getTotalWeight();
@@ -177,11 +258,18 @@ const AddToCart = () => {
     }
   }, [insurance, shippingRate]);
 
-  console.log("Cart Items", cart, shippingRate);
-  console.log("shippingStore", insurance);
-  console.log("userDetails", userDetails);
-  console.log("totalPrice", totalPrice);
-  console.log("isNavigating", isNavigating);
+  // console.log("Cart Items", cart, shippingRate);
+  // console.log("shippingStore", insurance);
+  // console.log("userDetails", userDetails);
+  // console.log("totalPrice", totalPrice);
+  // console.log("isNavigating", isNavigating);
+
+  console.log(
+    "cart",
+    allCart?.cart?.coupon_code,
+    allCart?.cart[0]?.coupon_code
+  );
+  // console.log("insurance",)
 
   return (
     <div className="container my-4">
@@ -267,14 +355,45 @@ const AddToCart = () => {
                     <td>Subtotal:</td>
                     <td className="text-end">
                       €
-                      {isNaN(totalPrice)
+                      {/* {isNaN(totalPrice)
                         ? getGrandTotal(cart).toFixed(2)
-                        : totalPrice}
+                        : totalPrice} */}
+                      {Number(cartTotal)?.toFixed(2)}
                     </td>
                   </tr>
                   <tr>
-                    <td>Discount:</td>
-                    <td className="text-end">€0.00</td>
+                    <td>
+                      Discount:{" "}
+                      {/* {allCart?.cart[0]?.coupon_code =!null && allCart?.cart[0]?.coupon_code != undefined &&  <div
+                          className="btn btn-link text-danger p-0"
+                          onClick={() => {
+                            removeTheCoupon(allCart?.cart[0]?.coupon_code);
+                          }}
+                        >
+                          Remove coupon
+                        </div> } */}
+                      {allCart?.cart?.coupon_code != null &&
+                        allCart?.cart?.coupon_code != undefined && (
+                          <div
+                            className="btn btn-link text-danger p-0"
+                            onClick={() => {
+                              removeTheCoupon(allCart?.cart?.coupon_code);
+                            }}
+                          >
+                            Remove coupon
+                          </div>
+                        )}
+                    </td>
+                    <td className="text-end">
+                      €{" "}
+                      {allCart?.cart?.coupon_code &&
+                        Number(allCart?.cart?.discount_amount).toFixed(2)}
+                      {allCart?.cart[0]?.discount_amount &&
+                        Number(allCart?.cart[0]?.discount_amount).toFixed(2)}
+                      {!allCart?.cart?.coupon_code &&
+                        !allCart?.cart[0]?.discount_amount &&
+                        "0.00"}
+                    </td>
                   </tr>
                   <tr>
                     <td>Shipping Price:</td>
@@ -302,7 +421,7 @@ const AddToCart = () => {
                       style={{ color: "#175E84" }}
                     >
                       €
-                      {isNaN(totalPrice)
+                      {/* {isNaN(totalPrice)
                         ? Number(getGrandTotal(cart)).toFixed(2)
                         : Number(
                             totalPrice +
@@ -310,7 +429,12 @@ const AddToCart = () => {
                               (shippingStore?.Value?.length > 0
                                 ? Number(shippingStore.Value[0].Price)
                                 : 0)
-                          ).toFixed(2)}
+                          ).toFixed(2)} */}
+                      {Number(cartTotal) +
+                        insurance +
+                        (shippingStore?.Value?.length > 0
+                          ? Number(shippingStore.Value[0].Price)
+                          : 0)}
                       {/* €{totalPrice + insurance} */}
                     </td>
                   </tr>
@@ -324,7 +448,7 @@ const AddToCart = () => {
                       style={{ color: "#175E84" }}
                     >
                       €
-                      {isNaN(totalPrice)
+                      {/* {isNaN(totalPrice)
                         ? Number(getGrandTotal(cart)).toFixed(2)
                         : Number(
                             totalPrice +
@@ -332,7 +456,12 @@ const AddToCart = () => {
                               (shippingStore?.Value?.length > 0
                                 ? Number(shippingStore.Value[0].Price)
                                 : 0)
-                          ).toFixed(2)}
+                          ).toFixed(2)} */}
+                      {Number(cartTotal) +
+                        insurance +
+                        (shippingStore?.Value?.length > 0
+                          ? Number(shippingStore.Value[0].Price)
+                          : 0)}
                     </td>
                   </tr>
                 </tbody>

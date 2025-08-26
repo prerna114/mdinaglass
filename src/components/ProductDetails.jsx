@@ -10,7 +10,7 @@ import { useMenuStore } from "@/store/useCategoryStore";
 import { createImage } from "@/constant";
 import dynamic from "next/dynamic";
 import InstantLink from "./InstantClick";
-import { addItemWIshlist } from "@/api/productApi";
+import { addItemWIshlist, getWishList } from "@/api/productApi";
 import { useAuthStore } from "@/store/useAuthStore";
 const AboveMenu = dynamic(() => import("./Products/AboveMenu"), {
   ssr: true,
@@ -59,9 +59,12 @@ export default function ProductDetails({ productDetails, productDetail }) {
   const [selectedImage, setSelectedImage] = useState("");
   const [simpleImage, setSImpleImage] = useState("");
   const [wishLoader, setWishLoader] = useState(false);
-  const { addToCart, clearCart } = useCartStore((state) => state);
+  const { addToCart, clearCart, setCartTotal, setAllCart } = useCartStore(
+    (state) => state
+  );
   const cart = useCartStore((state) => state.cart);
   const { isLogin } = useAuthStore((state) => state);
+  const [inWish, setInWish] = useState(false);
 
   const imageList = useMemo(
     () => [
@@ -133,6 +136,8 @@ export default function ProductDetails({ productDetails, productDetail }) {
         response?.data?.cart[0]?.items?.forEach((item) => {
           addToCart(item);
         });
+        setCartTotal(response?.data?.cart[0]?.grand_total);
+        setAllCart(response?.data);
       }
     }
   };
@@ -144,6 +149,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
     console.log("addItemWishlist", response);
     if (response.status === 200) {
       SuccessToast("Item added to Wishlist", "top-right");
+      setInWish(sku);
       setWishLoader(false);
     } else if (response.status == 409) {
       CustomToast("Product already in wishlist", "top-right");
@@ -151,6 +157,31 @@ export default function ProductDetails({ productDetails, productDetail }) {
     } else {
       CustomToast("SomeThing went wrong", "top-right");
       setWishLoader(false);
+    }
+  };
+
+  const getTheWistList = async () => {
+    const data = localStorage.getItem("token");
+    const parseData = JSON.parse(data);
+
+    if (parseData) {
+      const response = await getWishList();
+      if (response.status === 200) {
+        const data = response?.data?.wishlist?.find(
+          (data) => data?.product?.sku == productDetails?.sku
+        );
+        if (data != null && Object.keys(data)?.length > 0) {
+          setInWish(productDetails?.sku);
+        }
+        // setProducts(response.data.wishlist);
+        console.log("Dataresponse", data);
+        localStorage.setItem(
+          "wishlist",
+          JSON.stringify(response?.data?.wishlist)
+        );
+      } else {
+        // CustomToast("Somethin went wrong", "top-right");
+      }
     }
   };
 
@@ -172,7 +203,9 @@ export default function ProductDetails({ productDetails, productDetail }) {
       setSelectedData(productDetails);
       setSImpleImage(productDetails?.images[0]?.url);
       console.log("INside Product details", productDetails?.sku);
+      getTheWistList();
     }
+
     console.log("INside Product detail121s");
   }, [productDetails]);
 
@@ -238,7 +271,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
   //   selectedImage
   // );
 
-  console.log("Selected Image,uniqueOptions", selectedImage, chooseSku);
+  console.log("Selected Image,uniqueOptions", inWish);
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       {/* <div className="filter-are">
@@ -363,19 +396,23 @@ export default function ProductDetails({ productDetails, productDetail }) {
         {/* Product Info */}
         <div className="col-md-12 col-lg-6 ">
           <div className="products-detailing">
-            <h2>{productDetails?.name}</h2>
-            <p className="text-muted sku-detail">
-              SKU: {selectedImage || "n/a"}
-              {isLogin && (
-                <span
-                  className="wishlist float-right"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    console.log("addItemWishlist", productDetails?.sku);
+            <h2> {productDetails?.name}</h2>
+            <div className="d-flex justify-content-between align-items-center">
+              <p className="sku-detail">SKU: {selectedImage || "n/a"} </p>
+              <span
+                className="wishlist float-right"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  console.log("addItemWishlist", productDetails?.sku);
+                  if (inWish == productDetails?.sku) {
+                    SuccessToast("Already in wishlist");
+                  } else {
                     addWishList(productDetails?.sku);
-                  }}
-                >
-                  {wishLoader ? (
+                  }
+                }}
+              >
+                {isLogin &&
+                  (wishLoader ? (
                     <div
                       className="spinner-border spinner-border-sm text-danger"
                       role="status"
@@ -383,35 +420,43 @@ export default function ProductDetails({ productDetails, productDetail }) {
                       <span className="visually-hidden">Loading...</span>
                     </div>
                   ) : (
-                    <Heart
-                      size={24}
-                      color="#c6302c"
-                      fill="#c6302c"
-                      stroke="#c6302c"
-                    />
-                  )}
-                </span>
-              )}
-            </p>
+                    <div>
+                      {inWish ? (
+                        <Heart
+                          size={24}
+                          color="#c6302c"
+                          fill="#c6302c"
+                          stroke="#c6302c"
+                        />
+                      ) : (
+                        <Heart
+                          size={24}
+                          color="#c6302c"
+                          fill="#ffff"
+                          stroke="#c6302c"
+                        />
+                      )}
+                    </div>
+                  ))}
+              </span>
+            </div>
+
             <p className="sku-detail mb-0">Description </p>
             <p
               dangerouslySetInnerHTML={{
                 __html: productDetails?.description || "",
               }}
             />
-
             <p className="sku-detail">
               Availability:
               <span className="text-success">In Stock</span>
             </p>
-
             <p className="sku-detail">
               Price:{" "}
               <span className="fs-4 text-dark">
                 € {Number(selectedData?.price).toFixed(2)}
               </span>
             </p>
-
             {uniqueOptions.size > 0 && (
               <div className="mb-4 d-flex choose-category align-items-center">
                 <label
@@ -447,7 +492,6 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 </select>
               </div>
             )}
-
             <div className="mb-4 d-flex choose-category align-items-center">
               <label
                 className="form-label fw-semibold"
@@ -470,7 +514,6 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 ))}
               </select>
             </div>
-
             <button
               className="w-100 py-3 text-uppercase addtocart"
               onClick={addItemCart}
@@ -490,7 +533,6 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 </div>
               )}
             </button>
-
             <div className="mt-3 text-center a_color">
               <InstantLink href="/cartpage" className="me-2">
                 View Cart

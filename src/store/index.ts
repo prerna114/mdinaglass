@@ -7,20 +7,34 @@ type CartItem = {
 
 type CartState = {
   cart: CartItem[];
+  allCart: {};
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string, sku: string) => void;
   updateQuantity: (id: string, quantity: number, qty?: number) => void;
   clearCart: () => void;
   insurance: {};
   setInsurance: (state: string) => void;
+  cartTotal: string;
+  setCartTotal: (state: string) => void;
+  setAllCart: (state: string) => void;
+  discountAmount: string;
+  setDiscountAmount: (state: string) => void;
 };
 
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       cart: [],
-      insurance: "15.00",
+      cartTotal: "",
+      discountAmount: "",
+
+      allCart: {},
+      setAllCart: (data) => set({ allCart: data }),
+
+      insurance: "0.00",
       setInsurance: (data) => set({ insurance: data }),
+      setDiscountAmount: (data) => set({ discountAmount: data }),
+
       addToCart: (item) => {
         const currentCart = get().cart;
 
@@ -51,7 +65,7 @@ export const useCartStore = create<CartState>()(
           }
         }
       },
-
+      setCartTotal: (data) => set({ cartTotal: data }),
       removeFromCart: (id, sku) => {
         if (id) {
           const updatedCart = get().cart.filter((item) => item.id !== id);
@@ -81,6 +95,8 @@ export const useCartStore = create<CartState>()(
       partialize: (state) => ({
         cart: state.cart,
         insurance: state.insurance,
+        cartTotal: state.cartTotal,
+        allCart: state.allCart,
       }),
       // skipHydration: true,
       // skipHydration: true, // optional: to avoid hydration mismatch in SSR apps

@@ -16,7 +16,9 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   const { products, category, setHeading, setProducts } = ProductLists(
     (state) => state
   );
-  const { clearCart } = useCartStore((state) => state);
+  const { clearCart, setCartTotal, setAllCart } = useCartStore(
+    (state) => state
+  );
   const [productData, setProductData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingProductId, setLoadingProductId] = useState(null);
@@ -200,6 +202,8 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
         response?.data?.cart[0]?.items?.forEach((item) => {
           addToCart(item);
         });
+        setCartTotal(response?.data?.cart[0]?.grand_total);
+        setAllCart(response?.data);
       }
     }
   };

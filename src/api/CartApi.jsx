@@ -167,6 +167,8 @@ export const checkOut = async (
     shipping_method: shippingMethod,
     payment_method: "trust_payment",
     transaction_id: transactionId,
+    // transaction_id: "test_transaction12345",
+
     shipping_price: shippingPrice,
     insurance_cost: insurance,
   };
@@ -304,6 +306,7 @@ export const guestcheckOut = async (
     shipping_method: shippingMethod,
     payment_method: "trust_payment",
     transaction_id: transactionId,
+
     shipping_price: Number(price),
     guest_token: guestToken,
     insurance_cost: insurance,

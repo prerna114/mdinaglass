@@ -86,6 +86,20 @@ export const getNewArrivalProduct = async () => {
   return response;
 };
 
+export const getBestSeller = async () => {
+  const raw = {
+    per_page: 10,
+    page: 1,
+    sort_by: "price",
+    sort_dir: "dsc",
+  };
+  const response = await fetchGlobal("api/blackbull/products/bestsellers", {
+    method: "POST",
+    // body: raw,
+  });
+  return response;
+};
+
 export const getRangeProduct = async (sku, id) => {
   console.log("getRangeProduct", sku, id);
   const raw = {
@@ -139,6 +153,59 @@ export const removeItemWIshlist = async (id) => {
   const data = await fetchGlobal("api/blackbull/cart/removeWishlistItem", {
     method: "POST",
     body: raw,
+  });
+  console.log("WIshlist Data Data", raw);
+  return data;
+};
+
+export const verfiyCoupon = async (code, gustToken) => {
+  const raw = {
+    code: code,
+  };
+  const header = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  };
+  const data = await fetchGlobal("api/blackbull/coupon/verify", {
+    method: "POST",
+    body: raw,
+    headers: header,
+  });
+  console.log("WIshlist Data Data", raw);
+  return data;
+};
+
+export const applyCoupon = async (code, gustToken) => {
+  const raw = {
+    code: code,
+    guest_token: gustToken,
+  };
+  const header = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  };
+  const data = await fetchGlobal("api/blackbull/coupon/apply", {
+    method: "POST",
+    body: raw,
+    headers: header,
+  });
+  console.log("WIshlist Data Data", raw);
+  return data;
+};
+
+export const removeCoupon = async (code, gustToken) => {
+  const raw = {
+    code: code,
+    // guest_token: gustToken,
+  };
+  const header = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  };
+  const data = await fetchGlobal("api/blackbull/coupon/remove", {
+    method: "POST",
+    body: raw,
+    headers: header,
   });
   console.log("WIshlist Data Data", raw);
   return data;
