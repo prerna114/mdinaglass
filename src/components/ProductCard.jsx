@@ -11,6 +11,7 @@ import Link from "next/link";
 import { addCartGuest, addToTheCart, getCartGuest } from "@/api/CartApi";
 import InstantLink from "./InstantClick";
 import { createImage } from "@/constant";
+import { fetchCart } from "@/app/hooks/useCart";
 
 const ProductCard = ({ title = "New Arrivals" }) => {
   const { addToCart, cart, clearCart, setCartTotal, setAllCart } = useCartStore(
@@ -190,7 +191,7 @@ const ProductCard = ({ title = "New Arrivals" }) => {
       setLoading(false);
 
       // addToCart(data.data?.cart.items);
-      await getGUesstCart();
+      await fetchCart();
     } else {
       setLoading(false);
 
@@ -198,23 +199,23 @@ const ProductCard = ({ title = "New Arrivals" }) => {
     }
   };
 
-  const getGUesstCart = async () => {
-    const tokenData = localStorage.getItem("guestToken");
-    console.log("guestToken", tokenData);
-    if (tokenData) {
-      const response = await getCartGuest(tokenData);
-      console.log("getCartGuest", response?.data?.cart[0]?.items);
-      if (response.status == 200) {
-        setCartTotal(response?.data?.cart[0]?.grand_total);
-        setAllCart(response?.data);
+  // const getGUesstCart = async () => {
+  //   const tokenData = localStorage.getItem("guestToken");
+  //   console.log("guestToken", tokenData);
+  //   if (tokenData) {
+  //     const response = await getCartGuest(tokenData);
+  //     console.log("getCartGuest", response?.data?.cart[0]?.items);
+  //     if (response.status == 200) {
+  //       setCartTotal(response?.data?.cart[0]?.grand_total);
+  //       setAllCart(response?.data);
 
-        clearCart();
-        response?.data?.cart[0]?.items?.forEach((item) => {
-          addToCart(item);
-        });
-      }
-    }
-  };
+  //       clearCart();
+  //       response?.data?.cart[0]?.items?.forEach((item) => {
+  //         addToCart(item);
+  //       });
+  //     }
+  //   }
+  // };
   useEffect(() => {
     fetchData();
   }, []);

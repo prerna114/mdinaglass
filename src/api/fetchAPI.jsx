@@ -26,14 +26,14 @@ export const fetchGlobal = async (
       method,
       headers: {
         "Content-Type": "application/json",
-        // Accept: "application/json",
+        Accept: "application/json",
 
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
         ...headers,
-        redirect: "follow",
       },
       ...(body && { body: JSON.stringify(body) }),
       cache,
+      redirect: "follow",
     });
 
     const contentType = res.headers.get("content-type");

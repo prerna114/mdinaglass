@@ -837,6 +837,9 @@ button.trust-payment-gateway {
   border: 0;
   border-radius: 2px;
 }
+#st-security-code input {
+  -webkit-text-security: disc; /* for Safari */
+} /* for other browsers */
 
 li.jewels ul li a {
   color: #495057 !important;

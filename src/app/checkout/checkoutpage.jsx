@@ -1,4 +1,5 @@
 "use client";
+import { getShippingRate } from "@/api/CartApi";
 import { CustomToast } from "@/components/CustomToast";
 import { CountryList } from "@/constant";
 import { useNavigationStore } from "@/store/useNavigationstore";
@@ -10,6 +11,7 @@ import React, { useEffect, useRef, useState } from "react";
 const checkoutpage = () => {
   const [shipping, setShipping] = useState(false);
   const [checbox, setCheckbox] = useState(false);
+
   const router = useRouter();
   const [tokenAddress, setTokenAddress] = useState({});
   const searchParams = useSearchParams();
@@ -74,7 +76,7 @@ const checkoutpage = () => {
       newError.state = "State is required*";
     } else if (!filed?.zipCode?.trim()) {
       newError.zipCode = "zip Code is required*";
-    } else if (!filed?.country?.trim()) {
+    } else if (!filed?.country?.country?.trim()) {
       newError.country = "Country is required*";
     } else if (!filed?.telePhone?.trim()) {
       newError.telePhone = "TelePhone is required*";
@@ -116,6 +118,8 @@ const checkoutpage = () => {
       setTokenAddress(parseData);
       setFiled((prev) => ({
         ...prev,
+        firstName: parseData?.first_name || "",
+        lastName: parseData?.last_name || "",
 
         email: parseData?.email || "",
         addressOne: streetParts[0] || "",
@@ -293,13 +297,24 @@ const checkoutpage = () => {
                         id="country"
                         ref={fieldRef?.country}
                         onChange={(e) => {
-                          handleText("country", e.target.value);
+                          const code = e.target.value; // "AI"
+                          const name =
+                            e.target.selectedOptions[0].getAttribute(
+                              "data-name"
+                            );
+                          handleText("country", { code, country: name });
+
+                          // handleText("country", e.target.value);
                         }}
-                        value={filed?.country ?? ""}
+                        value={filed?.country?.code ?? ""}
                       >
                         <option value="">SELECT COUNTRY *</option>
                         {CountryList.map((country, index) => (
-                          <option key={index} value={country.code}>
+                          <option
+                            key={index}
+                            value={country.code}
+                            data-name={country.country}
+                          >
                             {country.country}
                           </option>
                         ))}

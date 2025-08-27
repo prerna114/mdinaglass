@@ -1,9 +1,15 @@
-// store/useNavigationStore.ts
 import { create } from "zustand";
 
-export const useNavigationStore = create((set) => ({
+type NavigationState = {
+  isNavigating: boolean;
+  showModal: boolean;
+  setNavigating: (val: boolean) => void;
+  setShowModal: (val: boolean) => void;
+};
+
+export const useNavigationStore = create<NavigationState>((set) => ({
   isNavigating: false,
   showModal: false,
-  setNavigating: (val: boolean) => set({ isNavigating: val }),
-  setShowModal: (val: boolean) => set({ showModal: val }),
+  setNavigating: (val) => set({ isNavigating: val }),
+  setShowModal: (val) => set({ showModal: val }),
 }));

@@ -171,7 +171,8 @@ const OrderReview = () => {
         shippingMethod?.Price,
         shippingMethod?.ServiceDescription,
         method,
-        transactionId?.transactionreference
+        transactionId?.transactionreference,
+        giftMessage
       );
       console.log("Response", response);
 
@@ -180,7 +181,7 @@ const OrderReview = () => {
         setLoader(false);
         router.replace("/");
         // window.location.replace("/");
-        localStorage.clear("shipping-store");
+        localStorage.removeItem("shipping-store");
         setNavigating(false);
         setShowModal(false);
         clearCart();
@@ -217,16 +218,16 @@ const OrderReview = () => {
       shippingMethod?.ServiceDescription,
       insurance,
       method,
-      transactionId?.transactionreference
+      transactionId?.transactionreference,
+      giftMessage
     );
     console.log("Guest checkut", data);
     if (data?.status == 200) {
       SuccessToast(data.data.message, "top-right");
       setLoader(false);
       setShowModal(false);
-
-      localStorage.clear("shipping-store");
-      // router.replace("/");
+      localStorage.removeItem("shipping-store");
+      router.replace("/");
       // window.location.replace("/");
 
       clearCart();
@@ -239,7 +240,7 @@ const OrderReview = () => {
       setLoader(false);
     }
   };
-  console.log("method", cartTotal, typeof cartTotal);
+  console.log("method", shippingMethod?.Price);
 
   // const GrandTotal =
   //   Number(Number(getGrandTotal(cart)).toFixed(2)) +
@@ -316,7 +317,8 @@ const OrderReview = () => {
                   </p>
                   <p className="mb-1 billing-text-name ">
                     {billingAddress.city}, {billingAddress?.state},{" "}
-                    {billingAddress?.zipCode}, {billingAddress?.country}
+                    {billingAddress?.zipCode},{" "}
+                    {billingAddress?.country?.country}
                   </p>
                   <p className="mb-0 billing-text-name ">
                     Tel: {billingAddress?.telePhone}
@@ -347,7 +349,8 @@ const OrderReview = () => {
                   </p>
                   <p className="mb-1 billing-text-name ">
                     {shippingAddress.city}, {shippingAddress?.state},{" "}
-                    {shippingAddress?.zipCode}, {shippingAddress?.country}
+                    {shippingAddress?.zipCode},{" "}
+                    {shippingAddress?.country?.country}
                   </p>
                   <p className="mb-0 billing-text-name ">
                     Tel: {shippingAddress?.telePhone}
@@ -594,7 +597,7 @@ const OrderReview = () => {
                   </div>
 
                   {/* ======== Proceed to Checkout Payment Button ========= */}
-                  <button className="btn btn-cart btn-info text-white back-button">
+                  {/* <button className="btn btn-cart btn-info text-white back-button">
                     {loader ? (
                       <div
                         className="spinner-border text-white"
@@ -621,7 +624,7 @@ const OrderReview = () => {
                         Proceed to Payment
                       </div>
                     )}
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>

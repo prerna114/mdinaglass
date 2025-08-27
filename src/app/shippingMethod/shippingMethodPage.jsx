@@ -14,6 +14,8 @@ const shippingMethodPagess = () => {
   const queryKey = Array.from(searchParams.keys())[0];
   const router = useRouter();
   const setGiftMessage = useAuthStore((state) => state.setGiftMessage);
+  const giftMessage = useAuthStore((state) => state.giftMessage);
+
   const setNavigating = useNavigationStore((s) => s.setNavigating);
   const {
     setShippingStore,
@@ -194,7 +196,7 @@ const shippingMethodPagess = () => {
           {giftOption && (
             <textarea
               required
-              onChange={(e) => console.log("EEE", handleChange(e.target.value))}
+              onChange={(e) => handleChange(e.target.value)}
               style={{ paddingLeft: 10, height: 150, width: "23%" }} // you can adjust height as needed
               placeholder="Gift Message*"
               rows={5}

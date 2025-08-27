@@ -19,6 +19,11 @@ const CategoryFeature = dynamic(() => import("../components/CategoryFeature"), {
   loading: () => <div style={{ height: 200 }}>Loading...</div>,
 });
 
+const GoogleReview = dynamic(() => import("../components/GoogleReview"), {
+  ssr: false,
+  loading: () => <div style={{ height: 200 }}>Loading...</div>,
+});
+
 const ProductCard = dynamic(() => import("../components/ProductCard"), {
   ssr: false,
   loading: () => <div style={{ height: 200 }}>Loading...</div>,
@@ -78,7 +83,8 @@ export default function Page() {
         <ProductCarousel title="Featured Products" showBadge={false} />
       )}
 
-      {slideSetting?.testi_monial && <Testimonials />}
+      {/* {slideSetting?.testi_monial && <Testimonials />} */}
+      {slideSetting?.testi_monial && <GoogleReview />}
 
       {/* <Footer /> */}
     </>

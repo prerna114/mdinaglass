@@ -57,6 +57,15 @@ export default function TrustPaymentForm() {
         securityCode: "st-security-code",
         notificationFrame: "st-notification-frame",
       },
+      styles: {
+        securityCode: {
+          "input-type": "password", // 👈 forces CVV masking
+          "font-size": "16px",
+          color: "#000",
+          "letter-spacing": "3px",
+          "placeholder-color": "#999",
+        },
+      },
     });
 
     st.Components();

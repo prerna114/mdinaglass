@@ -132,7 +132,8 @@ export const checkOut = async (
   shippingPrice,
   shippingMethod,
   method,
-  transactionId
+  transactionId,
+  giftMessage
 ) => {
   const billing = localStorage.getItem("billingaddress");
   const billingParse = JSON.parse(billing);
@@ -148,7 +149,7 @@ export const checkOut = async (
       address: billingParse.addressOne + billingParse.addressTwo,
       city: billingParse.city,
       state: billingParse.state,
-      country: billingParse.country,
+      country: billingParse.country?.code,
       postcode: billingParse.zipCode,
       phone: billingParse.telePhone,
     },
@@ -159,7 +160,7 @@ export const checkOut = async (
       address: shippingParse.addressOne + shippingParse.addressTwo,
       city: shippingParse.city,
       state: shippingParse.state,
-      country: shippingParse.country,
+      country: shippingParse.country?.code,
       postcode: shippingParse.zipCode,
       phone: shippingParse.telePhone,
     },
@@ -167,8 +168,8 @@ export const checkOut = async (
     shipping_method: shippingMethod,
     payment_method: "trust_payment",
     transaction_id: transactionId,
-    // transaction_id: "test_transaction12345",
-
+    // transaction_id: "login2345",
+    giftMessage: giftMessage,
     shipping_price: shippingPrice,
     insurance_cost: insurance,
   };
@@ -272,7 +273,8 @@ export const guestcheckOut = async (
   shippingMethod,
   insurance,
   method,
-  transactionId
+  transactionId,
+  giftMessage
 ) => {
   const billing = localStorage.getItem("billingaddress");
   const billingParse = JSON.parse(billing);
@@ -288,7 +290,7 @@ export const guestcheckOut = async (
       address: billingParse.addressOne + billingParse.addressTwo,
       city: billingParse.city,
       state: billingParse.state,
-      country: billingParse.country,
+      country: billingParse.country?.code,
       postcode: billingParse.zipCode,
       phone: billingParse.telePhone,
     },
@@ -299,17 +301,20 @@ export const guestcheckOut = async (
       address: shippingParse.addressOne + shippingParse.addressTwo,
       city: shippingParse.city,
       state: shippingParse.state,
-      country: shippingParse.country,
+      country: billingParse.country?.code,
+
       postcode: shippingParse.zipCode,
       phone: shippingParse.telePhone,
     },
     shipping_method: shippingMethod,
     payment_method: "trust_payment",
     transaction_id: transactionId,
+    // transaction_id: "1234321",
 
     shipping_price: Number(price),
     guest_token: guestToken,
     insurance_cost: insurance,
+    giftMessage: giftMessage,
   };
   const data = await fetchGlobal("api/blackbull/guest-checkout", {
     method: "POST",

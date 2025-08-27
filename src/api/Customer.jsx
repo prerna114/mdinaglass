@@ -195,3 +195,16 @@ export const giftRegitry = async (userDetails, token) => {
   });
   return data;
 };
+
+export const addItemInGiftRegistry = async () => {
+  const raw = {
+    sku: "BUB-357-W6-SX",
+    quantity: 21,
+  };
+  console.log("RAW Data", raw);
+  const data = await fetchGlobal("api/blackbull/gift-registry/add-item", {
+    method: "POST",
+    body: raw,
+  });
+  return data;
+};

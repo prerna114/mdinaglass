@@ -23,7 +23,9 @@ export default function Page() {
   const getSiderImage = async () => {
     const data = await getSlider(params.slug);
     if (data?.status == 200) {
-      setSliderImage(data?.data?.data[0]?.image_urls);
+      const response = JSON.parse(data?.data?.data[0]?.image);
+
+      setSliderImage(response);
     } else {
       setSliderImage([]);
     }
@@ -50,7 +52,8 @@ export default function Page() {
         sliderImage?.map((data, index) => (
           <Image
             key={index}
-            src={data}
+            // src={data}
+            src={`https://mdinaglasses.blackbullsolution.com/sliders/${data}`}
             width={1117}
             height={417}
             alt="terms and condtion"

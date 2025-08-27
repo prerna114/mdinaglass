@@ -8,6 +8,7 @@ import { CustomToast, SuccessToast } from "./CustomToast";
 import { getCartGuest, getCartListing } from "@/api/CartApi";
 import { useCartStore } from "@/store";
 import { useNavigationStore } from "@/store/useNavigationstore";
+import { fetchCart } from "@/app/hooks/useCart";
 
 const GiftVoucher = () => {
   const { isLogin } = useAuthStore((state) => state);
@@ -22,6 +23,7 @@ const GiftVoucher = () => {
     setCartTotal,
     setAllCart,
     setDiscountAmount,
+    allCart,
   } = useCartStore((state) => state);
   const router = useRouter();
   const processCheck = () => {
@@ -46,7 +48,7 @@ const GiftVoucher = () => {
   const verfiyTheCoupon = async () => {
     setNavigating(true);
     // const guest_token = localStorage.getItem("guestToken");
-    const data = await verfiyCoupon(couponCode);
+    const data = await verfiyCoupon(allCart?.cart?.coupon_code || couponCode);
     if (data?.status == 200) {
       applyTheCoupon();
     } else if (data?.status == 404) {
@@ -61,74 +63,33 @@ const GiftVoucher = () => {
   };
 
   const applyTheCoupon = async () => {
-    const guest_token = localStorage.getItem("guestToken");
+    setNavigating(true);
 
-    const data = await applyCoupon(couponCode, guest_token);
+    const guest_token = localStorage.getItem("guestToken");
+    const code = allCart?.cart?.coupon_code
+      ? allCart?.cart?.coupon_code
+      : couponCode;
+    const data = await applyCoupon(code, guest_token);
     console.log("applyTheCoupon", data);
     if (data?.status == 200) {
       SuccessToast(data?.data?.message, "top-right");
-      getCart();
+      fetchCart();
+    } else if (data?.status == 404) {
+      setNavigating(false);
+      CustomToast(data?.error, "top-right");
+    } else if (data?.status == 400) {
+      setNavigating(false);
+      CustomToast(data?.error, "top-right");
+    } else {
+      setNavigating(false);
+
+      CustomToast("Something went wrong", "top-right");
     }
     console.log("Verify coupoun", data);
   };
 
-  const getCart = async () => {
-    const tokenData = localStorage.getItem("token");
-    const parsed = tokenData ? JSON.parse(tokenData) : null;
-    const accessToken = parsed?.token;
-    console.log("accessToken", accessToken);
-    if (accessToken && accessToken !== "undefined") {
-      const data = await getCartListing();
-      console.log("getCart Header123", data.data?.cart);
+  console.log("allCart", allCart);
 
-      if (data?.status == 200) {
-        clearCart();
-        // console.log("getCart Header", data.data);
-        console.log("getCart Header ", data.data.items);
-        setCartTotal(data?.data?.cart?.grand_total);
-        setAllCart(data?.data);
-        setDiscountAmount(data?.data?.cart?.discount_amount);
-
-        // addToCart(data.result.items);
-        data.data.items.forEach((item) => {
-          addToCart(item);
-        });
-        setNavigating(false);
-      } else {
-        setNavigating(false);
-      }
-    } else {
-      const tokenData = localStorage.getItem("guestToken");
-      console.log("guestToken", tokenData);
-
-      if (tokenData) {
-        getGUesstCart();
-      }
-    }
-  };
-
-  const getGUesstCart = async () => {
-    const tokenData = localStorage.getItem("guestToken");
-    console.log("guestToken", tokenData);
-    if (tokenData) {
-      const response = await getCartGuest(tokenData);
-      // console.log("getCartGuest", );
-      if (response.status == 200) {
-        setCartTotal(response?.data?.cart[0]?.grand_total);
-        setAllCart(response?.data);
-
-        setDiscountAmount(response?.data?.cart?.discount_amount);
-
-        clearCart();
-        response?.data?.cart[0]?.items?.forEach((item) => {
-          addToCart(item);
-        });
-        setNavigating(false);
-      } else {
-        setNavigating(false);
-      }
-    }
-  };
   return (
     <div className="container">
       <div className="col-md-12">
@@ -137,15 +98,25 @@ const GiftVoucher = () => {
             <div className="discount-section">
               <h4>Discount Codes</h4>
               <p>Enter your coupon code if you have one.</p>
-
-              <input
-                type="text"
-                onChange={(e) => {
-                  console.log("Errr", e.target.value);
-                  setCouponCode(e.target.value);
+              <div
+                className="login-sec"
+                style={{
+                  padding: 0,
+                  marginTop: 0,
                 }}
-                className="w-100"
-              ></input>
+              >
+                <input
+                  type="text"
+                  style={{
+                    height: "40px",
+                  }}
+                  onChange={(e) => {
+                    console.log("Errr", e.target.value);
+                    setCouponCode(e.target.value);
+                  }}
+                  className="w-100"
+                ></input>
+              </div>
 
               <button
                 onClick={() => {
@@ -160,11 +131,29 @@ const GiftVoucher = () => {
           <div className="col-md-6">
             <div className="discount-section">
               <h4>Gift Cards</h4>
-              <p>Enter your coupon code if you have one.</p>
+              <p>Enter your Gift card code if you have one.</p>
 
-              <input type="text" className="w-100"></input>
+              <div
+                className="login-sec"
+                style={{
+                  padding: 0,
+                  marginTop: 0,
+                }}
+              >
+                <input
+                  type="text"
+                  style={{
+                    height: "40px",
+                  }}
+                  onChange={(e) => {
+                    // console.log("Errr", e.target.value);
+                    // setCouponCode(e.target.value);
+                  }}
+                  className="w-100"
+                ></input>
+              </div>
 
-              <button>Apply Voucher</button>
+              <button>Apply Gift Card</button>
             </div>
           </div>
         </div>

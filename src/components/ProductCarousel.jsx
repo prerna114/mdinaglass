@@ -11,6 +11,7 @@ import { ProductLists } from "@/store/product";
 import InstantLink from "./InstantClick";
 import { addCartGuest, addToTheCart, getCartGuest } from "@/api/CartApi";
 import { createImage } from "@/constant";
+import { fetchCart } from "@/app/hooks/useCart";
 
 const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   const { products, category, setHeading, setProducts } = ProductLists(
@@ -183,7 +184,8 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
       setLoading(false);
 
       // addToCart(data.data?.cart.items);
-      await getGUesstCart();
+      // await getGUesstCart();
+      await fetchCart();
     } else {
       setLoading(false);
 

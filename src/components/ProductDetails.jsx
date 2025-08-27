@@ -12,6 +12,7 @@ import dynamic from "next/dynamic";
 import InstantLink from "./InstantClick";
 import { addItemWIshlist, getWishList } from "@/api/productApi";
 import { useAuthStore } from "@/store/useAuthStore";
+import { fetchCart } from "@/app/hooks/useCart";
 const AboveMenu = dynamic(() => import("./Products/AboveMenu"), {
   ssr: true,
   loading: () => <span className="visually-hidden">Loading...</span>,
@@ -122,7 +123,8 @@ export default function ProductDetails({ productDetails, productDetail }) {
       SuccessToast("Item added to cart", "top-right");
       localStorage.setItem("guestToken", data.data?.guest_token);
       // addToCart(data.data?.cart.items);
-      await getGUesstCart();
+      // await getGUesstCart();
+      await fetchCart();
     }
   };
   const getGUesstCart = async () => {

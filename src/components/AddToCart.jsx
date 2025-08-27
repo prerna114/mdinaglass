@@ -16,6 +16,7 @@ import { useNavigationStore } from "@/store/useNavigationstore";
 import { useShippingStore } from "@/store/shippingStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { removeCoupon, verfiyCoupon } from "@/api/productApi";
+import { fetchCart } from "@/app/hooks/useCart";
 
 const AddToCart = () => {
   const {
@@ -171,70 +172,71 @@ const AddToCart = () => {
   const removeTheCoupon = async (code) => {
     const guest_token = localStorage.getItem("guestToken");
 
-    const data = await removeCoupon(code);
+    const data = await removeCoupon(code, guest_token);
     console.log("applyTheCoupon", data);
     if (data?.status == 200) {
       SuccessToast(data?.data?.message, "top-right");
-      getCart();
+      // getCart();
+      fetchCart();
     }
     console.log("Verify coupoun", data);
   };
 
-  const getCart = async () => {
-    setNavigating(true);
-    const tokenData = localStorage.getItem("token");
-    const parsed = tokenData ? JSON.parse(tokenData) : null;
-    const accessToken = parsed?.token;
-    console.log("accessToken", accessToken);
-    if (accessToken && accessToken !== "undefined") {
-      const data = await getCartListing();
-      console.log("getCart Header123", data.data?.cart);
+  // const getCart = async () => {
+  //   setNavigating(true);
+  //   const tokenData = localStorage.getItem("token");
+  //   const parsed = tokenData ? JSON.parse(tokenData) : null;
+  //   const accessToken = parsed?.token;
+  //   console.log("accessToken", accessToken);
+  //   if (accessToken && accessToken !== "undefined") {
+  //     const data = await getCartListing();
+  //     console.log("getCart Header123", data.data?.cart);
 
-      if (data?.status == 200) {
-        clearCart();
-        // console.log("getCart Header", data.data);
-        console.log("getCart Header ", data.data.items);
-        setCartTotal(data?.data?.cart?.grand_total);
-        setAllCart(data?.data);
+  //     if (data?.status == 200) {
+  //       clearCart();
+  //       // console.log("getCart Header", data.data);
+  //       console.log("getCart Header ", data.data.items);
+  //       setCartTotal(data?.data?.cart?.grand_total);
+  //       setAllCart(data?.data);
 
-        // addToCart(data.result.items);
-        data.data.items.forEach((item) => {
-          addToCart(item);
-        });
-        setNavigating(false);
-      } else {
-        setNavigating(false);
-      }
-    } else {
-      const tokenData = localStorage.getItem("guestToken");
-      console.log("guestToken", tokenData);
+  //       // addToCart(data.result.items);
+  //       data.data.items.forEach((item) => {
+  //         addToCart(item);
+  //       });
+  //       setNavigating(false);
+  //     } else {
+  //       setNavigating(false);
+  //     }
+  //   } else {
+  //     const tokenData = localStorage.getItem("guestToken");
+  //     console.log("guestToken", tokenData);
 
-      if (tokenData) {
-        getGUesstCart();
-      }
-    }
-  };
+  //     if (tokenData) {
+  //       getGUesstCart();
+  //     }
+  //   }
+  // };
 
-  const getGUesstCart = async () => {
-    const tokenData = localStorage.getItem("guestToken");
-    console.log("guestToken", tokenData);
-    if (tokenData) {
-      const response = await getCartGuest(tokenData);
-      // console.log("getCartGuest", );
-      if (response.status == 200) {
-        setCartTotal(response?.data?.cart[0]?.grand_total);
-        setAllCart(response?.data);
+  // const getGUesstCart = async () => {
+  //   const tokenData = localStorage.getItem("guestToken");
+  //   console.log("guestToken", tokenData);
+  //   if (tokenData) {
+  //     const response = await getCartGuest(tokenData);
+  //     // console.log("getCartGuest", );
+  //     if (response.status == 200) {
+  //       setCartTotal(response?.data?.cart[0]?.grand_total);
+  //       setAllCart(response?.data);
 
-        clearCart();
-        response?.data?.cart[0]?.items?.forEach((item) => {
-          addToCart(item);
-        });
-        setNavigating(false);
-      } else {
-        setNavigating(false);
-      }
-    }
-  };
+  //       clearCart();
+  //       response?.data?.cart[0]?.items?.forEach((item) => {
+  //         addToCart(item);
+  //       });
+  //       setNavigating(false);
+  //     } else {
+  //       setNavigating(false);
+  //     }
+  //   }
+  // };
   useEffect(() => {
     // setInsurance(15.0);
     getTotalWeight();
@@ -263,12 +265,15 @@ const AddToCart = () => {
   // console.log("userDetails", userDetails);
   // console.log("totalPrice", totalPrice);
   // console.log("isNavigating", isNavigating);
+  const couponCode =
+    allCart?.cart?.coupon_code ?? allCart?.cart?.[0]?.coupon_code;
 
   console.log(
-    "cart",
-    allCart?.cart?.coupon_code,
-    allCart?.cart[0]?.coupon_code
+    "cartallcart",
+    allCart?.cart?.discount_amount
+    // allCart?.cart[0]?.coupon_code
   );
+
   // console.log("insurance",)
 
   return (
@@ -364,35 +369,26 @@ const AddToCart = () => {
                   <tr>
                     <td>
                       Discount:{" "}
-                      {/* {allCart?.cart[0]?.coupon_code =!null && allCart?.cart[0]?.coupon_code != undefined &&  <div
+                      {couponCode && (
+                        <div
                           className="btn btn-link text-danger p-0"
                           onClick={() => {
-                            removeTheCoupon(allCart?.cart[0]?.coupon_code);
+                            removeTheCoupon(allCart?.cart?.coupon_code);
                           }}
                         >
                           Remove coupon
-                        </div> } */}
-                      {allCart?.cart?.coupon_code != null &&
-                        allCart?.cart?.coupon_code != undefined && (
-                          <div
-                            className="btn btn-link text-danger p-0"
-                            onClick={() => {
-                              removeTheCoupon(allCart?.cart?.coupon_code);
-                            }}
-                          >
-                            Remove coupon
-                          </div>
-                        )}
+                        </div>
+                      )}
                     </td>
                     <td className="text-end">
                       €{" "}
-                      {allCart?.cart?.coupon_code &&
+                      {/* {allCart?.cart?.coupon_code &&
                         Number(allCart?.cart?.discount_amount).toFixed(2)}
                       {allCart?.cart[0]?.discount_amount &&
-                        Number(allCart?.cart[0]?.discount_amount).toFixed(2)}
-                      {!allCart?.cart?.coupon_code &&
-                        !allCart?.cart[0]?.discount_amount &&
-                        "0.00"}
+                        Number(allCart?.cart[0]?.discount_amount).toFixed(2)} */}
+                      {allCart?.cart?.coupon_code
+                        ? Number(allCart?.cart?.discount_amount)?.toFixed(2)
+                        : "0.00"}
                     </td>
                   </tr>
                   <tr>
@@ -421,20 +417,13 @@ const AddToCart = () => {
                       style={{ color: "#175E84" }}
                     >
                       €
-                      {/* {isNaN(totalPrice)
-                        ? Number(getGrandTotal(cart)).toFixed(2)
-                        : Number(
-                            totalPrice +
-                              insurance +
-                              (shippingStore?.Value?.length > 0
-                                ? Number(shippingStore.Value[0].Price)
-                                : 0)
-                          ).toFixed(2)} */}
-                      {Number(cartTotal) +
-                        insurance +
-                        (shippingStore?.Value?.length > 0
-                          ? Number(shippingStore.Value[0].Price)
-                          : 0)}
+                      {Number(
+                        Number(cartTotal) +
+                          insurance +
+                          (shippingStore?.Value?.length > 0
+                            ? Number(shippingStore.Value[0].Price)
+                            : 0)
+                      ).toFixed(2)}
                       {/* €{totalPrice + insurance} */}
                     </td>
                   </tr>
@@ -448,20 +437,13 @@ const AddToCart = () => {
                       style={{ color: "#175E84" }}
                     >
                       €
-                      {/* {isNaN(totalPrice)
-                        ? Number(getGrandTotal(cart)).toFixed(2)
-                        : Number(
-                            totalPrice +
-                              insurance +
-                              (shippingStore?.Value?.length > 0
-                                ? Number(shippingStore.Value[0].Price)
-                                : 0)
-                          ).toFixed(2)} */}
-                      {Number(cartTotal) +
-                        insurance +
-                        (shippingStore?.Value?.length > 0
-                          ? Number(shippingStore.Value[0].Price)
-                          : 0)}
+                      {Number(
+                        Number(cartTotal) +
+                          insurance +
+                          (shippingStore?.Value?.length > 0
+                            ? Number(shippingStore.Value[0].Price)
+                            : 0)
+                      ).toFixed(2)}
                     </td>
                   </tr>
                 </tbody>

@@ -1,6 +1,9 @@
 "use client";
+import { getShippingRate } from "@/api/CartApi";
 import { CustomToast } from "@/components/CustomToast";
 import { CountryList } from "@/constant";
+import { useCartStore } from "@/store";
+import { useShippingStore } from "@/store/shippingStore";
 import { useNavigationStore } from "@/store/useNavigationstore";
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -9,13 +12,20 @@ import React, { useEffect, useRef, useState } from "react";
 
 const Shipping = () => {
   const [shipping, setShipping] = useState(false);
+  const [cartWieght, setCartWeight] = useState();
+  const { cart, insurance } = useCartStore((state) => state);
+  const [shippingRate, setShippingRate] = useState();
+
   const router = useRouter();
   const params = useSearchParams();
   const checkboxProps = params.get("checkbox");
   const [checkbox, setCheckbox] = useState(false);
   const setNavigating = useNavigationStore((s) => s.setNavigating);
+  const { setShippingStore } = useShippingStore((state) => state);
   const searchParams = useSearchParams();
   const queryKey = Array.from(searchParams.keys())[0];
+  const [apiCall, setAPICall] = useState("0");
+
   // console.log("EMai", email, params);
 
   const [filed, setFiled] = useState({
@@ -30,6 +40,7 @@ const Shipping = () => {
     zipCode: "",
     country: "",
     telePhone: "",
+    countryName: "",
   });
   const [error, setError] = useState({});
 
@@ -72,7 +83,7 @@ const Shipping = () => {
       newError.state = "State is required*";
     } else if (!filed?.zipCode?.trim()) {
       newError.zipCode = "zip Code is required*";
-    } else if (!filed?.country?.trim()) {
+    } else if (!filed?.country?.country?.trim()) {
       newError.country = "Country is required*";
     } else if (!filed?.telePhone?.trim()) {
       newError.telePhone = "TelePhone is required*";
@@ -101,30 +112,93 @@ const Shipping = () => {
 
     return true;
   };
+
+  function getTotalWeight() {
+    let total = 0;
+
+    for (const item of cart) {
+      // Prefer cart-level total_weight, fallback to product weight
+      const weight =
+        item?.total_weight || item?.weight || item?.product?.weight || 0;
+      total += Number(weight);
+    }
+
+    console.log("Total gram", total, cart);
+    setCartWeight(total);
+    return total;
+  }
+  const shiipingRate = async (code) => {
+    console.log("Cart Wiri", cartWieght);
+    if (Number(cartWieght) && Number(cartWieght) > 0) {
+      setNavigating(true);
+      const data = await getShippingRate(cartWieght, code);
+      if (data?.status == 200) {
+        console.log("datadata", data?.data);
+        if (data?.data?.Message == "An error has occurred.") {
+          setAPICall((prev) => prev + 1);
+          if (apiCall < 2) {
+            shiipingRate(countryCode);
+          }
+        }
+        if (data?.data) setShippingRate(data?.data);
+        setShippingStore(data?.data);
+        setNavigating(false);
+      } else {
+        setNavigating(false);
+      }
+    }
+    // console.log("Shipping Rate", data);
+  };
+  console.log("checkboxProps", checkboxProps);
   useEffect(() => {
     setNavigating(false);
     if (checkboxProps == true) {
-      const data = localStorage.getItem("billingaddress");
-      console.log("Billing addr", JSON.parse(data));
-      if (data) {
-        setFiled(JSON.parse(data));
+      const billingData = localStorage.getItem("billingaddress");
+      console.log(
+        "Billing addr12check",
+        JSON.parse(billingData),
+        checkboxProps
+      );
+      if (billingData) {
+        const parseData = JSON.parse(billingData);
+        setFiled(parseData);
+        // const data = JSON.parse(billingData);
+        console.log("Billing count", parseData?.country, cartWieght);
+        shiipingRate(parseData?.country?.code);
       }
     }
     if (checkbox) {
       const data = localStorage.getItem("billingaddress");
-      console.log("Billing addr", JSON.parse(data));
+      console.log("Billing addr12", JSON.parse(data));
+
       if (data) {
-        setFiled(JSON.parse(data));
+        const parseData = JSON.parse(data);
+        setFiled(parseData);
+        shiipingRate(parseData?.country?.code);
       }
     } else {
       const data = localStorage.getItem("shiipingaddreess");
-      console.log("Billing addr", JSON.parse(data));
+      console.log("Billing addr099", JSON.parse(data));
       if (data) {
-        setFiled(JSON.parse(data));
+        const parseData = JSON.parse(data);
+        setFiled(parseData);
+        shiipingRate(parseData?.country?.code);
       }
     }
-  }, [checkbox]);
-  console.log("Hndle text", checkbox);
+  }, [checkbox, cartWieght]);
+  useEffect(() => {
+    if (cart?.length > 0) {
+      getTotalWeight();
+    }
+  }, [cart]);
+
+  //  useEffect(() => {
+  //     // setInsuranceCost(insurance);
+  //     if (shiipingRate?.Value?.length >= 0) {
+  //       setshiipingCost(shippingRate?.Value[0]?.Price);
+  //     }
+  //   }, [insurance, shippingRate]);
+  console.log("Hndle text", filed);
 
   return (
     <>
@@ -138,7 +212,7 @@ const Shipping = () => {
           }}
         >
           <div className="header-product bg-white">
-            <h1>Checkout: Enter Billing Details</h1>
+            <h1>Checkout: Enter Shipping Details</h1>
           </div>
 
           <div className="container">
@@ -334,13 +408,23 @@ const Shipping = () => {
                         id="country"
                         ref={fieldRef?.country}
                         onChange={(e) => {
-                          handleText("country", e.target.value);
+                          const code = e.target.value; // "AI"
+                          const name =
+                            e.target.selectedOptions[0].getAttribute(
+                              "data-name"
+                            );
+                          handleText("country", { code, country: name });
+                          shiipingRate(code);
                         }}
-                        value={filed?.country ?? ""}
+                        value={filed?.country?.code ?? ""}
                       >
                         <option value="">SELECT COUNTRY *</option>
                         {CountryList.map((country, index) => (
-                          <option key={index} value={country.code}>
+                          <option
+                            key={index}
+                            data-name={country.country}
+                            value={country.code}
+                          >
                             {country.country}
                           </option>
                         ))}

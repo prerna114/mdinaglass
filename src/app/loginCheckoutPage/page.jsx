@@ -12,9 +12,10 @@ import Link from "next/link";
 import { useCartStore } from "@/store";
 import { getCartListing, getOrderList } from "@/api/CartApi";
 import { useMenuStore } from "@/store/useCategoryStore";
+import { fetchCart } from "../hooks/useCart";
 
 const loginCheckoutPage = () => {
-  const { clearCart, addToCart } = useCartStore((state) => state);
+  const { clearCart, addToCart, setAllCart } = useCartStore((state) => state);
   const loading = useMenuStore((state) => state.loading);
   const setLoading = useMenuStore((state) => state.setLoading);
 
@@ -66,7 +67,7 @@ const loginCheckoutPage = () => {
       setUserLogin(true);
       setLoadingScroll(false);
       setTimeout(() => {
-        getCart();
+        fetchCart();
       }, 1000);
     } else {
       setLoadingScroll(false);
@@ -74,27 +75,6 @@ const loginCheckoutPage = () => {
       // console.error("Data", data?.response?.data?.message);
       CustomToast(data?.response?.data?.message, "top-right");
     }
-  };
-  const getCart = async () => {
-    setLoading(true);
-    console.log("Cart listing caal");
-    const token = localStorage.getItem("token");
-    if (token) {
-      const data = await getCartListing();
-      if (data?.status == 200) {
-        clearCart();
-        console.log("getCart", data.data.items);
-        // addToCart(data.result.items);
-        data.data.items.forEach((item) => {
-          addToCart(item);
-        });
-        setLoading(false);
-      } else if (data?.status == 401) {
-        // logout;
-      }
-    }
-
-    // console.log("getCart", data);
   };
 
   // console.log("username", userName);

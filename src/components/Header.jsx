@@ -17,6 +17,7 @@ import InstantLink from "./InstantClick";
 import { ProductLists } from "@/store/product";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { fetchCart } from "@/app/hooks/useCart";
 const Banner = dynamic(() => import("./HeaderComponent/Banner"), {
   ssr: true,
   loading: () => <div>loading....</div>,
@@ -64,58 +65,60 @@ const Header = () => {
     logout();
   };
 
-  const getCart = async () => {
-    const tokenData = localStorage.getItem("token");
-    const parsed = tokenData ? JSON.parse(tokenData) : null;
-    const accessToken = parsed?.token;
-    console.log("accessToken", accessToken);
-    if (accessToken && accessToken !== "undefined") {
-      const data = await getCartListing();
-      console.log("getCart Header123", data.data?.cart);
+  // const getCart = async () => {
+  //   const tokenData = localStorage.getItem("token");
+  //   const parsed = tokenData ? JSON.parse(tokenData) : null;
+  //   const accessToken = parsed?.token;
+  //   console.log("accessToken", accessToken);
+  //   if (accessToken && accessToken !== "undefined") {
+  //     const data = await getCartListing();
+  //     console.log("getCart Header123", data.data?.cart);
 
-      if (data?.status == 200) {
-        clearCart();
-        setAllCart(data?.data);
-        // console.log("getCart Header", data.data);
-        console.log("getCart Header ", data.data.items);
-        setCartTotal(data?.data?.cart?.grand_total);
+  //     if (data?.status == 200) {
+  //       clearCart();
+  //       setAllCart(data?.data);
+  //       // console.log("getCart Header", data.data);
+  //       console.log("getCart Header ", data.data.items);
+  //       setCartTotal(data?.data?.cart?.grand_total);
 
-        // addToCart(data.result.items);
-        data.data.items.forEach((item) => {
-          addToCart(item);
-        });
-      }
-    } else {
-      const tokenData = localStorage.getItem("guestToken");
-      console.log("guestToken", tokenData);
+  //       // addToCart(data.result.items);
+  //       data.data.items.forEach((item) => {
+  //         addToCart(item);
+  //       });
+  //     }
+  //   } else {
+  //     const tokenData = localStorage.getItem("guestToken");
+  //     console.log("guestToken", tokenData);
 
-      if (tokenData) {
-        getGUesstCart();
-      }
-    }
-  };
+  //     if (tokenData) {
+  //       getGUesstCart();
+  //     }
+  //   }
+  // };
 
-  const getGUesstCart = async () => {
-    const tokenData = localStorage.getItem("guestToken");
-    console.log("guestToken", tokenData);
-    if (tokenData) {
-      const response = await getCartGuest(tokenData);
-      // console.log("getCartGuest", );
-      if (response.status == 200) {
-        setAllCart(response?.data);
+  // const getGUesstCart = async () => {
+  //   const tokenData = localStorage.getItem("guestToken");
+  //   console.log("guestToken", tokenData);
+  //   if (tokenData) {
+  //     const response = await getCartGuest(tokenData);
+  //     // console.log("getCartGuest", );
+  //     if (response.status == 200) {
+  //       setAllCart(response?.data);
 
-        setCartTotal(response?.data?.cart[0]?.grand_total);
+  //       setCartTotal(response?.data?.cart[0]?.grand_total);
 
-        clearCart();
-        response?.data?.cart[0]?.items?.forEach((item) => {
-          addToCart(item);
-        });
-      }
-    }
-  };
+  //       clearCart();
+  //       response?.data?.cart[0]?.items?.forEach((item) => {
+  //         addToCart(item);
+  //       });
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
-    getCart();
+    // getCart();
+    console.log("FEtch art method in headers");
+    fetchCart();
   }, []);
 
   const current = slides[currentSlide];

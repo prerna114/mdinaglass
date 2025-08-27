@@ -23,6 +23,7 @@ const page = () => {
   const params = useParams();
   const [imagesToUse, setImagesToUse] = useState([]);
   const [sliderImage, setSliderImage] = useState([]);
+  const [sliderImageArray, setSliderImageArray] = useState([]);
   const images = [
     { src: "/assets/abotone.png" },
     {
@@ -54,6 +55,9 @@ const page = () => {
   const getSiderImage = async () => {
     const data = await getSlider(params.slug);
     if (data?.status == 200) {
+      const response = JSON.parse(data?.data?.data[0]?.image);
+      setSliderImageArray(response);
+      console.log("Response", response);
       setSliderImage(data?.data?.data[0]?.image_urls);
     } else {
       setSliderImage([]);
@@ -77,7 +81,7 @@ const page = () => {
 
   return (
     <div className="InfoContainer mb-5">
-      <SimpleSlider images={sliderImage} />
+      <SimpleSlider images={sliderImageArray} />
       <div
         style={{
           flexDirection: "row",

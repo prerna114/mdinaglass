@@ -20,6 +20,7 @@ import dynamic from "next/dynamic";
 import { useShippingStore } from "@/store/shippingStore";
 import InstantLink from "@/components/InstantClick";
 import { useRouter } from "next/navigation";
+import { fetchCart } from "../hooks/useCart";
 // import TrustPaymentForm from "@/components/TrustPaymentForm";
 const TrustPaymentForm = dynamic(
   () => import("../../components/TrustPaymentForm"),
@@ -115,6 +116,7 @@ const page = () => {
     if (data.status == 200) {
       SuccessToast("Item Remove succusfully", "top-right");
       removeFromCart(id);
+      fetchCart();
       console.log("removeFromCart", id);
     } else {
       CustomToast("Something went wrong", "top-right");
@@ -127,6 +129,9 @@ const page = () => {
     if (response.status === 200) {
       SuccessToast("Item removed successfully", "top-right");
       removeFromCart("", sku);
+      fetchCart();
+    } else {
+      CustomToast("Something went wrong", "top-right");
     }
   };
 
@@ -156,7 +161,8 @@ const page = () => {
       setGuestToken(data);
     }
 
-    getCart();
+    // getCart();
+    fetchCart();
   }, []);
 
   useEffect(() => {
@@ -165,30 +171,30 @@ const page = () => {
     }
   }, [cart]);
 
-  const getCart = async () => {
-    const guestToken = localStorage.getItem("token");
+  // const getCart = async () => {
+  //   const guestToken = localStorage.getItem("token");
 
-    console.log("Cart listing caal");
-    if (guestToken) {
-      const parseData = JSON.parse(guestToken);
-      setUserDetails(parseData);
-      const data = await getCartListing();
-      if (data?.status == 200) {
-        setAllCart;
-        clearCart();
-        console.log("getCart", data);
-        setCartTotal(data?.data?.cart?.grand_total);
-        setAllCart(data?.data);
-        // addToCart(data.result.items);
-        data.data.items.forEach((item) => {
-          addToCart(item);
-        });
-      } else if (data?.status == 401) {
-        // logout;
-      }
-    }
-    // console.log("getCart", data);
-  };
+  //   console.log("Cart listing caal");is
+  //   if (guestToken) {
+  //     const parseData = JSON.parse(guestToken);
+  //     setUserDetails(parseData);
+  //     const data = await getCartListing();
+  //     if (data?.status == 200) {
+  //       // setAllCart;
+  //       clearCart();
+  //       console.log("getCart", data);
+  //       setCartTotal(data?.data?.cart?.grand_total);
+  //       setAllCart(data?.data);
+  //       // addToCart(data.result.items);
+  //       data.data.items.forEach((item) => {
+  //         addToCart(item);
+  //       });
+  //     } else if (data?.status == 401) {
+  //       // logout;
+  //     }
+  //   }
+  //   // console.log("getCart", data);
+  // };
 
   const processCheck = () => {
     console.log("guestTokenguestToken", guestToken);
@@ -335,7 +341,7 @@ const page = () => {
 
               <div className="table-row-3">
                 {localCart?.map((item, index) => (
-                  <div className="row">
+                  <div className="row" key={index}>
                     <div className="col-item">
                       <div>
                         {item?.product?.images?.length > 0 && (

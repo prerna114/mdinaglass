@@ -139,9 +139,11 @@ const PaymentPage = () => {
       <div className="container">
         <div
           className="login-signup"
-          style={{
-            margin: "0px 70px",
-          }}
+          style={
+            {
+              // margin: "0px 70px",
+            }
+          }
         >
           <div className="col-md-12">
             <div

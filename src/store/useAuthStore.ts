@@ -43,6 +43,7 @@ export const useAuthStore = create<AuthStore>()(
       partialize: (state) => ({
         isLogin: state.isLogin,
         paymentMethods: state.paymentMethods,
+        giftMessage: state.giftMessage,
       }), // only persist relevant parts
     }
   )

@@ -196,7 +196,7 @@ export const applyCoupon = async (code, gustToken) => {
 export const removeCoupon = async (code, gustToken) => {
   const raw = {
     code: code,
-    // guest_token: gustToken,
+    guest_token: gustToken,
   };
   const header = {
     "Content-Type": "application/json",

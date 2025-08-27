@@ -10,7 +10,7 @@ const CmsAboveMenu = ({ link, route }) => {
     if (data.status == 200) {
       if (data?.data) {
         setCmsInfo(data?.data);
-        console.log("CMSINFROMTIOn", data?.data);
+        console.log("CSM ABove Menu", data?.data);
       } else {
         setCmsInfo(null);
         CustomToast("Something went wrong", "top-right");
