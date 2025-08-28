@@ -134,6 +134,7 @@ const AddToCart = () => {
     }
   };
   const shiipingRate = async (code) => {
+    setNavigating(true);
     console.log("Cart Wiri", cartWieght);
     if (Number(cartWieght) && Number(cartWieght) > 0) {
       setNavigating(true);
@@ -248,7 +249,9 @@ const AddToCart = () => {
       if (parseData?.address?.country) {
         setCountryCode(parseData?.address?.country);
         console.log("parseData?.address?.country", parseData?.address?.country);
-        shiipingRate(parseData?.address?.country);
+        if (cartWieght) {
+          shiipingRate(parseData?.address?.country);
+        }
       }
     }
   }, [cartWieght]);
@@ -270,7 +273,9 @@ const AddToCart = () => {
 
   console.log(
     "cartallcart",
-    allCart?.cart?.discount_amount
+    cartTotal,
+    insurance,
+    shippingStore?.value
     // allCart?.cart[0]?.coupon_code
   );
 
@@ -406,7 +411,7 @@ const AddToCart = () => {
                   </tr>
                   <tr>
                     <td>Insurance:</td>
-                    <td className="text-end">€{insurance}.00</td>
+                    <td className="text-end">€{insurance}</td>
                   </tr>
                   <tr>
                     <td className="fw-bold" style={{ color: "#175E84" }}>

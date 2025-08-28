@@ -112,6 +112,16 @@ const checkoutpage = () => {
     const parseData = JSON.parse(token);
 
     if (parseData && Object.keys(parseData)?.length > 0) {
+      const countryList = CountryList?.find(
+        (data) => data?.code == parseData?.address?.country
+      );
+
+      console.log("countryListCode", countryList);
+      const data = {
+        code: "DZ",
+        country: "ALGERIA",
+      };
+
       const streetParts = parseData?.address?.street
         .split(",")
         .map((s) => s.trim());
@@ -127,7 +137,7 @@ const checkoutpage = () => {
         city: parseData?.address?.city || "",
         state: parseData?.address?.state || "",
         zipCode: parseData?.address?.postcode || "",
-        country: parseData?.address?.country || "",
+        country: countryList || "",
         telePhone: parseData?.address?.phone || " ",
       }));
     } else {

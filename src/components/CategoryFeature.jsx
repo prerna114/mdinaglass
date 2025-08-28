@@ -90,10 +90,10 @@ const CategoryFeature = () => {
                     }}
                   >
                     <InstantLink href={pair?.link1} className="imageText">
-                      {pair?.nameOne}
+                      <h2>{pair?.nameOne}</h2>
                     </InstantLink>
                     <InstantLink href={pair?.link2} className="imageTextTwo">
-                      {pair?.nameTwo}
+                      <h2>{pair?.nameTwo}</h2>
                     </InstantLink>
                   </div>
                 </div>

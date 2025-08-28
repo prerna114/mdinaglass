@@ -288,6 +288,7 @@ const OrderReview = () => {
               // width: "50%",
               // margin: "0 90px",
               marginBottom: "30px",
+              padding: "11px",
             }}
           >
             <div

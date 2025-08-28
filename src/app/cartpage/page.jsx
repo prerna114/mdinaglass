@@ -352,7 +352,10 @@ const page = () => {
                                 : item?.images[0]?.small_image_url
                             }
                             alt={item.name}
-                            width="80"
+                            // width="80"
+                            style={{
+                              width: "100%",
+                            }}
                           />
                         )}
                       </div>

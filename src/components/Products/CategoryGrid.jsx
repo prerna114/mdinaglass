@@ -8,6 +8,9 @@ import InstantLink from "../InstantClick";
 
 const CategoryGrid = ({ category }) => {
   const router = useRouter();
+  const { heading, setHeading, setPagination, setDescription } = ProductLists(
+    (state) => state
+  );
 
   const buildCategoryPath = (id) => {
     const { parentMap } = useMenuStore.getState();
@@ -34,6 +37,10 @@ const CategoryGrid = ({ category }) => {
                       buildCategoryPath(product?.id),
                       product.slug
                     )}
+                    onClick={() => {
+                      setDescription(product.description);
+                      setHeading(product.name);
+                    }}
                   >
                     <img
                       src={
@@ -53,6 +60,10 @@ const CategoryGrid = ({ category }) => {
                       buildCategoryPath(product?.id),
                       product.slug
                     )}
+                    onClick={() => {
+                      setDescription(product.description);
+                      setHeading(product.name);
+                    }}
                   >
                     <h6 className="card-title mb-3">{product.name}</h6>
                   </InstantLink>
