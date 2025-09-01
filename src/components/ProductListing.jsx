@@ -220,13 +220,13 @@ const ProductListing = ({ SearchData }) => {
     console.log("✅ selectedCategory", selectedCategory?.children);
     if (selectedCategory?.children?.length > 0) {
       setCategory(selectedCategory?.children);
-      setProducts([]);
+      // setProducts([]);
       setLoading(false);
       console.log("selectedCategory if");
     } else {
       console.log("selectedCategory else");
-      setProducts([]);
-      setCategory([]);
+      // setProducts([]);
+      // setCategory([]);
 
       getProductByCategory(lastId);
     }

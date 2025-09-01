@@ -372,6 +372,8 @@ export const getCategoryPath = (product) => {
 
   // Only process the first category
   const category = product?.categories?.[0];
+
+  // console.log("product?.categories", product?.categories);
   if (!category) return "";
 
   let current = category.parent;

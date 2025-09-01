@@ -67,16 +67,20 @@ const page = () => {
         </Link>
       </div>
 
+      <div className="card p-4 border-0 job-post mb-4">
+        <h5 className="text-primary">
+          Summer Sales Staff Vacancies - Full Time & Part Time
+        </h5>
 
+        <p className="mb-4">Location: Various</p>
 
-
-         <div className="card p-4 border-0 job-post mb-4">
-        <h5 className="text-primary">Delivery Person - Part Time</h5>
         <p className="mb-4">
-          Mdina Glass is seeking a dedicated and professional Delivery Person.
+          Are you looking for summer season work? If so, we may have the job
+          you're looking for.
         </p>
         <p className="mb-4">
-          This is a part-time position (during the month of December).
+          We are looking for sales staff, full time or part time, to work at
+          various outlets of ours.
           <br />
           Working Hours are between <strong>8:00am - 16:30pm</strong> (Monday to
           Friday).
@@ -93,19 +97,19 @@ const page = () => {
         </Link>
       </div>
 
+      <div className="card p-4 border-0 job-post mb-4">
+        <h5 className="text-primary">Sales Assistant - Full Time</h5>
+        <p className="mb-4">Location: Mdina</p>
 
-
-
-         <div className="card p-4 border-0 job-post mb-4">
-        <h5 className="text-primary">Delivery Person - Part Time</h5>
         <p className="mb-4">
-          Mdina Glass is seeking a dedicated and professional Delivery Person.
+          We are seeking a full time Sales Assistant with a professional
+          approach to their work for our bust outlet in Mdina.
         </p>
         <p className="mb-4">
-          This is a part-time position (during the month of December).
+          This is a permanent position, not a summer job.
           <br />
-          Working Hours are between <strong>8:00am - 16:30pm</strong> (Monday to
-          Friday).
+          Quality of service is paramount, so applicants must have an outgoing,
+          pleasent personality and retail experience.
         </p>
         <p className="fst-italic text-muted">
           *Applicants must be based in Malta to be considered.
@@ -119,22 +123,26 @@ const page = () => {
         </Link>
       </div>
 
+      <div className="card p-4 border-0 job-post mb-4">
+        <h5 className="text-primary">Cleaner - Full Time</h5>
 
+        <p className="mb-4">Location: Ta' Qali </p>
 
-
-         <div className="card p-4 border-0 job-post mb-4">
-        <h5 className="text-primary">Delivery Person - Part Time</h5>
         <p className="mb-4">
-          Mdina Glass is seeking a dedicated and professional Delivery Person.
+          We are currently looking for a cleaner to work at our Ta' Qali outlet.
+          While preference is given to applicants wishing to work full time
+          hours, we will also consider part time applicants for the right
+          individual.
         </p>
-        <p className="mb-4">
-          This is a part-time position (during the month of December).
+        {/* <p className="mb-4">
+          Working days will be Monday to Friday.
           <br />
           Working Hours are between <strong>8:00am - 16:30pm</strong> (Monday to
           Friday).
-        </p>
+        </p> */}
         <p className="fst-italic text-muted">
-          *Applicants must be based in Malta to be considered.
+          Duties will include cleaning the shop, offices and other common areas
+          as well as product displays.
         </p>
         <p className="fw-semibold mb-4">
           Should you wish to be considered for this role, please click the

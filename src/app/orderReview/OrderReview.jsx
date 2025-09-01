@@ -100,8 +100,15 @@ const OrderReview = () => {
   const [method, setMethod] = useState(paymentMethods);
 
   const router = useRouter();
-  const { cart, removeFromCart, clearCart, insurance, cartTotal, allCart } =
-    useCartStore((state) => state);
+  const {
+    cart,
+    setInsurance,
+    removeFromCart,
+    clearCart,
+    insurance,
+    cartTotal,
+    allCart,
+  } = useCartStore((state) => state);
   const subtotal = (price, qty) => {
     console.log("Price ", price, qty);
     return (price * qty).toFixed(2);
@@ -240,6 +247,36 @@ const OrderReview = () => {
       setLoader(false);
     }
   };
+
+  const insrunaceRate = async () => {
+    setNavigating(true);
+    if (shippingMethod && typeof shippingMethod === "object") {
+      const totalCost =
+        Number(Number(shippingMethod.Price).toFixed(2)) +
+        Number(Number(cartTotal)?.toFixed(2));
+      setInsurance(Number(totalCost)?.toFixed(2));
+
+      if (totalCost >= 600) {
+        const percentcost = (Number(totalCost).toFixed(2) / 100) * 2.5;
+        setInsurance(Number(percentcost).toFixed(2));
+        setNavigating(false);
+
+        console.log("percentcost", percentcost);
+      } else {
+        setInsurance(15);
+        setNavigating(false);
+      }
+
+      const percentcost = (Number(totalCost).toFixed(2) / 100) * 2.5;
+      console.log(
+        "percentcost",
+        Number(percentcost).toFixed(2),
+        "frfr",
+        totalCost
+      );
+      // console.log("Price issue", shippingStore?.Value?.[0]?.Price, cartTotal);
+    }
+  };
   console.log("method", shippingMethod?.Price);
 
   // const GrandTotal =
@@ -252,6 +289,9 @@ const OrderReview = () => {
     Number(Number(insurance).toFixed(2)) +
     Number(Number(shippingMethod?.Price).toFixed(2));
 
+  useEffect(() => {
+    insrunaceRate();
+  }, []);
   // console.log("total", insurance);
   // console.log("billingAddress", shippingMethod);
   return (

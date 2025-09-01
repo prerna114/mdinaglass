@@ -46,6 +46,9 @@ const ContactContent = ({ content }) => {
                       onChange={(e) => {
                         handleText("firstName", e.target.value);
                       }}
+                      style={{
+                        width: "100% !important",
+                      }}
                       placeholder="FIRST NAME*"
                     ></input>
                   </div>
@@ -56,6 +59,9 @@ const ContactContent = ({ content }) => {
                       required
                       onChange={(e) => {
                         handleText("firstName", e.target.value);
+                      }}
+                      style={{
+                        width: "100% !important",
                       }}
                       className="contact-input"
                       placeholder="LAST NAME*"
@@ -69,6 +75,9 @@ const ContactContent = ({ content }) => {
                       onChange={(e) => {
                         handleText("firstName", e.target.value);
                       }}
+                      style={{
+                        width: "100% !important",
+                      }}
                       className="contact-input"
                       placeholder="EMAIL*"
                     ></input>
@@ -80,6 +89,9 @@ const ContactContent = ({ content }) => {
                       required
                       onChange={(e) => {
                         handleText("firstName", e.target.value);
+                      }}
+                      style={{
+                        width: "100% !important",
                       }}
                       className="contact-input"
                       placeholder="SUBJECT*"

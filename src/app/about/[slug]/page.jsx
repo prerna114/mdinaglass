@@ -80,7 +80,7 @@ const page = () => {
   console.log("Params in about page", sliderImage);
 
   return (
-    <div className="InfoContainer mb-5">
+    <div className="InfoContainer ">
       <SimpleSlider images={sliderImageArray} />
       <div
         style={{

@@ -21,6 +21,7 @@ import { useShippingStore } from "@/store/shippingStore";
 import InstantLink from "@/components/InstantClick";
 import { useRouter } from "next/navigation";
 import { fetchCart } from "../hooks/useCart";
+import { useNavigationStore } from "@/store/useNavigationstore";
 // import TrustPaymentForm from "@/components/TrustPaymentForm";
 const TrustPaymentForm = dynamic(
   () => import("../../components/TrustPaymentForm"),
@@ -53,6 +54,8 @@ const page = () => {
 
   const { shippingStore } = useShippingStore((state) => state);
   console.log("shippingStore", shippingStore);
+  const setNavigating = useNavigationStore((s) => s.setNavigating);
+
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -197,13 +200,20 @@ const page = () => {
   // };
 
   const processCheck = () => {
+    setNavigating(true);
     console.log("guestTokenguestToken", guestToken);
     if (guestToken) {
+      setNavigating(false);
+
       router.push("/checkout");
     } else if (isLogin) {
+      setNavigating(false);
+
       // return "/checkout";
       router.push("/checkout");
     } else {
+      setNavigating(false);
+
       router.push("/loginCheckoutPage");
     }
   };
@@ -466,7 +476,7 @@ const page = () => {
                 </div>
               </div> */}
 
-              <AddToCart />
+              <AddToCart localCart={localCart} />
               <GiftVoucher />
             </div>
           </div>

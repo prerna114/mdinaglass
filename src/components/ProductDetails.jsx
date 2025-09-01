@@ -99,6 +99,10 @@ export default function ProductDetails({ productDetails, productDetail }) {
         setLaoding(false);
 
         SuccessToast("Item added Successfully", "top-right");
+      } else if (data?.status == 402) {
+        setLaoding(false);
+
+        CustomToast("Unautorized", "top-right");
       } else {
         setLaoding(false);
 
@@ -273,7 +277,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
   //   selectedImage
   // );
 
-  console.log("Selected Image,uniqueOptions", inWish);
+  console.log("Selected Image,uniqueOptions", selectedData);
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       {/* <div className="filter-are">
@@ -473,7 +477,8 @@ export default function ProductDetails({ productDetails, productDetail }) {
                   className="form-select"
                   onChange={(e) => {
                     if (e.target.value != "Select Option") {
-                      SelectedData("", e.target.value);
+                      console.log("Set selected", e.target.value);
+                      SelectedData("varient", e.target.value);
                       setChooseSku(e.target.value);
                     } else {
                       SelectedData("", productDetails?.sku);

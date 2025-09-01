@@ -18,7 +18,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { removeCoupon, verfiyCoupon } from "@/api/productApi";
 import { fetchCart } from "@/app/hooks/useCart";
 
-const AddToCart = () => {
+const AddToCart = ({ localCart }) => {
   const {
     cart,
     addToCart,
@@ -40,14 +40,9 @@ const AddToCart = () => {
 
   const [userDetails, setUserDetails] = useState();
   // const setNavigating = useNavigationStore((s) => s.setNavigating);
-  const {
-    setShippingStore,
-    shippingStore,
-    grandTotal,
-    setGrandTotal,
-    setInsuranceCost,
-    setshiipingCost,
-  } = useShippingStore((state) => state);
+  const { setShippingStore, shippingStore, setshiipingCost } = useShippingStore(
+    (state) => state
+  );
   const { setPaymentMethods, paymentMethods } = useAuthStore.getState(); //
   const [method, setMethod] = useState(paymentMethods);
 
@@ -106,7 +101,7 @@ const AddToCart = () => {
     setLoading(true);
 
     if (accessToken && accessToken !== "undefined") {
-      const response = await updateQuantityAPi(cart);
+      const response = await updateQuantityAPi(localCart);
       console.log("Update cart repsonse", response);
       if (response.status == 200) {
         SuccessToast(response.data?.message, "top-right");
@@ -125,7 +120,7 @@ const AddToCart = () => {
     const tokenData = localStorage.getItem("guestToken");
     console.log("guestCartUpdate", tokenData);
     if (tokenData && tokenData !== "undefined") {
-      const response = await updateGuestCart(cart);
+      const response = await updateGuestCart(localCart);
       console.log("Update guest cart response", response);
       SuccessToast(response.data?.message, "top-right");
       insrunaceRate();
@@ -149,6 +144,11 @@ const AddToCart = () => {
         }
         if (data?.data) setShippingRate(data?.data);
         setShippingStore(data?.data);
+        insrunaceRate();
+        if (data?.data?.Messages?.length > 0) {
+          console.log("Datadatadata", data?.data);
+          CustomToast(data?.data?.Messages[0], "top-right");
+        }
         setNavigating(false);
       } else {
         setNavigating(false);
@@ -158,16 +158,54 @@ const AddToCart = () => {
   };
   const insrunaceRate = async () => {
     setNavigating(true);
+    if (Object.keys(shippingStore)?.length > 0 && shippingStore?.Value) {
+      const totalCost =
+        Number(Number(shippingStore?.Value?.[0]?.Price).toFixed(2)) +
+        Number(Number(cartTotal)?.toFixed(2));
+      setInsurance(Number(totalCost)?.toFixed(2));
 
-    const response = await getInsuranceRate(getGrandTotal(cart).toFixed(2));
-    console.log("Insurance Rate Response", response);
-    if (response?.status == 200) {
-      setInsurance(response?.data?.Rate);
-      setNavigating(false);
+      if (totalCost >= 600) {
+        const percentcost = (Number(totalCost).toFixed(2) / 100) * 2.5;
+        setInsurance(Number(percentcost).toFixed(2));
+        setNavigating(false);
+
+        console.log("percentcost", percentcost);
+      } else {
+        setInsurance(15);
+        setNavigating(false);
+      }
+
+      const percentcost = (Number(totalCost).toFixed(2) / 100) * 2.5;
+      console.log(
+        "percentcost",
+        Number(percentcost).toFixed(2),
+        "frfr",
+        totalCost
+      );
+      // console.log("Price issue", shippingStore?.Value?.[0]?.Price, cartTotal);
     } else {
-      setNavigating(false);
-      CustomToast("Something went wrong in insurance", "top-right");
+      if (cartTotal >= 600) {
+        const percentCost = (Number(cartTotal).toFixed(2) / 100) * 2.5;
+        console.log("Percent COuntry not selected", percentCost);
+        setInsurance(percentCost);
+        setNavigating(false);
+      } else {
+        setInsurance(15);
+        setNavigating(false);
+      }
     }
+
+    const percentCost = (Number(cartTotal).toFixed(2) / 100) * 2.5;
+    console.log("Percent id", percentCost, cartTotal);
+    // const response = await getInsuranceRate(getGrandTotal(cart).toFixed(2));
+    // console.log("Insurance Rate Response", response);
+    // if (response?.status == 200) {
+    //   setInsurance(response?.data?.Rate);
+    //   setNavigating(false);
+    // } else {
+    //   setNavigating(false);
+    //   CustomToast("Something went wrong in insurance", "top-right");
+    // }
   };
 
   const removeTheCoupon = async (code) => {
@@ -183,61 +221,6 @@ const AddToCart = () => {
     console.log("Verify coupoun", data);
   };
 
-  // const getCart = async () => {
-  //   setNavigating(true);
-  //   const tokenData = localStorage.getItem("token");
-  //   const parsed = tokenData ? JSON.parse(tokenData) : null;
-  //   const accessToken = parsed?.token;
-  //   console.log("accessToken", accessToken);
-  //   if (accessToken && accessToken !== "undefined") {
-  //     const data = await getCartListing();
-  //     console.log("getCart Header123", data.data?.cart);
-
-  //     if (data?.status == 200) {
-  //       clearCart();
-  //       // console.log("getCart Header", data.data);
-  //       console.log("getCart Header ", data.data.items);
-  //       setCartTotal(data?.data?.cart?.grand_total);
-  //       setAllCart(data?.data);
-
-  //       // addToCart(data.result.items);
-  //       data.data.items.forEach((item) => {
-  //         addToCart(item);
-  //       });
-  //       setNavigating(false);
-  //     } else {
-  //       setNavigating(false);
-  //     }
-  //   } else {
-  //     const tokenData = localStorage.getItem("guestToken");
-  //     console.log("guestToken", tokenData);
-
-  //     if (tokenData) {
-  //       getGUesstCart();
-  //     }
-  //   }
-  // };
-
-  // const getGUesstCart = async () => {
-  //   const tokenData = localStorage.getItem("guestToken");
-  //   console.log("guestToken", tokenData);
-  //   if (tokenData) {
-  //     const response = await getCartGuest(tokenData);
-  //     // console.log("getCartGuest", );
-  //     if (response.status == 200) {
-  //       setCartTotal(response?.data?.cart[0]?.grand_total);
-  //       setAllCart(response?.data);
-
-  //       clearCart();
-  //       response?.data?.cart[0]?.items?.forEach((item) => {
-  //         addToCart(item);
-  //       });
-  //       setNavigating(false);
-  //     } else {
-  //       setNavigating(false);
-  //     }
-  //   }
-  // };
   useEffect(() => {
     // setInsurance(15.0);
     getTotalWeight();
@@ -268,18 +251,19 @@ const AddToCart = () => {
   // console.log("userDetails", userDetails);
   // console.log("totalPrice", totalPrice);
   // console.log("isNavigating", isNavigating);
+
   const couponCode =
     allCart?.cart?.coupon_code ?? allCart?.cart?.[0]?.coupon_code;
 
-  console.log(
-    "cartallcart",
-    cartTotal,
-    insurance,
-    shippingStore?.value
-    // allCart?.cart[0]?.coupon_code
-  );
+  // console.log(
+  //   "cartallcart",
+  //   cartTotal,
+  //   insurance,
+  //   shippingStore?.value
+  //   // allCart?.cart[0]?.coupon_code
+  // );
 
-  // console.log("insurance",)
+  console.log("insurance", localCart);
 
   return (
     <div className="container my-4">

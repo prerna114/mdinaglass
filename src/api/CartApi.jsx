@@ -54,7 +54,7 @@ export const updateQuantityAPi = async (data) => {
     item_id: item.id,
     qty: item.quantity ? item.quantity : item.qty, // Ensure quantity is set to 1 if not provided
   }));
-  console.log("Items", items);
+  console.log("Items updateQuantityAPi", items, data);
   const raw = {
     items: items,
   };
@@ -168,7 +168,7 @@ export const checkOut = async (
     shipping_method: shippingMethod,
     payment_method: "trust_payment",
     transaction_id: transactionId,
-    // transaction_id: "login2345",
+    // transaction_id: "12345666",
     giftMessage: giftMessage,
     shipping_price: shippingPrice,
     insurance_cost: insurance,
@@ -309,7 +309,7 @@ export const guestcheckOut = async (
     shipping_method: shippingMethod,
     payment_method: "trust_payment",
     transaction_id: transactionId,
-    // transaction_id: "1234321",
+    // transaction_id: "0986543",
 
     shipping_price: Number(price),
     guest_token: guestToken,

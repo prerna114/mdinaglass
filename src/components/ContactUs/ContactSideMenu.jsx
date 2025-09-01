@@ -48,7 +48,7 @@ const ContactSideMenu = () => {
   }, [params?.slug]);
 
   return (
-    <aside className=" sidebar">
+    <aside className=" col-lg-3 col-md-3 col-sm-4 sidebar">
       <h1>About Us</h1>
       <ul>
         {links.map((link) => (
