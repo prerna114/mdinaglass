@@ -78,7 +78,7 @@ const Footer = () => {
                 </InstantLink>
               </li> */}
               <li>
-                <InstantLink href={"/gift"}>Gift Registry</InstantLink>
+                <InstantLink href={"/giftRegistry"}>Gift Registry</InstantLink>
               </li>
             </ul>
           </div>
@@ -97,9 +97,9 @@ const Footer = () => {
                 </InstantLink>
               </li>
 
-              <li>
+              {/* <li>
                 <InstantLink href={"/chandeliers"}>Chandeliers</InstantLink>
-              </li>
+              </li> */}
 
               <li>
                 <InstantLink href={"/about/trade-partner"}>

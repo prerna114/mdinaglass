@@ -216,6 +216,7 @@ const AddToCart = ({ localCart }) => {
     if (data?.status == 200) {
       SuccessToast(data?.data?.message, "top-right");
       // getCart();
+      console.log("Fetch Cart add to cart");
       fetchCart();
     }
     console.log("Verify coupoun", data);

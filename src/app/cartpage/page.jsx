@@ -163,7 +163,7 @@ const page = () => {
     if (data) {
       setGuestToken(data);
     }
-
+    console.log("Fetch cart cartpage");
     // getCart();
     fetchCart();
   }, []);

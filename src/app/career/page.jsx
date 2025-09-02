@@ -1,7 +1,38 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import ApplyJob from "../../components/Applyjob";
+import { getCarrerList } from "@/api/menuAPI";
+import ParagraphSkeleton from "@/components/Skeleton/ParagraphSkeleton";
 
 const page = () => {
+  const [careerList, setCareerList] = useState([]);
+  const [selectedData, setSelectedData] = useState(null);
+  const [showPop, setShowPop] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fetched, setFetched] = useState(false); // ✅ new state
+
+  const getCareer = async () => {
+    setLoading(true);
+    const data = await getCarrerList();
+    setFetched(true); // ✅ mark API as completed
+
+    console.log("Get career List", data);
+    if (data?.status == 200) {
+      setLoading(false);
+
+      setCareerList(data?.data?.data);
+    } else {
+      setLoading(false);
+
+      setCareerList([]);
+    }
+  };
+  useEffect(() => {
+    getCareer();
+  }, []);
+
+  console.log("careerList", careerList);
   return (
     <div className="container job-porter py-5">
       <h2 className="fw-bold">Careers at Mdina Glass</h2>
@@ -44,7 +75,45 @@ const page = () => {
         </ul>
       </div>
 
-      <div className="card p-4 border-0 job-post mb-4">
+      {loading ? (
+        <ParagraphSkeleton />
+      ) : (
+        careerList?.map((data, index) => (
+          <div className="card p-4 border-0 job-post mb-4" key={data?.id}>
+            <h5 className="text-primary">{data?.title}</h5>
+            {/* <p className="mb-4">
+          Mdina Glass is seeking a dedicated and professional Delivery Person.
+        </p> */}
+            {/* <p className="mb-4">{data?.description}</p> */}
+            <p dangerouslySetInnerHTML={{ __html: data?.description }}></p>
+
+            <a
+              onClick={() => {
+                setShowPop(true);
+                setSelectedData(data);
+              }}
+              className="btn btn-cart career-btn text-white"
+            >
+              Apply
+            </a>
+          </div>
+        ))
+      )}
+
+      {fetched && careerList?.length == 0 && !loading && (
+        <div className="no-data-found">
+          <h1>No job found </h1>
+        </div>
+      )}
+
+      <ApplyJob
+        id={selectedData?.id}
+        title={selectedData?.title}
+        showPop={showPop}
+        onClose={() => setShowPop(false)}
+      />
+
+      {/* <div className="card p-4 border-0 job-post mb-4">
         <h5 className="text-primary">Delivery Person - Part Time</h5>
         <p className="mb-4">
           Mdina Glass is seeking a dedicated and professional Delivery Person.
@@ -134,12 +203,7 @@ const page = () => {
           hours, we will also consider part time applicants for the right
           individual.
         </p>
-        {/* <p className="mb-4">
-          Working days will be Monday to Friday.
-          <br />
-          Working Hours are between <strong>8:00am - 16:30pm</strong> (Monday to
-          Friday).
-        </p> */}
+
         <p className="fst-italic text-muted">
           Duties will include cleaning the shop, offices and other common areas
           as well as product displays.
@@ -151,7 +215,7 @@ const page = () => {
         <Link href="/" className="btn btn-cart career-btn text-white">
           Apply
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };

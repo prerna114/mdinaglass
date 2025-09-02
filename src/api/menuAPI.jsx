@@ -33,3 +33,8 @@ export const getMenuCategories = async () => {
   const data = await fetchGlobal("api/menu-categories");
   return data;
 };
+
+export const getCarrerList = async () => {
+  const data = await fetchGlobal("api/blackbull/get-careers-list");
+  return data;
+};

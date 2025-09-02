@@ -117,7 +117,9 @@ const Header = () => {
 
   useEffect(() => {
     // getCart();
-    console.log("FEtch art method in headers");
+    // console.log("FEtch art method in headers");
+    console.log("Fetch Cart Header");
+
     fetchCart();
   }, []);
 

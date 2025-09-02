@@ -1,12 +1,16 @@
 import { getCartGuest, getCartListing } from "@/api/CartApi";
+import { CustomToast } from "@/components/CustomToast";
 import { useCartStore } from "@/store";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigationStore } from "@/store/useNavigationstore";
 
 export const fetchCart = async () => {
   const { setCartTotal, setAllCart, addToCart, clearCart } =
     useCartStore.getState(); // ✅ directly access Zustand store
   console.log("User car hook calling");
-
+  // const { logout } = useAuthStore(
+  //   (state) => state
+  // );
   const { setNavigating } = useNavigationStore.getState();
 
   setNavigating(true);
@@ -23,6 +27,15 @@ export const fetchCart = async () => {
       setAllCart(data?.data);
       data.data.items.forEach((item: any) => addToCart(item));
     }
+    // else if(data?.status == 401){
+    //   clearCart();
+    //   logout()
+    //   CustomToast("Session Expire Please login")
+
+    // }
+    // else{
+    //   CustomToast("")
+    // }
   } else {
     const guestToken = localStorage.getItem("guestToken");
     if (guestToken) {

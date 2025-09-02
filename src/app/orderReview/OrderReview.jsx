@@ -261,19 +261,19 @@ const OrderReview = () => {
         setInsurance(Number(percentcost).toFixed(2));
         setNavigating(false);
 
-        console.log("percentcost", percentcost);
+        // console.log("percentcost", percentcost);
       } else {
         setInsurance(15);
         setNavigating(false);
       }
 
       const percentcost = (Number(totalCost).toFixed(2) / 100) * 2.5;
-      console.log(
-        "percentcost",
-        Number(percentcost).toFixed(2),
-        "frfr",
-        totalCost
-      );
+      // console.log(
+      //   "percentcost",
+      //   Number(percentcost).toFixed(2),
+      //   "frfr",
+      //   totalCost
+      // );
       // console.log("Price issue", shippingStore?.Value?.[0]?.Price, cartTotal);
     }
   };
