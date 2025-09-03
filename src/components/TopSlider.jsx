@@ -22,7 +22,7 @@ function SimpleSlider({ images }) {
           images.map((image, index) => (
             <div key={index}>
               <Image
-                src={`https://mdinaglasses.blackbullsolution.com/sliders/${image}`}
+                src={`https://mdinaglass.blackbullsolution.com/sliders/${image}`}
                 alt={`Slide ${index + 1}`}
                 className="mb-3 footer-logo"
                 style={{ width: "100%!important", height: "430px !important" }}

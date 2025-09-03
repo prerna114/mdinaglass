@@ -2,6 +2,7 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import React from "react";
 import CmsAboveMenu from "../CmsAboveMenu";
+import RecipeIdea from "../RecipeIdea";
 
 const ContactContent = ({ content }) => {
   const { cmsInfo } = useAuthStore((state) => state);
@@ -11,7 +12,7 @@ const ContactContent = ({ content }) => {
     { id: 2, label: "Contact Form", slug: "contact-form" },
   ];
   const cleanedHtml = cmsInfo?.html_content?.replaceAll(
-    "https://mdinaglasses.blackbullsolution.com",
+    "https://mdinaglass.blackbullsolution.com",
     ""
   );
 
@@ -134,6 +135,9 @@ const ContactContent = ({ content }) => {
           </div>
         </div>
       )}
+      <div className="reciep-display">
+        <RecipeIdea />
+      </div>
     </div>
   );
 };

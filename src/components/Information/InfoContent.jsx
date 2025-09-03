@@ -4,6 +4,7 @@ import React from "react";
 import CmsAboveMenu from "../CmsAboveMenu";
 import ParagraphSkeleton from "../Skeleton/ParagraphSkeleton";
 import { useMenuStore } from "@/store/useCategoryStore";
+import RecipeIdea from "../RecipeIdea";
 
 const InfoContent = ({ content }) => {
   const { cmsInfo } = useAuthStore((state) => state);
@@ -21,7 +22,7 @@ const InfoContent = ({ content }) => {
     },
   ];
   const cleanedHtml = cmsInfo?.html_content?.replaceAll(
-    "https://mdinaglasses.blackbullsolution.com",
+    "https://mdinaglass.blackbullsolution.com",
     ""
   );
   return (
@@ -39,6 +40,9 @@ const InfoContent = ({ content }) => {
       )}
       <h2>{cmsInfo?.page_title}</h2>
       <p dangerouslySetInnerHTML={{ __html: cleanedHtml }}></p>
+      <div className="reciep-display">
+        <RecipeIdea />
+      </div>
     </div>
   );
 };

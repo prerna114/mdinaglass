@@ -189,6 +189,8 @@ const OrderReview = () => {
         router.replace("/");
         // window.location.replace("/");
         localStorage.removeItem("shipping-store");
+        localStorage.removeItem("trust-payment");
+
         setNavigating(false);
         setShowModal(false);
         clearCart();
@@ -234,6 +236,8 @@ const OrderReview = () => {
       setLoader(false);
       setShowModal(false);
       localStorage.removeItem("shipping-store");
+      localStorage.removeItem("trust-payment");
+
       router.replace("/");
       // window.location.replace("/");
 

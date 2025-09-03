@@ -67,6 +67,7 @@ const Applyjob = ({ id, title, showPop, onClose }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        overflow: "auto",
       }}
     >
       <div

@@ -54,7 +54,10 @@ const WishlistGrid = () => {
     getTheWistList();
   }, []);
 
-  console.log("Wishlist products", products[0]?.product);
+  console.log(
+    "Wishlist products",
+    products[0]?.product?.images[0]?.url?.includes("http")
+  );
   return (
     <div className="row">
       {products?.length > 0 &&
@@ -102,8 +105,10 @@ const WishlistGrid = () => {
                     <Image
                       // src={"/assets/nothere.png"}
                       src={
-                        product?.product?.images[0]?.url ||
-                        "/assets/nothere.png"
+                        product?.product?.images[0]?.url.includes("http")
+                          ? product?.product?.images[0]?.url
+                          : `https://${product?.product?.images[0]?.url}` ||
+                            "/assets/nothere.png"
                       }
                       //   onError={() => handleImgError(index)}
                       className="card-img-top"

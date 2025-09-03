@@ -87,6 +87,7 @@ const page = () => {
           flexDirection: "row",
           display: "flex",
           marginTop: "20px",
+          justifyContent: "center",
         }}
       >
         <AboutSideMenu />

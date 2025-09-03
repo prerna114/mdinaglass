@@ -11,7 +11,7 @@ const AboutContent = ({ content }) => {
 
   console.log("cmdinfor", cmsInfo);
   const cleanedHtml = cmsInfo?.html_content?.replaceAll(
-    "https://mdinaglasses.blackbullsolution.com",
+    "https://mdinaglass.blackbullsolution.com",
     ""
   );
   console.log("Loading123", loading);
@@ -39,6 +39,9 @@ const AboutContent = ({ content }) => {
       )}
       <h2>{cmsInfo?.page_title}</h2>
       <p dangerouslySetInnerHTML={{ __html: cleanedHtml }}></p>
+      <div className="reciep-display">
+        <RecipeIdea />
+      </div>
     </div>
   );
 };

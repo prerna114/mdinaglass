@@ -53,16 +53,15 @@ export default function Page() {
           <Image
             key={index}
             // src={data}
-            src={`https://mdinaglasses.blackbullsolution.com/sliders/${data}`}
+            src={`https://mdinaglass.blackbullsolution.com/sliders/${data}`}
             width={1117}
             height={417}
             alt="terms and condtion"
-            style={
-              {
-                // width: "10%",
-                // maxWidth: "1006px",
-              }
-            }
+            style={{
+              // width: "10%",
+              width: "100%",
+              // maxWidth: "1006px",
+            }}
           />
         ))}
 
@@ -73,7 +72,7 @@ export default function Page() {
             flexDirection: "row",
             display: "flex",
             marginTop: "20px",
-            justifyContent: "space-around",
+            justifyContent: "center",
           }}
         >
           <InformationSideMenu />

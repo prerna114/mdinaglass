@@ -57,7 +57,14 @@ const SideMenu = ({ productDetails }) => {
     const data = getCategoryPath(productDetails);
     console.log("SideMenupath123", data);
     if (data) {
-      setCateogryParents(data);
+      const normalized =
+        typeof data === "string"
+          ? data.split("/").map((id) => Number(id))
+          : Array.isArray(data)
+          ? data.map((id) => Number(id))
+          : [];
+      // setCateogryParents(Array.isArray(data) ? data : [data]);
+      setCateogryParents(normalized);
     }
   };
   useEffect(() => {
@@ -65,6 +72,8 @@ const SideMenu = ({ productDetails }) => {
       getCateogryIDs();
     }
   }, [productDetails]);
+
+  console.log("sideMenu12345", sideMenu);
   return (
     <div className="category-sidebar">
       <div className="hide_Mobi_sidebar">

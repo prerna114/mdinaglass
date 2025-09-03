@@ -1,14 +1,15 @@
-import { createUrl } from "@/constant";
+import { createUrl, getCategoryPath } from "@/constant";
 import { ProductLists } from "@/store/product";
 import { useMenuStore } from "@/store/useCategoryStore";
 import { useParams, usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-const AboveMenu = () => {
+const AboveMenu = ({ productDetails }) => {
   const [levels, setLevels] = useState([]);
   const sideMenu = useMenuStore((state) => state.sideMenu);
   const setLoading = useMenuStore((state) => state.setLoading);
+  const [cateogoryParents, setCateogryParents] = useState([]);
 
   const [cateogryArray, setCateogryArray] = useState([]);
   const [theLastI, setTheLastI] = useState("");
@@ -25,6 +26,22 @@ const AboveMenu = () => {
   const pathname = usePathname();
   const params = useParams();
   const allParams = useMemo(() => params?.params || [], [params]);
+  console.log("allParamsallParams", allParams);
+  const getCateogryIDs = () => {
+    const data = getCategoryPath(productDetails);
+    // console.log("SideMenupath123 AboveMenu", data);
+    if (data) {
+      const normalized =
+        typeof data === "string"
+          ? data.split("/").map((id) => Number(id))
+          : Array.isArray(data)
+          ? data.map((id) => Number(id))
+          : [];
+      // setCateogryParents(Array.isArray(data) ? data : [data]);
+      setCateogryParents(normalized);
+      // setCateogryArray(normalized);
+    }
+  };
   const renderedDropdowns = useMemo(
     () => (
       <>
@@ -33,7 +50,7 @@ const AboveMenu = () => {
             <select
               key={index}
               className="form-select mt-2"
-              value={cateogryArray[index] ?? ""} // 👈 Set selected value
+              value={cateogryArray[index]} // 👈 Set selected value
               onChange={(e) => {
                 const selectedId = Number(e.target.value);
                 const element = levelItems.find((cat) => cat.id == selectedId);
@@ -90,7 +107,7 @@ const AboveMenu = () => {
     [levels, cateogryArray]
   );
   const getLevels = () => {
-    console.log("GetLEVELcall", sideMenu, cateogryArray);
+    // console.log("GetLEVELcall aboveMenu", sideMenu, cateogryArray);
     if (!sideMenu || !Array.isArray(cateogryArray)) return;
 
     let currentLevel = Array.isArray(sideMenu) ? sideMenu : [];
@@ -104,10 +121,10 @@ const AboveMenu = () => {
       const match = currentLevel.find((cat) => cat.id == selectedId);
       console.log("currentLevel", match, selectedId);
       if (match) {
-        console.log("currentLevel", currentLevel);
+        // console.log("currentLevel", currentLevel);
       }
       if (!match) {
-        console.warn(`Category ID ${selectedId} not found at level ${i}`);
+        // console.warn(`Category ID ${selectedId} not found at level ${i}`);
         currentLevel = [];
         break; // Stop further nesting
       }
@@ -123,7 +140,7 @@ const AboveMenu = () => {
     setLevels(newLevels);
   };
   const intiziliaseDataChild = () => {
-    console.log("Rohan0987");
+    console.log("Rohan0987", cateogoryParents);
     const isNumeric = (value) => !isNaN(Number(value));
 
     const categoryIds = allParams
@@ -136,8 +153,11 @@ const AboveMenu = () => {
     const parsedCateogry = subCateogry ? JSON.parse(subCateogry) : [];
 
     console.log("Category Ids", categoryIds, lastId, parsedCateogry);
-
-    setCateogryArray(categoryIds);
+    if (cateogoryParents?.length > 0) {
+      setCateogryArray(cateogoryParents);
+    } else {
+      setCateogryArray(categoryIds);
+    }
     if (lastId) {
       setTheLastI(lastId);
     }
@@ -156,14 +176,14 @@ const AboveMenu = () => {
       return null;
     };
     const selectedCategory = findCategoryById(parsedCateogry, lastId);
-    console.log("✅ selectedCategory", selectedCategory?.children);
+    // console.log("✅ selectedCategory", selectedCategory?.children);
     if (selectedCategory?.children?.length > 0) {
       setCategory(selectedCategory?.children);
       setProducts([]);
       setLoading(false);
-      console.log("selectedCategory if");
+      // console.log("selectedCategory if");
     } else {
-      console.log("selectedCategory else");
+      // console.log("selectedCategory else");
       setProducts([]);
       setCategory([]);
       // getProductByCategory(lastId, filterData);
@@ -177,23 +197,31 @@ const AboveMenu = () => {
   const hasRunOnce = useRef(false);
 
   useEffect(() => {
-    const intiziliaseData = async () => {
-      if (hasRunOnce.current) return;
-      hasRunOnce.current = true;
-
-      intiziliaseDataChild();
-
-      const data = localStorage.getItem("filterdData");
-      // if (data) {
-      //   const parsedData = JSON.parse(data);
-      //   setSelectedFilter(parsedData);
-      //   console.log("Parsed Data", parsedData);
-      // }
-    };
-    setTimeout(() => {
-      intiziliaseData();
-    }, 0);
+    // const intiziliaseData = async () => {
+    //   if (hasRunOnce.current) return;
+    //   hasRunOnce.current = true;
+    //   intiziliaseDataChild();
+    // };
+    // setTimeout(() => {
+    //   intiziliaseData();
+    // }, 0);
   }, [pathname]);
+
+  useEffect(() => {
+    intiziliaseDataChild();
+
+    // console.log("cateogoryParentsUpdate", cateogoryParents);
+  }, [cateogoryParents, pathname]);
+  useEffect(() => {
+    getCateogryIDs();
+  }, [productDetails]);
+  // useEffect(() => {
+  //   if (cateogoryParents?.length > 0) {
+  //     setCateogryArray(cateogoryParents);
+  //   }
+  // }, [cateogoryParents]);
+
+  // console.log("AboveMenu Render", levels, cateogryArray, cateogoryParents);
   return (
     <div className="filter-are">
       <div className="row mb-4">

@@ -293,7 +293,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
           </div>
         </div>
       </div> */}
-      <AboveMenu />
+      <AboveMenu productDetails={productDetails} />
       <div className="row">
         {/* Product Image */}
         <div className="col-md-12 col-lg-6 mt-2">
@@ -322,12 +322,12 @@ export default function ProductDetails({ productDetails, productDetail }) {
             )}
           </div>
           {productDetails?.type == "simple" && (
-            <div className="d-flex justify-content-center gap-2 mt-3">
+            <div className="d-flex flex-wrap  justify-content-center gap-2 mt-3">
               {productDetails?.images?.length > 0 &&
                 productDetails?.images.map((src, index) => (
                   <Image
                     key={index}
-                    src={src?.url}
+                    src={src?.url || "/assets/nothere.png"}
                     alt={`Thumbnail ${index + 1}`}
                     width={100}
                     height={100}
@@ -349,7 +349,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
           )}
 
           {productDetails?.type == "configurable" && (
-            <div className="d-flex justify-content-center gap-2 mt-3">
+            <div className="d-flex flex-wrap justify-content-evenly gap-2 mt-3 mb-3">
               <Image
                 src={createImage(productDetails?.sku)}
                 alt={productDetails?.sku || "Product Image"}
@@ -400,7 +400,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
         </div>
 
         {/* Product Info */}
-        <div className="col-md-12 col-lg-6 ">
+        <div className="col-md-12 col-lg-6">
           <div className="products-detailing">
             <h2> {productDetails?.name}</h2>
             <div className="d-flex justify-content-between align-items-center">

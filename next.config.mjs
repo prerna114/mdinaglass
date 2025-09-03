@@ -7,7 +7,7 @@ const withBundleAnalyzer = createBundleAnalyzer({
 
 const nextConfig = {
   images: {
-    domains: ["mdinaglasses.blackbullsolution.com"],
+    domains: ["mdinaglass.blackbullsolution.com"],
   },
   // other configs if any
 };

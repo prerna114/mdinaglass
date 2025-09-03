@@ -8,7 +8,9 @@ import { ProductLists } from "@/store/product";
 import InstantLink from "./InstantClick";
 
 const Footer = () => {
-  const { setPagination } = ProductLists((state) => state);
+  const { setPagination, setHeading, setDescription } = ProductLists(
+    (state) => state
+  );
   return (
     <footer style={{ backgroundColor: "#F1F1F1" }}>
       {/* Top Footer */}
@@ -61,6 +63,8 @@ const Footer = () => {
                       sort_by: "price",
                       sort_dir: "asc",
                     });
+                    setHeading("All Products");
+                    setDescription("");
                   }}
                   href={createUrl("all", "all-product")}
                 >

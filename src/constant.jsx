@@ -1,5 +1,5 @@
 import { buildProductUrl } from "./utils/buildProductUrl";
-export const API_BASE_URL = "https://mdinaglasses.blackbullsolution.com/";
+export const API_BASE_URL = "https://mdinaglass.blackbullsolution.com/";
 export const products = [
   {
     id: 1,
@@ -100,9 +100,9 @@ export const extractUniqueOptions = (variants = []) => {
 
 export const createImage = (sku) => {
   return (
-    `https://mdinaglasses.blackbullsolution.com/storage/product-images/${sku}.jpg` ||
-    `https://mdinaglasses.blackbullsolution.com/storage/product-images/${sku}.png ` ||
-    `https://mdinaglasses.blackbullsolution.com/storage/product-images/${sku}.webp`
+    `https://mdinaglass.blackbullsolution.com/storage/product-images/${sku}.jpg` ||
+    `https://mdinaglass.blackbullsolution.com/storage/product-images/${sku}.png ` ||
+    `https://mdinaglass.blackbullsolution.com/storage/product-images/${sku}.webp`
   );
 };
 export const CountryList = [

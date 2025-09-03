@@ -74,6 +74,9 @@ const ResponsiveNav = () => {
                     if (label === "WishList") {
                       setHeading("WishList");
                       setDescription("");
+                    } else if (label === "All Products") {
+                      setHeading("All Products");
+                      setDescription("");
                     }
                   }}
                 >
@@ -178,7 +181,7 @@ const ResponsiveNav = () => {
                     </a>
                   ))} */}
                   {menu?.map((item) => (
-                    <Link
+                    <InstantLink
                       key={item.id}
                       href={createUrl(item.id, item?.slug)}
                       onClick={() => {
@@ -196,7 +199,7 @@ const ResponsiveNav = () => {
                       className="navlink nav-link mx-3"
                     >
                       {item?.name}
-                    </Link>
+                    </InstantLink>
                   ))}
                 </div>
               </div>
@@ -204,7 +207,7 @@ const ResponsiveNav = () => {
           )}
 
           {/* Other items */}
-          <Link
+          <InstantLink
             href={"/loginCheckoutPage"}
             className="menu-item"
             onClick={() => {
@@ -212,8 +215,8 @@ const ResponsiveNav = () => {
             }}
           >
             My Account
-          </Link>
-          <Link
+          </InstantLink>
+          <InstantLink
             href={"/about/about-mdina-glass"}
             className="menu-item"
             onClick={() => {
@@ -221,14 +224,20 @@ const ResponsiveNav = () => {
             }}
           >
             About Us
-          </Link>
-          <Link href={"/contactus/contact-details"} className="menu-item">
+          </InstantLink>
+          <InstantLink
+            href={"/contactus/contact-details"}
+            className="menu-item"
+          >
             Contact Detail & Store Locator
-          </Link>
-          <Link href={"/information/terms-conditions"} className="menu-item">
+          </InstantLink>
+          <InstantLink
+            href={"/information/terms-conditions"}
+            className="menu-item"
+          >
             Terms & Conditions
-          </Link>
-          <Link
+          </InstantLink>
+          <InstantLink
             className="menu-item"
             href={"/wishlist"}
             onClick={() => {
@@ -236,8 +245,8 @@ const ResponsiveNav = () => {
             }}
           >
             WishList
-          </Link>
-          <Link
+          </InstantLink>
+          <InstantLink
             href={"/giftRegistry"}
             className="menu-item"
             onClick={() => {
@@ -245,7 +254,7 @@ const ResponsiveNav = () => {
             }}
           >
             Gift Registry
-          </Link>
+          </InstantLink>
         </div>
       )}
     </nav>

@@ -18,12 +18,24 @@ const SideMenuItem = ({
   const params = useParams();
   const allParams = useMemo(() => params?.params || [], [params]);
   const pathname = usePathname();
-  // console.log("pathnameSideMenu", cateogoryParents);
+  console.log("pathnameSideMenu", cateogoryParents);
 
   const priceIndex =
     !pathname.includes("search") && allParams.findIndex((p) => p === "price");
+  // const computedCategoryIds = useMemo(() => {
+  //   if (cateogoryParents) return cateogoryParents;
+  //   return priceIndex !== -1
+  //     ? allParams.slice(0, priceIndex).map(Number)
+  //     : allParams.map(Number);
+  // }, [cateogoryParents, allParams, priceIndex]);
+
   const computedCategoryIds = useMemo(() => {
-    if (cateogoryParents) return cateogoryParents;
+    if (Array.isArray(cateogoryParents)) {
+      return cateogoryParents.map(Number);
+    }
+    if (typeof cateogoryParents === "number") {
+      return [Number(cateogoryParents)];
+    }
     return priceIndex !== -1
       ? allParams.slice(0, priceIndex).map(Number)
       : allParams.map(Number);
@@ -98,7 +110,13 @@ const SideMenuItem = ({
     localStorage.setItem("currentUrl", currentUrl);
     // console.log("currentUrl", currentUrl);
   };
-  // console.log("subCategoriesSIdeMenu", categoryIds, fullPathToItem);
+  console.log(
+    "subCategoriesSIdeMenu",
+    categoryIds,
+    fullPathToItem,
+
+    isExpanded
+  );
   return (
     <li
       className={`mb-3 list-unstyled ${level === 1 ? "top-level-li" : ""}`}

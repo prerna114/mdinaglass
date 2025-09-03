@@ -244,6 +244,7 @@ const page = () => {
                         className="btn btn-info text-white"
                         onClick={() => {
                           processCheck();
+                          // console.log("Proceed To Checkout clicked");
                         }}
                       >
                         Proceed To Checkout
@@ -278,8 +279,12 @@ const page = () => {
                             <img
                               src={
                                 item?.product?.images?.length > 0
-                                  ? item?.product?.images[0]?.url
-                                  : item?.images[0]?.small_image_url
+                                  ? item?.product?.images[0]?.url?.includes(
+                                      "http"
+                                    )
+                                    ? `${item?.product?.images[0]?.url}`
+                                    : `https://${item?.product?.images[0]?.url}`
+                                  : `https://${item?.images[0]?.small_image_url}`
                               }
                               alt={item.name}
                               width="80"

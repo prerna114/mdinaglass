@@ -107,6 +107,7 @@ const AddToCart = ({ localCart }) => {
         SuccessToast(response.data?.message, "top-right");
         setLoading(false);
         insrunaceRate();
+        fetchCart();
       } else {
         CustomToast("Something went wrong", "top-right");
         setLoading(false);
@@ -124,7 +125,10 @@ const AddToCart = ({ localCart }) => {
       console.log("Update guest cart response", response);
       SuccessToast(response.data?.message, "top-right");
       insrunaceRate();
-
+      fetchCart();
+      setLoading(false);
+    } else {
+      CustomToast("Something went wrong", "top-right");
       setLoading(false);
     }
   };

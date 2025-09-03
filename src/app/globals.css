@@ -408,6 +408,7 @@ aside.sidebarnew ul li a {
 }
 a.btn.btn-cart.career-btn {
   width: 15%;
+  min-width: 150px !important;
 }
 
 .job-post h5 {
@@ -929,6 +930,9 @@ p.sku-detail {
 }
 
 .side-bar-mobi {
+  display: none;
+}
+.reciep-display {
   display: none;
 }
 
@@ -1488,6 +1492,12 @@ span.wishlist {
   .side-bar-mobi {
     display: block;
   }
+  .reciep-display {
+    display: block;
+    max-width: 400px;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
   button.page-link {
     font-size: 11px;
     padding: 9px 12px;
@@ -1783,6 +1793,11 @@ span.wishlist {
   .about-content .outlet {
     width: 100% !important;
   }
+  .careerModal h4 {
+    /* padding: 10px !important;
+    width: 82% !important; */
+    font-size: 18px !important;
+  }
   h1 {
     font-size: 22px !important;
   }
@@ -2053,6 +2068,12 @@ hr.display-option {
   .side-bar-mobi {
     display: block;
   }
+  .reciep-display {
+    display: block;
+    max-width: 400px;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
   .mobile-cart {
     display: none !important;
   }
@@ -2182,6 +2203,9 @@ hr.display-option {
   }
 
   .side-bar-mobi {
+    display: none !important;
+  }
+  .reciep-display {
     display: none !important;
   }
   .mobile-cart {
@@ -3729,6 +3753,10 @@ aside.sidebarnew {
   .slider-image {
     height: 300px;
   }
+  .careerModal {
+    padding: 10px !important;
+    width: 82% !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -3879,4 +3907,7 @@ form-check-input:checked[type="checkbox"] {
 }
 .careerModal button {
   width: 100%;
+}
+.about-content p img {
+  width: 100% !important;
 }
