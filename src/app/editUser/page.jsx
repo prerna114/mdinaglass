@@ -94,6 +94,24 @@ function editUser() {
     const data = await UpdateProfile(nameField, address);
     console.log("data", data);
     if (data?.status == 200) {
+      const Tokendata = localStorage.getItem("token");
+      const storedUser = JSON.parse(Tokendata);
+      const updatedUser = data?.data;
+      console.log("Updated User", updatedUser);
+      let mergedUser = {
+        ...storedUser, // keep old values like token
+        ...updatedUser, // overwrite with new values
+        address: {
+          ...storedUser.address,
+          street: updatedUser.billing_address?.address,
+          city: updatedUser.billing_address?.city,
+          state: updatedUser.billing_address?.state,
+          postcode: updatedUser.billing_address?.postcode,
+          country: updatedUser.billing_address?.country,
+          default_address: updatedUser.billing_address?.is_default === 1,
+        },
+      };
+      console.log("Merged User", mergedUser);
       SuccessToast(`${data?.data?.message}`, "top-right");
       setLoading(false);
       logout();
@@ -299,10 +317,29 @@ function editUser() {
                   ))}
                 </select>
                 <div className="required-text">{error.country}</div>
-              </div>
+                <div className="header-of-cart mt-2 mb-3">
+                  {/* <Link href="/"> */}
+                  <div className="col-md-12">
+                    <a>Fields Marked with (*) are Required.</a>
+                  </div>
+                  <button
+                    onClick={() => {
+                      validation();
+                    }}
+                    className="btn btn-info text-white"
+                  >
+                    {loading ? (
+                      <div
+                        className="spinner-border text-light"
+                        role="status"
+                      ></div>
+                    ) : (
+                      "Submit"
+                    )}
+                  </button>
 
-              <div className="col-md-12">
-                <a>Fields Marked with (*) are Required.</a>
+                  {/* </Link> */}
+                </div>
               </div>
 
               <div className="bottom-checkout">
@@ -315,25 +352,6 @@ function editUser() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="header-of-cart mt-2">
-          {/* <Link href="/"> */}
-
-          <button
-            onClick={() => {
-              validation();
-            }}
-            className="btn btn-info text-white"
-          >
-            {loading ? (
-              <div className="spinner-border text-light" role="status"></div>
-            ) : (
-              "Submit"
-            )}
-          </button>
-
-          {/* </Link> */}
         </div>
       </div>
     </div>

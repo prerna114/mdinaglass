@@ -268,7 +268,8 @@ const AddToCart = ({ localCart }) => {
   //   // allCart?.cart[0]?.coupon_code
   // );
 
-  console.log("insurance", localCart);
+  // console.log("insurance", localCart);
+  // console.log("isNavigating", isNavigating);
 
   return (
     <div className="container my-4">

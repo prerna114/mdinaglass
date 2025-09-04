@@ -122,10 +122,11 @@ const checkoutpage = () => {
         country: "ALGERIA",
       };
 
-      const streetParts = parseData?.address?.street
-        .split(",")
-        .map((s) => s.trim());
+      const streetParts =
+        parseData?.address != null &&
+        parseData?.address?.street.split(",").map((s) => s.trim());
       setTokenAddress(parseData);
+      console.log("streetParts", streetParts);
       setFiled((prev) => ({
         ...prev,
         firstName: parseData?.first_name || "",
@@ -335,7 +336,7 @@ const checkoutpage = () => {
                     <div className="col-md-12">
                       <input
                         ref={fieldRef?.telePhone}
-                        type="text"
+                        type="number"
                         onChange={(e) => {
                           handleText("telePhone", e.target.value);
                         }}

@@ -12,6 +12,7 @@ import InstantLink from "./InstantClick";
 import { addCartGuest, addToTheCart, getCartGuest } from "@/api/CartApi";
 import { createImage } from "@/constant";
 import { fetchCart } from "@/app/hooks/useCart";
+// import { set } from "react-datepicker/dist/date_utils";
 
 const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
   const { products, category, setHeading, setProducts } = ProductLists(
@@ -28,6 +29,8 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
     const data = await getNewArrivalProduct();
     if (data.status == 200) {
       setProducts(data?.data?.data);
+    } else {
+      setProducts([]);
     }
   };
 

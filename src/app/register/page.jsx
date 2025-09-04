@@ -170,7 +170,7 @@ const Register = () => {
 
                 <div className="col-md-12">
                   <input
-                    type="text"
+                    type="number"
                     placeholder="CONTACT*"
                     onChange={(e) => {
                       console.log("E", e.target.value);
@@ -367,12 +367,56 @@ const Register = () => {
                   <a>Fields Marked with (*) are Required.</a>
                 </div>
               </div>
+              <div className="container mb-5">
+                <div className="Terms_condition">
+                  <input
+                    type="checkbox"
+                    name="checkoutType"
+                    className="custom-checkbox"
+                    onChange={(e) => {
+                      setCheckbox(!checkbox);
+                    }}
+                  />{" "}
+                  <label className="label_checkbox">
+                    I accept the
+                    <a href={"information/terms-conditions"} target="_blank">
+                      Terms and Conditions
+                    </a>
+                    of mdinaglass.com.mt
+                  </label>
+                </div>
+                <div className="col-md-12">
+                  <div className="d-flex  pb-3 ">
+                    <Link href={"/loginCheckoutPage"}>
+                      <button className="btn btn-shop btn-primary me-3">
+                        Back
+                      </button>
+                    </Link>
+
+                    <a
+                      // href={"#"}
+                      onClick={() => {
+                        validation();
+                      }}
+                    >
+                      <button
+                        className="btn btn-cart btn-info text-white"
+                        style={{
+                          padding: "0px !important",
+                        }}
+                      >
+                        Submit
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mb-5">
+      {/* <div className="container mb-5">
         <div className="Terms_condition">
           <input
             type="checkbox"
@@ -408,7 +452,7 @@ const Register = () => {
             </a>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

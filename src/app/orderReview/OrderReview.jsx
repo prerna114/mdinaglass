@@ -194,6 +194,7 @@ const OrderReview = () => {
         setNavigating(false);
         setShowModal(false);
         clearCart();
+        localStorage.removeItem("the-cart-storage");
       } else {
         setNavigating(false);
         setShowModal(false);
@@ -237,6 +238,7 @@ const OrderReview = () => {
       setShowModal(false);
       localStorage.removeItem("shipping-store");
       localStorage.removeItem("trust-payment");
+      localStorage.removeItem("the-cart-storage");
 
       router.replace("/");
       // window.location.replace("/");
@@ -294,9 +296,9 @@ const OrderReview = () => {
     Number(Number(shippingMethod?.Price).toFixed(2));
 
   useEffect(() => {
-    insrunaceRate();
+    // insrunaceRate();
   }, []);
-  // console.log("total", insurance);
+  console.log("total", insurance);
   // console.log("billingAddress", shippingMethod);
   return (
     <div

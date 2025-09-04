@@ -983,9 +983,8 @@ table.table.cart-table thead tr th {
 table.table.cart-table thead tr td {
   font-family: var(--font-domine) !important;
   font-weight: 300;
-  font-size: 20px;
+  font-size: 15px;
   color: #666666;
-  font-size: 20px;
 }
 
 .shiiping-box h4 {

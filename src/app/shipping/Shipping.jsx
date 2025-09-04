@@ -143,6 +143,10 @@ const Shipping = () => {
         if (data?.data) setShippingRate(data?.data);
         setShippingStore(data?.data);
         setNavigating(false);
+        if (data?.data?.Messages?.length > 0) {
+          console.log("Datadatadata", data?.data);
+          CustomToast(data?.data?.Messages[0], "top-right");
+        }
       } else {
         setNavigating(false);
       }
@@ -152,7 +156,8 @@ const Shipping = () => {
   console.log("checkboxProps", checkboxProps);
   useEffect(() => {
     setNavigating(false);
-    if (checkboxProps == true) {
+    if (checkboxProps == "true") {
+      console.log("Checkbox call");
       const billingData = localStorage.getItem("billingaddress");
       console.log(
         "Billing addr12check",

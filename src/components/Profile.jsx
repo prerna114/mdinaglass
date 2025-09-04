@@ -13,6 +13,7 @@ import CreateGiftRegister from "./giftregistry/CreateGiftRegistry";
 import InstantLink from "./InstantClick";
 import { useNavigationStore } from "@/store/useNavigationstore";
 import { CustomToast } from "./CustomToast";
+// import { set } from "react-datepicker/dist/date_utils";
 
 export default function Make() {
   const [tab, setTab] = useState("profile");
@@ -27,6 +28,8 @@ export default function Make() {
     const response = await getOrderList();
     if (response.status == 200) {
       setOrderList(response.data.data);
+    } else {
+      setOrderList([]);
     }
   };
   useEffect(() => {
