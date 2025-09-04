@@ -100,24 +100,29 @@ function editUser() {
       console.log("Updated User", updatedUser);
       let mergedUser = {
         ...storedUser, // keep old values like token
-        ...updatedUser, // overwrite with new values
+        first_name: nameField.first_name,
+        last_name: nameField.last_name,
+        email: nameField.email,
+        // name: `${nameField.first_name} ${nameField.last_name}`,
+        // overwrite with new values
         address: {
           ...storedUser.address,
-          street: updatedUser.billing_address?.address,
-          city: updatedUser.billing_address?.city,
-          state: updatedUser.billing_address?.state,
-          postcode: updatedUser.billing_address?.postcode,
-          country: updatedUser.billing_address?.country,
+          street: address?.street,
+          city: address?.city,
+          state: address?.state,
+          postcode: address?.postcode,
+          country: address?.country,
           default_address: updatedUser.billing_address?.is_default === 1,
         },
       };
       console.log("Merged User", mergedUser);
+      localStorage.setItem("token", JSON.stringify(mergedUser));
       SuccessToast(`${data?.data?.message}`, "top-right");
       setLoading(false);
-      logout();
+      // logout();
       router.push("/loginCheckoutPage");
 
-      SuccessToast(`Please login again`, "top-right");
+      // SuccessToast(`Please login again`, "top-right");
     } else if (data?.status == 422) {
       setLoading(false);
 
@@ -144,7 +149,7 @@ function editUser() {
     // setNameField(nameField?.first_name)
   }, []);
 
-  console.log("Login", nameField);
+  console.log("Login", nameField, address);
 
   return (
     <div className="container">
@@ -231,7 +236,7 @@ function editUser() {
               <div className="col-md-12">
                 <input
                   type="text"
-                  value={address?.street}
+                  value={address?.street ?? ""}
                   placeholder="Street Address*"
                   onChange={(e) => {
                     console.log("E", e.target.value);
@@ -259,7 +264,7 @@ function editUser() {
                 <input
                   type="text"
                   placeholder="CITY*"
-                  value={address?.city}
+                  value={address?.city ?? ""}
                   onChange={(e) => {
                     console.log("E", e.target.value);
                     handleAddress("city", e.target.value);
@@ -273,7 +278,7 @@ function editUser() {
                 <input
                   type="text"
                   placeholder="STATE/PROVINCE*"
-                  value={address?.state}
+                  value={address?.state ?? ""}
                   onChange={(e) => {
                     console.log("E", e.target.value);
                     handleAddress("state", e.target.value);
@@ -286,7 +291,7 @@ function editUser() {
               <div className="col-md-12">
                 <input
                   type="number"
-                  value={address?.postcode}
+                  value={address?.postcode ?? ""}
                   placeholder="POST CODE*"
                   onChange={(e) => {
                     console.log("E", e.target.value);

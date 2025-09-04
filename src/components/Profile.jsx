@@ -142,7 +142,9 @@ export default function Make() {
                   <div className="ms-4">
                     <div>
                       <h5>Name</h5>
-                      <p>{userDetails?.name}</p>
+                      <p>
+                        {userDetails?.first_name} {userDetails?.last_name}
+                      </p>
                     </div>
 
                     <div>
