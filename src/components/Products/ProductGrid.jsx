@@ -16,6 +16,7 @@ const ProductGrid = ({ products, categoryidList }) => {
   const priceIndex = allParams.findIndex((p) => p === "price");
   const [categryIds, setCategoryIds] = useState();
   const [imgSrcs, setImgSrcs] = useState([]);
+
   const [errorImage, setErrorImage] = useState("/assets/nothere.png");
   const { heading, setHeading, setDescription } = ProductLists(
     (state) => state
@@ -42,21 +43,33 @@ const ProductGrid = ({ products, categoryidList }) => {
     if (products?.length > 0) {
       setImgSrcs(
         products.map((item) => ({
-          url: createImage(item.sku),
+          url: item?.images[0]?.url
+            ? item?.images[0]?.url
+            : createImage(item.sku),
           fallback: false,
           id: item.id,
         }))
       );
     }
-  }, [products]);
+  }, []);
+
+  // const handleImgError = (index) => {
+  //   setImgSrcs((prev) =>
+  //     prev.map((img, i) => (i === index ? { ...img, fallback: true } : img))
+  //   );
+  // };
 
   const handleImgError = (index) => {
     setImgSrcs((prev) =>
-      prev.map((img, i) => (i === index ? { ...img, fallback: true } : img))
+      prev.map((img, i) =>
+        i === index
+          ? { ...img, url: "/assets/dummyimage.jpg", error: true }
+          : img
+      )
     );
   };
   console.log("categoryIds", imgSrcs);
-  console.log("products", products);
+  console.log("productsproducts", products);
 
   return (
     <div className="row">
