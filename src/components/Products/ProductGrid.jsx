@@ -8,6 +8,10 @@ import InstantLink from "../InstantClick";
 import { createImage } from "@/constant";
 import { useParams } from "next/navigation";
 import { ProductLists } from "@/store/product";
+import { useCartStore } from "@/store";
+import { fetchCart } from "@/app/hooks/useCart";
+import { CustomToast, SuccessToast } from "../CustomToast";
+import { addCartGuest, addToTheCart } from "@/api/CartApi";
 
 const ProductGrid = ({ products, categoryidList }) => {
   console.log("Products in Grid");
@@ -16,6 +20,11 @@ const ProductGrid = ({ products, categoryidList }) => {
   const priceIndex = allParams.findIndex((p) => p === "price");
   const [categryIds, setCategoryIds] = useState();
   const [imgSrcs, setImgSrcs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingProductId, setLoadingProductId] = useState(null);
+  const { addToCart, cart, clearCart, setCartTotal, setAllCart } = useCartStore(
+    (state) => state
+  );
 
   const [errorImage, setErrorImage] = useState("/assets/nothere.png");
   const { heading, setHeading, setDescription } = ProductLists(
@@ -67,6 +76,60 @@ const ProductGrid = ({ products, categoryidList }) => {
           : img
       )
     );
+  };
+
+  const addItemCart = async (product) => {
+    setLoadingProductId(product.id);
+    const tokenData = localStorage.getItem("token");
+    const parsed = tokenData ? JSON.parse(tokenData) : null;
+    const accessToken = parsed?.token;
+
+    setLoading(true);
+    if (accessToken) {
+      const data = await addToTheCart(product?.sku, 1);
+
+      if (data.status == 200) {
+        clearCart();
+        console.log("data", data);
+        addToCart(data.data.cart.items);
+        setLoading(false);
+
+        SuccessToast("Item added Successfuly", "top-right");
+      } else {
+        CustomToast("Something went Wrong", "top-right");
+        setLoading(false);
+      }
+    } else {
+      const guestToken = localStorage.getItem("guestToken");
+      addGuestCart(product, guestToken);
+      // addToCart({ ...product, quantity: "1" });
+      // SuccessToast("Item added Successfuly", "top-right");
+    }
+    console.log("Add", product);
+
+    // setLoading(false);
+  };
+
+  const addGuestCart = async (product, guestToken) => {
+    setLoading(true);
+    setLoadingProductId(product.id);
+
+    console.log("guestToken", product);
+    const data = await addCartGuest(product?.sku, "1", guestToken);
+    console.log("addCartGuest", data, guestToken);
+
+    if (data?.status === 200) {
+      SuccessToast("Item added to cart", "top-right");
+      localStorage.setItem("guestToken", data.data?.guest_token);
+      setLoading(false);
+
+      // addToCart(data.data?.cart.items);
+      await fetchCart();
+    } else {
+      setLoading(false);
+
+      CustomToast("Something went wrong", "top-right");
+    }
   };
   console.log("categoryIds", imgSrcs);
   console.log("productsproducts", products);
@@ -159,6 +222,47 @@ const ProductGrid = ({ products, categoryidList }) => {
                       ? Number(product?.price).toFixed(2)
                       : "0"}
                   </p>
+
+                  {product?.type == "simple" ? (
+                    <div className="new-arrival-design">
+                      <button
+                        className="btn btn-outline-secondary  w-100"
+                        onClick={() => {
+                          addItemCart(product);
+                        }}
+                      >
+                        {loading && product.id === loadingProductId ? (
+                          <div
+                            className="spinner-border text-dark"
+                            role="status"
+                          ></div>
+                        ) : (
+                          <div>Add to Cart</div>
+                        )}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="new-arrival-design">
+                      <button
+                        onClick={() => {
+                          // addItemCart(product);
+                        }}
+                        style={{
+                          // display: "none",
+                          visibility: "hidden",
+                        }}
+                      >
+                        {/* {loading && product.id === loadingProductId ? (
+                          <div
+                            className="spinner-border text-dark"
+                            role="status"
+                          ></div>
+                        ) : (
+                          <div>Add to Cart</div>
+                        )} */}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

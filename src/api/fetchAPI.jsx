@@ -41,8 +41,10 @@ export const fetchGlobal = async (
     const data = isJson ? await res.json() : await res.text();
 
     if (!res.ok) {
-      if (res.status === 500 && typeof window !== "undefined") {
-        CustomToast("Session expired Please login again", "top-right");
+      if (res.status == 401) {
+        CustomToast(data?.message, "top-right");
+        const logout = useAuthStore.getState().logout;
+        logout();
       }
       return {
         success: false,

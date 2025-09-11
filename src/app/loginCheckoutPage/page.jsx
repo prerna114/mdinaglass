@@ -69,6 +69,14 @@ const loginCheckoutPage = () => {
       setTimeout(() => {
         fetchCart();
       }, 1000);
+    } else if (data?.status == 401) {
+      setLoadingScroll(false);
+
+      CustomToast("Invalid Credentials", "top-right");
+    } else if (data?.status == 403) {
+      setLoadingScroll(false);
+
+      CustomToast(data?.error, "top-right");
     } else {
       setLoadingScroll(false);
 
