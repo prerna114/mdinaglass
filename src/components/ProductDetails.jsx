@@ -400,7 +400,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
         </div>
 
         {/* Product Info */}
-        <div className="col-md-12 col-lg-6">
+        {/* <div className="col-md-12 col-lg-6">
           <div className="products-detailing">
             <h2> {productDetails?.name}</h2>
             <div className="d-flex justify-content-between align-items-center">
@@ -463,6 +463,203 @@ export default function ProductDetails({ productDetails, productDetail }) {
                 € {Number(selectedData?.price).toFixed(2)}
               </span>
             </p>
+            {uniqueOptions.size > 0 && (
+              <div className="mb-4 d-flex choose-category align-items-center">
+                <label
+                  className="form-label fw-semibold"
+                  style={{
+                    color: "rgb(0, 94, 132)",
+                  }}
+                >
+                  Choose:
+                </label>
+                <select
+                  className="form-select"
+                  onChange={(e) => {
+                    if (e.target.value != "Select Option") {
+                      console.log("Set selected", e.target.value);
+                      SelectedData("varient", e.target.value);
+                      setChooseSku(e.target.value);
+                    } else {
+                      SelectedData("", productDetails?.sku);
+                      setChooseSku(null);
+                    }
+                    // setSelectedImage(e.target.value);
+
+                    console.log("Selected SKU:", e.target.value);
+                  }}
+                  value={selectedImage || ""}
+                >
+                  <option>Select Option</option>
+                  {[...uniqueOptions.entries()].map(([optionId, label]) => (
+                    <option key={optionId} value={label.sku}>
+                      {label.value}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <div className="mb-4 d-flex choose-category align-items-center">
+              <label
+                className="form-label fw-semibold"
+                style={{
+                  color: "rgb(0, 94, 132)",
+                }}
+              >
+                Quantity:
+              </label>
+
+              <select
+                className="form-select w-auto"
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+              >
+                {[1, 2, 3, 4].map((val) => (
+                  <option key={val} value={val}>
+                    {val}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button
+              className="w-100 py-3 text-uppercase addtocart"
+              onClick={addItemCart}
+            >
+              {loading ? (
+                <div className="spinner-border text-light" role="status"></div>
+              ) : (
+                <div>
+                  <Image
+                    src="/assets/bag_white.webp"
+                    alt="Cart Icon"
+                    width={27}
+                    height={27}
+                    className="me-2"
+                  />
+                  Add to Cart
+                </div>
+              )}
+            </button>
+            <div className="mt-3 text-center a_color">
+              <InstantLink href="/cartpage" className="me-2">
+                View Cart
+              </InstantLink>
+              |
+              <InstantLink href="#" className="ms-2">
+                Add to Gift Registry
+              </InstantLink>
+            </div>
+          </div>
+        </div> */}
+
+        {/* --------  Voucher ----------------- */}
+
+        <div className="col-md-12 col-lg-6">
+          <div className="products-detailing">
+            <h2>Gift Voucher Euro 35 (sent by email)</h2>
+
+            <p className="sku-detail mb-0">Description </p>
+            <p
+            // dangerouslySetInnerHTML={{
+            //   __html: productDetails?.description || "",
+            // }}
+            >
+              Buy this €35 gift voucher for friends and family and they will
+              receive an email with a unique code so they can redeem the amount
+              online on this website. Please note that Gift Vouchers are not
+              refundable.
+            </p>
+            <div>
+              <div>
+                <div className="row">
+                  <div className="col-md-12">
+                    <div
+                      className="gift-voucher  checkout-sec"
+                      style={{
+                        margin: 0,
+                        padding: 0,
+                      }}
+                    >
+                      <div className="col-md-12">
+                        <input
+                          type="text"
+                          required
+                          className="input-full-width"
+                          // ref={fieldRef?.firstName}
+                          onChange={(e) => {
+                            // handleText("firstName", e.target.value);
+                          }}
+                          // value={
+                          //   filed && filed.firstName !== undefined ? filed.firstName : ""
+                          // }
+                          placeholder="FROM NAME*"
+                        ></input>
+                      </div>
+
+                      <div className="col-md-12">
+                        <input
+                          type="text"
+                          required
+                          // ref={fieldRef?.firstName}
+                          onChange={(e) => {
+                            // handleText("firstName", e.target.value);
+                          }}
+                          // value={
+                          //   filed && filed.firstName !== undefined ? filed.firstName : ""
+                          // }
+                          placeholder="FROM EMAIL*"
+                        ></input>
+                      </div>
+
+                      <div className="col-md-12">
+                        <input
+                          type="text"
+                          required
+                          // ref={fieldRef?.firstName}
+                          onChange={(e) => {
+                            // handleText("firstName", e.target.value);
+                          }}
+                          // value={
+                          //   filed && filed.firstName !== undefined ? filed.firstName : ""
+                          // }
+                          placeholder="TO NAME*"
+                        ></input>
+                      </div>
+
+                      <div className="col-md-12">
+                        <input
+                          type="text"
+                          required
+                          // ref={fieldRef?.firstName}
+                          onChange={(e) => {
+                            // handleText("firstName", e.target.value);
+                          }}
+                          // value={
+                          //   filed && filed.firstName !== undefined ? filed.firstName : ""
+                          // }
+                          placeholder="TO EMAIL*"
+                        ></input>
+                      </div>
+
+                      <div className="col-md-12">
+                        <textarea
+                          required
+                          className="full-width-textarea"
+                          // onChange={(e) => handleChange(e.target.value)}
+                          style={{
+                            paddingLeft: 10,
+                            height: 150,
+                          }} // you can adjust height as needed
+                          placeholder="Message"
+                          rows={5}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {uniqueOptions.size > 0 && (
               <div className="mb-4 d-flex choose-category align-items-center">
                 <label

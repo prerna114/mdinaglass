@@ -72,6 +72,10 @@ input[type="checkbox"] {
   width: 25px !important;
   height: 25px !important;
 }
+.full-width-textarea {
+  width: 100% !important;
+}
+
 .InfoContainer {
   max-width: 1050px !important;
   margin: 0 auto;
@@ -1139,6 +1143,9 @@ select.gift-input {
 @media (width >= 1800px) {
   .checkout-sec textarea {
     width: 65% !important;
+  }
+  .checkout-sec .full-width-textarea {
+    width: 100% !important;
   }
 }
 .custom-file-upload {
@@ -2920,6 +2927,10 @@ hr.display-option {
     color: #666;
     width: 80% !important;
   }
+  .input-full-width {
+    width: 100% !important;
+  }
+
   .login-sec.checkout-sec select {
     width: 80%;
   }
@@ -2963,6 +2974,10 @@ li.nav-item:hover {
     color: #666;
     width: 80% !important;
   }
+  .input-full-width {
+    width: 100% !important;
+  }
+
   .login-sec.checkout-sec select {
     width: 80%;
   }
@@ -3015,6 +3030,11 @@ li.nav-item:hover {
     color: #666;
     width: 80% !important;
   }
+
+  .input-full-width {
+    width: 100% !important;
+  }
+
   .login-sec.checkout-sec select {
     width: 80%;
   }
@@ -3036,6 +3056,11 @@ li.nav-item:hover {
     color: #666;
     width: 80% !important;
   }
+
+  .input-full-width {
+    width: 100% !important;
+  }
+
   .login-sec.checkout-sec select {
     width: 80%;
   }
@@ -3908,5 +3933,26 @@ form-check-input:checked[type="checkbox"] {
   width: 100%;
 }
 .about-content p img {
+  width: 100% !important;
+}
+.voucher textarea {
+  width: 100%;
+  resize: none;
+  height: 120px;
+  border: 1px solid #c7c7c7;
+  border-radius: 3px;
+  padding: 15px;
+}
+.gift-voucher input {
+  width: 100% !important;
+  color: #666;
+  width: 100%;
+  height: 62px;
+  margin-bottom: 7px;
+  padding-left: 15px;
+  font-size: 16px;
+  font-family: var(--font-quicksand) !important;
+}
+.full-width-textarea {
   width: 100% !important;
 }

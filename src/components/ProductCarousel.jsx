@@ -212,7 +212,7 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
       }
     }
   };
-  console.log("productsCarousel", loading, loadingProductId);
+  console.log("productsCarousel", loading, products);
   return (
     <div className=" py-5 bg-white bg-white-custom">
       <div className="container">
@@ -245,7 +245,9 @@ const ProductCarousel = ({ title = "New Arrivals", showBadge = false }) => {
                     }}
                   >
                     <img
-                      src={createImage(product?.sku)}
+                      // src={createImage(product?.sku)}
+                      src={product?.images[0]?.url}
+                      // onError={() => console.log("Voucher email")}
                       alt={product.name}
                       className="img-fluid"
                       style={{
