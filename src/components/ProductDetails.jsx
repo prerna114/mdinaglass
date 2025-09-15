@@ -7,7 +7,7 @@ import { useCartStore } from "@/store";
 import { CustomToast, SuccessToast } from "./CustomToast";
 import { addCartGuest, addToTheCart, getCartGuest } from "@/api/CartApi";
 import { useMenuStore } from "@/store/useCategoryStore";
-import { createImage } from "@/constant";
+import { createImage, emailRegex } from "@/constant";
 import dynamic from "next/dynamic";
 import InstantLink from "./InstantClick";
 import { addItemWIshlist, getWishList } from "@/api/productApi";
@@ -60,29 +60,33 @@ export default function ProductDetails({ productDetails, productDetail }) {
   const [selectedImage, setSelectedImage] = useState("");
   const [simpleImage, setSImpleImage] = useState("");
   const [wishLoader, setWishLoader] = useState(false);
+  const [voucherInCart, setVoucherInCart] = useState();
   const { addToCart, clearCart, setCartTotal, setAllCart } = useCartStore(
     (state) => state
   );
   const cart = useCartStore((state) => state.cart);
   const { isLogin } = useAuthStore((state) => state);
   const [inWish, setInWish] = useState(false);
+  const [giftVoucher, setGiftVoucher] = useState({});
+  const [voucherError, setVoucherError] = useState({});
 
-  const imageList = useMemo(
-    () => [
-      "/assets/bracelet1.png",
-      "/assets/Bowls.png",
-      "/assets/lamp.png",
-      "/assets/bracelet2.png",
-    ],
-    []
-  );
+  const handleVoucherDetails = (name, value) => {
+    setGiftVoucher((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const uniqueOptions = useMemo(
     () => extractUniqueOptions(productDetails?.variants),
     [productDetails?.variants]
   );
   const addItemCart = async () => {
-    if (uniqueOptions?.size > 0 && chooseSku == null) {
+    if (
+      uniqueOptions?.size > 0 &&
+      chooseSku == null &&
+      !productDetails?.categories[0]?.name.includes("Gift Vouchers")
+    ) {
       CustomToast("Please Choose Varient", "top-right");
       return;
     }
@@ -92,11 +96,16 @@ export default function ProductDetails({ productDetails, productDetail }) {
     const parsed = tokenData ? JSON.parse(tokenData) : null;
     const accessToken = parsed?.token;
     if (accessToken) {
-      const data = await addToTheCart(selectedImage, quantity);
+      const data = await addToTheCart(
+        selectedImage,
+        quantity,
+        productDetails?.categories[0]?.name.includes("Gift Vouchers")
+      );
       if (data?.status === 200) {
         clearCart();
         addToCart(data.data?.cart.items);
         setLaoding(false);
+        localStorage.setItem("is_voucher", JSON.stringify(1));
 
         SuccessToast("Item added Successfully", "top-right");
       } else if (data?.status == 402) {
@@ -120,31 +129,22 @@ export default function ProductDetails({ productDetails, productDetail }) {
   };
 
   const addGuestCart = async (guestToken) => {
-    const data = await addCartGuest(selectedImage, quantity, guestToken);
+    const data = await addCartGuest(
+      selectedImage,
+      quantity,
+      guestToken,
+      productDetails?.categories[0]?.name.includes("Gift Vouchers")
+    );
     console.log("addCartGuest", data, guestToken);
 
     if (data?.status === 200) {
       SuccessToast("Item added to cart", "top-right");
       localStorage.setItem("guestToken", data.data?.guest_token);
+      localStorage.setItem("is_voucher", JSON.stringify(1));
+
       // addToCart(data.data?.cart.items);
       // await getGUesstCart();
       await fetchCart();
-    }
-  };
-  const getGUesstCart = async () => {
-    const tokenData = localStorage.getItem("guestToken");
-    console.log("guestToken", tokenData);
-    if (tokenData) {
-      const response = await getCartGuest(tokenData);
-      console.log("getCartGuest", response?.data?.cart[0]?.items);
-      if (response.status == 200) {
-        clearCart();
-        response?.data?.cart[0]?.items?.forEach((item) => {
-          addToCart(item);
-        });
-        setCartTotal(response?.data?.cart[0]?.grand_total);
-        setAllCart(response?.data);
-      }
     }
   };
 
@@ -215,19 +215,6 @@ export default function ProductDetails({ productDetails, productDetail }) {
     console.log("INside Product detail121s");
   }, [productDetails]);
 
-  // useEffect(() => {
-  //   if (uniqueOptions.size > 0) {
-  //     const firstValue = uniqueOptions.values().next().value;
-  //     console.log("uniqueOptions", uniqueOptions, firstValue);
-  //     if (firstValue?.sku) {
-  //       setChooseSku(firstValue.sku);
-  //     }
-  //     // setChooseSku(uniqueOptions.values().next().value.sku);
-  //   } else {
-  //     // setSelectedImage(productDetails?.sku);
-  //   }
-  // }, []);
-
   const SelectedData = (type, sku) => {
     setSelectedImage(sku);
     if (type == "varient") {
@@ -247,37 +234,54 @@ export default function ProductDetails({ productDetails, productDetail }) {
     }
   };
 
-  // useEffect(() => {
-  //   if (selectedImage) {
-  //     console.log("Sele");
-  //     const selectedOption = productDetails?.variants.find(
-  //       (variant) => variant.sku === selectedImage
-  //     );
-  //     // console.log("selectedOption", selectedOption);
-  //     if (selectedOption?.sku != selectedImage) {
-  //       console.log(" ifElse fffff");
+  const voucherValidation = () => {
+    const newErrors = {};
 
-  //       setSelectedData(selectedOption);
-  //       // setImgSrc(createImage(selectedOption.sku));
-  //       // setSelectedImage(selectedOption.sku);
-  //     }
-  //   } else {
-  //     console.log("Else fffff");
-  //     // setSelectedImage(productDetails?.sku);
-  //     setSelectedData(productDetails);
-  //   }
-  // }, [selectedImage]);
+    if (!giftVoucher?.fromName) {
+      newErrors.fromName = "From name required";
+    }
 
-  // console.log(
-  //   "createImage(productDetails?.sku)",
-  //   createImage("CAS-294-MPE"),
-  //   productDetails,
-  //   chooseSku,
-  //   uniqueOptions,
-  //   selectedImage
-  // );
+    if (!giftVoucher?.fromEmail) {
+      newErrors.fromEmail = "From email required";
+    } else if (!emailRegex.test(giftVoucher.fromEmail)) {
+      newErrors.fromEmail = "Enter valid email address";
+    }
+
+    if (!giftVoucher?.toName) {
+      newErrors.toName = "To name required";
+    }
+
+    if (!giftVoucher?.toEmail) {
+      newErrors.toEmail = "To email required";
+    } else if (!emailRegex.test(giftVoucher.toEmail)) {
+      newErrors.toEmail = "Enter valid email address";
+    }
+
+    if (!giftVoucher?.message) {
+      newErrors.message = "Message required";
+    }
+
+    setVoucherError(newErrors);
+
+    console.log("Errors:", newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      console.log("Validation passed ✅");
+      localStorage.setItem("voucherDetails", JSON.stringify(giftVoucher));
+      addItemCart();
+
+      // localStorage.setItem("billingaddress", JSON.stringify(filed));
+    }
+  };
+
+  useEffect(() => {
+    const data = localStorage.getItem("is_voucher");
+    const parse = JSON.parse(data);
+    setVoucherInCart(parse);
+  }, []);
 
   console.log("Selected Image,uniqueOptions", selectedData);
+  console.log("Voucher", giftVoucher);
   return (
     <div className="container bg-white mt-5 mb-5 py-3">
       {/* <div className="filter-are">
@@ -400,70 +404,106 @@ export default function ProductDetails({ productDetails, productDetail }) {
         </div>
 
         {/* Product Info */}
-        {/* <div className="col-md-12 col-lg-6">
-          <div className="products-detailing">
-            <h2> {productDetails?.name}</h2>
-            <div className="d-flex justify-content-between align-items-center">
-              <p className="sku-detail">SKU: {selectedImage || "n/a"} </p>
-              <span
-                className="wishlist float-right"
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  console.log("addItemWishlist", productDetails?.sku);
-                  if (inWish == productDetails?.sku) {
-                    SuccessToast("Already in wishlist");
-                  } else {
-                    addWishList(productDetails?.sku);
-                  }
-                }}
-              >
-                {isLogin &&
-                  (wishLoader ? (
-                    <div
-                      className="spinner-border spinner-border-sm text-danger"
-                      role="status"
-                    >
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
-                  ) : (
-                    <div>
-                      {inWish ? (
-                        <Heart
-                          size={24}
-                          color="#c6302c"
-                          fill="#c6302c"
-                          stroke="#c6302c"
-                        />
-                      ) : (
-                        <Heart
-                          size={24}
-                          color="#c6302c"
-                          fill="#ffff"
-                          stroke="#c6302c"
-                        />
-                      )}
-                    </div>
-                  ))}
-              </span>
-            </div>
+        {!productDetails?.categories[0]?.name.includes("Gift Vouchers") && (
+          <div className="col-md-12 col-lg-6">
+            <div className="products-detailing">
+              <h2> {productDetails?.name}</h2>
+              <div className="d-flex justify-content-between align-items-center">
+                <p className="sku-detail">SKU: {selectedImage || "n/a"} </p>
+                <span
+                  className="wishlist float-right"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    console.log("addItemWishlist", productDetails?.sku);
+                    if (inWish == productDetails?.sku) {
+                      SuccessToast("Already in wishlist");
+                    } else {
+                      addWishList(productDetails?.sku);
+                    }
+                  }}
+                >
+                  {isLogin &&
+                    (wishLoader ? (
+                      <div
+                        className="spinner-border spinner-border-sm text-danger"
+                        role="status"
+                      >
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    ) : (
+                      <div>
+                        {inWish ? (
+                          <Heart
+                            size={24}
+                            color="#c6302c"
+                            fill="#c6302c"
+                            stroke="#c6302c"
+                          />
+                        ) : (
+                          <Heart
+                            size={24}
+                            color="#c6302c"
+                            fill="#ffff"
+                            stroke="#c6302c"
+                          />
+                        )}
+                      </div>
+                    ))}
+                </span>
+              </div>
 
-            <p className="sku-detail mb-0">Description </p>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: productDetails?.description || "",
-              }}
-            />
-            <p className="sku-detail">
-              Availability:
-              <span className="text-success">In Stock</span>
-            </p>
-            <p className="sku-detail">
-              Price:{" "}
-              <span className="fs-4 text-dark">
-                € {Number(selectedData?.price).toFixed(2)}
-              </span>
-            </p>
-            {uniqueOptions.size > 0 && (
+              <p className="sku-detail mb-0">Description </p>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: productDetails?.description || "",
+                }}
+              />
+              <p className="sku-detail">
+                Availability:
+                <span className="text-success">In Stock</span>
+              </p>
+              <p className="sku-detail">
+                Price:{" "}
+                <span className="fs-4 text-dark">
+                  € {Number(selectedData?.price).toFixed(2)}
+                </span>
+              </p>
+              {uniqueOptions.size > 0 && (
+                <div className="mb-4 d-flex choose-category align-items-center">
+                  <label
+                    className="form-label fw-semibold"
+                    style={{
+                      color: "rgb(0, 94, 132)",
+                    }}
+                  >
+                    Choose:
+                  </label>
+                  <select
+                    className="form-select"
+                    onChange={(e) => {
+                      if (e.target.value != "Select Option") {
+                        console.log("Set selected", e.target.value);
+                        SelectedData("varient", e.target.value);
+                        setChooseSku(e.target.value);
+                      } else {
+                        SelectedData("", productDetails?.sku);
+                        setChooseSku(null);
+                      }
+                      // setSelectedImage(e.target.value);
+
+                      console.log("Selected SKU:", e.target.value);
+                    }}
+                    value={selectedImage || ""}
+                  >
+                    <option>Select Option</option>
+                    {[...uniqueOptions.entries()].map(([optionId, label]) => (
+                      <option key={optionId} value={label.sku}>
+                        {label.value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <div className="mb-4 d-flex choose-category align-items-center">
                 <label
                   className="form-label fw-semibold"
@@ -471,196 +511,187 @@ export default function ProductDetails({ productDetails, productDetail }) {
                     color: "rgb(0, 94, 132)",
                   }}
                 >
-                  Choose:
+                  Quantity:
                 </label>
-                <select
-                  className="form-select"
-                  onChange={(e) => {
-                    if (e.target.value != "Select Option") {
-                      console.log("Set selected", e.target.value);
-                      SelectedData("varient", e.target.value);
-                      setChooseSku(e.target.value);
-                    } else {
-                      SelectedData("", productDetails?.sku);
-                      setChooseSku(null);
-                    }
-                    // setSelectedImage(e.target.value);
 
-                    console.log("Selected SKU:", e.target.value);
-                  }}
-                  value={selectedImage || ""}
+                <select
+                  className="form-select w-auto"
+                  value={quantity}
+                  onChange={(e) => setQuantity(parseInt(e.target.value))}
                 >
-                  <option>Select Option</option>
-                  {[...uniqueOptions.entries()].map(([optionId, label]) => (
-                    <option key={optionId} value={label.sku}>
-                      {label.value}
+                  {[1, 2, 3, 4].map((val) => (
+                    <option key={val} value={val}>
+                      {val}
                     </option>
                   ))}
                 </select>
               </div>
-            )}
-            <div className="mb-4 d-flex choose-category align-items-center">
-              <label
-                className="form-label fw-semibold"
-                style={{
-                  color: "rgb(0, 94, 132)",
-                }}
+              <button
+                className="w-100 py-3 text-uppercase addtocart"
+                onClick={addItemCart}
               >
-                Quantity:
-              </label>
-
-              <select
-                className="form-select w-auto"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value))}
-              >
-                {[1, 2, 3, 4].map((val) => (
-                  <option key={val} value={val}>
-                    {val}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              className="w-100 py-3 text-uppercase addtocart"
-              onClick={addItemCart}
-            >
-              {loading ? (
-                <div className="spinner-border text-light" role="status"></div>
-              ) : (
-                <div>
-                  <Image
-                    src="/assets/bag_white.webp"
-                    alt="Cart Icon"
-                    width={27}
-                    height={27}
-                    className="me-2"
-                  />
-                  Add to Cart
-                </div>
-              )}
-            </button>
-            <div className="mt-3 text-center a_color">
-              <InstantLink href="/cartpage" className="me-2">
-                View Cart
-              </InstantLink>
-              |
-              <InstantLink href="#" className="ms-2">
-                Add to Gift Registry
-              </InstantLink>
+                {loading ? (
+                  <div
+                    className="spinner-border text-light"
+                    role="status"
+                  ></div>
+                ) : (
+                  <div>
+                    <Image
+                      src="/assets/bag_white.webp"
+                      alt="Cart Icon"
+                      width={27}
+                      height={27}
+                      className="me-2"
+                    />
+                    Add to Cart
+                  </div>
+                )}
+              </button>
+              <div className="mt-3 text-center a_color">
+                <InstantLink href="/cartpage" className="me-2">
+                  View Cart
+                </InstantLink>
+                |
+                <InstantLink href="#" className="ms-2">
+                  Add to Gift Registry
+                </InstantLink>
+              </div>
             </div>
           </div>
-        </div> */}
+        )}
 
         {/* --------  Voucher ----------------- */}
+        {productDetails?.categories[0]?.name.includes("Gift Vouchers") && (
+          <div className="col-md-12 col-lg-6">
+            <div className="products-detailing">
+              <h2>{productDetails?.name} (sent by email)</h2>
 
-        <div className="col-md-12 col-lg-6">
-          <div className="products-detailing">
-            <h2>Gift Voucher Euro 35 (sent by email)</h2>
+              <p className="sku-detail mb-0">Description </p>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: productDetails?.description || "",
+                }}
+              />
 
-            <p className="sku-detail mb-0">Description </p>
-            <p
-            // dangerouslySetInnerHTML={{
-            //   __html: productDetails?.description || "",
-            // }}
-            >
-              Buy this €35 gift voucher for friends and family and they will
-              receive an email with a unique code so they can redeem the amount
-              online on this website. Please note that Gift Vouchers are not
-              refundable.
-            </p>
-            <div>
               <div>
-                <div className="row">
-                  <div className="col-md-12">
-                    <div
-                      className="gift-voucher  checkout-sec"
-                      style={{
-                        margin: 0,
-                        padding: 0,
-                      }}
-                    >
-                      <div className="col-md-12">
-                        <input
-                          type="text"
-                          required
-                          className="input-full-width"
-                          // ref={fieldRef?.firstName}
-                          onChange={(e) => {
-                            // handleText("firstName", e.target.value);
-                          }}
-                          // value={
-                          //   filed && filed.firstName !== undefined ? filed.firstName : ""
-                          // }
-                          placeholder="FROM NAME*"
-                        ></input>
-                      </div>
+                <div>
+                  <div className="row">
+                    <div className="col-md-12">
+                      <div
+                        className="gift-voucher  checkout-sec"
+                        style={{
+                          margin: 0,
+                          padding: 0,
+                        }}
+                      >
+                        <div className="col-md-12">
+                          <input
+                            type="text"
+                            required
+                            className="input-full-width"
+                            onChange={(e) => {
+                              handleVoucherDetails("fromName", e.target.value);
+                            }}
+                            value={
+                              giftVoucher && giftVoucher?.fromName !== undefined
+                                ? giftVoucher?.fromName
+                                : ""
+                            }
+                            placeholder="FROM NAME*"
+                          ></input>
+                          <div className="required-text">
+                            {voucherError.fromName}
+                          </div>
+                        </div>
 
-                      <div className="col-md-12">
-                        <input
-                          type="text"
-                          required
-                          // ref={fieldRef?.firstName}
-                          onChange={(e) => {
-                            // handleText("firstName", e.target.value);
-                          }}
-                          // value={
-                          //   filed && filed.firstName !== undefined ? filed.firstName : ""
-                          // }
-                          placeholder="FROM EMAIL*"
-                        ></input>
-                      </div>
+                        <div className="col-md-12">
+                          <input
+                            type="email"
+                            required
+                            onChange={(e) => {
+                              handleVoucherDetails("fromEmail", e.target.value);
+                            }}
+                            value={
+                              giftVoucher &&
+                              giftVoucher?.fromEmail !== undefined
+                                ? giftVoucher?.fromEmail
+                                : ""
+                            }
+                            placeholder="FROM EMAIL*"
+                          ></input>
+                          <div className="required-text">
+                            {voucherError.fromEmail}
+                          </div>
+                        </div>
 
-                      <div className="col-md-12">
-                        <input
-                          type="text"
-                          required
-                          // ref={fieldRef?.firstName}
-                          onChange={(e) => {
-                            // handleText("firstName", e.target.value);
-                          }}
-                          // value={
-                          //   filed && filed.firstName !== undefined ? filed.firstName : ""
-                          // }
-                          placeholder="TO NAME*"
-                        ></input>
-                      </div>
+                        <div className="col-md-12">
+                          <input
+                            type="text"
+                            required
+                            onChange={(e) => {
+                              handleVoucherDetails("toName", e.target.value);
+                            }}
+                            value={
+                              giftVoucher && giftVoucher?.toName !== undefined
+                                ? giftVoucher?.toName
+                                : ""
+                            }
+                            placeholder="TO NAME*"
+                          ></input>
+                          <div className="required-text">
+                            {voucherError.toName}
+                          </div>
+                        </div>
 
-                      <div className="col-md-12">
-                        <input
-                          type="text"
-                          required
-                          // ref={fieldRef?.firstName}
-                          onChange={(e) => {
-                            // handleText("firstName", e.target.value);
-                          }}
-                          // value={
-                          //   filed && filed.firstName !== undefined ? filed.firstName : ""
-                          // }
-                          placeholder="TO EMAIL*"
-                        ></input>
-                      </div>
+                        <div className="col-md-12">
+                          <input
+                            type="email"
+                            required
+                            onChange={(e) => {
+                              handleVoucherDetails("toEmail", e.target.value);
+                            }}
+                            value={
+                              giftVoucher && giftVoucher?.toEmail !== undefined
+                                ? giftVoucher?.toEmail
+                                : ""
+                            }
+                            placeholder="TO EMAIL*"
+                          ></input>
+                          <div className="required-text">
+                            {voucherError.toEmail}
+                          </div>
+                        </div>
 
-                      <div className="col-md-12">
-                        <textarea
-                          required
-                          className="full-width-textarea"
-                          // onChange={(e) => handleChange(e.target.value)}
-                          style={{
-                            paddingLeft: 10,
-                            height: 150,
-                          }} // you can adjust height as needed
-                          placeholder="Message"
-                          rows={5}
-                        />
+                        <div className="col-md-12">
+                          <textarea
+                            required
+                            className="full-width-textarea"
+                            onChange={(e) =>
+                              handleVoucherDetails("message", e.target.value)
+                            }
+                            value={
+                              giftVoucher && giftVoucher?.message !== undefined
+                                ? giftVoucher?.message
+                                : ""
+                            }
+                            style={{
+                              paddingLeft: 10,
+                              height: 150,
+                            }} // you can adjust height as needed
+                            placeholder="Message"
+                            rows={5}
+                          />
+                          <div className="required-text">
+                            {voucherError.message}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {uniqueOptions.size > 0 && (
               <div className="mb-4 d-flex choose-category align-items-center">
                 <label
                   className="form-label fw-semibold"
@@ -668,137 +699,120 @@ export default function ProductDetails({ productDetails, productDetail }) {
                     color: "rgb(0, 94, 132)",
                   }}
                 >
-                  Choose:
+                  Quantity:
                 </label>
-                <select
-                  className="form-select"
-                  onChange={(e) => {
-                    if (e.target.value != "Select Option") {
-                      console.log("Set selected", e.target.value);
-                      SelectedData("varient", e.target.value);
-                      setChooseSku(e.target.value);
-                    } else {
-                      SelectedData("", productDetails?.sku);
-                      setChooseSku(null);
-                    }
-                    // setSelectedImage(e.target.value);
 
-                    console.log("Selected SKU:", e.target.value);
-                  }}
-                  value={selectedImage || ""}
+                <select
+                  className="form-select w-auto"
+                  value={quantity}
+                  onChange={(e) => setQuantity(parseInt(e.target.value))}
                 >
-                  <option>Select Option</option>
-                  {[...uniqueOptions.entries()].map(([optionId, label]) => (
-                    <option key={optionId} value={label.sku}>
-                      {label.value}
+                  {[1, 2, 3, 4].map((val) => (
+                    <option key={val} value={val}>
+                      {val}
                     </option>
                   ))}
                 </select>
               </div>
-            )}
-            <div className="mb-4 d-flex choose-category align-items-center">
-              <label
-                className="form-label fw-semibold"
-                style={{
-                  color: "rgb(0, 94, 132)",
-                }}
-              >
-                Quantity:
-              </label>
-
-              <select
-                className="form-select w-auto"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value))}
-              >
-                {[1, 2, 3, 4].map((val) => (
-                  <option key={val} value={val}>
-                    {val}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              className="w-100 py-3 text-uppercase addtocart"
-              onClick={addItemCart}
-            >
-              {loading ? (
-                <div className="spinner-border text-light" role="status"></div>
-              ) : (
-                <div>
-                  <Image
-                    src="/assets/bag_white.webp"
-                    alt="Cart Icon"
-                    width={27}
-                    height={27}
-                    className="me-2"
-                  />
-                  Add to Cart
+              {voucherInCart == 1 ? (
+                <div className="alert alert-warning" role="alert">
+                  ❗ You are not allowed to purchase more than 1 gift voucher at
+                  a time.
                 </div>
+              ) : (
+                <button
+                  className="w-100 py-3 text-uppercase addtocart"
+                  // onClick={addItemCart}
+                  onClick={voucherValidation}
+                >
+                  {loading ? (
+                    <div
+                      className="spinner-border text-light"
+                      role="status"
+                    ></div>
+                  ) : (
+                    <div>
+                      <Image
+                        src="/assets/bag_white.webp"
+                        alt="Cart Icon"
+                        width={27}
+                        height={27}
+                        className="me-2"
+                      />
+                      Add to Cart
+                    </div>
+                  )}
+                </button>
               )}
-            </button>
-            <div className="mt-3 text-center a_color">
-              <InstantLink href="/cartpage" className="me-2">
-                View Cart
-              </InstantLink>
-              |
-              <InstantLink href="#" className="ms-2">
-                Add to Gift Registry
-              </InstantLink>
+
+              <div className="mt-3 text-center a_color">
+                <InstantLink href="/cartpage" className="me-2">
+                  View Cart
+                </InstantLink>
+                |
+                <InstantLink href="#" className="ms-2">
+                  Add to Gift Registry
+                </InstantLink>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
-      <div className="row">
-        <div className="col-md-12 col-lg-6 ">
-          <table className="table table-details mt-3">
-            <tbody>
-              <tr>
-                <th>Colour:</th>
-                <td>n/a</td>
-              </tr>
-              <tr>
-                <th>Width(cm):</th>
-                <td>{productDetails?.width ? productDetails.width : "n/a"}</td>
-              </tr>
 
-              {/* <tr>
+      {!productDetails?.categories[0]?.name.includes("Gift Vouchers") && (
+        <div className="row">
+          <div className="col-md-12 col-lg-6 ">
+            <table className="table table-details mt-3">
+              <tbody>
+                <tr>
+                  <th>Colour:</th>
+                  <td>n/a</td>
+                </tr>
+                <tr>
+                  <th>Width(cm):</th>
+                  <td>
+                    {productDetails?.width ? productDetails.width : "n/a"}
+                  </td>
+                </tr>
+
+                {/* <tr>
                 <th>Weight(gram):</th>
                 <td>
                   {productDetails?.weight ? productDetails.weight : "n/a"}
                 </td>
               </tr> */}
 
-              <tr>
-                <th>Height(cm):</th>
-                <td>
-                  {productDetails?.height ? productDetails.height : "n/a"}
-                </td>
-              </tr>
+                <tr>
+                  <th>Height(cm):</th>
+                  <td>
+                    {productDetails?.height ? productDetails.height : "n/a"}
+                  </td>
+                </tr>
 
-              <tr>
-                <th>Length(cm):</th>
-                <td>
-                  {productDetails?.length ? productDetails.length : "n/a"}
-                </td>
-              </tr>
-              <tr>
-                <th>Size:</th>
-                <td>{productDetails?.size ? productDetails.size : "n/a"}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="col-md-12 col-lg-6">
-          <div className=" small mt-2 text-muted">
-            <p className="impnotice">
-              IMPORTANT - Due to the handmade nature of our products, each piece
-              is unique. Sizes are approximate. For matching sets, please visit
-              our factory or contact support before ordering.
-            </p>
+                <tr>
+                  <th>Length(cm):</th>
+                  <td>
+                    {productDetails?.length ? productDetails.length : "n/a"}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Size:</th>
+                  <td>{productDetails?.size ? productDetails.size : "n/a"}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="col-md-12 col-lg-6">
+            <div className=" small mt-2 text-muted">
+              <p className="impnotice">
+                IMPORTANT - Due to the handmade nature of our products, each
+                piece is unique. Sizes are approximate. For matching sets,
+                please visit our factory or contact support before ordering.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

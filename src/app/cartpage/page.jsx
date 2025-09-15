@@ -115,11 +115,17 @@ const page = () => {
 
   const removeItem = async (id) => {
     const data = await RemoveItemCart(id);
+    const voucher = localStorage.getItem("is_voucher");
+    const voucherParse = JSON.parse(voucher);
     console.log("Data", data);
     if (data.status == 200) {
       SuccessToast("Item Remove succusfully", "top-right");
       removeFromCart(id);
       fetchCart();
+      if (voucherParse == 1) {
+        localStorage.setItem("is_voucher", 0);
+      }
+
       console.log("removeFromCart", id);
     } else {
       CustomToast("Something went wrong", "top-right");
@@ -128,11 +134,16 @@ const page = () => {
 
   const removeGuestItem = async (sku) => {
     const response = await RemoveGuestCart(sku);
+    const voucher = localStorage.getItem("is_voucher");
+    const voucherParse = JSON.parse(voucher);
     console.log("Remove Guest Item Response", response);
     if (response.status === 200) {
       SuccessToast("Item removed successfully", "top-right");
       removeFromCart("", sku);
       fetchCart();
+      if (voucherParse == 1) {
+        localStorage.setItem("is_voucher", 0);
+      }
     } else {
       CustomToast("Something went wrong", "top-right");
     }

@@ -223,7 +223,9 @@ const ProductGrid = ({ products, categoryidList }) => {
                       : "0"}
                   </p>
 
-                  {product?.type == "simple" ? (
+                  {product?.type == "simple" &&
+                  !product.sku?.toLowerCase().includes("gift") &&
+                  !product.sku?.toLowerCase().includes("voucher") ? (
                     <div className="new-arrival-design">
                       <button
                         className="btn btn-outline-secondary  w-100"

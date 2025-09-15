@@ -7,6 +7,9 @@ const { logout } = useAuthStore.getState(); //
 
 export const RemoveItemCart = async (id) => {
   const tokenData = localStorage.getItem("token");
+  const data = localStorage.getItem("is_voucher");
+  const voucherParse = JSON.parse(data);
+
   const parsed = tokenData ? JSON.parse(tokenData) : null;
   const accessToken = parsed?.token;
   const myHeaders = new Headers();
@@ -30,7 +33,9 @@ export const RemoveItemCart = async (id) => {
   if (response.status == 200) {
     console.log("response", response);
     const text = await response.text(); // first read as text to inspect
-
+    if (voucherParse == 1) {
+      localStorage.setItem("is_voucher", 0);
+    }
     try {
       const result = JSON.parse(text); // then try to parse manually
       return {
@@ -115,10 +120,11 @@ export const getCartListing = async () => {
   return data;
 };
 
-export const addToTheCart = async (sku, qty, chooseSku) => {
+export const addToTheCart = async (sku, qty, voucher) => {
   const raw = {
     sku: sku,
     qty: qty,
+    is_voucher: voucher,
   };
   const data = await fetchGlobal("api/blackbull/cart/add", {
     method: "POST",
@@ -140,6 +146,9 @@ export const checkOut = async (
 
   const shipping = localStorage.getItem("shiipingaddreess");
   const shippingParse = JSON.parse(shipping);
+
+  const voucherDetails = localStorage.getItem("voucherDetails");
+  const voucherParse = JSON.parse(voucherDetails);
 
   const raw = {
     billing: {
@@ -164,7 +173,13 @@ export const checkOut = async (
       postcode: shippingParse.zipCode,
       phone: shippingParse.telePhone,
     },
-
+    voucher: {
+      fromName: voucherParse?.voucherParse,
+      fromEmail: voucherParse?.fromEmail,
+      toName: voucherParse?.toName,
+      toEmail: voucherParse?.toEmail,
+      message: voucherParse?.message,
+    },
     shipping_method: shippingMethod,
     payment_method: "trust_payment",
     transaction_id: transactionId,
@@ -198,10 +213,11 @@ export const generateInvoice = async (invoiceId) => {
   return data;
 };
 
-export const addCartGuest = async (product, qty, token) => {
+export const addCartGuest = async (product, qty, token, voucher) => {
   const raw = {
     sku: product,
     qty: qty,
+    is_voucher: voucher,
   };
 
   const data = await fetchGlobal("api/blackbull/cart/guestAdd", {
@@ -253,6 +269,7 @@ export const updateGuestCart = async (data) => {
 
 export const RemoveGuestCart = async (sku) => {
   console.log("Items", sku);
+
   const raw = {
     sku: sku,
   };
@@ -282,6 +299,8 @@ export const guestcheckOut = async (
   const shipping = localStorage.getItem("shiipingaddreess");
   const shippingParse = JSON.parse(shipping);
 
+  const voucherDetails = localStorage.getItem("voucherDetails");
+  const voucherParse = JSON.parse(voucherDetails);
   const raw = {
     billing: {
       first_name: billingParse.firstName,
@@ -305,6 +324,14 @@ export const guestcheckOut = async (
 
       postcode: shippingParse.zipCode,
       phone: shippingParse.telePhone,
+    },
+
+    voucher: {
+      fromName: voucherParse?.voucherParse,
+      fromEmail: voucherParse?.fromEmail,
+      toName: voucherParse?.toName,
+      toEmail: voucherParse?.toEmail,
+      message: voucherParse?.message,
     },
     shipping_method: shippingMethod,
     payment_method: "trust_payment",
