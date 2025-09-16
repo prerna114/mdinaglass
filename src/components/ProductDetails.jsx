@@ -106,6 +106,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
         addToCart(data.data?.cart.items);
         setLaoding(false);
         localStorage.setItem("is_voucher", JSON.stringify(1));
+        setVoucherInCart(1);
 
         SuccessToast("Item added Successfully", "top-right");
       } else if (data?.status == 402) {
@@ -141,9 +142,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
       SuccessToast("Item added to cart", "top-right");
       localStorage.setItem("guestToken", data.data?.guest_token);
       localStorage.setItem("is_voucher", JSON.stringify(1));
-
-      // addToCart(data.data?.cart.items);
-      // await getGUesstCart();
+      setVoucherInCart(1);
       await fetchCart();
     }
   };

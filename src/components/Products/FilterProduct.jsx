@@ -144,7 +144,7 @@ const FilterProduct = ({ down }) => {
                   </select>
                 </div>
               </div>
-              {sku == "all-product.htm" ? null : (
+              {sku == "all-product.htm" || sku == "gift-vouchers.htm" ? null : (
                 <div className="col-md-4">
                   <div className="d-flex  sorting-item align-items-center justify-content-end">
                     <span>Filter by</span>

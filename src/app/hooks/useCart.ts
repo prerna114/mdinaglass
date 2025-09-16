@@ -25,6 +25,12 @@ export const fetchCart = async () => {
       clearCart();
       setCartTotal(data?.data?.cart?.grand_total);
       setAllCart(data?.data);
+      console.log("Cart datadatadata", data?.data);
+      if (data?.data?.is_voucher) {
+        localStorage.setItem("is_voucher", JSON.stringify(1));
+      } else {
+        localStorage.setItem("is_voucher", JSON.stringify(0));
+      }
       data.data.items.forEach((item: any) => addToCart(item));
     }
     // else if(data?.status == 401){
@@ -41,8 +47,14 @@ export const fetchCart = async () => {
     if (guestToken) {
       const response = await getCartGuest(guestToken);
       if (response?.status === 200) {
+        console.log("Cart datadatadata guest", response?.data);
         clearCart();
         setCartTotal(response?.data?.cart?.grand_total);
+        if (response?.data?.is_voucher) {
+          localStorage.setItem("is_voucher", JSON.stringify(1));
+        } else {
+          localStorage.setItem("is_voucher", JSON.stringify(0));
+        }
         setAllCart(response?.data);
         response?.data?.cart?.items?.forEach((item: any) => addToCart(item));
       }
