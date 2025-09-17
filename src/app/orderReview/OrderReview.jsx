@@ -25,6 +25,8 @@ const OrderReview = () => {
   const setNavigating = useNavigationStore((s) => s.setNavigating);
   const setShowModal = useNavigationStore((s) => s.setShowModal);
 
+  const [voucherInCart, setVoucherInCart] = useState();
+
   const [modalTrue, setModalTrue] = useState(false);
 
   useEffect(() => {
@@ -90,13 +92,15 @@ const OrderReview = () => {
   const {
     setShippingStore,
     shippingStore,
-
+    setShippingMethod,
     shiipingCost,
     shippingMethod,
   } = useShippingStore((state) => state);
 
   const [billingAddress, setBillingAddress] = useState({});
   const [shippingAddress, setShippingAddress] = useState({});
+  const [voucherDetails, setVoucherDetails] = useState({});
+
   const [method, setMethod] = useState(paymentMethods);
 
   const router = useRouter();
@@ -117,11 +121,15 @@ const OrderReview = () => {
   useEffect(() => {
     const bill = localStorage.getItem("billingaddress");
     const ship = localStorage.getItem("shiipingaddreess");
+    const voucher = localStorage.getItem("voucherDetails");
+
     const parseBill = JSON.parse(bill);
     const parseShip = JSON.parse(ship);
+    const parsevoucher = JSON.parse(voucher);
     // console.log("parse", parse.firstName);
     setBillingAddress(parseBill);
     setShippingAddress(parseShip);
+    setVoucherDetails(parsevoucher);
   }, []);
 
   let totalPrice = 0;
@@ -190,6 +198,7 @@ const OrderReview = () => {
         // window.location.replace("/");
         localStorage.removeItem("shipping-store");
         localStorage.removeItem("trust-payment");
+        localStorage.removeItem("is_voucher");
 
         setNavigating(false);
         setShowModal(false);
@@ -206,6 +215,7 @@ const OrderReview = () => {
     } else {
       setLoader(true);
       const guestToken = localStorage.getItem("guestToken");
+
       if (guestToken) {
         guestCheckoutAPI(guestToken);
       }
@@ -222,6 +232,7 @@ const OrderReview = () => {
     const price = getGrandTotal(cart) + insurance + shippingMethod?.Price;
     const parseData = localStorage.getItem("trust-payment");
     const transactionId = JSON.parse(parseData);
+    console.log("Guestcheckout");
     const data = await guestcheckOut(
       guestToken,
       shippingMethod?.Price,
@@ -234,6 +245,8 @@ const OrderReview = () => {
     console.log("Guest checkut", data);
     if (data?.status == 200) {
       SuccessToast(data.data.message, "top-right");
+      localStorage.removeItem("is_voucher");
+
       setLoader(false);
       setShowModal(false);
       localStorage.removeItem("shipping-store");
@@ -293,13 +306,23 @@ const OrderReview = () => {
   const GrandTotal =
     Number(Number(cartTotal).toFixed(2)) +
     Number(Number(insurance).toFixed(2)) +
-    Number(Number(shippingMethod?.Price).toFixed(2));
+    (voucherInCart != 1 &&
+    shippingMethod != undefined &&
+    Object.keys(shippingMethod).length > 0
+      ? Number(Number(shippingMethod?.Price).toFixed(2))
+      : 0);
 
   useEffect(() => {
     // insrunaceRate();
+    const data = localStorage.getItem("is_voucher");
+    if (data == 1) {
+      setShippingMethod({});
+    }
+    setVoucherInCart(data);
   }, []);
-  console.log("total", insurance);
-  // console.log("billingAddress", shippingMethod);
+  console.log("total", Number(Number(cartTotal).toFixed(2)), insurance);
+  console.log("billingAddress", method);
+
   return (
     <div
       style={{
@@ -346,34 +369,36 @@ const OrderReview = () => {
             >
               {/* Billing Info Box 1 */}
               <div className="col-12 col-md-4">
-                <div className="p-3 mb-3 h-100">
-                  <div className="d-flex justify-content-between">
-                    <h5 className="billing-text">Billing Information</h5>
+                {billingAddress && (
+                  <div className="p-3 mb-3 h-100">
+                    <div className="d-flex justify-content-between">
+                      <h5 className="billing-text">Billing Information</h5>
+                    </div>
+                    <p className="mb-1 billing-text-name ">
+                      {billingAddress?.firstName}
+                    </p>
+                    <p className="mb-1 billing-text-name ">
+                      {billingAddress?.email}
+                    </p>
+                    <p className="mb-1 billing-text-name ">
+                      {billingAddress?.addressOne}
+                    </p>
+                    <p className="mb-1 billing-text-name ">
+                      {billingAddress?.addressTwo}
+                    </p>
+                    <p className="mb-1 billing-text-name ">
+                      {billingAddress.city}, {billingAddress?.state},{" "}
+                      {billingAddress?.zipCode},{" "}
+                      {billingAddress?.country?.country}
+                    </p>
+                    <p className="mb-0 billing-text-name ">
+                      Tel: {billingAddress?.telePhone}
+                    </p>
+                    <Link href="/checkout?orderReview" className="text-primary">
+                      Edit
+                    </Link>
                   </div>
-                  <p className="mb-1 billing-text-name ">
-                    {billingAddress?.firstName}
-                  </p>
-                  <p className="mb-1 billing-text-name ">
-                    {billingAddress?.email}
-                  </p>
-                  <p className="mb-1 billing-text-name ">
-                    {billingAddress?.addressOne}
-                  </p>
-                  <p className="mb-1 billing-text-name ">
-                    {billingAddress?.addressTwo}
-                  </p>
-                  <p className="mb-1 billing-text-name ">
-                    {billingAddress.city}, {billingAddress?.state},{" "}
-                    {billingAddress?.zipCode},{" "}
-                    {billingAddress?.country?.country}
-                  </p>
-                  <p className="mb-0 billing-text-name ">
-                    Tel: {billingAddress?.telePhone}
-                  </p>
-                  <Link href="/checkout?orderReview" className="text-primary">
-                    Edit
-                  </Link>
-                </div>
+                )}
               </div>
 
               {/* Billing Info Box 2 */}
@@ -408,47 +433,196 @@ const OrderReview = () => {
                 </div>
               </div>
 
+              {
+                <div className="col-12 col-md-4">
+                  <div className="p-3 mb-3 h-100">
+                    {shippingMethod != null &&
+                      Object.keys(shippingMethod)?.length > 0 && (
+                        <div>
+                          <div className="d-flex justify-content-between">
+                            <h5 className="billing-text">Shipping Method:</h5>
+                          </div>
+                          <p className="mb-1 billing-text-name ">
+                            {shippingMethod?.ServiceDescription}
+                          </p>
+                          <Link
+                            href="/shippingMethod?orderReview"
+                            className="text-primary"
+                          >
+                            Edit
+                          </Link>
+                        </div>
+                      )}
+
+                    <div>
+                      <div className="d-flex justify-content-between">
+                        <h5 className="billing-text mt-2">Payment Method:</h5>
+                      </div>
+                      <p className="mb-1 billing-text-name ">{method}</p>
+                      <Link
+                        href={"/payment?orderReview"}
+                        className="text-primary"
+                      >
+                        Edit
+                      </Link>
+                    </div>
+
+                    {giftMessage?.length > 0 && (
+                      <div>
+                        <div className="d-flex justify-content-between">
+                          <h5 className="billing-text mt-2">Gift Message::</h5>
+                        </div>
+                        <p className="mb-1 billing-text-name ">{giftMessage}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      )}
+
+      {voucherDetails != null && billingAddress == null && (
+        <div className="container">
+          <div
+            className="login-signup"
+            style={{
+              // width: "50%",
+              // margin: "0 90px",
+              marginBottom: "30px",
+              padding: "11px",
+            }}
+          >
+            <div
+              className="row mt-3"
+              style={{
+                backgroundColor: "white",
+                padding: 20,
+              }}
+            >
+              {/* Billing Info Box 1 */}
               <div className="col-12 col-md-4">
                 <div className="p-3 mb-3 h-100">
                   <div className="d-flex justify-content-between">
-                    <h5 className="billing-text">Shipping Method:</h5>
+                    <h5 className="billing-text">Billing Information</h5>
                   </div>
                   <p className="mb-1 billing-text-name ">
-                    {shippingMethod?.ServiceDescription}
+                    {voucherDetails?.fromName}
                   </p>
-                  <Link
-                    href="/shippingMethod?orderReview"
-                    className="text-primary"
-                  >
+                  <p className="mb-1 billing-text-name ">
+                    {voucherDetails?.fromEmail}
+                  </p>
+                </div>
+              </div>
+              <div className="col-12 col-md-4">
+                <div className="p-3 mb-3 h-100">
+                  <div className="d-flex justify-content-between">
+                    <h5 className="billing-text">Shipping Information</h5>
+                  </div>
+                  <p className="mb-1 billing-text-name ">
+                    {voucherDetails?.toName}
+                  </p>
+                  <p className="mb-1 billing-text-name ">
+                    {voucherDetails?.toEmail}
+                  </p>
+                </div>
+              </div>
+
+              <div className="col-12 col-md-4">
+                <div className="p-3 mb-3 h-100">
+                  <div className="d-flex justify-content-between">
+                    <h5 className="billing-text mt-2">Payment Method:</h5>
+                  </div>
+                  <p className="mb-1 billing-text-name ">
+                    {/* Card Payment (Using Trust Payments 3D Secure Hosted
+                    Checkout) */}
+                    {method}
+                  </p>
+                  <Link href={"/payment?orderReview"} className="text-primary">
                     Edit
                   </Link>
-                  <div>
+                </div>
+              </div>
+
+              {/* Billing Info Box 2 */}
+
+              {shippingAddress != null && (
+                <div className="col-12 col-md-4">
+                  <div className="p-3 mb-3 h-100">
                     <div className="d-flex justify-content-between">
-                      <h5 className="billing-text mt-2">Payment Method:</h5>
+                      <h5 className="billing-text">Shipping Information</h5>
                     </div>
                     <p className="mb-1 billing-text-name ">
-                      {/* Card Payment (Using Trust Payments 3D Secure Hosted
-                    Checkout) */}
-                      {method}
+                      {shippingAddress?.firstName}
+                    </p>
+                    <p className="mb-1 billing-text-name ">
+                      {shippingAddress?.email}
+                    </p>
+                    <p className="mb-1 billing-text-name ">
+                      {shippingAddress?.addressOne}
+                    </p>
+                    <p className="mb-1 billing-text-name ">
+                      {shippingAddress?.addressTwo}
+                    </p>
+                    <p className="mb-1 billing-text-name ">
+                      {shippingAddress.city}, {shippingAddress?.state},{" "}
+                      {shippingAddress?.zipCode},{" "}
+                      {shippingAddress?.country?.country}
+                    </p>
+                    <p className="mb-0 billing-text-name ">
+                      Tel: {shippingAddress?.telePhone}
+                    </p>
+                    <Link href="/shipping?orderReview" className="text-primary">
+                      Edit
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {Object.keys(shippingMethod)?.length > 0 && (
+                <div className="col-12 col-md-4">
+                  <div className="p-3 mb-3 h-100">
+                    <div className="d-flex justify-content-between">
+                      <h5 className="billing-text">Shipping Method:</h5>
+                    </div>
+                    <p className="mb-1 billing-text-name ">
+                      {shippingMethod?.ServiceDescription}
                     </p>
                     <Link
-                      href={"/payment?orderReview"}
+                      href="/shippingMethod?orderReview"
                       className="text-primary"
                     >
                       Edit
                     </Link>
-                  </div>
-
-                  {giftMessage?.length > 0 && (
                     <div>
                       <div className="d-flex justify-content-between">
-                        <h5 className="billing-text mt-2">Gift Message::</h5>
+                        <h5 className="billing-text mt-2">Payment Method:</h5>
                       </div>
-                      <p className="mb-1 billing-text-name ">{giftMessage}</p>
+                      <p className="mb-1 billing-text-name ">
+                        {/* Card Payment (Using Trust Payments 3D Secure Hosted
+                    Checkout) */}
+                        {method}
+                      </p>
+                      <Link
+                        href={"/payment?orderReview"}
+                        className="text-primary"
+                      >
+                        Edit
+                      </Link>
                     </div>
-                  )}
+
+                    {giftMessage?.length > 0 && (
+                      <div>
+                        <div className="d-flex justify-content-between">
+                          <h5 className="billing-text mt-2">Gift Message::</h5>
+                        </div>
+                        <p className="mb-1 billing-text-name ">{giftMessage}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -588,12 +762,13 @@ const OrderReview = () => {
                         }}
                       >
                         Shipping & Handling
+                        {voucherInCart == 1 && " (Delivered via email)"}
                       </td>
 
                       <td>
                         €
                         {shippingMethod && typeof shippingMethod === "object"
-                          ? shippingMethod.Price ?? "" // show Price if exists, else empty
+                          ? shippingMethod.Price ?? 0.0 // show Price if exists, else empty
                           : shippingMethod}
                       </td>
                     </tr>

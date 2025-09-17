@@ -123,7 +123,7 @@ const page = () => {
       removeFromCart(id);
       fetchCart();
       if (voucherParse == 1) {
-        localStorage.setItem("is_voucher", 0);
+        localStorage.setItem("is_voucher", null);
       }
 
       console.log("removeFromCart", id);
@@ -142,7 +142,7 @@ const page = () => {
       removeFromCart("", sku);
       fetchCart();
       if (voucherParse == 1) {
-        localStorage.setItem("is_voucher", 0);
+        localStorage.setItem("is_voucher", null);
       }
     } else {
       CustomToast("Something went wrong", "top-right");
@@ -213,6 +213,8 @@ const page = () => {
   const processCheck = () => {
     setNavigating(true);
     console.log("guestTokenguestToken", guestToken);
+    const voucher = localStorage.getItem("is_voucher");
+
     if (guestToken) {
       setNavigating(false);
 

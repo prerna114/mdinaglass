@@ -79,6 +79,13 @@ const ProductGrid = ({ products, categoryidList }) => {
   };
 
   const addItemCart = async (product) => {
+    const data = localStorage.getItem("is_voucher");
+    if (data == 1) {
+      CustomToast(
+        "Complete voucher purchase or remove from cart to add item in cart"
+      );
+      return;
+    }
     setLoadingProductId(product.id);
     const tokenData = localStorage.getItem("token");
     const parsed = tokenData ? JSON.parse(tokenData) : null;

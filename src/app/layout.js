@@ -16,6 +16,7 @@ import { ToastContainer } from "react-toastify";
 import dynamic from "next/dynamic";
 import GloblaLoader from "@/components/GloblaLoader";
 import MegaMenuSkeleton from "@/components/Skeleton/MegaMenuSkeleton";
+import TawkScript from "@/components/TawkScript";
 
 const Footer = dynamic(() => import("../components/Footer"), {
   ssr: true,
@@ -86,6 +87,7 @@ export default function RootLayout({ children }) {
         {children}
         <ToastContainer />
         <Footer />
+        <TawkScript />
       </body>
     </html>
   );

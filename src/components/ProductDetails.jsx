@@ -90,6 +90,13 @@ export default function ProductDetails({ productDetails, productDetail }) {
       CustomToast("Please Choose Varient", "top-right");
       return;
     }
+
+    if (voucherInCart == 1) {
+      CustomToast(
+        "Complete voucher purchase or remove from cart to add item in cart"
+      );
+      return;
+    }
     console.log("chooseSku", chooseSku, uniqueOptions?.length);
     setLaoding(true);
     const tokenData = localStorage.getItem("token");
@@ -235,7 +242,12 @@ export default function ProductDetails({ productDetails, productDetail }) {
 
   const voucherValidation = () => {
     const newErrors = {};
-
+    if (voucherInCart == 0 && cart?.length > 0) {
+      CustomToast(
+        "Complete purchase of item in cart or remove to add voucher in cart"
+      );
+      return;
+    }
     if (!giftVoucher?.fromName) {
       newErrors.fromName = "From name required";
     }
@@ -276,6 +288,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
   useEffect(() => {
     const data = localStorage.getItem("is_voucher");
     const parse = JSON.parse(data);
+    console.log("parse data useffe", parse);
     setVoucherInCart(parse);
   }, []);
 
@@ -525,6 +538,7 @@ export default function ProductDetails({ productDetails, productDetail }) {
                   ))}
                 </select>
               </div>
+
               <button
                 className="w-100 py-3 text-uppercase addtocart"
                 onClick={addItemCart}

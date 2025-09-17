@@ -26,7 +26,7 @@ export const fetchCart = async () => {
       setCartTotal(data?.data?.cart?.grand_total);
       setAllCart(data?.data);
       console.log("Cart datadatadata", data?.data);
-      if (data?.data?.is_voucher) {
+      if (data?.data?.cart?.is_voucher == "1") {
         localStorage.setItem("is_voucher", JSON.stringify(1));
       } else {
         localStorage.setItem("is_voucher", JSON.stringify(0));
@@ -50,7 +50,7 @@ export const fetchCart = async () => {
         console.log("Cart datadatadata guest", response?.data);
         clearCart();
         setCartTotal(response?.data?.cart?.grand_total);
-        if (response?.data?.is_voucher) {
+        if (response?.data?.cart?.is_voucher == "1") {
           localStorage.setItem("is_voucher", JSON.stringify(1));
         } else {
           localStorage.setItem("is_voucher", JSON.stringify(0));

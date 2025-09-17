@@ -174,18 +174,18 @@ export const checkOut = async (
       phone: shippingParse.telePhone,
     },
     voucher: {
-      fromName: voucherParse?.voucherParse,
+      fromName: voucherParse?.fromName,
       fromEmail: voucherParse?.fromEmail,
       toName: voucherParse?.toName,
       toEmail: voucherParse?.toEmail,
       message: voucherParse?.message,
     },
-    shipping_method: shippingMethod,
+    shipping_method: shippingMethod ? shippingMethod : "email",
     payment_method: "trust_payment",
     transaction_id: transactionId,
     // transaction_id: "12345666",
     giftMessage: giftMessage,
-    shipping_price: shippingPrice,
+    shipping_price: shippingPrice ? shippingPrice : "0",
     insurance_cost: insurance,
   };
   const data = await fetchGlobal("api/blackbull/checkout", {
@@ -302,47 +302,55 @@ export const guestcheckOut = async (
   const voucherDetails = localStorage.getItem("voucherDetails");
   const voucherParse = JSON.parse(voucherDetails);
   const raw = {
-    billing: {
-      first_name: billingParse.firstName,
-      last_name: billingParse.lastName,
-      email: billingParse.email,
-      address: billingParse.addressOne + billingParse.addressTwo,
-      city: billingParse.city,
-      state: billingParse.state,
-      country: billingParse.country?.code,
-      postcode: billingParse.zipCode,
-      phone: billingParse.telePhone,
-    },
-    shipping: {
-      first_name: shippingParse.firstName,
-      last_name: shippingParse.lastName,
-      email: shippingParse.email,
-      address: shippingParse.addressOne + shippingParse.addressTwo,
-      city: shippingParse.city,
-      state: shippingParse.state,
-      country: billingParse.country?.code,
+    ...(billingParse && {
+      billing: {
+        first_name: billingParse.firstName,
+        last_name: billingParse.lastName,
+        email: billingParse.email,
+        address:
+          (billingParse.addressOne || "") + (billingParse.addressTwo || ""),
+        city: billingParse.city,
+        state: billingParse.state,
+        country: billingParse.country?.code,
+        postcode: billingParse.zipCode,
+        phone: billingParse.telePhone,
+      },
+    }),
 
-      postcode: shippingParse.zipCode,
-      phone: shippingParse.telePhone,
-    },
+    ...(shippingParse && {
+      shipping: {
+        first_name: shippingParse.firstName,
+        last_name: shippingParse.lastName,
+        email: shippingParse.email,
+        address:
+          (shippingParse.addressOne || "") + (shippingParse.addressTwo || ""),
+        city: shippingParse.city,
+        state: shippingParse.state,
+        country: shippingParse.country?.code, // ✅ use shippingParse here, not billingParse
+        postcode: shippingParse.zipCode,
+        phone: shippingParse.telePhone,
+      },
+    }),
 
-    voucher: {
-      fromName: voucherParse?.voucherParse,
-      fromEmail: voucherParse?.fromEmail,
-      toName: voucherParse?.toName,
-      toEmail: voucherParse?.toEmail,
-      message: voucherParse?.message,
-    },
-    shipping_method: shippingMethod,
+    ...(voucherParse && {
+      voucher: {
+        fromName: voucherParse?.fromName,
+        fromEmail: voucherParse?.fromEmail,
+        toName: voucherParse?.toName,
+        toEmail: voucherParse?.toEmail,
+        message: voucherParse?.message,
+      },
+    }),
+
+    shipping_method: shippingMethod ? shippingMethod : "Email",
     payment_method: "trust_payment",
     transaction_id: transactionId,
-    // transaction_id: "0986543",
-
-    shipping_price: Number(price),
+    shipping_price: price ? Number(price) : 0,
     guest_token: guestToken,
     insurance_cost: insurance,
     giftMessage: giftMessage,
   };
+
   const data = await fetchGlobal("api/blackbull/guest-checkout", {
     method: "POST",
     body: raw,

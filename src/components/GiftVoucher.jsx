@@ -28,6 +28,7 @@ const GiftVoucher = () => {
   const router = useRouter();
   const processCheck = () => {
     console.log("guestTokenguestToken", guestToken);
+
     if (guestToken) {
       router.push("/checkout");
     } else if (isLogin) {

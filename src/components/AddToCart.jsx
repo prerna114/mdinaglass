@@ -37,6 +37,7 @@ const AddToCart = ({ localCart }) => {
   const setNavigating = useNavigationStore((s) => s.setNavigating);
   const isNavigating = useNavigationStore((s) => s.isNavigating);
   const [apiCall, setAPICall] = useState("0");
+  const [voucherInCart, setVoucherInCart] = useState("");
 
   const [userDetails, setUserDetails] = useState();
   // const setNavigating = useNavigationStore((s) => s.setNavigating);
@@ -135,7 +136,8 @@ const AddToCart = ({ localCart }) => {
   const shiipingRate = async (code) => {
     setNavigating(true);
     console.log("Cart Wiri", cartWieght);
-    if (Number(cartWieght) && Number(cartWieght) > 0) {
+    if (Number(cartWieght) && Number(cartWieght) > 0 && voucherInCart != 1) {
+      console.log("getShippingRate", voucherInCart);
       setNavigating(true);
       const data = await getShippingRate(cartWieght, code);
       if (data?.status == 200) {
@@ -162,6 +164,10 @@ const AddToCart = ({ localCart }) => {
   };
   const insrunaceRate = async () => {
     setNavigating(true);
+    if (voucherInCart == 1) {
+      setInsurance(0);
+      return;
+    }
     if (Object.keys(shippingStore)?.length > 0 && shippingStore?.Value) {
       const totalCost =
         Number(Number(shippingStore?.Value?.[0]?.Price).toFixed(2)) +
@@ -232,7 +238,7 @@ const AddToCart = ({ localCart }) => {
     insrunaceRate();
     const data = localStorage.getItem("token");
     const parseData = JSON.parse(data);
-    if (parseData) {
+    if (parseData && voucherInCart != 1) {
       setUserDetails(parseData);
       if (parseData?.address?.country) {
         setCountryCode(parseData?.address?.country);
@@ -251,6 +257,10 @@ const AddToCart = ({ localCart }) => {
     }
   }, [insurance, shippingRate]);
 
+  useEffect(() => {
+    const data = localStorage.getItem("is_voucher");
+    setVoucherInCart(data);
+  }, []);
   // console.log("Cart Items", cart, shippingRate);
   // console.log("shippingStore", insurance);
   // console.log("userDetails", userDetails);
@@ -307,6 +317,7 @@ const AddToCart = ({ localCart }) => {
                 Enter your delivery country to calculate shipping cost
               </h4>
               <select
+                disabled={voucherInCart == 1}
                 className="form-select mb-3"
                 onChange={(e) => {
                   console.log("Selected Country", e.target.value);
