@@ -138,7 +138,7 @@ const ProductGrid = ({ products, categoryidList }) => {
       CustomToast("Something went wrong", "top-right");
     }
   };
-  console.log("categoryIds", imgSrcs);
+  console.log("categoryIddeds Product", allParams);
   console.log("productsproducts", products);
 
   return (

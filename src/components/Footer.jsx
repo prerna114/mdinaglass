@@ -101,9 +101,9 @@ const Footer = () => {
                 </InstantLink>
               </li>
 
-              {/* <li>
+              <li>
                 <InstantLink href={"/chandeliers"}>Chandeliers</InstantLink>
-              </li> */}
+              </li>
 
               <li>
                 <InstantLink href={"/about/trade-partner"}>

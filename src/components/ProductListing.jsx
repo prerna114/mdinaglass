@@ -11,6 +11,7 @@ import { useParams, useRouter, usePathname } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import ListingSkeleton from "./Skeleton/ListingSkeleton";
 import { useNavigationStore } from "@/store/useNavigationstore";
+import Chandeliers from "./Chandeliers";
 const FilterProduct = dynamic(
   () => import("../components/Products/FilterProduct"),
   {
@@ -40,7 +41,6 @@ const AboveMenu = dynamic(() => import("./Products/AboveMenu"), {
 });
 
 const ProductListing = ({ SearchData }) => {
-  const [productList, setProductList] = useState([]);
   const [categoryidList, setCategoryidList] = useState([]);
   const [cateogryArray, setCateogryArray] = useState([]);
   const [theLastI, setTheLastI] = useState("");
@@ -321,7 +321,7 @@ const ProductListing = ({ SearchData }) => {
     paginationOption();
   }, [params]);
 
-  console.log("isNavigating", products);
+  console.log("isNavigating", products, theLastI);
   return (
     <div className="productListing">
       {/* Filter Controls */}
@@ -339,12 +339,16 @@ const ProductListing = ({ SearchData }) => {
         <CategoryGrid category={category} />
       )}
 
-      {products?.length == 0 && category?.length == 0 && !loading && (
-        <div className="no-data-found">
-          <h1>No data found </h1>
-        </div>
-      )}
+      {products?.length == 0 &&
+        category?.length == 0 &&
+        !loading &&
+        theLastI != 229 && (
+          <div className="no-data-found">
+            <h1>No data found </h1>
+          </div>
+        )}
 
+      {theLastI == 229 && <Chandeliers />}
       {/* Product Grid */}
 
       {!loading && products?.length > 0 && (

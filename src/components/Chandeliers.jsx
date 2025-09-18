@@ -4,7 +4,7 @@ const SideMenu = dynamic(() => import("@/components/SideMenu"), {
   ssr: true,
   loading: () => <span className="visually-hidden">Loading...</span>,
 });
-const page = () => {
+const Chandeliers = () => {
   return (
     <div>
       <div className="container">
@@ -12,13 +12,10 @@ const page = () => {
           <div className="category-bg">
             <div className="row  min-vh-100">
               {/* Category Sidebar */}
-              <div className="col-lg-3 col-md-12  p-0">
-                <SideMenu />
-                {/* <CategorySidebar cateogryId={params?.productId} /> */}
-              </div>
+
               {/* Product Listing */}
 
-              <div className="col-md-9 col-12">
+              <div className="col-md-10 col-12">
                 <div className="product-content-wrapper">
                   <h2>Chandeliers</h2>
                   <p>
@@ -65,7 +62,12 @@ const page = () => {
                   <div className="row">
                     <div className="col-md-12">
                       <div className="product-wrapper">
-                        <img src="/assets/chandeliers.png" />
+                        <img
+                          style={{
+                            width: "100%",
+                          }}
+                          src="/assets/chandeliers.png"
+                        />
                       </div>
 
                       <p>
@@ -102,4 +104,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Chandeliers;
